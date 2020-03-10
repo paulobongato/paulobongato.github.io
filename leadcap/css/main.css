@@ -698,7 +698,8 @@ textarea:focus {
     margin:0 auto;
     height:30px;
     background-image: url(../img/lc-w.png);
-    width:130px
+    width:130px;
+    background-size:130px;
   }
 
   .head .logo img {
