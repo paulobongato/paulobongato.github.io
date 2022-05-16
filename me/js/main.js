@@ -58,7 +58,7 @@ window.onload = () => {
 } ;   
 
 // pull via fetch?
-fetch('cv.json')
+fetch('js/cv.json')
   .then(response => response.json())
   .then(data => {
     document.querySelector("#loading").classList.add("loading-hide");
