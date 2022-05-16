@@ -563,6 +563,7 @@ header nav a .ico-li {
     */
     grid-template-columns: 1fr;
     justify-items: center;
+    gap:1.5em;
   }
 
   .sec > *:first-child {
@@ -605,14 +606,14 @@ header nav a .ico-li {
   .info:after {
     border-color: rgba(255, 255, 255, 0);
     border-bottom-color: #fff;
-    border-width: 20px;
-    margin-left: -20px;
+    border-width: 12px;
+    margin-left: -12px;
   }
   .info:before {
     border-color: rgba(241, 66, 0, 0);
     border-bottom-color: #ddd;
-    border-width: 27px;
-    margin-left: -27px;
+    border-width: 18px;
+    margin-left: -18px;
   }
 
   /*.sec:hover .info::before,*/
