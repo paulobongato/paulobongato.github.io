@@ -166,6 +166,7 @@ h1, h2, h3, h4, h5 {
 h1 {
   font-weight: normal;
   text-transform: uppercase;
+  margin-bottom:10px;
 }
 
 h2, h3, h4, h5 {
@@ -224,8 +225,8 @@ header nav a .ico {
 
 header nav > a:first-child {
   border-bottom: 1px solid #eee;
-  padding-bottom: 0.5em;
-  margin-bottom: 0.5em;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
   color:#999;
 }
 
