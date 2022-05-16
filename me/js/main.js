@@ -61,12 +61,13 @@ window.onload = () => {
 fetch('js/cv.json')
   .then(response => response.json())
   .then(data => {
-    document.querySelector("#loading").classList.add("loading-hide");
     let myVue = Vue.createApp({
       data() {
         return data;
       }
     }).mount('#me');
+    document.querySelector("#loading").classList.add("loading-hide");
+    document.querySelector("#me").classList.remove("me");
   });
 
 /*
