@@ -66,8 +66,12 @@ fetch('js/cv.json')
         return data;
       }
     }).mount('#me');
-    document.querySelector("#loading").classList.add("loading-hide");
-    document.querySelector("#me").classList.remove("me");
+
+    window.setTimeout(function() {
+      document.querySelector("#loading").classList.add("loading-hide");
+      document.querySelector("#me").classList.remove("me");
+      selectSection();
+    }, 500);
   });
 
 /*
