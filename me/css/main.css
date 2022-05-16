@@ -365,7 +365,7 @@ h2 .mti {
 }
 
 .sec .info {
-  font-size:95%;
+  font-size:100%;
 }
 
 .sec .info p:last-child,
@@ -378,10 +378,6 @@ h2 .mti {
 /*.sec:hover .info,*/
 .sec.h .info {
   border-color:rgb(241, 66, 0);
-}
-
-.sec.h .info {
-  font-size:100%;
 }
 
 /*.sec:hover *,*/
@@ -808,3 +804,4 @@ header nav a .ico-li {
     page-break-after: avoid;
   }
 }
+
