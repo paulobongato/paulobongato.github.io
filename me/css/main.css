@@ -369,8 +369,6 @@ h2 .mti {
   margin-bottom:0;
 }
 
-
-
 /*.sec:hover .info,*/
 .sec.h .info {
   border-color:rgb(241, 66, 0);
@@ -800,4 +798,3 @@ header nav a .ico-li {
     page-break-after: avoid;
   }
 }
-
