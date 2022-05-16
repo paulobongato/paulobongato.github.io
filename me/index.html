@@ -6,15 +6,17 @@
   <!-- There is nothing here. Really.-->
 
   <meta charset="utf-8">
-  <title>PB</title>
+  <title>Paulo Bongato</title>
   <meta name="description" content="Helping technologies grow businesses through the business of technology.">
   <meta name="robots" content="noindex,nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!--
   <meta property="og:title" content="">
   <meta property="og:type" content="">
   <meta property="og:url" content="">
   <meta property="og:image" content="">
+  -->
 
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
@@ -30,392 +32,6 @@
 </head>
 
 <body class="mob">
-
-<style>
-  @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url("css/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2") format("woff2"); /* this one is used in https://fonts.googleapis.com/icon?family=Material+Icons */
-  }
-
-  .mti {
-    font-family: 'Material Icons';
-    font-weight: normal !important;
-    font-style: normal;
-    font-size: 16px; /* Preferred icon size */
-    display: inline-block;
-    line-height: 18px;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    text-decoration:none !important;
-    vertical-align: middle;
-
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
-
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
-
-    /* Support for IE. */
-    font-feature-settings: 'liga';
-    
-    /* If the icon is used for click events */
-    -webkit-user-select: none; /* Safari */        
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none; /* Standard */
-  }
-  * {
-    -webkit-transition: all ease-out 0.3s;
-    -moz-transition: all ease-out 0.3s;
-    -ms-transition: all ease-out 0.3s;
-    -o-transition: all ease-out 0.3s;
-    transition: all ease-out 0.3s;
-  }
-
-  body {
-    background-color: #f0f0f0;
-    font-size: 100%;
-  }
-
-  h1, h2, h3, h4, h5 {
-    padding:0;
-    margin:0;
-    font-family:Georgia, 'Times New Roman', Times, serif;
-  }
-
-  h1 {
-    font-weight: normal;
-    text-transform: uppercase;
-  }
-
-  h2, h3, h4, h5 {
-    color:#aaa;
-  }
-
-  header {
-    border-top:5px solid #1976d2;
-    text-align: center;
-    background-color: #fff;
-    padding:2em;
-    box-shadow: 0px 5px 10px -10px rgba(0,0,0,0.3);
-  }
-
-
-  header h1 span.s {
-    display:none;
-  }
-
-  header nav {
-    display:flex;
-    width: 800px;
-    margin: 0 auto;
-    flex-direction: column;
-  }
-
-  header nav a {
-    text-decoration: none;
-    color:rgb(246, 147, 110);
-    font-size:90%;
-  }
-
-  header nav a:hover {
-    color:rgb(241, 66, 0);
-  }
-
-  header nav a .ico {
-    display:none;
-  }
-
-  header nav > a:first-child {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.5em;
-    margin-bottom: 0.5em;
-    color:#999;
-  }
-
-  header nav > a:first-child:hover {
-    color:#666;
-  }
-
-  .socmed {
-    display:flex;
-    gap:3em;
-    justify-content: center;
-  }
-
-  .wrap {
-    width:800px;    
-    margin:0 auto;
-  }
-
-  .sec {
-    margin:2em 0;
-    display:flex;
-    gap:2em;
-  }
-
-  .sec > *:first-child {
-    width:150px;
-  }
-
-  .sec > *:last-child {
-    background-color: #fff;
-    flex-grow: 1;
-  }
-
-  .sec figure {
-    margin:0;
-  }
-
-  .sec figure img {
-    background-color:#999;
-    width:150px;
-    height:150px;
-    border-radius: 99999px;
-    border:5px solid #aaa;
-    display: block;
-    opacity: 0.5;
-  }
-
-  .info {
-    border-left:5px solid #ddd;
-    border-top:0px solid #ddd;
-    color:#aaa;
-    box-shadow: 5px 5px 10px -10px rgba(0,0,0,0.3);
-    padding: 1.5em;
-    font-family:Arial, Helvetica, sans-serif;
-  }
-
-  h2 {
-    color:#555;
-    text-align: center;
-    font-weight: normal;
-    border-bottom: 1px solid black;
-    line-height: 0;
-    margin:2em 0;
-  }
-
-  h2 span {
-    background-color:#eee;
-    padding:0 1em;
-  }
-
-  .sec hgroup {
-    text-align: right;
-  }
-
-  .sec hgroup h3 {
-    font-size:100%;
-  }
-
-  .sec hgroup h4 {
-    font-weight: normal;
-    font-size: 85%;
-  }
-
-  .sec hgroup h5 {
-    text-transform: uppercase;
-    font-weight: normal;
-    font-size: 70%;
-  }
-
-  .sec .info,
-  .sec hgroup {
-    font-size:98%;
-  }
-
-  
-  /*.sec:hover .info,*/
-  .sec.h .info {
-    border-color:rgb(241, 66, 0);
-  }
-
-  .sec.h .info,
-  .sec.h hgroup {
-    font-size:100%;
-  }
-
-  /*.sec:hover *,*/
-  .sec.h * {
-    color:#333;
-  }
-
-  /* .sec:hover img, */
-  .sec.h img {
-    opacity: 1;
-  }
-
-  footer {
-    color:#aaa;
-    background-color:#333;
-    font-family:Arial, Helvetica, sans-serif;
-    padding:2em;
-    font-size:80%;
-    text-align: center;
-  }
-
-  .ico {
-    background-size: 28px 28px;
-  }
-
-  .ico-email {
-    background-image: url(img/email-13-64.png);
-  }
-  .ico-fb {
-    background-image: url(img/facebook-3-64.png);
-  }
-  .ico-tw {
-    background-image: url(img/twitter-3-64.png);
-  }
-  .ico-li {
-    background-image: url(img/linkedin-3-64.png);
-  }
-
-  @media screen and (max-width: 800px) {
-    header {
-      background-color: #1976d2;
-      color:#fff;
-      display: flex;
-      justify-content: space-between;
-      padding: 0;
-      position: sticky;
-      top:0;
-      border:0;
-      z-index: 1;
-    }
-
-    header.s {
-      top:0;
-    }
-
-    header h1 {
-      display:flex;
-      word-spacing: 5px;
-      font-size: 28px;
-      align-items:center;
-      padding-left:10px;
-
-    }
-    header h1 span {
-      display:none;
-    }
-
-    header h1 span.s {
-      display:inline-block;
-    }
-
-    header nav {
-      display:flex;
-      margin: 0;
-      align-items: center;
-      justify-content: end;
-      flex-direction: row;
-    }
-
-    header nav a:first-child,
-    header nav a {
-      color:#fff;
-      padding:10px;
-      margin:0;
-      border:0;
-    }
-
-    header nav a:first-child:hover {
-      color:rgb(241, 66, 0);
-    }
-
-    header nav a .ico {
-      display:block;
-      width:28px;
-      height:28px;
-    }
-
-    header nav a .txt {
-      display:none;
-    }
-
-    header nav a:first-child:hover,
-    header nav a:hover {
-      background-color:#0f4880;
-    }
-
-    .socmed {
-      gap:0;
-    }
-
-    .wrap {
-      width: 100%;
-    }
-
-    .sec {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sec > *:first-child {
-      width:auto;
-      flex-grow: 1;
-    }
-
-    .sec figure img {
-      margin:0;
-      width:200px;
-      height:200px;
-    }
-
-    .sec hgroup {
-      text-align: center;
-    }
-
-    .info {
-      width:80%;
-      border-left:0;
-      border-top-width: 5px;
-    }
-
-    .info {
-      position: relative;
-      background: #fff;
-/*      border-top: 5px solid #f14200;*/
-    }
-    .info:after, .info:before {
-      bottom: 100%;
-      left: 50%;
-      border: solid transparent;
-      content: "";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .info:after {
-      border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: #fff;
-      border-width: 20px;
-      margin-left: -20px;
-    }
-    .info:before {
-      border-color: rgba(241, 66, 0, 0);
-      border-bottom-color: #ddd;
-      border-width: 27px;
-      margin-left: -27px;
-    }
-
-    /*.sec:hover .info::before,*/
-    .sec.h .info::before {
-      border-bottom-color:rgb(241, 66, 0);
-    }
-  }
-
-</style>
 
 <div id="me">
   <header>
@@ -434,7 +50,7 @@
     <div class="wrap">
       <section class="sec">
         <figure>
-          <img src="img/me.jpg" alt=""/>
+          <img :src="profile"/>
         </figure>
         <div class="info">
           {{about}}
@@ -443,171 +59,99 @@
     </div>
 
     <div class="wrap">
-      <h2><span>Professional Experience</span></h2>
+      <h2><span><b class="mti">work_history</b> Professional Experience</span></h2>
 
-      <section class="sec">
+      <section class="sec" v-for="work in works">
         <hgroup>
-          <h3>Job Title</h3>
-          <h4>Company</h4>
-          <h5>X to Z</h5>
+          <a :href="work.url" target="_blank">
+            <img :src="work.logo"/>
+          </a>
+          <h3 v-html="work.title"></h3>
+          <h4>
+            <a :href="work.url" target="_blank">
+              {{ work.company }}
+            </a>
+          </h4>
+          <h5>{{ work.years }}</h5>
         </hgroup>
-        <div class="info">
-          <p>Hello.</p>
-        </div>
-      </section>
-
-      <section class="sec">
-        <hgroup>
-          <h3>Job Title</h3>
-          <h4>Company</h4>
-          <h5>X to Z</h5>
-        </hgroup>
-        <div class="info">
-          <p>Hello.</p>
-        </div>
-      </section>
-
-      <section class="sec">
-        <hgroup>
-          <h3>Job Title</h3>
-          <h4>Company</h4>
-          <h5>X to Z</h5>
-        </hgroup>
-        <div class="info">
-          <p>Hello.</p>
+        <div class="info" v-html="work.description">
         </div>
       </section>
     </div>
-    
-    <!--
+
     <div class="wrap">
-      <h2><span>Competencies</span></h2>
-      <section class="sec">
+      <h2><span><b class="mti">school</b> Education</span></h2>
+
+      <section class="sec" v-for="edu in education">
         <hgroup>
-          <h3>Job Title</h3>
+          <h4 v-html="edu.degree"></h4>
+          <h5 v-html="edu.years"></h5>
         </hgroup>
-        <div class="info">
-          <p>Hello.</p>
+        <div class="info info-edu">
+          <figure>
+            <a :href="edu.url" target="_blank">
+              <img :src="edu.logo"/>
+            </a>
+          </figure>
+          <p>
+            <b v-html="edu.title"></b>
+            <br/>
+            <a :href="edu.url" target="_blank" v-html="edu.school"></a>
+            <br/>
+            <span v-html="edu.address"></span>
+          </p>
+        </div>
+      </section>
+    </div>        
+    
+    <div class="wrap">
+      <h2><span><b class="mti">star</b> Competencies</span></h2>
+      <section class="sec" v-for="comp in competencies">
+        <hgroup>
+          <h3 v-html="comp.title"></h3>
+        </hgroup>
+        <div class="info badges" v-html="comp.description">
         </div>
       </section>
     </div>
-    
+        
     <div class="wrap">
-      <h2><span>Education</span></h2>
+      <h2><span><b class="mti">saved_search</b> Others</span></h2>
 
-      <section class="sec">
+      <section class="sec" v-for="other in others">
         <hgroup>
-          <hgroup>
-            <h3>Job Title</h3>
-            <h4>Company</h4>
-            <h5>X to Z</h5>
-          </hgroup>
+          <h3 v-html="other.title"></h3>
         </hgroup>
-        <div class="info">
-          <p>Hello.</p>
+        <div class="info" v-html="other.description">
         </div>
-      </section>
     </div>    
-    
-    <div class="wrap">
-      <h2><span>Others</span></h2>
-
-      <section class="sec">
-        <hgroup>
-          <hgroup>
-            <h3>Job Title</h3>
-            <h4>Company</h4>
-            <h5>X to Z</h5>
-          </hgroup>
-        </hgroup>
-        <div class="info">
-          <p>Hello.</p>
-        </div>
-      </section>
-    </div>    
-    -->
   </main>
 
   <footer>
-    Site was made by me.
+    <p>Site was made by me using:</p>
+    <ul>
+      <li><a href="https://html5boilerplate.com/" target="_blank">HTML5 Boilerplate</a></li>
+      <li><a href="https://vuejs.org/" target="_blank">Vue.js</a></li>
+      <li><a href="https://fonts.google.com/icons" target="_blank">Material Icons</a></li>
+      <li>Native HTML/JS/CSS</li>
+    </ul>
   </footer>
+</div>
+
+<div id="loading" class="loading">
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin:auto;display:block;" width="150px" height="150px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+    <circle cx="50" cy="50" r="26" stroke-width="8" stroke="#1976d2" stroke-dasharray="40.840704496667314 40.840704496667314" fill="none" stroke-linecap="round">
+      <animateTransform attributeName="transform" type="rotate" dur="4.761904761904762s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+    </circle>
+    <circle cx="50" cy="50" r="17" stroke-width="8" stroke="#f14200" stroke-dasharray="26.703537555513243 26.703537555513243" stroke-dashoffset="26.703537555513243" fill="none" stroke-linecap="round">
+      <animateTransform attributeName="transform" type="rotate" dur="4.761904761904762s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;-360 50 50"></animateTransform>
+    </circle>
+  </svg>
 </div>
 
   <script src="js/vendor/modernizr-3.11.2.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/main.js"></script>
-
-  <script>
-    // section on focus
-    const selectSection = () => {
-      // compute what section to highlight
-      const threshold = window.innerHeight*0.25;
-      const fromY = (window.innerHeight/2)-threshold;
-      const toY = (window.innerHeight/2)+threshold;
-
-
-      for(let i=0; i<document.querySelectorAll(".sec").length; i++){
-        const sec = document.querySelectorAll(".sec")[i];
-
-        const b = sec.getBoundingClientRect();
-
-        const top = b.top > fromY && b.top < toY;
-        const middle = fromY > b.top && toY < b.bottom;
-        const bottom = b.bottom > fromY && b.bottom < toY;
-
-        /*
-        if(i==0) {
-          //console.log(i, test1,test2,test3);
-          
-          console.log(i, fromY, toY, b.top, b.bottom);
-
-          // top - inside fromY and toY
-          // console.log(b.top > fromY && b.top < toY)
-          console.log("in top", top);
-          console.log("in mid", middle);
-          console.log("in bottom", bottom);
-        }*/
-
-        if( top || middle || bottom ) {
-          // tood (only one should be selected).
-          sec.classList.add("h");
-        }
-
-        else {
-          sec.classList.remove("h");
-        }
-      }      
-    };
-
-    window.addEventListener("scroll", selectSection);
-
-    // ready
-    window.onload = () => {
-      selectSection();
-    } ;   
-
-    // pull via fetch?
-    const data = {
-      "name" : {
-        "initials" : "PB",
-        "full" : "Paulo Napoleon Sicangco Bongato"
-      },
-      "email" : "paulobongato@gmail.com",
-      "social" : {
-        "facebook" : "paulobongato",
-        "twitter" : "paulobongato",
-        "linkedin" : "paulobongato"
-      },
-      "about" : "Hi! My name is Paulo Bongato (friends call me Popo) and I’m the Product Manager of Xtenit Philippines, Inc., a cloud-based Software-as-a-Service (SaaS) platform dedicated to content publish for email, web and mobile. I lead our team in designing new technology innovations, building client solutions and expanding global reach. I also have decades of experience in front-end web development through technologies such as HTML5, CSS3, JS, UI/UX and more. I’m currently in pursuit of my MBA degree at De La Salle University Manila to expand my business knowledge and to progress my professional growth."
-    };
-    
-    let myVue = Vue.createApp({
-      data() {
-        return data;
-      }
-    }).mount('#me');
-  </script>
-
 
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. 
   <script>
