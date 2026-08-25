@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Baptism of Jesus Quiz - Christian Living, Unit 1</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(135deg, #fdf6ec 0%, #f3e5d0 100%);
+    margin: 0;
+    padding: 16px;
+    color: #3a2a1a;
+  }
+  .app { max-width: 680px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 16px; }
+  header h1 { font-size: 1.5rem; color: #7a1f2b; margin: 8px 0 4px; }
+  header p { margin: 0; color: #6b5a48; font-size: 0.92rem; }
+  .progress-wrap {
+    background: #fff; border-radius: 20px; height: 14px; overflow: hidden;
+    margin: 12px 0; box-shadow: inset 0 0 3px rgba(0,0,0,0.15); display: none;
+  }
+  .progress-bar {
+    height: 100%; background: linear-gradient(90deg, #b08d3e, #7a1f2b);
+    width: 0%; transition: width 0.3s ease;
+  }
+  .card {
+    background: #fff; border-radius: 16px; padding: 24px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  .qnum { font-weight: 700; color: #7a1f2b; font-size: 0.9rem; margin-bottom: 8px; }
+  .qtext { font-size: 1.15rem; line-height: 1.5; margin-bottom: 18px; font-weight: 600; color: #3a2a1a; }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #fffdf8;
+    border: 2px solid #cbb994;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .option:hover:not(:disabled) {
+    background: #f6ecd9;
+    border-color: #b08d3e;
+  }
+  .option.selected {
+    border-color: #b08d3e;
+    background: #f6ecd9;
+  }
+  .option.correct {
+    background: #d9f0d6;
+    border-color: #3f8f3f;
+    color: #205020;
+    font-weight: bold;
+  }
+  .option.incorrect {
+    background: #f8d7d7;
+    border-color: #b03030;
+    color: #6b1c1c;
+    font-weight: bold;
+  }
+  .option:disabled { cursor: not-allowed; }
+  .controls { display: flex; justify-content: flex-end; margin-top: 10px; }
+  button {
+    font-family: inherit; font-size: 1rem; font-weight: 700; padding: 12px 24px;
+    border: none; border-radius: 10px; cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-submit { background: #7a1f2b; color: #fff; }
+  .btn-submit:hover:not(:disabled) { background: #5e1720; }
+  .btn-next { background: #b08d3e; color: #fff; }
+  .btn-next:hover { background: #93732f; }
+  .feedback {
+    margin-top: 16px; padding: 12px 14px; border-radius: 10px;
+    font-weight: 700; font-size: 1.02rem; display: none;
+  }
+  .feedback.correct-fb { background: #d9f0d6; color: #205020; display: block; }
+  .feedback.incorrect-fb { background: #f8d7d7; color: #6b1c1c; display: block; }
+  .explain { margin-top: 8px; font-weight: 400; font-size: 0.95rem; color: #4a3a28; }
+  .explain .cite { font-style: italic; color: #7a1f2b; }
+  .result-card { text-align: center; }
+  .score-big { font-size: 2.6rem; font-weight: 800; color: #7a1f2b; margin: 10px 0; }
+  .score-msg { font-size: 1.05rem; margin-bottom: 20px; color: #444; }
+  .review { text-align: left; margin-top: 20px; }
+  .review h3 { color: #7a1f2b; border-bottom: 2px solid #e0cfa9; padding-bottom: 6px; }
+  .review-item {
+    background: #fdf3e3; border-left: 5px solid #b08d3e; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 12px;
+  }
+  .review-item .rq { font-weight: 700; margin-bottom: 4px; }
+  .review-item .rline { font-size: 0.95rem; margin: 2px 0; }
+  .review-item .wrong-a { color: #b03030; }
+  .review-item .right-a { color: #205020; font-weight: 700; }
+  .no-mistakes {
+    background: #d9f0d6; border-left: 5px solid #3f8f3f; border-radius: 8px;
+    padding: 14px; font-weight: 700; color: #205020; text-align: center;
+  }
+  .btn-restart { background: #7a1f2b; color: #fff; margin-top: 20px; }
+  .btn-restart:hover { background: #5e1720; }
+  .welcome-card { text-align: center; }
+  .welcome-icon { font-size: 3rem; margin-bottom: 8px; }
+  .welcome-card h2 { color: #7a1f2b; margin: 6px 0 14px; font-size: 1.3rem; }
+  .welcome-list { text-align: left; background: #f6ecd9; border-radius: 10px; padding: 16px 20px; margin: 0 0 20px; }
+  .welcome-list li { margin-bottom: 8px; line-height: 1.4; }
+  .btn-start { background: #7a1f2b; color: #fff; font-size: 1.1rem; padding: 14px 32px; }
+  .btn-start:hover { background: #5e1720; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>The Baptism of Jesus</h1>
+    <p>Christian Living, Unit 1 &middot; I Receive Jesus in Baptism &middot; 20 Questions</p>
+  </header>
+
+  <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTIONS_PER_ATTEMPT = 20;
+
+const allQuestions = [
+  { q: "Where did Jesus come from before going to John at the Jordan?",
+    options: ["Nazareth", "Galilee", "Jerusalem", "Bethlehem"], correct: 1,
+    explain: '"Then Jesus came from Galilee to John at the Jordan to be baptized by him." <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "Who baptized Jesus in the Jordan?",
+    options: ["Peter", "John", "James", "Andrew"], correct: 1,
+    explain: 'John the Baptist baptized Jesus at the Jordan River. <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: 'What did John say when Jesus came to be baptized by him?',
+    options: ['"I am not worthy to baptize you."', '"I need to be baptized by you, and yet you are coming to me?"', '"Why have you come here?"', '"You must wait for the Holy Spirit."'], correct: 1,
+    explain: 'John tried to prevent Jesus, saying this. <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "How did Jesus respond to John's hesitation?",
+    options: ['"Allow it now, for thus it is fitting for us to fulfill all righteousness."', '"Do not worry, I will baptize myself."', '"Wait until my Father commands it."', '"I have changed my mind."'], correct: 0,
+    explain: 'Jesus insisted on being baptized to fulfill all righteousness. <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "What happened right after Jesus was baptized?",
+    options: ["The earth shook", "The heavens were opened", "John left immediately", "A rainbow appeared"], correct: 1,
+    explain: '"After Jesus was baptized, he came up from the water and behold, the heavens were opened." <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "What did Jesus see after coming up from the water?",
+    options: ["An angel with a trumpet", "The Spirit of God descending like a dove", "A bright star", "A rainbow"], correct: 1,
+    explain: 'He saw the Spirit of God descending like a dove and coming upon him. <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "What did the voice from heaven say?",
+    options: ['"This is my beloved Son, with whom I am well pleased."', '"This is my servant, obey him."', '"Today salvation has come."', '"This is the Messiah, follow him."'], correct: 0,
+    explain: 'A voice came from the heavens declaring this about Jesus. <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "Which Gospel passage tells the Bible story of the Baptism of Jesus in this lesson?",
+    options: ["Matthew 3:13-17", "Mark 1:9-11", "Luke 3:21-22", "John 1:29-34"], correct: 0,
+    explain: 'The lesson\'s Bible story is taken from Matthew 3:13-17.' },
+  { q: "Why is it fitting, according to Jesus, that He be baptized?",
+    options: ["To fulfill all righteousness", "To please the crowd", "To test John", "To begin his ministry publicly"], correct: 0,
+    explain: 'Jesus said, "thus it is fitting for us to fulfill all righteousness." <span class="cite">(Matthew 3:13-17)</span>' },
+  { q: "What form did the Spirit of God take at Jesus' baptism?",
+    options: ["A dove", "A flame of fire", "A cloud", "A gentle wind"], correct: 0,
+    explain: 'The Spirit of God descended "like a dove" and came upon Jesus. <span class="cite">(Matthew 3:13-17)</span>' },
+
+  { q: "According to the Church teaching, what does Baptism represent for a person in the Church?",
+    options: ["Their confirmation day", "Their birthday in the Church", "Their wedding day", "Their graduation day"], correct: 1,
+    explain: '"Our baptism is our birthday in the Church." <span class="cite">(CCC 1265)</span>' },
+  { q: "Through Baptism, what do we become, besides members of the community that belongs to God?",
+    options: ["Priests", "Sons and daughters of God", "Angels", "Prophets"], correct: 1,
+    explain: 'Baptism makes us sons and daughters of God, the Church teaches. <span class="cite">(CCC 1265)</span>' },
+  { q: 'Besides purifying us from sin, what else does Baptism make the neophyte, according to Church teaching?',
+    options: ["A prophet", 'A "new creature"', "A saint immediately", "A bishop"], correct: 1,
+    explain: 'Baptism "not only purifies from all sins, but also makes the neophyte \'a new creature.\'" <span class="cite">(CCC 1265)</span>' },
+  { q: "According to Church teaching, an adopted son of God becomes a partaker of what?",
+    options: ["Divine nature", "Earthly riches", "Angelic power", "Priestly authority"], correct: 0,
+    explain: 'The baptized becomes "a partaker of the divine nature." <span class="cite">(CCC 1265)</span>' },
+  { q: "According to the Church teaching, Baptism makes us a temple of whom?",
+    options: ["The Holy Spirit", "The angels", "The saints", "The Church hierarchy"], correct: 0,
+    explain: 'The baptized becomes "a temple of the Holy Spirit." <span class="cite">(CCC 1265)</span>' },
+  { q: 'What does the Church teaching say we become alongside becoming "member of Christ"?',
+    options: ["A co-heir with him", "A servant to him", "A stranger to him", "A disciple only"], correct: 0,
+    explain: 'We become "member of Christ and co-heir with him." <span class="cite">(CCC 1265)</span>' },
+  { q: "Where is this Church teaching about Baptism found?",
+    options: ["CCC 1265", "CFC 1622", "Psalm 100", "Ephesians 1:11"], correct: 0,
+    explain: 'This Church teaching on the Baptism of Jesus is from the Catechism of the Catholic Church, CCC 1265.' },
+  { q: "What word is used in Church teaching for a newly baptized person?",
+    options: ["Neophyte", "Catechist", "Apostle", "Deacon"], correct: 0,
+    explain: 'A newly baptized person is called a "neophyte." <span class="cite">(CCC 1265)</span>' },
+
+  { q: "Through Baptism, whom does Jesus become to us, according to the lesson's message?",
+    options: ["Our judge", "Our brother", "Our servant", "Our teacher only"], correct: 1,
+    explain: 'Through Baptism, "we become children of God, and Jesus becomes our brother."' },
+  { q: "Besides cleansing us of original sin, what else does the Sacrament of Baptism do, according to the lesson?",
+    options: ["Makes us members of God's family, the Church", "Gives us wealth", "Removes our need to pray", "Ends all future struggles"], correct: 0,
+    explain: 'Through it, "we become members of God\'s family, the Church."' },
+  { q: "Through Baptism, what privilege do we receive, according to the lesson?",
+    options: ["Ruling over others", "Being with Him in heaven", "Immediate wealth", "Avoiding all illness"], correct: 1,
+    explain: 'We "receive the privilege of being with Him in heaven."' },
+  { q: "How, according to the lesson, do we grow in our faith as children of God?",
+    options: ["By going to church, reading the Bible, and helping others", "By staying home and waiting", "By avoiding other people", "By focusing only on schoolwork"], correct: 0,
+    explain: 'As children of God, "we grow in our faith by going to church, reading the Bible, and helping others."' },
+  { q: "As children of God, what can we be to others, according to the lesson?",
+    options: ["A light, showing God's love and kindness", "A judge of their actions", "A silent observer", "A stranger"], correct: 0,
+    explain: 'We "can also be a light to others, showing God\'s love and kindness to everyone around us."' },
+  { q: "What made God the Father happy, as described in the lesson?",
+    options: ["Jesus doing many miracles publicly", "Jesus being eager to do the work the Father gave Him", "Jesus building the Temple", "Jesus staying in Nazareth"], correct: 1,
+    explain: 'Jesus made His Father happy "when He showed that He was eager to do the work that He gave Him."' },
+  { q: "According to the lesson, when do we make God happy as His children?",
+    options: ["When we do our work as His children", "When we ignore our family", "When we compete with others", "When we hide our faith"], correct: 0,
+    explain: '"We make God happy when we do our work as His children," such as caring for ourselves and others.' },
+  { q: "What do the words spoken by God at Jesus' baptism remind us about ourselves, according to the lesson?",
+    options: ["That we must earn God's love", "That we are loved and are special to God", "That we are unimportant", "That only priests are loved by God"], correct: 1,
+    explain: 'The words of God "remind us... that just like Jesus, we are loved and are special to God."' },
+  { q: "Why does God make us His children, according to the lesson?",
+    options: ["Because He loves us", "Because we are perfect", "Because of our achievements", "Because of tradition only"], correct: 0,
+    explain: '"God makes us His children because He loves us."' },
+
+  { q: 'In the "Faith" reflection of Lesson 4, what does the Sacrament of Baptism make the person, according to the statement?',
+    options: ["A child of God, a member of His family, and Jesus becomes a brother", "A stranger to the Church", "A temporary member of the community", "A servant without inheritance"], correct: 0,
+    explain: '"I believe that the Sacrament of Baptism makes me a child of God, a member of His family, and Jesus becomes my brother."' },
+  { q: 'In the "Hope" reflection of Lesson 4, what does the person pray for?',
+    options: ["To always be God's loving and obedient child", "Wealth and fame", "To avoid going to church", "To never pray again"], correct: 0,
+    explain: '"I pray that I will always be His loving and obedient child so that I can make Him happy."' },
+  { q: 'In the "Love" reflection of Lesson 4, how does the person promise to show they are a child of God?',
+    options: ["By loving God above all and loving others as oneself", "By staying silent about their faith", "By avoiding others", "By only loving family members"], correct: 0,
+    explain: '"I promise to love Him above all and to love others as I love myself."' },
+  { q: 'What three virtues are reflected on in the "One in..." sections of the lesson?',
+    options: ["Faith, Hope, and Love", "Wisdom, Courage, and Patience", "Kindness, Honesty, and Obedience", "Prayer, Fasting, and Almsgiving"], correct: 0,
+    explain: 'Each lesson closes with reflections under Faith, Hope, and Love.' },
+
+  { q: 'Lesson 5\'s opening Bible verse says, "Know that the Lord is God, he made us, we belong to him, we are his people, ___."',
+    options: ["the flock he shepherds", "the temple he builds", "the light he shines", "the seed he plants"], correct: 0,
+    explain: '"...we are his people, the flock he shepherds." <span class="cite">(Psalm)</span>' },
+  { q: "What is the title of Lesson 5?",
+    options: ["I Belong to Jesus (Seal)", "The Baptism of Jesus", "I Receive the Holy Spirit", "The Temple of God"], correct: 0,
+    explain: "Lesson 5 is titled \"I Belong to Jesus (Seal).\"" },
+  { q: "Which Old Testament book is the source of Lesson 5's opening verse?",
+    options: ["Psalms", "Proverbs", "Isaiah", "Genesis"], correct: 0,
+    explain: 'The opening verse of Lesson 5 is taken from the Book of Psalms.' },
+
+  { q: 'According to the Bible story "Inheritance Through the Spirit," with what were believers "sealed" after hearing and believing the gospel?',
+    options: ["The promised Holy Spirit", "A golden ring", "Holy water", "A written covenant"], correct: 0,
+    explain: '"...you also, who have heard the word of truth... and have believed in him, were sealed with the promised Holy Spirit." <span class="cite">(Ephesians 1:11-14)</span>' },
+  { q: "The sealing with the Holy Spirit is described as what, according to this passage?",
+    options: ["The first installment of our inheritance toward redemption", "A temporary blessing", "A reward for good deeds", "A sign for others only"], correct: 0,
+    explain: 'The Spirit "is the first installment of our inheritance toward redemption as God\'s possession." <span class="cite">(Ephesians 1:11-14)</span>' },
+  { q: "What is the purpose of our being sealed with the Spirit, according to the passage?",
+    options: ["To the praise of his glory", "For our own fame", "To impress others", "To gain earthly riches"], correct: 0,
+    explain: 'It is "to the praise of his glory." <span class="cite">(Ephesians 1:11-14)</span>' },
+  { q: 'According to the passage, believers heard "the word of truth," which is called what?',
+    options: ["The gospel of your salvation", "The law of Moses", "A parable", "A prophecy"], correct: 0,
+    explain: '"...the word of truth, the gospel of your salvation..." <span class="cite">(Ephesians 1:11-14)</span>' },
+  { q: 'The Bible story titled "Inheritance Through the Spirit" is taken from which book?',
+    options: ["Ephesians", "Romans", "Galatians", "Colossians"], correct: 0,
+    explain: 'This Bible story is from Ephesians 1:11-14.' },
+  { q: 'According to the passage, in Him we were also chosen and destined according to what?',
+    options: ["The purpose of the One who accomplishes all things according to his will", "Our own choices", "Random chance", "The decisions of the apostles"], correct: 0,
+    explain: '"...destined in accord with the purpose of the One who accomplishes all things according to the intention of his will." <span class="cite">(Ephesians 1:11-14)</span>' },
+  { q: 'What is the goal mentioned for those "who first hoped in Christ," according to the passage?',
+    options: ["That we might exist for the praise of his glory", "That we might become rich", "That we might rule others", "That we might be famous"], correct: 0,
+    explain: '"...so that we might exist for the praise of his glory, we who first hoped in Christ." <span class="cite">(Ephesians 1:11-14)</span>' },
+
+  { q: "According to the Church teaching in Lesson 5, what does the Sacrament of Baptism imprint on a person?",
+    options: ['A permanent sign or seal called "character"', "A temporary blessing", "A written certificate only", "A special title"], correct: 0,
+    explain: '"The Sacrament of Baptism imprints a permanent sign or seal called \'character.\'" <span class="cite">(CFC 1622-1623)</span>' },
+  { q: 'What does this "character" represent, according to Church teaching?',
+    options: ["The permanent mark of Christ in us", "A reward for good behavior", "A sign only visible to priests", "A temporary spiritual state"], correct: 0,
+    explain: '"This character is the permanent mark of Christ in us." <span class="cite">(CFC 1622-1623)</span>' },
+  { q: "Why is Baptism given only once, according to Church teaching?",
+    options: ["Because of the permanent character it imprints", "Because it is expensive", "Because of Church rules only", "Because it takes too long"], correct: 0,
+    explain: 'The permanent character "is the very reason why Baptism is given only once." <span class="cite">(CFC 1622-1623)</span>' },
+  { q: "Can the sacramental character be erased by personal sin, according to Church teaching?",
+    options: ["No, it remains permanent even if affected by sin", "Yes, it disappears with any sin", "Yes, but only for serious sins", "It depends on the priest's decision"], correct: 0,
+    explain: '"This sacramental character may be affected by personal sin but it remains permanent." <span class="cite">(CFC 1622-1623)</span>' },
+  { q: "Where is this teaching on the baptismal character found?",
+    options: ["CFC 1622-1623", "CCC 1265", "Psalm 100", "Ephesians 1:11"], correct: 0,
+    explain: 'This teaching on the baptismal character is from the Catechism for Filipino Catholics, CFC 1622-1623.' },
+  { q: "What other name is given to the baptismal character in the lesson?",
+    options: ["Baptismal seal", "Holy oil", "Confirmation mark", "Priestly blessing"], correct: 0,
+    explain: 'The lesson also calls this permanent character the "baptismal seal."' },
+
+  { q: "According to Lesson 5's message, what do all of God's children have?",
+    options: ["A special talent", "The same exact talent", "No talents at all", "Only musical talent"], correct: 0,
+    explain: '"All of God\'s children have a special talent."' },
+  { q: "Which of these talents is mentioned as an example in the lesson?",
+    options: ["Playing the piano", "Cooking gourmet meals", "Building houses", "Driving cars"], correct: 0,
+    explain: 'The lesson mentions playing the piano, painting, gymnastics, and dancing as examples of talents.' },
+  { q: "What do the talents of God's children show, according to the lesson?",
+    options: ["That God loves us", "That some children are better than others", "That talents come from hard work alone", "That talents are unimportant"], correct: 0,
+    explain: '"These talents show that God loves us," and all talents come from God.' },
+  { q: "What does the baptismal seal or character tell other people, according to the lesson?",
+    options: ["That we belong to Christ", "That we are perfect", "That we are wealthy", "That we are important in society"], correct: 0,
+    explain: 'The permanent mark "tells people that we belong to Christ because He saved us."' },
+  { q: "Because we belong to Christ through the baptismal seal, what do we also do, according to the lesson?",
+    options: ["Follow His words and actions", "Ignore His teachings", "Follow only our own wishes", "Wait for further instructions"], correct: 0,
+    explain: '"Since we belong to Him, we also follow His words and actions."' },
+  { q: "What does the baptismal character make us part of, according to the lesson?",
+    options: ["God's family, the Church", "A secret society", "A separate nation", "An exclusive club"], correct: 0,
+    explain: 'The baptismal character "makes us part of God\'s family, the Church."' },
+  { q: "As members of the Church, what special blessing do we receive, according to the lesson?",
+    options: ["Receiving the other sacraments, such as Holy Communion", "Automatic wealth", "Freedom from all rules", "Exemption from prayer"], correct: 0,
+    explain: 'Being members of the Church gives us "the special blessing of receiving the other sacraments," like Holy Communion.' },
+  { q: "Which of these is listed as a duty of Church members in the lesson?",
+    options: ["Joining in church activities like prayers and Mass", "Avoiding community events", "Skipping celebrations", "Ignoring other members"], correct: 0,
+    explain: 'Duties include "happily joining in church activities... and most especially the celebration of the Mass."' },
+  { q: "Doing these duties helps us do what, according to the lesson?",
+    options: ["Be closer to Jesus and avoid sin", "Become famous", "Earn money", "Avoid responsibilities"], correct: 0,
+    explain: '"Doing these duties helps us be closer to Jesus, avoid sin, and do loving acts toward those who need help."' },
+  { q: "According to the lesson, can the baptismal character be erased over time or by mistakes?",
+    options: ["No, it cannot be erased because it is permanent", "Yes, it fades over time", "Yes, if you commit a mistake", "It depends on your age"], correct: 0,
+    explain: 'The lesson states the baptismal seal or character "cannot be erased because it is permanent."' },
+
+  { q: 'In the "Faith" reflection of Lesson 5, what does the Sacrament of Baptism imprint, according to the statement?',
+    options: ["A permanent mark or seal that tells I belong to Christ", "A temporary feeling of joy", "A title of honor", "A written record only"], correct: 0,
+    explain: '"I believe that the Sacrament of Baptism imprints a permanent mark or seal in me that tells that I belong to Christ."' },
+  { q: 'In the "Hope" reflection of Lesson 5, what does the person pray for?',
+    options: ["The blessing to show others that I belong to Jesus", "Wealth and success", "To avoid difficulties", "To be famous among friends"], correct: 0,
+    explain: '"I pray for the blessing to show others that I belong to Jesus, and I promise to pray always."' },
+  { q: 'In the "Love" reflection of Lesson 5, how will the person show they belong to Jesus?',
+    options: ["By loving others, like what He did", "By staying away from others", "By focusing only on rules", "By seeking praise from others"], correct: 0,
+    explain: '"I will show that I belong to Jesus by loving others, like what He did."' }
+];
+
+let quiz = [];
+let current = 0;
+let score = 0;
+const userAnswers = [];
+let selectedOption = null;
+
+const card = document.getElementById("quizCard");
+const progressBar = document.getElementById("progressBar");
+const progressWrap = document.getElementById("progressWrap");
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildQuiz() {
+  const picked = shuffle(allQuestions).slice(0, QUESTIONS_PER_ATTEMPT);
+  return picked.map(orig => {
+    const optionIndices = orig.options.map((opt, idx) => ({ opt, idx }));
+    const shuffledOptions = shuffle(optionIndices);
+    const newCorrectIndex = shuffledOptions.findIndex(o => o.idx === orig.correct);
+    return {
+      q: orig.q,
+      options: shuffledOptions.map(o => o.opt),
+      correct: newCorrectIndex,
+      explain: orig.explain
+    };
+  });
+}
+
+function renderWelcome() {
+  progressWrap.style.display = "none";
+  card.innerHTML = `
+    <div class="welcome-card">
+      <div class="welcome-icon">🕊️</div>
+      <h2>Ready to test what you know about the Baptism of Jesus?</h2>
+      <ul class="welcome-list">
+        <li><strong>20 questions</strong>, drawn at random from a larger pool covering the Bible story of Jesus' Baptism, the Church teachings on Baptism, and Lesson 5 on the baptismal seal.</li>
+        <li>Multiple choice, A to D. The set of questions, their order, and the choices all change every attempt — no two attempts are the same.</li>
+        <li>Choose an answer, then click <strong>Submit</strong> to see if you got it right, along with an explanation.</li>
+        <li>Click <strong>Next Question</strong> to continue after each answer.</li>
+        <li>At the end, you'll see your score and a review of any questions you missed.</li>
+      </ul>
+      <button class="btn-start" id="startBtn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById("startBtn").addEventListener("click", startQuiz);
+}
+
+function startQuiz() {
+  progressWrap.style.display = "";
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  userAnswers.length = 0;
+  selectedOption = null;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedOption = null;
+  const item = quiz[current];
+  const letters = ["A", "B", "C", "D"];
+  progressBar.style.width = `${(current / quiz.length) * 100}%`;
+
+  let html = `
+    <div class="qnum">Question ${current + 1} of ${quiz.length}</div>
+    <div class="qtext">${item.q}</div>
+  `;
+
+  item.options.forEach((opt, i) => {
+    html += `<button class="option" data-index="${i}" onclick="selectOption(${i})">${letters[i]}. ${opt}</button>`;
+  });
+
+  html += `
+    <div class="controls">
+      <button class="btn-submit" id="submitBtn" disabled onclick="submitAnswer()">Submit</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  `;
+
+  card.innerHTML = html;
+}
+
+function selectOption(i) {
+  selectedOption = i;
+  document.querySelectorAll(".option").forEach(btn => btn.classList.remove("selected"));
+  document.querySelectorAll(".option")[i].classList.add("selected");
+  document.getElementById("submitBtn").disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedOption === null) return;
+  const item = quiz[current];
+  const letters = ["A", "B", "C", "D"];
+  const options = document.querySelectorAll(".option");
+  const isCorrect = selectedOption === item.correct;
+
+  options.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === item.correct) btn.classList.add("correct");
+    if (i === selectedOption && !isCorrect) btn.classList.add("incorrect");
+  });
+
+  document.getElementById("submitBtn").disabled = true;
+
+  const fb = document.getElementById("feedback");
+  fb.classList.add(isCorrect ? "correct-fb" : "incorrect-fb");
+  fb.innerHTML = (isCorrect
+    ? "Correct! Great job."
+    : `Not quite. The correct answer is ${letters[item.correct]}. ${item.options[item.correct]}`)
+    + `<div class="explain">${item.explain}</div>`;
+
+  if (isCorrect) score++;
+  userAnswers.push({
+    q: item.q,
+    options: item.options,
+    userIndex: selectedOption,
+    correctIndex: item.correct,
+    isCorrect,
+    explain: item.explain
+  });
+
+  const controls = document.querySelector(".controls");
+  const nextLabel = current + 1 === quiz.length ? "See Results" : "Next Question";
+  controls.innerHTML = `<button class="btn-next" id="nextBtn">${nextLabel}</button>`;
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    current++;
+    if (current < quiz.length) {
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  });
+}
+
+function renderResults() {
+  progressBar.style.width = "100%";
+  const total = quiz.length;
+  const pct = Math.round((score / total) * 100);
+  const letters = ["A", "B", "C", "D"];
+  let msg = "Keep reading the lesson again — you'll get there!";
+  if (pct === 100) msg = "Perfect score! You know the Baptism of Jesus well!";
+  else if (pct >= 80) msg = "Great job! You know this lesson well.";
+  else if (pct >= 60) msg = "Good effort! Review the ones you missed.";
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+  card.innerHTML = `
+    <div class="result-card">
+      <div class="qnum">Quiz Complete</div>
+      <div class="score-big">${score} / ${total}</div>
+      <div class="score-msg">${pct}% &mdash; ${msg}</div>
+      <div class="review">
+        <h3>Review</h3>
+        ${mistakes.length === 0
+          ? `<div class="no-mistakes">You got every question right. Amazing!</div>`
+          : mistakes.map(m => `
+            <div class="review-item">
+              <div class="rq">${m.q}</div>
+              <div class="rline wrong-a">Your answer: ${letters[m.userIndex]}. ${m.options[m.userIndex]}</div>
+              <div class="rline right-a">Correct answer: ${letters[m.correctIndex]}. ${m.options[m.correctIndex]}</div>
+              <div class="rline explain">${m.explain}</div>
+            </div>
+          `).join("")
+        }
+      </div>
+      <button class="btn-restart" id="restartBtn">Try Again</button>
+    </div>
+  `;
+
+  document.getElementById("restartBtn").addEventListener("click", startQuiz);
+}
+
+renderWelcome();
+</script>
+</body>
+</html>
