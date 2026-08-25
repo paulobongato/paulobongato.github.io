@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsasanay sa Pangngalan - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 16px;
+    color: #2c3e50;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.5rem;
+    color: #2b579a;
+    margin-bottom: 4px;
+  }
+  header p {
+    color: #607d8b;
+    margin: 0;
+  }
+  #progress {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #2b579a;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #eef3fb;
+    border: 2px solid #dbe6f5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .choice:hover:not(:disabled) {
+    background: #dde9fa;
+  }
+  .choice.selected {
+    border-color: #2b579a;
+    background: #d7e6fb;
+  }
+  .choice:disabled {
+    cursor: default;
+  }
+  .choice.correct {
+    background: #d5f5df;
+    border-color: #34a853;
+    color: #1b6b33;
+    font-weight: bold;
+  }
+  .choice.incorrect {
+    background: #fbdede;
+    border-color: #e74c3c;
+    color: #a02c1f;
+    font-weight: bold;
+  }
+  .submit-btn, .next-btn, .restart-btn {
+    display: inline-block;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .submit-btn:disabled {
+    background: #a9bcd6;
+    cursor: not-allowed;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #d5f5df;
+    color: #1b6b33;
+  }
+  .feedback.incorrect-fb {
+    background: #fbdede;
+    color: #a02c1f;
+  }
+  .nav-row {
+    text-align: right;
+  }
+  #resultsScreen, #quizScreen, #startScreen {
+    display: none;
+  }
+  #startScreen { display: block; }
+  .score-big {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    color: #2b579a;
+    margin: 6px 0 4px;
+  }
+  .score-sub {
+    text-align: center;
+    color: #607d8b;
+    margin-bottom: 18px;
+  }
+  .review-item {
+    border-left: 5px solid #e74c3c;
+    background: #fff6f6;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .review-item.correctone {
+    border-left-color: #34a853;
+    background: #f5fdf7;
+  }
+  .review-item p { margin: 4px 0; }
+  .review-q { font-weight: 700; }
+  .review-your { color: #a02c1f; }
+  .review-correct { color: #1b6b33; }
+  .start-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .center { text-align: center; }
+  .topics-list {
+    text-align: left;
+    max-width: 480px;
+    margin: 10px auto 0;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Pagsasanay sa Pangngalan</h1>
+    <p>Ikaapat na Baitang (Grade 4) &mdash; Filipino</p>
+  </header>
+
+  <div id="startScreen" class="card center">
+    <p style="font-size:1.05rem; line-height:1.6;">
+      Sasagutan mo ang <strong>20 tanong</strong> na random na pipiliin mula sa
+      <strong>100 posibleng tanong</strong> tungkol sa mga sumusunod na paksa:
+    </p>
+    <p class="topics-list">
+      1. Kategorya ng Pangngalan (Pantangi at Pambalana) &mdash; balik-aral<br>
+      2. Uri ng Pangngalang Pambalana (Kongkreto/Tahas, Di-kongkreto/Basal, Lansakan) &mdash; balik-aral<br>
+      3. Kayarian ng Pangngalan (Payak at Maylapi: Unlapi, Gitlapi, Hulapi) &mdash; bagong aralin
+    </p>
+    <p style="font-size:1.05rem; line-height:1.6;">
+      Random ang pagkakasunod-sunod ng mga tanong at ang mga pipiliing tanong sa bawat pagsusulit.
+    </p>
+    <button class="start-btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <div id="quizScreen">
+    <div id="progress"></div>
+    <div class="card">
+      <div class="question-text" id="questionText"></div>
+      <div id="choicesArea"></div>
+      <div class="feedback" id="feedbackBox"></div>
+      <div class="nav-row">
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()" disabled>Isumite</button>
+        <button class="next-btn" id="nextBtn" style="display:none;" onclick="nextQuestion()">Susunod</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" class="card">
+    <h2 class="center" style="color:#2b579a;">Resulta ng Pagsusulit</h2>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-sub" id="scoreSub"></div>
+    <div id="reviewList"></div>
+    <div class="center">
+      <button class="restart-btn" onclick="location.reload()">Ulitin ang Pagsusulit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const allQuestions = [
+  {
+    "q": "Ang salitang \"Jose Rizal\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Andres Bonifacio\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Pilipinas\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Maynila\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Boracay\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Cebu\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Davao\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Batangas\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Quezon City\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"Bataan\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"bata\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"bahay\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"paaralan\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"guro\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"aso\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"pusa\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"ilog\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"bundok\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"lungsod\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"bansa\" ay pangngalang ___.",
+    "choices": [
+      "Pantangi",
+      "Pambalana",
+      "Pang-uri",
+      "Pandiwa"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PANTANGI?",
+    "choices": [
+      "Jose Rizal",
+      "bata",
+      "bahay",
+      "guro"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PANTANGI?",
+    "choices": [
+      "Pilipinas",
+      "aso",
+      "pusa",
+      "ilog"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PANTANGI?",
+    "choices": [
+      "Boracay",
+      "bundok",
+      "lungsod",
+      "bansa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PANTANGI?",
+    "choices": [
+      "Andres Bonifacio",
+      "buwan",
+      "araw",
+      "pista"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PANTANGI?",
+    "choices": [
+      "Quezon City",
+      "mangga",
+      "saging",
+      "sapatos"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PANTANGI?",
+    "choices": [
+      "Corazon Aquino",
+      "damit",
+      "kotse",
+      "kalabaw"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PAMBALANA?",
+    "choices": [
+      "manok",
+      "Batangas",
+      "Bataan",
+      "Palawan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PAMBALANA?",
+    "choices": [
+      "silya",
+      "Baguio City",
+      "Ilocos Norte",
+      "Bulacan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PAMBALANA?",
+    "choices": [
+      "mesa",
+      "Mindanao",
+      "Maria Clara",
+      "Emilio Aguinaldo"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PAMBALANA?",
+    "choices": [
+      "aklat",
+      "Enero",
+      "Lunes",
+      "Disyembre"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PAMBALANA?",
+    "choices": [
+      "lapis",
+      "Pasko",
+      "La Salle Green Hills",
+      "Sampaguita Street"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang PANGNGALANG PAMBALANA?",
+    "choices": [
+      "kapatid",
+      "Miyerkules",
+      "Setyembre",
+      "Bagong Taon"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin sa mga sumusunod ang HINDI pangngalan?",
+    "choices": [
+      "bahay",
+      "maganda",
+      "guro",
+      "bata"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Alin sa mga sumusunod ang HINDI pangngalan?",
+    "choices": [
+      "kumain",
+      "aklat",
+      "paaralan",
+      "ilog"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"papel\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"gulay\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"bintana\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"mesa\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"silya\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"aklat\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"lapis\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ang salitang \"pag-ibig\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"lungkot\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"saya\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"galit\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"takot\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"kagandahan\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"katapatan\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ang salitang \"pamilya\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ang salitang \"kawan ng isda\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ang salitang \"bungkos ng bulaklak\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ang salitang \"hukbo\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ang salitang \"pulutong ng tao\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ang salitang \"kumpol ng ubas\" ay HALIMBAWA ng pangngalang ___.",
+    "choices": [
+      "Kongkreto/Tahas",
+      "Di-kongkreto/Basal",
+      "Lansakan",
+      "Pantangi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang KONGKRETO/TAHAS?",
+    "choices": [
+      "gulay",
+      "pag-ibig",
+      "pamilya",
+      "lungkot"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang KONGKRETO/TAHAS?",
+    "choices": [
+      "bintana",
+      "saya",
+      "hukbo",
+      "takot"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang KONGKRETO/TAHAS?",
+    "choices": [
+      "sapatos",
+      "kagandahan",
+      "koponan",
+      "katotohanan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang KONGKRETO/TAHAS?",
+    "choices": [
+      "bulaklak",
+      "pangarap",
+      "angkan",
+      "pag-asa"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang KONGKRETO/TAHAS?",
+    "choices": [
+      "bato",
+      "kabaitan",
+      "orkestra",
+      "tiwala"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang DI-KONGKRETO/BASAL?",
+    "choices": [
+      "papel",
+      "pamilya",
+      "pag-ibig",
+      "kotse"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang DI-KONGKRETO/BASAL?",
+    "choices": [
+      "ilog",
+      "kawan ng isda",
+      "kalayaan",
+      "mesa"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang DI-KONGKRETO/BASAL?",
+    "choices": [
+      "prutas",
+      "hukbo",
+      "katapatan",
+      "tela"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang DI-KONGKRETO/BASAL?",
+    "choices": [
+      "bundok",
+      "pangkat",
+      "kasiyahan",
+      "aklat"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang LANSAKAN?",
+    "choices": [
+      "gulay",
+      "lungkot",
+      "pamilya",
+      "sapatos"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang LANSAKAN?",
+    "choices": [
+      "silya",
+      "takot",
+      "kawan ng isda",
+      "papel"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang LANSAKAN?",
+    "choices": [
+      "bola",
+      "katotohanan",
+      "bungkos ng bulaklak",
+      "bahay"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang LANSAKAN?",
+    "choices": [
+      "tubig",
+      "tiwala",
+      "koponan",
+      "kahoy"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"bahay\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"mesa\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"silya\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"aklat\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"lapis\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"kaklase\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"kababata\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"kaibigan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"kapitbahay\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"katrabaho\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"sinaing\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"dinuguan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"ginisa\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"kinilaw\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"ginataan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"palayan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"sakahan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"aklatan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"halamanan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Ano ang KAYARIAN ng pangngalang \"gulayan\"?",
+    "choices": [
+      "Payak",
+      "Maylapi (Unlapi)",
+      "Maylapi (Gitlapi)",
+      "Maylapi (Hulapi)"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang PAYAK?",
+    "choices": [
+      "bahay",
+      "kaklase",
+      "sinaing",
+      "palayan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang PAYAK?",
+    "choices": [
+      "mesa",
+      "kababata",
+      "dinuguan",
+      "sakahan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang PAYAK?",
+    "choices": [
+      "ilog",
+      "kaibigan",
+      "ginisa",
+      "aklatan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang PAYAK?",
+    "choices": [
+      "guro",
+      "tagaluto",
+      "sinigang",
+      "halamanan"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang MAYLAPI?",
+    "choices": [
+      "bata",
+      "aso",
+      "pusa",
+      "kapitbahay"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang MAYLAPI?",
+    "choices": [
+      "mangga",
+      "saging",
+      "ulan",
+      "tinapay"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang MAYLAPI?",
+    "choices": [
+      "buwan",
+      "araw",
+      "tubig",
+      "gulayan"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Alin ang HALIMBAWA ng pangngalang MAYLAPI?",
+    "choices": [
+      "hangin",
+      "apoy",
+      "bulaklak",
+      "tanggapan"
+    ],
+    "answer": 3
+  },
+  {
+    "q": "Anong panlapi ang ginamit sa salitang \"kaklase\"?",
+    "choices": [
+      "Unlapi",
+      "Gitlapi",
+      "Hulapi",
+      "Walang Panlapi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Anong panlapi ang ginamit sa salitang \"sinaing\"?",
+    "choices": [
+      "Unlapi",
+      "Gitlapi",
+      "Hulapi",
+      "Walang Panlapi"
+    ],
+    "answer": 1
+  },
+  {
+    "q": "Anong panlapi ang ginamit sa salitang \"palayan\"?",
+    "choices": [
+      "Unlapi",
+      "Gitlapi",
+      "Hulapi",
+      "Walang Panlapi"
+    ],
+    "answer": 2
+  },
+  {
+    "q": "Anong panlapi ang ginamit sa salitang \"pagbasa\"?",
+    "choices": [
+      "Unlapi",
+      "Gitlapi",
+      "Hulapi",
+      "Walang Panlapi"
+    ],
+    "answer": 0
+  },
+  {
+    "q": "Anong panlapi ang ginamit sa salitang \"tinola\"?",
+    "choices": [
+      "Unlapi",
+      "Gitlapi",
+      "Hulapi",
+      "Walang Panlapi"
+    ],
+    "answer": 1
+  }
+];
+
+const QUESTIONS_PER_ATTEMPT = 20;
+
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let selectedChoice = null;
+let answered = false;
+let results = []; // {q, choices, correctIdx, userIdx, isCorrect}
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function shuffleQuestionChoices(question) {
+  const choiceObjs = question.choices.map((text, idx) => ({ text, isCorrect: idx === question.answer }));
+  const shuffled = shuffle(choiceObjs);
+  return {
+    q: question.q,
+    choices: shuffled.map(c => c.text),
+    answer: shuffled.findIndex(c => c.isCorrect)
+  };
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(allQuestions).slice(0, QUESTIONS_PER_ATTEMPT).map(shuffleQuestionChoices);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedChoice = null;
+  answered = false;
+  const question = quizQuestions[currentIndex];
+  document.getElementById('progress').textContent = `Tanong ${currentIndex + 1} sa ${quizQuestions.length}`;
+  document.getElementById('questionText').textContent = question.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const choicesArea = document.getElementById('choicesArea');
+  choicesArea.innerHTML = '';
+  question.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = `${letters[idx]}. ${choice}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = `choice-${idx}`;
+    choicesArea.appendChild(btn);
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.className = 'feedback';
+  feedbackBox.textContent = '';
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectChoice(idx) {
+  if (answered) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answered) return;
+  answered = true;
+  const question = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === question.answer;
+  if (isCorrect) score++;
+
+  results.push({
+    q: question.q,
+    choices: question.choices,
+    correctIdx: question.answer,
+    userIdx: selectedChoice,
+    isCorrect
+  });
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === question.answer) btn.classList.add('correct');
+    if (i === selectedChoice && !isCorrect) btn.classList.add('incorrect');
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.classList.add('show');
+  if (isCorrect) {
+    feedbackBox.classList.add('correct-fb');
+    feedbackBox.textContent = 'Tama! Mahusay!';
+  } else {
+    feedbackBox.classList.add('incorrect-fb');
+    feedbackBox.textContent = `Mali. Ang tamang sagot ay ${letters[question.answer]}. ${question.choices[question.answer]}.`;
+  }
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < quizQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+
+  document.getElementById('scoreBig').textContent = `${score} / ${quizQuestions.length}`;
+  const pct = Math.round((score / quizQuestions.length) * 100);
+  document.getElementById('scoreSub').textContent = `Iskor: ${pct}%`;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+
+  const wrongOnes = results.filter(r => !r.isCorrect);
+  const letters = ['A', 'B', 'C', 'D'];
+
+  if (wrongOnes.length === 0) {
+    const div = document.createElement('div');
+    div.className = 'review-item correctone';
+    div.innerHTML = `<p style="text-align:center; font-size:1.05rem;">Perpekto! Nasagot mo nang tama ang lahat ng tanong.</p>`;
+    reviewList.appendChild(div);
+  } else {
+    const heading = document.createElement('h3');
+    heading.style.color = '#2b579a';
+    heading.textContent = 'Mga Tanong na Mali ang Sagot:';
+    reviewList.appendChild(heading);
+
+    wrongOnes.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <p class="review-q">${r.q}</p>
+        <p class="review-your">Ang sagot mo: ${letters[r.userIdx]}. ${r.choices[r.userIdx]}</p>
+        <p class="review-correct">Tamang sagot: ${letters[r.correctIdx]}. ${r.choices[r.correctIdx]}</p>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

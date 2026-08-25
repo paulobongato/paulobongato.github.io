@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canva Quiz - Elementary Math Multiplication</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            canva: {
+              purple: '#7d2ae8',
+              teal: '#00c4cc',
+              pink: '#ff66c4',
+              violet: '#5e17eb',
+              bg: '#f4f5f8',
+              card: '#ffffff',
+              dark: '#1e1b2e'
+            }
+          },
+          boxShadow: {
+            'canva': '0 10px 30px -5px rgba(94, 23, 235, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05)',
+            'canva-lg': '0 20px 40px -10px rgba(125, 42, 232, 0.22)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f4ff 0%, #fef0f7 50%, #eefbfb 100%);
+      min-height: 100vh;
+    }
+    .canva-gradient-text {
+      background: linear-gradient(90deg, #7d2ae8 0%, #00c4cc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .canva-btn-gradient {
+      background: linear-gradient(135deg, #7d2ae8 0%, #5e17eb 100%);
+    }
+    .canva-btn-gradient:hover {
+      background: linear-gradient(135deg, #6c22d4 0%, #4f11cc 100%);
+    }
+    .option-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-card:hover:not(.disabled) {
+      transform: translateY(-2px);
+      border-color: #7d2ae8;
+      background-color: #f8f5ff;
+    }
+    .pulse-subtle {
+      animation: pulseSubtle 3s infinite;
+    }
+    @keyframes pulseSubtle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-800 flex flex-col justify-between p-3 sm:p-6">
+
+  <!-- Header Banner -->
+  <header class="max-w-4xl mx-auto w-full mb-6">
+    <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-canva border border-white/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl canva-btn-gradient flex items-center justify-center text-white shadow-md text-xl font-black">
+          <i class="fa-solid fa-calculator"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-canva-purple/10 text-canva-purple text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Video Lesson Edition</span>
+            <span class="bg-canva-teal/15 text-teal-700 text-xs font-bold px-2.5 py-0.5 rounded-full">25 Questions</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Multiplication & Word Problems <span class="canva-gradient-text">Mastery Quiz</span></h1>
+        </div>
+      </div>
+      <button id="restartHeaderBtn" onclick="initQuiz()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+        <i class="fa-solid fa-shuffle text-canva-purple"></i> Reshuffle & Restart
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col justify-center">
+
+    <!-- START SCREEN -->
+    <div id="startScreen" class="bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100 text-center relative overflow-hidden">
+      <!-- Decorative background circles -->
+      <div class="absolute -top-12 -right-12 w-40 h-40 bg-canva-purple/10 rounded-full blur-2xl"></div>
+      <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-canva-teal/10 rounded-full blur-2xl"></div>
+
+      <div class="relative z-10">
+        <span class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-canva-purple to-canva-pink rounded-3xl text-white text-3xl mb-6 shadow-canva-lg pulse-subtle">
+          <i class="fa-solid fa-square-root-variable"></i>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Elementary Math Multiplication Challenge</h2>
+        <p class="text-slate-600 max-w-lg mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+          Test your skills in 3 to 4-digit by 1-digit multiplication, 2 to 3-digit by 2-digit multiplication, estimation, and solving multi-step word problems!
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mb-8 text-left">
+          <div class="bg-purple-50 p-3 rounded-2xl border border-purple-100">
+            <div class="text-purple-600 font-bold text-xs">TOPIC 1</div>
+            <div class="text-slate-800 font-semibold text-xs sm:text-sm">3-4 Digit × 1 Digit</div>
+          </div>
+          <div class="bg-teal-50 p-3 rounded-2xl border border-teal-100">
+            <div class="text-teal-600 font-bold text-xs">TOPIC 2</div>
+            <div class="text-slate-800 font-semibold text-xs sm:text-sm">2-3 Digit × 2 Digit</div>
+          </div>
+          <div class="bg-pink-50 p-3 rounded-2xl border border-pink-100">
+            <div class="text-pink-600 font-bold text-xs">TOPIC 3</div>
+            <div class="text-slate-800 font-semibold text-xs sm:text-sm">Estimating Products</div>
+          </div>
+          <div class="bg-amber-50 p-3 rounded-2xl border border-amber-100">
+            <div class="text-amber-600 font-bold text-xs">TOPIC 4</div>
+            <div class="text-slate-800 font-semibold text-xs sm:text-sm">Multi-step Word Problems</div>
+          </div>
+        </div>
+
+        <button onclick="startQuiz()" class="canva-btn-gradient text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-canva-lg transition transform hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto inline-flex items-center justify-center gap-3">
+          <span>Start Math Quiz</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- QUIZ CARD -->
+    <div id="quizCard" class="hidden bg-white rounded-3xl p-5 sm:p-8 shadow-canva border border-slate-100 relative">
+
+      <!-- Top Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+          <span id="questionProgressText">Question 1 of 25</span>
+          <span id="scoreTracker" class="text-canva-purple"><i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: 0</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-3 p-0.5 overflow-hidden">
+          <div id="progressBar" class="bg-gradient-to-r from-canva-purple to-canva-teal h-full rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <!-- Question Badge & Header -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <span id="qBadge" class="bg-canva-purple text-white text-xs font-bold px-3 py-1 rounded-lg">Question 1</span>
+        <span id="categoryTag" class="bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1 rounded-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-bookmark text-canva-teal"></i> <span id="categoryText">Multiplication Topic</span>
+        </span>
+      </div>
+
+      <!-- Question Text -->
+      <div id="questionContainer" class="mb-6">
+        <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-3 leading-snug" id="questionPrompt">
+          Solve the problem and select the correct answer:
+        </h3>
+
+        <!-- Sentence / Problem Box -->
+        <div class="bg-gradient-to-r from-purple-50 via-slate-50 to-teal-50 p-4 sm:p-5 rounded-2xl border border-purple-100/80 text-slate-800 text-base sm:text-lg leading-relaxed shadow-sm font-medium" id="sentenceBox">
+          <!-- Dynamic sentence inserted here -->
+        </div>
+      </div>
+
+      <!-- Options (A-D) -->
+      <div class="grid grid-cols-1 gap-3 mb-6" id="optionsGrid">
+        <!-- Options generated dynamically -->
+      </div>
+
+      <!-- Immediate Feedback Panel (hidden initially per question) -->
+      <div id="feedbackBox" class="hidden mb-6 p-4 sm:p-5 rounded-2xl border transition-all">
+        <div class="flex items-start gap-3">
+          <div id="feedbackIcon" class="w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <h4 id="feedbackTitle" class="font-extrabold text-base mb-1">Correct!</h4>
+            <p id="feedbackText" class="text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-3 pt-2 border-t border-slate-100">
+        <button id="submitBtn" onclick="submitAnswer()" class="canva-btn-gradient text-white font-bold px-6 py-3 rounded-xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+          <span>Submit Answer</span>
+          <i class="fa-solid fa-paper-plane text-xs"></i>
+        </button>
+
+        <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+          <span id="nextBtnText">Next Question</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTS / END SCREEN -->
+    <div id="resultsScreen" class="hidden bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100">
+      
+      <div class="text-center mb-8">
+        <div id="scoreBadge" class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-tr from-canva-purple to-canva-teal text-white text-3xl font-black mb-4 shadow-canva-lg">
+          0%
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900" id="resultTitle">Quiz Completed!</h2>
+        <p class="text-slate-600 mt-1 text-sm sm:text-base" id="scoreSummaryText">You scored 0 out of 25 questions correctly.</p>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex flex-wrap justify-center gap-4 mb-10">
+        <button onclick="initQuiz()" class="canva-btn-gradient text-white font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Try Again (New Random Order)</span>
+        </button>
+      </div>
+
+      <!-- Mistakes / Corrections Section -->
+      <div class="border-t border-slate-100 pt-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-check text-canva-purple"></i> Detailed Answer Review
+          </h3>
+          <span id="mistakesCountTag" class="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-600 rounded-full">
+            0 Mistakes
+          </span>
+        </div>
+
+        <div id="reviewContainer" class="space-y-4">
+          <!-- Dynamic review cards generated here -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="max-w-4xl mx-auto w-full text-center text-xs text-slate-500 py-6 mt-6">
+    <p>Elementary Mathematics • Multiplication & Problem Solving Interactive Quiz</p>
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Master Questions Bank (25 High Quality Math Questions covering all video topics)
+    const masterQuestions = [
+      {
+        id: 1,
+        sentence: "What is the product of <strong class='text-canva-purple'>1,232 × 3</strong>?",
+        options: ["3,696", "3,686", "3,796", "3,496"],
+        answer: 0, // A
+        category: "3-Digit to 4-Digit × 1-Digit (Without Regrouping)",
+        explanation: "1,232 × 3 = (1,000 × 3) + (200 × 3) + (30 × 3) + (2 × 3) = 3,000 + 600 + 90 + 6 = 3,696."
+      },
+      {
+        id: 2,
+        sentence: "Calculate: <strong class='text-canva-purple'>2,104 × 2</strong>.",
+        options: ["4,280", "4,208", "4,108", "4,408"],
+        answer: 1, // B
+        category: "3-Digit to 4-Digit × 1-Digit (Without Regrouping)",
+        explanation: "2,104 × 2 = (2,000 × 2) + (100 × 2) + (0 × 2) + (4 × 2) = 4,000 + 200 + 0 + 8 = 4,208."
+      },
+      {
+        id: 3,
+        sentence: "Multiply: <strong class='text-canva-purple'>3,012 × 3</strong>.",
+        options: ["9,306", "9,063", "9,036", "9,360"],
+        answer: 2, // C
+        category: "3-Digit to 4-Digit × 1-Digit (Without Regrouping)",
+        explanation: "3,012 × 3 = (3,000 × 3) + (10 × 3) + (2 × 3) = 9,000 + 30 + 6 = 9,036."
+      },
+      {
+        id: 4,
+        sentence: "Find the product of <strong class='text-canva-purple'>1,458 × 4</strong>.",
+        options: ["5,832", "5,632", "5,732", "5,932"],
+        answer: 0, // A
+        category: "3-Digit to 4-Digit × 1-Digit (With Regrouping)",
+        explanation: "4 × 8 = 32 (write 2, carry 3); 4 × 5 + 3 = 23 (write 3, carry 2); 4 × 4 + 2 = 18 (write 8, carry 1); 4 × 1 + 1 = 5. Total = 5,832."
+      },
+      {
+        id: 5,
+        sentence: "Calculate: <strong class='text-canva-purple'>2,637 × 5</strong>.",
+        options: ["13,085", "13,185", "13,285", "12,185"],
+        answer: 1, // B
+        category: "3-Digit to 4-Digit × 1-Digit (With Regrouping)",
+        explanation: "5 × 7 = 35 (carry 3); 5 × 3 + 3 = 18 (carry 1); 5 × 6 + 1 = 31 (carry 3); 5 × 2 + 3 = 13. Total = 13,185."
+      },
+      {
+        id: 6,
+        sentence: "Multiply: <strong class='text-canva-purple'>4,129 × 6</strong>.",
+        options: ["24,674", "24,754", "24,774", "24,874"],
+        answer: 2, // C
+        category: "3-Digit to 4-Digit × 1-Digit (With Regrouping)",
+        explanation: "6 × 9 = 54 (carry 5); 6 × 2 + 5 = 17 (carry 1); 6 × 1 + 1 = 7; 6 × 4 = 24. Total = 24,774."
+      },
+      {
+        id: 7,
+        sentence: "Find the product: <strong class='text-canva-purple'>3,875 × 7</strong>.",
+        options: ["27,125", "27,025", "26,925", "27,225"],
+        answer: 0, // A
+        category: "3-Digit to 4-Digit × 1-Digit (With Regrouping)",
+        explanation: "7 × 5 = 35; 7 × 7 + 3 = 52; 7 × 8 + 5 = 61; 7 × 3 + 6 = 27. Total = 27,125."
+      },
+      {
+        id: 8,
+        sentence: "What is the result of <strong class='text-canva-purple'>32 × 13</strong>?",
+        options: ["396", "416", "426", "406"],
+        answer: 1, // B
+        category: "2-Digit to 3-Digit × 2-Digit (Without Regrouping)",
+        explanation: "32 × 3 = 96. 32 × 10 = 320. 96 + 320 = 416."
+      },
+      {
+        id: 9,
+        sentence: "Calculate: <strong class='text-canva-purple'>142 × 21</strong>.",
+        options: ["2,962", "2,882", "2,982", "3,082"],
+        answer: 2, // C
+        category: "2-Digit to 3-Digit × 2-Digit (Without Regrouping)",
+        explanation: "142 × 1 = 142. 142 × 20 = 2,840. 142 + 2,840 = 2,982."
+      },
+      {
+        id: 10,
+        sentence: "Multiply: <strong class='text-canva-purple'>213 × 31</strong>.",
+        options: ["6,603", "6,503", "6,630", "6,703"],
+        answer: 0, // A
+        category: "2-Digit to 3-Digit × 2-Digit (Without Regrouping)",
+        explanation: "213 × 1 = 213. 213 × 30 = 6,390. 213 + 6,390 = 6,603."
+      },
+      {
+        id: 11,
+        sentence: "Find the product: <strong class='text-canva-purple'>48 × 26</strong>.",
+        options: ["1,148", "1,248", "1,258", "1,348"],
+        answer: 1, // B
+        category: "2-Digit to 3-Digit × 2-Digit (With Regrouping)",
+        explanation: "48 × 6 = 288. 48 × 20 = 960. 288 + 960 = 1,248."
+      },
+      {
+        id: 12,
+        sentence: "Multiply: <strong class='text-canva-purple'>245 × 34</strong>.",
+        options: ["8,230", "8,430", "8,330", "8,340"],
+        answer: 2, // C
+        category: "2-Digit to 3-Digit × 2-Digit (With Regrouping)",
+        explanation: "245 × 4 = 980. 245 × 30 = 7,350. 980 + 7,350 = 8,330."
+      },
+      {
+        id: 13,
+        sentence: "Calculate: <strong class='text-canva-purple'>678 × 45</strong>.",
+        options: ["30,510", "30,410", "29,510", "30,610"],
+        answer: 0, // A
+        category: "2-Digit to 3-Digit × 2-Digit (With Regrouping)",
+        explanation: "678 × 5 = 3,390. 678 × 40 = 27,120. 3,390 + 27,120 = 30,510."
+      },
+      {
+        id: 14,
+        sentence: "What is the product of <strong class='text-canva-purple'>516 × 28</strong>?",
+        options: ["14,348", "14,448", "14,548", "14,428"],
+        answer: 1, // B
+        category: "2-Digit to 3-Digit × 2-Digit (With Regrouping)",
+        explanation: "516 × 8 = 4,128. 516 × 20 = 10,320. 4,128 + 10,320 = 14,448."
+      },
+      {
+        id: 15,
+        sentence: "Estimate the product of <strong class='text-canva-purple'>483 × 62</strong> by rounding each factor to its highest place value.",
+        options: ["24,000", "28,000", "30,000", "35,000"],
+        answer: 2, // C
+        category: "Estimating Products",
+        explanation: "Round 483 to 500. Round 62 to 60. Estimated Product = 500 × 60 = 30,000."
+      },
+      {
+        id: 16,
+        sentence: "Estimate <strong class='text-canva-purple'>3,745 × 8</strong> by rounding the 4-digit number to the nearest thousand.",
+        options: ["32,000", "24,000", "30,000", "36,000"],
+        answer: 0, // A
+        category: "Estimating Products",
+        explanation: "Round 3,745 to the nearest thousand → 4,000. Estimated Product = 4,000 × 8 = 32,000."
+      },
+      {
+        id: 17,
+        sentence: "Estimate the product of <strong class='text-canva-purple'>29 × 74</strong> by rounding each number to the nearest ten.",
+        options: ["1,400", "2,100", "2,400", "2,800"],
+        answer: 1, // B
+        category: "Estimating Products",
+        explanation: "Round 29 to 30. Round 74 to 70. Estimated Product = 30 × 70 = 2,100."
+      },
+      {
+        id: 18,
+        sentence: "Estimate <strong class='text-canva-purple'>5,120 × 39</strong> by rounding each number to its highest place value.",
+        options: ["150,000", "180,000", "200,000", "250,000"],
+        answer: 2, // C
+        category: "Estimating Products",
+        explanation: "Round 5,120 to 5,000. Round 39 to 40. Estimated Product = 5,000 × 40 = 200,000."
+      },
+      {
+        id: 19,
+        sentence: "A school ordered 124 boxes of pencils. If each box contains 24 pencils, how many pencils were ordered in total?",
+        options: ["2,976", "2,876", "2,986", "3,076"],
+        answer: 0, // A
+        category: "Solving Word Problems Involving Multiplication",
+        explanation: "Total pencils = 124 × 24. 124 × 4 = 496. 124 × 20 = 2,480. 496 + 2,480 = 2,976 pencils."
+      },
+      {
+        id: 20,
+        sentence: "A bakery bakes 1,250 cookies each day. How many cookies does the bakery bake in 7 days?",
+        options: ["8,650", "8,750", "8,850", "8,700"],
+        answer: 1, // B
+        category: "Solving Word Problems Involving Multiplication",
+        explanation: "Total cookies = 1,250 × 7 = (1,000 × 7) + (250 × 7) = 7,000 + 1,750 = 8,750 cookies."
+      },
+      {
+        id: 21,
+        sentence: "An auditorium has 36 rows of seats. Each row has 45 seats. What is the total seating capacity of the auditorium?",
+        options: ["1,520", "1,600", "1,620", "1,720"],
+        answer: 2, // C
+        category: "Solving Word Problems Involving Multiplication",
+        explanation: "Total capacity = 36 × 45 = 36 × (40 + 5) = 1,440 + 180 = 1,620 seats."
+      },
+      {
+        id: 22,
+        sentence: "Maria bought 15 boxes of red apples and 12 boxes of green apples. Each box contains 24 apples. How many total apples did she buy?",
+        options: ["648", "628", "658", "548"],
+        answer: 0, // A
+        category: "Solving Multi-step Word Problems",
+        explanation: "Step 1: Find total boxes = 15 + 12 = 27. Step 2: Multiply by apples per box = 27 × 24 = 648 apples."
+      },
+      {
+        id: 23,
+        sentence: "A clothing store sold 125 shirts for $18 each and 80 pairs of pants for $25 each. What was the total amount earned from sales?",
+        options: ["$4,150", "$4,250", "$4,350", "$4,050"],
+        answer: 1, // B
+        category: "Solving Multi-step Word Problems",
+        explanation: "Shirt earnings = 125 × $18 = $2,250. Pants earnings = 80 × $25 = $2,000. Total = $2,250 + $2,000 = $4,250."
+      },
+      {
+        id: 24,
+        sentence: "A warehouse received 4,500 kg of rice. Workers packed 120 bags of 25 kg each and sold the remaining rice in bulk. How many kilograms were sold in bulk?",
+        options: ["1,200 kg", "1,400 kg", "1,500 kg", "1,600 kg"],
+        answer: 2, // C
+        category: "Solving Multi-step Word Problems",
+        explanation: "Step 1: Calculate packed rice = 120 × 25 kg = 3,000 kg. Step 2: Subtract from total = 4,500 kg - 3,000 kg = 1,500 kg."
+      },
+      {
+        id: 25,
+        sentence: "A teacher bought 45 math workbooks at $15 each and 30 science workbooks at $22 each. She paid with a $1,500 bill. How much change should she receive?",
+        options: ["$165", "$175", "$155", "$265"],
+        answer: 0, // A
+        category: "Solving Multi-step Word Problems",
+        explanation: "Math cost = 45 × $15 = $675. Science cost = 30 × $22 = $660. Total cost = $675 + $660 = $1,335. Change = $1,500 - $1,335 = $165."
+      }
+    ];
+
+    // State variables
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let selectedOptionIndex = null;
+    let userAnswers = []; // stores { questionId, selectedIndex, isCorrect, questionObj }
+    let score = 0;
+
+    // Utility: Fisher-Yates Shuffle
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Initialize Quiz
+    function initQuiz() {
+      // Shuffle questions randomly for this attempt
+      currentQuestions = shuffleArray(masterQuestions);
+      currentIndex = 0;
+      score = 0;
+      userAnswers = [];
+      selectedOptionIndex = null;
+
+      // Reset views
+      document.getElementById("startScreen").classList.remove("hidden");
+      document.getElementById("quizCard").classList.add("hidden");
+      document.getElementById("resultsScreen").classList.add("hidden");
+    }
+
+    // Start Quiz
+    function startQuiz() {
+      document.getElementById("startScreen").classList.add("hidden");
+      document.getElementById("quizCard").classList.remove("hidden");
+      loadQuestion();
+    }
+
+    // Load Question
+    function loadQuestion() {
+      selectedOptionIndex = null;
+      const q = currentQuestions[currentIndex];
+      const total = currentQuestions.length;
+
+      // Update progress & header
+      document.getElementById("questionProgressText").innerText = `Question ${currentIndex + 1} of ${total}`;
+      document.getElementById("scoreTracker").innerHTML = `<i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: ${score}`;
+      document.getElementById("progressBar").style.width = `${((currentIndex + 1) / total) * 100}%`;
+      
+      document.getElementById("qBadge").innerText = `Question ${currentIndex + 1}`;
+      document.getElementById("categoryText").innerText = q.category || "Math Focus";
+
+      // Load Sentence
+      document.getElementById("sentenceBox").innerHTML = q.sentence;
+
+      // Load Options A-D
+      const optionsGrid = document.getElementById("optionsGrid");
+      optionsGrid.innerHTML = "";
+
+      const optionLabels = ["A", "B", "C", "D"];
+
+      q.options.forEach((opt, idx) => {
+        const optCard = document.createElement("button");
+        optCard.className = `option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-canva-purple flex items-center gap-3.5 cursor-pointer transition`;
+        optCard.onclick = () => selectOption(idx);
+        optCard.id = `optBtn_${idx}`;
+
+        optCard.innerHTML = `
+          <span class="opt-label w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center shrink-0 text-sm">
+            ${optionLabels[idx]}
+          </span>
+          <span class="opt-text text-slate-800 font-medium text-sm sm:text-base flex-grow">${opt}</span>
+          <i class="opt-icon fa-regular fa-circle text-slate-300 text-lg"></i>
+        `;
+
+        optionsGrid.appendChild(optCard);
+      });
+
+      // Reset Feedback Box
+      const feedbackBox = document.getElementById("feedbackBox");
+      feedbackBox.classList.add("hidden");
+      feedbackBox.className = "hidden mb-6 p-4 sm:p-5 rounded-2xl border transition-all";
+
+      // Reset Buttons
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.classList.remove("hidden");
+      submitBtn.disabled = true;
+
+      const nextBtn = document.getElementById("nextBtn");
+      nextBtn.classList.add("hidden");
+      
+      if (currentIndex === total - 1) {
+        document.getElementById("nextBtnText").innerText = "Finish & See Results";
+      } else {
+        document.getElementById("nextBtnText").innerText = "Next Question";
+      }
+    }
+
+    // Select Option
+    function selectOption(index) {
+      // Ignore if already submitted
+      if (userAnswers[currentIndex] && userAnswers[currentIndex].submitted) return;
+
+      selectedOptionIndex = index;
+      const totalOpts = currentQuestions[currentIndex].options.length;
+
+      for (let i = 0; i < totalOpts; i++) {
+        const btn = document.getElementById(`optBtn_${i}`);
+        const icon = btn.querySelector(".opt-icon");
+        const label = btn.querySelector(".opt-label");
+
+        if (i === index) {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-canva-purple bg-purple-50/50 flex items-center gap-3.5 cursor-pointer shadow-sm";
+          icon.className = "opt-icon fa-solid fa-circle-dot text-canva-purple text-lg";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-canva-purple text-white font-bold flex items-center justify-center shrink-0 text-sm shadow-sm";
+        } else {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white flex items-center gap-3.5 cursor-pointer";
+          icon.className = "opt-icon fa-regular fa-circle text-slate-300 text-lg";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center shrink-0 text-sm";
+        }
+      }
+
+      // Enable submit button
+      document.getElementById("submitBtn").disabled = false;
+    }
+
+    // Submit Answer for current question
+    function submitAnswer() {
+      if (selectedOptionIndex === null) return;
+
+      const q = currentQuestions[currentIndex];
+      const isCorrect = selectedOptionIndex === q.answer;
+
+      if (isCorrect) score++;
+
+      // Record answer
+      userAnswers[currentIndex] = {
+        questionId: q.id,
+        questionObj: q,
+        selectedIndex: selectedOptionIndex,
+        isCorrect: isCorrect,
+        submitted: true
+      };
+
+      // Disable option buttons
+      q.options.forEach((_, idx) => {
+        const btn = document.getElementById(`optBtn_${idx}`);
+        btn.onclick = null;
+        btn.classList.add("disabled");
+        btn.classList.remove("hover:border-canva-purple");
+
+        const icon = btn.querySelector(".opt-icon");
+        const label = btn.querySelector(".opt-label");
+
+        if (idx === q.answer) {
+          // Highlight correct answer
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex items-center gap-3.5";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-emerald-500 text-white font-bold flex items-center justify-center shrink-0 text-sm";
+          icon.className = "opt-icon fa-solid fa-circle-check text-emerald-600 text-lg";
+        } else if (idx === selectedOptionIndex && !isCorrect) {
+          // Highlight wrong choice
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-rose-400 bg-rose-50 flex items-center gap-3.5";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-rose-500 text-white font-bold flex items-center justify-center shrink-0 text-sm";
+          icon.className = "opt-icon fa-solid fa-circle-xmark text-rose-500 text-lg";
+        }
+      });
+
+      // Show Feedback Box
+      const feedbackBox = document.getElementById("feedbackBox");
+      const feedbackIcon = document.getElementById("feedbackIcon");
+      const feedbackTitle = document.getElementById("feedbackTitle");
+      const feedbackText = document.getElementById("feedbackText");
+
+      feedbackBox.classList.remove("hidden");
+
+      if (isCorrect) {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-emerald-200 bg-emerald-50/80 text-emerald-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        feedbackTitle.innerText = "Correct Answer!";
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-emerald-800";
+      } else {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-rose-200 bg-rose-50/80 text-rose-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        feedbackTitle.innerText = `Incorrect. Correct choice was (${["A","B","C","D"][q.answer]})`;
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-rose-800";
+      }
+
+      feedbackText.innerText = q.explanation;
+
+      // Update Tracker score display
+      document.getElementById("scoreTracker").innerHTML = `<i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: ${score}`;
+
+      // Hide Submit, Show Next
+      document.getElementById("submitBtn").classList.add("hidden");
+      document.getElementById("nextBtn").classList.remove("hidden");
+    }
+
+    // Go to Next Question or Finish
+    function nextQuestion() {
+      if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    // Show Results & Mistakes
+    function showResults() {
+      document.getElementById("quizCard").classList.add("hidden");
+      document.getElementById("resultsScreen").classList.remove("hidden");
+
+      const total = currentQuestions.length;
+      const percentage = Math.round((score / total) * 100);
+
+      document.getElementById("scoreBadge").innerText = `${percentage}%`;
+      document.getElementById("scoreSummaryText").innerText = `You answered ${score} out of ${total} questions correctly.`;
+
+      const titleElem = document.getElementById("resultTitle");
+      if (percentage === 100) {
+        titleElem.innerText = "🌟 Perfect Score! Math Wizard!";
+      } else if (percentage >= 80) {
+        titleElem.innerText = "🎉 Great Job! Excellent Math Skills!";
+      } else if (percentage >= 60) {
+        titleElem.innerText = "👍 Good Effort! Keep Practicing!";
+      } else {
+        titleElem.innerText = "📚 Review Your Multiplication Steps!";
+      }
+
+      // Build Review of Mistakes
+      const reviewContainer = document.getElementById("reviewContainer");
+      reviewContainer.innerHTML = "";
+
+      const mistakes = userAnswers.filter(a => !a.isCorrect);
+      document.getElementById("mistakesCountTag").innerText = `${mistakes.length} ${mistakes.length === 1 ? 'Mistake' : 'Mistakes'}`;
+
+      if (mistakes.length === 0) {
+        reviewContainer.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
+            <i class="fa-solid fa-award text-emerald-500 text-4xl mb-2"></i>
+            <h4 class="font-bold text-emerald-900 text-lg">No Mistakes Made!</h4>
+            <p class="text-emerald-700 text-sm mt-1">You solved all 25 multiplication and word problems perfectly!</p>
+          </div>
+        `;
+      } else {
+        // Render mistakes
+        userAnswers.forEach((ans, qSeqIndex) => {
+          if (!ans.isCorrect) {
+            const q = ans.questionObj;
+            const labels = ["A", "B", "C", "D"];
+
+            const card = document.createElement("div");
+            card.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 text-left";
+
+            card.innerHTML = `
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="bg-rose-100 text-rose-700 font-bold text-xs px-2.5 py-0.5 rounded-md">
+                  Question ${qSeqIndex + 1} • Incorrect
+                </span>
+                <span class="text-xs font-semibold text-slate-500">${q.category || 'Mathematics'}</span>
+              </div>
+
+              <p class="text-slate-800 text-sm sm:text-base mb-3 leading-relaxed font-medium">
+                ${q.sentence}
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm mb-3">
+                <div class="bg-rose-100/70 border border-rose-200 p-2.5 rounded-xl text-rose-900">
+                  <span class="font-bold">Your Choice:</span> (${labels[ans.selectedIndex]}) ${q.options[ans.selectedIndex]}
+                </div>
+                <div class="bg-emerald-100/70 border border-emerald-200 p-2.5 rounded-xl text-emerald-900">
+                  <span class="font-bold">Correct Choice:</span> (${labels[q.answer]}) ${q.options[q.answer]}
+                </div>
+              </div>
+
+              <div class="bg-white border border-slate-200 p-3 rounded-xl text-xs sm:text-sm text-slate-600">
+                <span class="font-bold text-slate-800"><i class="fa-solid fa-calculator text-canva-purple mr-1"></i> Step-by-step Solution:</span> ${q.explanation}
+              </div>
+            `;
+
+            reviewContainer.appendChild(card);
+          }
+        });
+      }
+    }
+
+    // Initialize on page load
+    window.onload = function() {
+      initQuiz();
+    };
+  </script>
+</body>
+</html>

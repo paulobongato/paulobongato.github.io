@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeletal System Interactive Canva Quiz</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            canvaPurple: '#7D2AE8',
+            canvaCyan: '#00C4CC',
+            canvaPink: '#FF6196',
+            canvaBg: '#F3F4F9',
+            canvaCard: '#FFFFFF',
+            canvaDark: '#1E1B4B',
+          },
+          boxShadow: {
+            'canva': '0 10px 30px -5px rgba(125, 42, 232, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05)',
+            'canva-lg': '0 20px 40px -10px rgba(125, 42, 232, 0.2)',
+            'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F3F4F9;
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(125, 42, 232, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(0, 196, 204, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(255, 97, 150, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .option-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .option-card:hover:not(.disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(125, 42, 232, 0.12);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-800 min-h-screen flex flex-col justify-between selection:bg-canvaPurple selection:text-white">
+
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-30 glass-nav shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-canvaPurple to-canvaCyan flex items-center justify-center text-white shadow-md">
+          <i class="fa-solid fa-bone text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-slate-900 text-lg leading-tight">Skeletal System Master Quiz</h1>
+          <p class="text-xs text-slate-500 font-medium">Parts, Functions & Diseases • 25 Questions</p>
+        </div>
+      </div>
+
+      <!-- Quick Action / Mode Pill -->
+      <div class="flex items-center space-x-3">
+        <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-canvaPurple border border-purple-200">
+          <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Canva Learn Mode
+        </span>
+        <button id="soundToggle" onclick="toggleSound()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
+          <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto w-full px-4 py-6 flex-grow">
+
+    <!-- WELCOME / START SCREEN -->
+    <div id="startScreen" class="bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100 text-center relative overflow-hidden my-auto">
+      <!-- Decorative background shapes -->
+      <div class="absolute -top-12 -right-12 w-40 h-40 bg-purple-100 rounded-full blur-2xl opacity-60"></div>
+      <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-cyan-100 rounded-full blur-2xl opacity-60"></div>
+
+      <div class="relative z-10 max-w-2xl mx-auto">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 to-cyan-500/10 text-canvaPurple font-bold text-xs uppercase tracking-wider mb-4 border border-purple-100">
+          Interactive Anatomy & Health Assessment
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">
+          Test Your Knowledge on the <span class="bg-gradient-to-r from-canvaPurple via-canvaPink to-canvaCyan bg-clip-text text-transparent">Human Skeletal System</span>
+        </h2>
+        <p class="text-slate-600 mb-8 text-sm sm:text-base leading-relaxed">
+          Based on <strong>Lesson 1.6 Skeletal System</strong> & designated learning videos. Challenge yourself with 25 randomized multiple-choice questions on bone functions, cartilage, marrow, joints, and diseases!
+        </p>
+
+        <!-- Topic Badges -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-8">
+          <div class="p-4 rounded-2xl bg-purple-50/60 border border-purple-100 flex items-start space-x-3">
+            <div class="p-2.5 bg-canvaPurple text-white rounded-xl shadow-sm shrink-0">
+              <i class="fa-solid fa-skull"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Parts & Functions</h4>
+              <p class="text-xs text-slate-500 mt-0.5">206 Bones, Cartilage, Ligaments, Marrow, Joint Types & Mineral Storage</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-cyan-50/60 border border-cyan-100 flex items-start space-x-3">
+            <div class="p-2.5 bg-canvaCyan text-white rounded-xl shadow-sm shrink-0">
+              <i class="fa-solid fa-notes-medical"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Common Diseases</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Rickets, Osteoporosis, Scoliosis, Fractures & Healthy Habits ("ED Rule")</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features summary -->
+        <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-semibold mb-8">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-shuffle text-canvaPurple"></i>
+            <span>Shuffled every attempt</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-circle-check text-emerald-500"></i>
+            <span>Instant feedback & answers</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-list-check text-canvaCyan"></i>
+            <span>Detailed review at end</span>
+          </div>
+        </div>
+
+        <!-- Start Button -->
+        <button onclick="startQuiz()" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-canvaPurple to-canvaPink text-white font-extrabold text-base rounded-2xl shadow-canva hover:shadow-canva-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-3 mx-auto">
+          <span>Start Quiz Now</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- QUIZ CONTAINER (HIDDEN INITIALLY) -->
+    <div id="quizContainer" class="hidden space-y-6">
+
+      <!-- Progress Header Card -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <!-- Question Counter -->
+        <div class="flex items-center space-x-3 w-full sm:w-auto">
+          <span class="w-10 h-10 rounded-xl bg-purple-100 text-canvaPurple font-bold text-sm flex items-center justify-center" id="qBadge">
+            Q1
+          </span>
+          <div>
+            <div class="text-xs text-slate-400 font-bold uppercase tracking-wider">Progress</div>
+            <div class="text-sm font-bold text-slate-800">
+              Question <span id="currentQNum">1</span> of <span id="totalQNum">25</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full sm:w-1/2 bg-slate-100 h-3 rounded-full overflow-hidden p-0.5 border border-slate-200">
+          <div id="progressBar" class="bg-gradient-to-r from-canvaPurple via-canvaPink to-canvaCyan h-full rounded-full transition-all duration-300 w-0"></div>
+        </div>
+
+        <!-- Score Tracker -->
+        <div class="flex items-center space-x-2 text-xs font-bold bg-slate-50 px-3 py-2 rounded-xl border border-slate-200">
+          <i class="fa-solid fa-trophy text-amber-500"></i>
+          <span class="text-slate-600">Score: <span id="liveScore" class="text-canvaPurple text-sm">0</span> / 25</span>
+        </div>
+      </div>
+
+      <!-- QUESTION CARD -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-canva border border-slate-100 relative">
+        <!-- Topic Tag -->
+        <div class="mb-3 flex items-center justify-between">
+          <span id="topicTag" class="px-3 py-1 rounded-full text-xs font-extrabold bg-purple-50 text-canvaPurple border border-purple-100">
+            Topic Name
+          </span>
+          <span id="questionStatus" class="text-xs font-bold text-slate-400">
+            Select an answer below
+          </span>
+        </div>
+
+        <!-- Question Prompt -->
+        <h3 id="questionText" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug mb-6">
+          Question content goes here?
+        </h3>
+
+        <!-- Options Grid -->
+        <div id="optionsContainer" class="grid grid-cols-1 gap-3.5 mb-6">
+          <!-- Dynamically populated options A-D -->
+        </div>
+
+        <!-- Feedback Box (Hidden until submitted) -->
+        <div id="feedbackBox" class="hidden rounded-2xl p-4 sm:p-5 mb-6 border transition-all">
+          <div class="flex items-start space-x-3">
+            <div id="feedbackIcon" class="w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 font-bold text-sm">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+              <h5 id="feedbackTitle" class="font-extrabold text-sm sm:text-base">Correct!</h5>
+              <p id="feedbackExplanation" class="text-xs sm:text-sm mt-1 leading-relaxed opacity-90">
+                Detailed explanation regarding this answer.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+          <button id="prevBtn" onclick="prevQuestion()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-chevron-left mr-1.5"></i> Previous
+          </button>
+
+          <div class="flex space-x-3">
+            <button id="submitBtn" onclick="submitCurrentAnswer()" class="px-6 py-2.5 bg-canvaPurple hover:bg-purple-700 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center space-x-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Submit Answer</span>
+            </button>
+
+            <button id="nextBtn" onclick="nextQuestion()" class="hidden px-6 py-2.5 bg-gradient-to-r from-canvaPurple to-canvaCyan text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-md hover:opacity-95 transition-all flex items-center space-x-2">
+              <span>Next Question</span>
+              <i class="fa-solid fa-chevron-right ml-1.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- RESULTS / REVIEW SCREEN (HIDDEN INITIALLY) -->
+    <div id="resultsScreen" class="hidden space-y-8">
+
+      <!-- Score Summary Header Card -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100 text-center relative overflow-hidden">
+        <div class="max-w-xl mx-auto">
+          <!-- Trophy / Badge Icon -->
+          <div id="scoreBadgeContainer" class="w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-amber-400 to-amber-200 text-amber-800 flex items-center justify-center text-3xl shadow-lg">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">Quiz Completed!</h2>
+          <p id="scoreFeedbackText" class="text-sm text-slate-500 mb-6 font-medium">Great job testing your skeletal system knowledge!</p>
+
+          <!-- Score Circle / Stats Box -->
+          <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex items-center justify-around mb-8">
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-extrabold text-canvaPurple" id="finalScore">0</div>
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Total Score</div>
+            </div>
+
+            <div class="h-10 w-px bg-slate-200"></div>
+
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-extrabold text-emerald-500" id="finalPercentage">0%</div>
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Accuracy</div>
+            </div>
+
+            <div class="h-10 w-px bg-slate-200"></div>
+
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-extrabold text-rose-500" id="finalMistakes">0</div>
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Mistakes</div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onclick="restartQuiz()" class="px-8 py-3.5 bg-gradient-to-r from-canvaPurple to-canvaPink text-white font-extrabold text-sm rounded-2xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>Try Again (Shuffle Questions)</span>
+            </button>
+            
+            <a href="#reviewSection" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm rounded-2xl transition-colors flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Review All Answers</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEW SECTION -->
+      <div id="reviewSection" class="bg-white rounded-3xl p-6 sm:p-8 shadow-canva border border-slate-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-slate-100 gap-4">
+          <div>
+            <h3 class="text-xl font-extrabold text-slate-900 flex items-center space-x-2">
+              <i class="fa-solid fa-clipboard-check text-canvaPurple"></i>
+              <span>Detailed Answer Review</span>
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">Examine correct answers and explanations for any mistakes made.</p>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="flex items-center p-1 bg-slate-100 rounded-xl text-xs font-bold self-start">
+            <button onclick="filterReview('all')" id="filterAll" class="px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-800">All (25)</button>
+            <button onclick="filterReview('mistakes')" id="filterMistakes" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800">Mistakes</button>
+            <button onclick="filterReview('correct')" id="filterCorrect" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800">Correct</button>
+          </div>
+        </div>
+
+        <!-- Review Cards List -->
+        <div id="reviewList" class="space-y-6">
+          <!-- Dynamically generated question reviews -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-xs text-slate-400 border-t border-slate-200 bg-white/50 mt-10">
+    <p>© Skeletal System Science Quiz • Canva Learning Edition</p>
+    <p class="mt-1 text-[11px] text-slate-400">Based on Lesson 1.6 Skeletal System & Educational Video Series</p>
+  </footer>
+
+  <!-- QUIZ LOGIC SCRIPT -->
+  <script>
+    // 25 Comprehensive Master Questions based on PDF and YouTube videos
+    const MASTER_QUESTIONS = [
+      {
+        topic: "Parts & Functions",
+        question: "How many total bones does an adult human body have after early childhood bones fuse together?",
+        options: ["300 bones", "206 bones", "150 bones", "210 bones"],
+        answer: 1, // Index of correct answer
+        explanation: "At birth, a baby has approximately 300 bones. As the body matures, these bones gradually fuse together to form the 206 bones found in an adult skeleton."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Approximately how many bones is a human baby born with before fusion occurs?",
+        options: ["206 bones", "300 bones", "180 bones", "400 bones"],
+        answer: 1,
+        explanation: "Babies are born with about 300 bones, many of which are composed of flexible cartilage that eventually fuses into 206 solid adult bones."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Where in the human body can you find the smallest bone?",
+        options: ["In the pinky finger", "In the nose", "In the middle ear (Stapes)", "In the toe"],
+        answer: 2,
+        explanation: "The smallest bone in the human body is the Stapes (stirrup), located in the middle ear, measuring only about 3 millimeters!"
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What is the longest and strongest bone in the human body?",
+        options: ["Humerus", "Tibia", "Femur (Thigh bone)", "Radius"],
+        answer: 2,
+        explanation: "The Femur (thigh bone) is both the longest and strongest bone in the human body, supporting much of our body weight during movement."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What special flexible material makes up much of a baby's early skeleton and cushions adult joints?",
+        options: ["Ligament", "Tendon", "Cartilage", "Periosteum"],
+        answer: 2,
+        explanation: "Cartilage is a tough, flexible connective tissue. In babies, it provides flexibility for growth, and in adults, it cushions joints to prevent bones from rubbing together."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Why do a baby's skull bones have gaps (fontanelles) during early infancy?",
+        options: [
+          "To allow the skull to flex so the brain can grow and develop",
+          "To store extra calcium for teeth growth",
+          "To produce red blood cells for the brain",
+          "To allow oxygen directly into the skull"
+        ],
+        answer: 0,
+        explanation: "Gaps in a baby's skull (fontanelles) allow very fine movement so the skull can expand and adjust while the baby's brain grows rapidly."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Which major part of the skeletal system protects the brain from external injury?",
+        options: ["Rib cage", "Skull (Cranium)", "Pelvis", "Vertebral column"],
+        answer: 1,
+        explanation: "The skull acts as a hard protective helmet that surrounds and protects the brain from physical trauma."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Which vital internal organs are protected primarily by the rib cage?",
+        options: ["Brain and eyes", "Heart and lungs", "Stomach and liver", "Kidneys and intestines"],
+        answer: 1,
+        explanation: "The rib cage creates a protective cage around delicate thoracic organs, specifically the heart and lungs."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What type of tissue connects one bone to another bone at a joint?",
+        options: ["Tendon", "Ligament", "Cartilage", "Muscle"],
+        answer: 1,
+        explanation: "Ligaments are tough bands of fibrous connective tissue that hold bones together at joints (Bone to Bone)."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What type of connective tissue attaches muscles directly to bones to facilitate movement?",
+        options: ["Ligament", "Tendon", "Cartilage", "Marrow"],
+        answer: 1,
+        explanation: "Tendons are strong flexible cords that connect muscle to bone. When muscles contract, tendons pull on bones to move them."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Where inside bones are red blood cells produced?",
+        options: ["Compact bone layer", "Red bone marrow", "Periosteum", "Joint cartilage"],
+        answer: 1,
+        explanation: "Red bone marrow, located within the spongy cavities of certain bones, is responsible for producing red blood cells, white blood cells, and platelets."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Which hard outer layer gives bones their strength and smooth white appearance?",
+        options: ["Spongy bone", "Compact bone", "Bone marrow", "Cartilage"],
+        answer: 1,
+        explanation: "Compact bone is the dense, hard outer shell of the bone that provides structural strength and protection."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What is the inner, porous honeycomb-like layer inside a bone called?",
+        options: ["Compact bone", "Spongy (cancellous) bone", "Periosteum", "Ligament"],
+        answer: 1,
+        explanation: "Spongy bone has a lightweight, porous structure filled with spaces that often contain bone marrow."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What is the name of the thin, protective outer membrane covering the surface of bones?",
+        options: ["Periosteum", "Endosteum", "Cartilage", "Synovial sheath"],
+        answer: 0,
+        explanation: "The periosteum is a dense membrane that covers the outside of bones, containing blood vessels and nerves that nourish the bone tissue."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Which type of joint allows the greatest range of rotational movement, such as in the shoulder and hip?",
+        options: ["Hinge joint", "Pivot joint", "Ball-and-socket joint", "Fixed joint"],
+        answer: 2,
+        explanation: "Ball-and-socket joints (found in the shoulder and hip) allow movement in almost all directions, including rotational movement."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Elbows and knees are primary examples of which type of movable joint?",
+        options: ["Ball-and-socket joint", "Hinge joint", "Gliding joint", "Pivot joint"],
+        answer: 1,
+        explanation: "Hinge joints work like a door hinge, allowing movement back and forth in one direction (flexion and extension)."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "Which key minerals are stored inside human bones and released into the bloodstream when needed?",
+        options: ["Iron and Sodium", "Calcium and Phosphate", "Potassium and Iodine", "Zinc and Magnesium"],
+        answer: 1,
+        explanation: "Bones serve as a major storage reservoir for minerals, primarily Calcium and Phosphate, which help keep bones rigid and support bodily functions."
+      },
+      {
+        topic: "Parts & Functions",
+        question: "What series of small bones protects the spinal cord while giving flexibility to the neck and back?",
+        options: ["Ribs", "Vertebrae (Spinal column)", "Pelvis", "Clavicles"],
+        answer: 1,
+        explanation: "The vertebrae form the backbone, surrounding and shielding the spinal cord while allowing bending and twisting."
+      },
+      {
+        topic: "Common Diseases",
+        question: "What disease causes softening and weakening of bones in children, usually due to extreme Vitamin D deficiency?",
+        options: ["Osteoporosis", "Rickets", "Scoliosis", "Tendonitis"],
+        answer: 1,
+        explanation: "Rickets is a childhood condition characterized by soft, weak bones usually caused by a severe, prolonged deficiency in Vitamin D or calcium."
+      },
+      {
+        topic: "Common Diseases",
+        question: "Which skeletal disorder makes bones fragile and prone to breaking slowly over time, often diagnosed after a fall?",
+        options: ["Osteoporosis", "Rickets", "Scoliosis", "Arthritis"],
+        answer: 0,
+        explanation: "Osteoporosis weakens bone density, making bones porous, fragile, and far more likely to break from minor falls or impacts."
+      },
+      {
+        topic: "Common Diseases",
+        question: "What is Scoliosis?",
+        options: [
+          "An infection in the bone marrow",
+          "An abnormal sideways curvature of the spine (forming an 'S' or 'C' shape)",
+          "A complete fracture of the thigh bone",
+          "The inflammation of a tendon"
+        ],
+        answer: 1,
+        explanation: "Scoliosis is an abnormal lateral curve of the spine, often forming an 'S' or 'C' shape, which frequently appears during growth spurts before puberty."
+      },
+      {
+        topic: "Common Diseases",
+        question: "What is an 'open' or 'compound' fracture?",
+        options: [
+          "A hairline crack in the bone that does not break through",
+          "A bone fracture where the broken bone punctures through the skin",
+          "A fracture that cures itself without casting",
+          "A joint dislocation without bone damage"
+        ],
+        answer: 1,
+        explanation: "An open or compound fracture occurs when a broken bone pierces through the skin, increasing the risk of infection."
+      },
+      {
+        topic: "Common Diseases",
+        question: "According to the lesson guidelines, what does the 'ED' rule stand for to maintain healthy bones?",
+        options: ["Energy and Development", "Exercise and Diet", "Eating and Drinking", "Evaluation and Diagnosis"],
+        answer: 1,
+        explanation: "The lesson highlights keeping 'ED' in your life: Exercise (weight-bearing activities) and Diet (rich in Calcium and Vitamin D) to build strong bones."
+      },
+      {
+        topic: "Common Diseases",
+        question: "What painful condition involves inflammation of the joints, leading to stiffness and reduced movement?",
+        options: ["Arthritis", "Rickets", "Scoliosis", "Osteogenesis"],
+        answer: 0,
+        explanation: "Arthritis is an inflammatory disease affecting one or more joints, causing pain, swelling, and stiffness."
+      },
+      {
+        topic: "Common Diseases",
+        question: "Overusing a joint or repeating the same gesture continuously can cause painful swelling of a tendon known as:",
+        options: ["Rickets", "Tendonitis", "Scoliosis", "Osteoporosis"],
+        answer: 1,
+        explanation: "Tendonitis is the painful inflammation or irritation of a tendon, commonly caused by repetitive motions or overuse."
+      }
+    ];
+
+    // QUIZ STATE
+    let quizQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = []; // Array of { selected: number | null, isSubmitted: boolean, isCorrect: boolean }
+    let soundEnabled = true;
+
+    // Web Audio API Sound generator
+    function playAudio(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+          osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        } else if (type === 'incorrect') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+          osc.frequency.exponentialRampToValueAtTime(164.81, ctx.currentTime + 0.15); // E3
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        } else if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, ctx.currentTime);
+          gain.gain.setValueAtTime(0.05, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.05);
+        }
+      } catch (e) {
+        // Audio fallback
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      if (soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high';
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-slate-400';
+      }
+    }
+
+    // Utility: Fisher-Yates Shuffle
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Initialize & Shuffle Quiz Questions & Options
+    function prepareShuffledQuiz() {
+      // 1. Shuffle main questions
+      const shuffledMaster = shuffleArray(MASTER_QUESTIONS);
+
+      // 2. Deep copy & shuffle options for each question
+      quizQuestions = shuffledMaster.map((q) => {
+        const correctOptionText = q.options[q.answer];
+        const shuffledOptions = shuffleArray(q.options);
+        const newCorrectIndex = shuffledOptions.indexOf(correctOptionText);
+
+        return {
+          topic: q.topic,
+          question: q.question,
+          options: shuffledOptions,
+          answer: newCorrectIndex,
+          explanation: q.explanation
+        };
+      });
+
+      // Reset state tracking
+      currentIndex = 0;
+      userAnswers = quizQuestions.map(() => ({
+        selected: null,
+        isSubmitted: false,
+        isCorrect: false
+      }));
+    }
+
+    // START QUIZ
+    function startQuiz() {
+      playAudio('click');
+      prepareShuffledQuiz();
+
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('resultsScreen').classList.add('hidden');
+      document.getElementById('quizContainer').classList.remove('hidden');
+
+      renderQuestion();
+    }
+
+    // RENDER CURRENT QUESTION
+    function renderQuestion() {
+      const q = quizQuestions[currentIndex];
+      const state = userAnswers[currentIndex];
+
+      // Update question badges & text
+      document.getElementById('currentQNum').innerText = currentIndex + 1;
+      document.getElementById('totalQNum').innerText = quizQuestions.length;
+      document.getElementById('qBadge').innerText = `Q${currentIndex + 1}`;
+      document.getElementById('topicTag').innerText = q.topic;
+      document.getElementById('questionText').innerText = q.question;
+
+      // Update Progress bar
+      const progressPercent = ((currentIndex + 1) / quizQuestions.length) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+      // Live Score
+      const currentScore = userAnswers.filter(a => a.isCorrect).length;
+      document.getElementById('liveScore').innerText = currentScore;
+
+      // Render Options A, B, C, D
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((optText, optIdx) => {
+        const isSelected = state.selected === optIdx;
+        const isSubmitted = state.isSubmitted;
+        const isCorrectOpt = q.answer === optIdx;
+
+        let borderStyle = 'border-slate-200 hover:border-purple-300 bg-white';
+        let badgeStyle = 'bg-slate-100 text-slate-600';
+        let textStyle = 'text-slate-800';
+
+        if (isSubmitted) {
+          if (isCorrectOpt) {
+            borderStyle = 'border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500';
+            badgeStyle = 'bg-emerald-500 text-white';
+            textStyle = 'text-emerald-900 font-bold';
+          } else if (isSelected && !isCorrectOpt) {
+            borderStyle = 'border-rose-400 bg-rose-50/80 ring-1 ring-rose-400';
+            badgeStyle = 'bg-rose-500 text-white';
+            textStyle = 'text-rose-900 font-medium';
+          } else {
+            borderStyle = 'border-slate-200 bg-slate-50/50 opacity-60';
+            badgeStyle = 'bg-slate-200 text-slate-400';
+            textStyle = 'text-slate-500';
+          }
+        } else if (isSelected) {
+          borderStyle = 'border-canvaPurple bg-purple-50/70 ring-2 ring-canvaPurple/30';
+          badgeStyle = 'bg-canvaPurple text-white';
+          textStyle = 'text-purple-950 font-bold';
+        }
+
+        const btn = document.createElement('button');
+        btn.className = `option-card ${isSubmitted ? 'disabled' : ''} w-full text-left p-4 rounded-2xl border ${borderStyle} flex items-center space-x-3.5 transition-all`;
+        
+        btn.onclick = () => selectOption(optIdx);
+
+        btn.innerHTML = `
+          <div class="w-8 h-8 rounded-xl ${badgeStyle} flex items-center justify-center font-extrabold text-xs shrink-0 transition-colors">
+            ${letters[optIdx]}
+          </div>
+          <div class="text-sm ${textStyle} flex-grow leading-snug">
+            ${optText}
+          </div>
+          ${isSubmitted && isCorrectOpt ? '<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>' : ''}
+          ${isSubmitted && isSelected && !isCorrectOpt ? '<i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i>' : ''}
+        `;
+
+        optionsContainer.appendChild(btn);
+      });
+
+      // Feedback Box rendering
+      const feedbackBox = document.getElementById('feedbackBox');
+      const feedbackIcon = document.getElementById('feedbackIcon');
+      const feedbackTitle = document.getElementById('feedbackTitle');
+      const feedbackExplanation = document.getElementById('feedbackExplanation');
+      const statusText = document.getElementById('questionStatus');
+
+      if (state.isSubmitted) {
+        feedbackBox.classList.remove('hidden');
+        if (state.isCorrect) {
+          feedbackBox.className = 'rounded-2xl p-4 sm:p-5 mb-6 bg-emerald-50 border-emerald-200 text-emerald-900';
+          feedbackIcon.className = 'w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0';
+          feedbackIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+          feedbackTitle.innerText = 'Correct Answer!';
+          statusText.innerText = 'Submitted • Correct';
+          statusText.className = 'text-xs font-bold text-emerald-600';
+        } else {
+          feedbackBox.className = 'rounded-2xl p-4 sm:p-5 mb-6 bg-rose-50 border-rose-200 text-rose-900';
+          feedbackIcon.className = 'w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold shrink-0';
+          feedbackIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+          feedbackTitle.innerText = `Incorrect. Correct choice was (${letters[q.answer]})`;
+          statusText.innerText = 'Submitted • Incorrect';
+          statusText.className = 'text-xs font-bold text-rose-500';
+        }
+        feedbackExplanation.innerText = q.explanation;
+
+        // Toggle submit/next buttons
+        document.getElementById('submitBtn').classList.add('hidden');
+        document.getElementById('nextBtn').classList.remove('hidden');
+        if (currentIndex === quizQuestions.length - 1) {
+          document.getElementById('nextBtn').innerHTML = '<span>Finish & View Results</span> <i class="fa-solid fa-trophy ml-1.5"></i>';
+        } else {
+          document.getElementById('nextBtn').innerHTML = '<span>Next Question</span> <i class="fa-solid fa-chevron-right ml-1.5"></i>';
+        }
+      } else {
+        feedbackBox.classList.add('hidden');
+        document.getElementById('submitBtn').classList.remove('hidden');
+        document.getElementById('nextBtn').classList.add('hidden');
+        statusText.innerText = state.selected !== null ? 'Answer selected • Click Submit' : 'Select an answer below';
+        statusText.className = 'text-xs font-bold text-slate-400';
+      }
+
+      // Prev Button State
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+    }
+
+    // SELECT AN OPTION
+    function selectOption(index) {
+      if (userAnswers[currentIndex].isSubmitted) return; // Locked once submitted
+      playAudio('click');
+      userAnswers[currentIndex].selected = index;
+      renderQuestion();
+    }
+
+    // SUBMIT ANSWER FOR CURRENT QUESTION
+    function submitCurrentAnswer() {
+      const state = userAnswers[currentIndex];
+      if (state.selected === null) {
+        // Highlight prompt if no option selected
+        const statusText = document.getElementById('questionStatus');
+        statusText.innerText = '⚠️ Please select an option first!';
+        statusText.className = 'text-xs font-bold text-amber-600 animate-bounce';
+        return;
+      }
+
+      const q = quizQuestions[currentIndex];
+      state.isSubmitted = true;
+      state.isCorrect = (state.selected === q.answer);
+
+      if (state.isCorrect) {
+        playAudio('correct');
+      } else {
+        playAudio('incorrect');
+      }
+
+      renderQuestion();
+    }
+
+    // NAVIGATION
+    function nextQuestion() {
+      playAudio('click');
+      if (currentIndex < quizQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        playAudio('click');
+        currentIndex--;
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // SHOW FINAL RESULTS & REVIEW
+    function showResults() {
+      document.getElementById('quizContainer').classList.add('hidden');
+      document.getElementById('resultsScreen').classList.remove('hidden');
+
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      const mistakesCount = quizQuestions.length - correctCount;
+      const percentage = Math.round((correctCount / quizQuestions.length) * 100);
+
+      document.getElementById('finalScore').innerText = `${correctCount}/${quizQuestions.length}`;
+      document.getElementById('finalPercentage').innerText = `${percentage}%`;
+      document.getElementById('finalMistakes').innerText = mistakesCount;
+
+      // Badge & Feedback Text
+      const badgeContainer = document.getElementById('scoreBadgeContainer');
+      const feedbackText = document.getElementById('scoreFeedbackText');
+
+      if (percentage >= 90) {
+        badgeContainer.className = 'w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-900 flex items-center justify-center text-3xl shadow-lg';
+        badgeContainer.innerHTML = '<i class="fa-solid fa-crown"></i>';
+        feedbackText.innerText = 'Outstanding! You have mastered the Skeletal System!';
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      } else if (percentage >= 70) {
+        badgeContainer.className = 'w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-purple-500 to-canvaCyan text-white flex items-center justify-center text-3xl shadow-lg';
+        badgeContainer.innerHTML = '<i class="fa-solid fa-medal"></i>';
+        feedbackText.innerText = 'Great Job! Solid knowledge on bone parts and health.';
+      } else {
+        badgeContainer.className = 'w-20 h-20 mx-auto mb-4 rounded-3xl bg-gradient-to-tr from-cyan-400 to-blue-500 text-white flex items-center justify-center text-3xl shadow-lg';
+        badgeContainer.innerHTML = '<i class="fa-solid fa-book-open"></i>';
+        feedbackText.innerText = 'Keep reviewing! Examine your mistakes below to improve.';
+      }
+
+      renderReviewList('all');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // RENDER DETAILED REVIEW CARDS
+    function renderReviewList(filter = 'all') {
+      const reviewList = document.getElementById('reviewList');
+      reviewList.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      quizQuestions.forEach((q, idx) => {
+        const state = userAnswers[idx];
+        const isCorrect = state.isCorrect;
+
+        if (filter === 'mistakes' && isCorrect) return;
+        if (filter === 'correct' && !isCorrect) return;
+
+        const card = document.createElement('div');
+        card.className = `p-5 sm:p-6 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/30' : 'border-rose-200 bg-rose-50/30'} space-y-3 transition-all`;
+
+        const userSelectedText = state.selected !== null ? `${letters[state.selected]}. ${q.options[state.selected]}` : 'None';
+        const correctText = `${letters[q.answer]}. ${q.options[q.answer]}`;
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                Q${idx + 1}
+              </span>
+              <span class="text-xs font-bold text-slate-400">${q.topic}</span>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-extrabold ${isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'} flex items-center space-x-1.5">
+              <i class="fa-solid ${isCorrect ? 'fa-check' : 'fa-xmark'}"></i>
+              <span>${isCorrect ? 'Correct' : 'Mistake'}</span>
+            </span>
+          </div>
+
+          <h4 class="font-bold text-slate-900 text-sm sm:text-base leading-snug">
+            ${q.question}
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+            <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-100/60 text-emerald-950 border border-emerald-200' : 'bg-rose-100/60 text-rose-950 border border-rose-200'} font-medium">
+              <span class="font-bold block text-[11px] uppercase tracking-wider ${isCorrect ? 'text-emerald-700' : 'text-rose-700'} mb-0.5">Your Choice:</span>
+              ${userSelectedText}
+            </div>
+
+            <div class="p-3 rounded-xl bg-emerald-100/60 text-emerald-950 border border-emerald-200 font-medium">
+              <span class="font-bold block text-[11px] uppercase tracking-wider text-emerald-700 mb-0.5">Correct Answer:</span>
+              ${correctText}
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-white/80 border border-slate-200 text-xs text-slate-600 leading-relaxed">
+            <strong class="text-slate-800 font-bold block mb-0.5"><i class="fa-solid fa-circle-info mr-1 text-canvaPurple"></i> Explanation:</strong>
+            ${q.explanation}
+          </div>
+        `;
+
+        reviewList.appendChild(card);
+      });
+
+      if (reviewList.children.length === 0) {
+        reviewList.innerHTML = `
+          <div class="text-center py-10 text-slate-400 text-sm">
+            <i class="fa-solid fa-face-smile text-3xl mb-2 text-slate-300 block"></i>
+            No questions match this filter!
+          </div>
+        `;
+      }
+    }
+
+    // REVIEW FILTER TABS
+    function filterReview(type) {
+      playAudio('click');
+      const btnAll = document.getElementById('filterAll');
+      const btnMistakes = document.getElementById('filterMistakes');
+      const btnCorrect = document.getElementById('filterCorrect');
+
+      [btnAll, btnMistakes, btnCorrect].forEach(btn => {
+        btn.className = 'px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800';
+      });
+
+      if (type === 'all') {
+        btnAll.className = 'px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-800 font-extrabold';
+      } else if (type === 'mistakes') {
+        btnMistakes.className = 'px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-800 font-extrabold';
+      } else if (type === 'correct') {
+        btnCorrect.className = 'px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-800 font-extrabold';
+      }
+
+      renderReviewList(type);
+    }
+
+    // RESTART QUIZ (RE-SHUFFLE)
+    function restartQuiz() {
+      startQuiz();
+    }
+  </script>
+</body>
+</html>

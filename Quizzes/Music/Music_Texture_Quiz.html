@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Quiz: Texture</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(135deg, #eef6ea 0%, #f7fbf3 100%);
+    color: #2c3a1f;
+    padding: 16px;
+  }
+  .app {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    padding: 18px 10px;
+    background: #3d5c1f;
+    color: #fff;
+    border-radius: 14px;
+    margin-bottom: 18px;
+  }
+  header h1 {
+    margin: 0 0 4px 0;
+    font-size: 1.5em;
+  }
+  header p {
+    margin: 0;
+    font-size: 0.95em;
+    opacity: 0.9;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .progress-bar {
+    background: #dfe9d3;
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .progress-fill {
+    background: #6a9a3c;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .q-count {
+    font-size: 0.85em;
+    color: #6b7a5e;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .q-text {
+    font-size: 1.15em;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border: 2px solid #d6e2c8;
+    border-radius: 10px;
+    background: #fbfdf9;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .choice:hover { border-color: #a9c88a; }
+  .choice.selected {
+    border-color: #3d5c1f;
+    background: #eaf3e0;
+  }
+  .choice.correct {
+    border-color: #2e7d32;
+    background: #d9f3da;
+    color: #1b5e20;
+    font-weight: 600;
+  }
+  .choice.incorrect {
+    border-color: #c62828;
+    background: #fbdede;
+    color: #b71c1c;
+    font-weight: 600;
+  }
+  .choice[disabled] { cursor: default; }
+  .letter {
+    display: inline-block;
+    width: 24px;
+    font-weight: 700;
+    color: #3d5c1f;
+  }
+  .feedback {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.right { background: #d9f3da; color: #1b5e20; }
+  .feedback.wrong { background: #fbdede; color: #b71c1c; }
+  button.action {
+    background: #3d5c1f;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 14px;
+    width: 100%;
+  }
+  button.action:disabled {
+    background: #b6c6a4;
+    cursor: not-allowed;
+  }
+  .score-big {
+    text-align: center;
+    font-size: 2.4em;
+    font-weight: 800;
+    color: #3d5c1f;
+    margin: 6px 0;
+  }
+  .score-sub {
+    text-align: center;
+    color: #6b7a5e;
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border-left: 5px solid #c62828;
+    background: #fdf3f3;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .review-item.ok {
+    border-left-color: #2e7d32;
+    background: #f2f9f1;
+  }
+  .review-q {
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .review-line { margin: 3px 0; font-size: 0.95em; }
+  .tag-correct { color: #1b5e20; font-weight: 600; }
+  .tag-wrong { color: #b71c1c; font-weight: 600; }
+  #restartBtn { display: none; }
+  @media (max-width: 400px) {
+    header h1 { font-size: 1.25em; }
+    .q-text { font-size: 1.05em; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🎵 Music Texture Quiz</h1>
+    <p>Grade 4 &middot; Lesson 4: Form and Texture</p>
+  </header>
+
+  <div id="quizArea">
+    <div class="card">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="q-count" id="qCount"></div>
+      <div class="q-text" id="qText"></div>
+      <div id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="action" id="submitBtn" disabled>Submit Answer</button>
+      <button class="action" id="nextBtn" style="display:none;">Next Question</button>
+    </div>
+  </div>
+
+  <div id="resultArea" style="display:none;">
+    <div class="card">
+      <div class="score-sub">Your Score</div>
+      <div class="score-big" id="scoreBig"></div>
+      <div class="score-sub" id="scoreMsg"></div>
+      <button class="action" id="restartBtn">Try Again</button>
+    </div>
+    <div class="card" id="reviewCard">
+      <h2 style="margin-top:0;">Answer Review</h2>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "What element of music refers to the thickness and thinness of musical sound?",
+    choices: ["Rhythm", "Texture", "Dynamics", "Tempo"],
+    answer: "Texture"
+  },
+  {
+    q: "According to the lesson, what does texture help do for a musical piece?",
+    choices: [
+      "It makes the piece shorter",
+      "It enhances the beauty of the piece",
+      "It changes the key of the piece",
+      "It slows down the tempo"
+    ],
+    answer: "It enhances the beauty of the piece"
+  },
+  {
+    q: "Which of the following are the 3 kinds of texture?",
+    choices: [
+      "Monophony, Homophony, Polyphony",
+      "Melody, Harmony, Rhythm",
+      "Tempo, Pitch, Dynamics",
+      "Round, Canon, Chorus"
+    ],
+    answer: "Monophony, Homophony, Polyphony"
+  },
+  {
+    q: "Which texture is the thinnest, with only one musical part in a song?",
+    choices: ["Polyphony", "Homophony", "Monophony", "Round song"],
+    answer: "Monophony"
+  },
+  {
+    q: "In the word \"monophony,\" what does the prefix \"mono\" mean?",
+    choices: ["Many", "One", "Two", "None"],
+    answer: "One"
+  },
+  {
+    q: "In monophony, are there background singers or instruments?",
+    choices: [
+      "Yes, always several",
+      "No, there are none",
+      "Only background singers, no instruments",
+      "Only instruments, no singers"
+    ],
+    answer: "No, there are none"
+  },
+  {
+    q: "Monophony could also mean a single melody on an instrument without any:",
+    choices: [
+      "Accompanying harmony or chords",
+      "Rhythm",
+      "Notes",
+      "Beat"
+    ],
+    answer: "Accompanying harmony or chords"
+  },
+  {
+    q: "Which texture is made of a single melodic line accompanied by chords?",
+    choices: ["Monophony", "Homophony", "Polyphony", "Round song"],
+    answer: "Homophony"
+  },
+  {
+    q: "Which texture is composed of two or more melodies sounded simultaneously?",
+    choices: ["Monophony", "Homophony", "Polyphony", "None of these"],
+    answer: "Polyphony"
+  },
+  {
+    q: "Polyphony is music consisting of many voice parts, each with its own form and:",
+    choices: ["Rhythm", "Color", "Instrument", "Singer"],
+    answer: "Rhythm"
+  },
+  {
+    q: "Why is polyphony considered the thickest texture?",
+    choices: [
+      "Because it has the loudest volume",
+      "Because of the many melodies heard at once",
+      "Because it has only one melody",
+      "Because it uses no instruments"
+    ],
+    answer: "Because of the many melodies heard at once"
+  },
+  {
+    q: "What is a \"round song\"?",
+    choices: [
+      "A monophonic song with no accompaniment",
+      "A short polyphonic vocal piece in canon form",
+      "A homophonic song with chords only",
+      "A song with only one singer"
+    ],
+    answer: "A short polyphonic vocal piece in canon form"
+  },
+  {
+    q: "How many parts does a round song have?",
+    choices: ["Only one part", "Two or more parts", "Exactly three parts", "No parts, just instruments"],
+    answer: "Two or more parts"
+  },
+  {
+    q: "In a round song, do the parts have the same or different melodies?",
+    choices: ["Different melodies", "The same melody", "No melody at all", "Only rhythm, no melody"],
+    answer: "Different melodies"
+  },
+  {
+    q: "In the lesson's painting example, what shows \"community and solidarity\" when different colors and textures work together?",
+    choices: [
+      "Everyone helping each other, even if different",
+      "Using only one color",
+      "Working alone on separate paintings",
+      "Removing all textures from the painting"
+    ],
+    answer: "Everyone helping each other, even if different"
+  }
+];
+
+let order = [];
+let current = 0;
+let score = 0;
+let userAnswers = [];
+let shuffledChoicesMap = [];
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initQuiz() {
+  order = shuffle(QUESTIONS.map((_, i) => i));
+  current = 0;
+  score = 0;
+  userAnswers = [];
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('resultArea').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qIndex = order[current];
+  const qObj = QUESTIONS[qIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+  const shuffledChoices = shuffle(qObj.choices);
+
+  document.getElementById('qCount').textContent = `Question ${current + 1} of ${order.length}`;
+  document.getElementById('progressFill').style.width = `${(current / order.length) * 100}%`;
+  document.getElementById('qText').textContent = qObj.q;
+
+  const choicesDiv = document.getElementById('choices');
+  choicesDiv.innerHTML = '';
+  let selected = null;
+
+  shuffledChoices.forEach((choiceText, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="letter">${letters[i]}.</span> ${choiceText}`;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      document.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+      btn.classList.add('selected');
+      selected = choiceText;
+      document.getElementById('submitBtn').disabled = false;
+    };
+    choicesDiv.appendChild(btn);
+  });
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('submitBtn').style.display = 'block';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('nextBtn').style.display = 'none';
+
+  document.getElementById('submitBtn').onclick = () => {
+    if (!selected) return;
+    const isCorrect = selected === qObj.answer;
+    if (isCorrect) score++;
+
+    userAnswers.push({
+      question: qObj.q,
+      correctAnswer: qObj.answer,
+      userAnswer: selected,
+      isCorrect: isCorrect
+    });
+
+    document.querySelectorAll('.choice').forEach(c => {
+      c.disabled = true;
+      const text = c.textContent.replace(/^[A-D]\.\s*/, '');
+      if (text === qObj.answer) c.classList.add('correct');
+      else if (c.classList.contains('selected') && !isCorrect) c.classList.add('incorrect');
+    });
+
+    const fb = document.getElementById('feedback');
+    fb.classList.add('show', isCorrect ? 'right' : 'wrong');
+    fb.textContent = isCorrect ? '✅ Correct!' : `❌ Incorrect. The correct answer is: ${qObj.answer}`;
+
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'block';
+  };
+
+  document.getElementById('nextBtn').onclick = () => {
+    current++;
+    if (current < order.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  };
+}
+
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'block';
+
+  const total = order.length;
+  document.getElementById('scoreBig').textContent = `${score} / ${total}`;
+  const pct = Math.round((score / total) * 100);
+  let msg = '';
+  if (pct === 100) msg = 'Perfect score! Excellent job! 🎉';
+  else if (pct >= 80) msg = 'Great work! 👏';
+  else if (pct >= 60) msg = 'Good effort — review the topics below.';
+  else msg = 'Keep practicing — review the topics below.';
+  document.getElementById('scoreMsg').textContent = `${pct}% — ${msg}`;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+  if (mistakes.length === 0) {
+    reviewList.innerHTML = '<p>You answered every question correctly. No mistakes to review!</p>';
+  } else {
+    const heading = document.createElement('p');
+    heading.textContent = `You missed ${mistakes.length} question(s). Review below:`;
+    reviewList.appendChild(heading);
+
+    mistakes.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <div class="review-q">${a.question}</div>
+        <div class="review-line">Your answer: <span class="tag-wrong">${a.userAnswer}</span></div>
+        <div class="review-line">Correct answer: <span class="tag-correct">${a.correctAnswer}</span></div>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+
+  document.getElementById('restartBtn').style.display = 'block';
+  document.getElementById('restartBtn').onclick = initQuiz;
+}
+
+initQuiz();
+</script>
+</body>
+</html>

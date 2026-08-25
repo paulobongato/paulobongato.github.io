@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holy Rosary Quiz - Christian Living/GMRC 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(135deg, #fdf6ec 0%, #f3e5d0 100%);
+    margin: 0;
+    padding: 16px;
+    color: #3a2a1a;
+  }
+  .app { max-width: 680px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 16px; }
+  header h1 { font-size: 1.5rem; color: #7a1f2b; margin: 8px 0 4px; }
+  header p { margin: 0; color: #6b5a48; font-size: 0.92rem; }
+  .progress-wrap {
+    background: #fff; border-radius: 20px; height: 14px; overflow: hidden;
+    margin: 12px 0; box-shadow: inset 0 0 3px rgba(0,0,0,0.15); display: none;
+  }
+  .progress-bar {
+    height: 100%; background: linear-gradient(90deg, #b08d3e, #7a1f2b);
+    width: 0%; transition: width 0.3s ease;
+  }
+  .card {
+    background: #fff; border-radius: 16px; padding: 24px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  .qnum { font-weight: 700; color: #7a1f2b; font-size: 0.9rem; margin-bottom: 8px; }
+  .qtext { font-size: 1.15rem; line-height: 1.5; margin-bottom: 18px; font-weight: 600; color: #3a2a1a; }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #fffdf8;
+    border: 2px solid #cbb994;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .option:hover:not(:disabled) {
+    background: #f6ecd9;
+    border-color: #b08d3e;
+  }
+  .option.selected {
+    border-color: #b08d3e;
+    background: #f6ecd9;
+  }
+  .option.correct {
+    background: #d9f0d6;
+    border-color: #3f8f3f;
+    color: #205020;
+    font-weight: bold;
+  }
+  .option.incorrect {
+    background: #f8d7d7;
+    border-color: #b03030;
+    color: #6b1c1c;
+    font-weight: bold;
+  }
+  .option:disabled { cursor: not-allowed; }
+  .controls { display: flex; justify-content: flex-end; margin-top: 10px; }
+  button {
+    font-family: inherit; font-size: 1rem; font-weight: 700; padding: 12px 24px;
+    border: none; border-radius: 10px; cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-submit { background: #7a1f2b; color: #fff; }
+  .btn-submit:hover:not(:disabled) { background: #5e1720; }
+  .btn-next { background: #b08d3e; color: #fff; }
+  .btn-next:hover { background: #93732f; }
+  .feedback {
+    margin-top: 16px; padding: 12px 14px; border-radius: 10px;
+    font-weight: 700; font-size: 1.02rem; display: none;
+  }
+  .feedback.correct-fb { background: #d9f0d6; color: #205020; display: block; }
+  .feedback.incorrect-fb { background: #f8d7d7; color: #6b1c1c; display: block; }
+  .result-card { text-align: center; }
+  .score-big { font-size: 2.6rem; font-weight: 800; color: #7a1f2b; margin: 10px 0; }
+  .score-msg { font-size: 1.05rem; margin-bottom: 20px; color: #444; }
+  .review { text-align: left; margin-top: 20px; }
+  .review h3 { color: #7a1f2b; border-bottom: 2px solid #e0cfa9; padding-bottom: 6px; }
+  .review-item {
+    background: #fdf3e3; border-left: 5px solid #b08d3e; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 12px;
+  }
+  .review-item .rq { font-weight: 700; margin-bottom: 4px; }
+  .review-item .rline { font-size: 0.95rem; margin: 2px 0; }
+  .review-item .wrong-a { color: #b03030; }
+  .review-item .right-a { color: #205020; font-weight: 700; }
+  .no-mistakes {
+    background: #d9f0d6; border-left: 5px solid #3f8f3f; border-radius: 8px;
+    padding: 14px; font-weight: 700; color: #205020; text-align: center;
+  }
+  .btn-restart { background: #7a1f2b; color: #fff; margin-top: 20px; }
+  .btn-restart:hover { background: #5e1720; }
+  .welcome-card { text-align: center; }
+  .welcome-icon { font-size: 3rem; margin-bottom: 8px; }
+  .welcome-card h2 { color: #7a1f2b; margin: 6px 0 14px; font-size: 1.3rem; }
+  .welcome-list { text-align: left; background: #f6ecd9; border-radius: 10px; padding: 16px 20px; margin: 0 0 20px; }
+  .welcome-list li { margin-bottom: 8px; line-height: 1.4; }
+  .btn-start { background: #7a1f2b; color: #fff; font-size: 1.1rem; padding: 14px 32px; }
+  .btn-start:hover { background: #5e1720; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Holy Rosary Quiz</h1>
+    <p>Christian Living/GMRC 4 &middot; Handout #3 &middot; 15 Questions</p>
+  </header>
+
+  <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const allQuestions = [
+  {
+    q: 'The word "rosary" comes from Latin. What does it mean?',
+    options: ["A crown of thorns", "A garland of roses", "A book of prayers", "A chain of gold"],
+    correct: 1
+  },
+  {
+    q: "The Rosary is a devotion in honor of whom?",
+    options: ["Saint Joseph", "The Holy Spirit", "Mary, the Mother of God", "The Apostles"],
+    correct: 2
+  },
+  {
+    q: "Which prayer begins the Rosary and summarizes the great mysteries of the Catholic faith?",
+    options: ["The Hail Mary", "The Apostles' Creed", "The Glory Be", "The Fatima Prayer"],
+    correct: 1
+  },
+  {
+    q: "Which prayer, taken from the Gospels, introduces each Mystery of the Rosary?",
+    options: ["The Hail Mary", "The Glory Be", "The Our Father", "The Hail Holy Queen"],
+    correct: 2
+  },
+  {
+    q: "The first part of the Hail Mary is drawn from which two Gospel moments?",
+    options: [
+      "The angel's announcement to Mary and Elizabeth's greeting to her",
+      "Jesus' birth and the shepherds' visit",
+      "The Last Supper and the Crucifixion",
+      "The Resurrection and the Ascension"
+    ],
+    correct: 0
+  },
+  {
+    q: "How many sets of Mysteries are there in the Rosary?",
+    options: ["Two", "Three", "Four", "Five"],
+    correct: 2
+  },
+  {
+    q: "Which set of Mysteries was added by Pope John Paul II in 2002?",
+    options: ["Joyful Mysteries", "Sorrowful Mysteries", "Glorious Mysteries", "Luminous Mysteries"],
+    correct: 3
+  },
+  {
+    q: "What is the purpose of the repetition of prayers in the Rosary?",
+    options: [
+      "To make the prayer longer",
+      "To lead one into restful, contemplative prayer",
+      "To test one's memory",
+      "To replace silent prayer"
+    ],
+    correct: 1
+  },
+  {
+    q: "In the Lasallian 6-Decade Rosary, the 6th decade is offered for which intentions?",
+    options: [
+      "Only for personal intentions",
+      "The Immaculate Conception of Mary, the intentions of the Pope, and the Brothers of the Christian Schools",
+      "The souls in purgatory",
+      "World peace only"
+    ],
+    correct: 1
+  },
+  {
+    q: "On which days are the Joyful Mysteries prayed?",
+    options: ["Tuesdays and Fridays", "Wednesdays and Sundays", "Mondays and Saturdays", "Thursdays only"],
+    correct: 2
+  },
+  {
+    q: "Which of the following is one of the Joyful Mysteries?",
+    options: ["The Crucifixion", "The Wedding Feast at Cana", "The Finding of Jesus in the Temple", "The Ascension"],
+    correct: 2
+  },
+  {
+    q: "The Luminous Mysteries, or Mysteries of Light, are prayed on which day?",
+    options: ["Mondays", "Tuesdays", "Thursdays", "Sundays"],
+    correct: 2
+  },
+  {
+    q: "Which event belongs to the Luminous Mysteries?",
+    options: ["The Institution of the Eucharist", "The Nativity", "The Agony in the Garden", "The Coronation of Mary"],
+    correct: 0
+  },
+  {
+    q: "The Sorrowful Mysteries, which focus on Christ's suffering, are prayed on which days?",
+    options: ["Mondays and Saturdays", "Tuesdays and Fridays", "Wednesdays and Sundays", "Thursdays"],
+    correct: 1
+  },
+  {
+    q: "Which of the following belongs to the Glorious Mysteries?",
+    options: ["The Scourging at the Pillar", "The Baptism of Jesus", "The Assumption of Mary", "The Presentation"],
+    correct: 2
+  }
+];
+
+let quiz = [];
+let current = 0;
+let score = 0;
+const userAnswers = [];
+let selectedOption = null;
+
+const card = document.getElementById("quizCard");
+const progressBar = document.getElementById("progressBar");
+const progressWrap = document.getElementById("progressWrap");
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildQuiz() {
+  const shuffledQuestions = shuffle(allQuestions);
+  return shuffledQuestions.map(orig => {
+    const optionIndices = orig.options.map((opt, idx) => ({ opt, idx }));
+    const shuffledOptions = shuffle(optionIndices);
+    const newCorrectIndex = shuffledOptions.findIndex(o => o.idx === orig.correct);
+    return {
+      q: orig.q,
+      options: shuffledOptions.map(o => o.opt),
+      correct: newCorrectIndex
+    };
+  });
+}
+
+function renderWelcome() {
+  progressWrap.style.display = "none";
+  card.innerHTML = `
+    <div class="welcome-card">
+      <div class="welcome-icon">🌹</div>
+      <h2>Ready to test what you know about the Holy Rosary?</h2>
+      <ul class="welcome-list">
+        <li><strong>15 questions</strong>, based on Handout #3: Holy Rosary — Life, Ministry and the Paschal Mystery of Christ.</li>
+        <li>Multiple choice, A to D. The order of questions and choices changes every attempt.</li>
+        <li>Choose an answer, then click <strong>Submit</strong> to see if you got it right.</li>
+        <li>Click <strong>Next Question</strong> to continue after each answer.</li>
+        <li>At the end, you'll see your score and a review of any questions you missed.</li>
+      </ul>
+      <button class="btn-start" id="startBtn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById("startBtn").addEventListener("click", startQuiz);
+}
+
+function startQuiz() {
+  progressWrap.style.display = "";
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  userAnswers.length = 0;
+  selectedOption = null;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedOption = null;
+  const item = quiz[current];
+  const letters = ["A", "B", "C", "D"];
+  progressBar.style.width = `${(current / quiz.length) * 100}%`;
+
+  let html = `
+    <div class="qnum">Question ${current + 1} of ${quiz.length}</div>
+    <div class="qtext">${item.q}</div>
+  `;
+
+  item.options.forEach((opt, i) => {
+    html += `<button class="option" data-index="${i}" onclick="selectOption(${i})">${letters[i]}. ${opt}</button>`;
+  });
+
+  html += `
+    <div class="controls">
+      <button class="btn-submit" id="submitBtn" disabled onclick="submitAnswer()">Submit</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  `;
+
+  card.innerHTML = html;
+}
+
+function selectOption(i) {
+  selectedOption = i;
+  document.querySelectorAll(".option").forEach(btn => btn.classList.remove("selected"));
+  document.querySelectorAll(".option")[i].classList.add("selected");
+  document.getElementById("submitBtn").disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedOption === null) return;
+  const item = quiz[current];
+  const letters = ["A", "B", "C", "D"];
+  const options = document.querySelectorAll(".option");
+  const isCorrect = selectedOption === item.correct;
+
+  options.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === item.correct) btn.classList.add("correct");
+    if (i === selectedOption && !isCorrect) btn.classList.add("incorrect");
+  });
+
+  document.getElementById("submitBtn").disabled = true;
+
+  const fb = document.getElementById("feedback");
+  fb.classList.add(isCorrect ? "correct-fb" : "incorrect-fb");
+  fb.textContent = isCorrect
+    ? "Correct! Great job."
+    : `Not quite. The correct answer is ${letters[item.correct]}. ${item.options[item.correct]}`;
+
+  if (isCorrect) score++;
+  userAnswers.push({
+    q: item.q,
+    options: item.options,
+    userIndex: selectedOption,
+    correctIndex: item.correct,
+    isCorrect
+  });
+
+  const controls = document.querySelector(".controls");
+  const nextLabel = current + 1 === quiz.length ? "See Results" : "Next Question";
+  controls.innerHTML = `<button class="btn-next" id="nextBtn">${nextLabel}</button>`;
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    current++;
+    if (current < quiz.length) {
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  });
+}
+
+function renderResults() {
+  progressBar.style.width = "100%";
+  const total = quiz.length;
+  const pct = Math.round((score / total) * 100);
+  const letters = ["A", "B", "C", "D"];
+  let msg = "Keep reading the handout again — you'll get there!";
+  if (pct === 100) msg = "Perfect score! You know your Rosary well!";
+  else if (pct >= 80) msg = "Great job! You know the Holy Rosary well.";
+  else if (pct >= 60) msg = "Good effort! Review the ones you missed.";
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+  card.innerHTML = `
+    <div class="result-card">
+      <div class="qnum">Quiz Complete</div>
+      <div class="score-big">${score} / ${total}</div>
+      <div class="score-msg">${pct}% &mdash; ${msg}</div>
+      <div class="review">
+        <h3>Review</h3>
+        ${mistakes.length === 0
+          ? `<div class="no-mistakes">You got every question right. Amazing!</div>`
+          : mistakes.map(m => `
+            <div class="review-item">
+              <div class="rq">${m.q}</div>
+              <div class="rline wrong-a">Your answer: ${letters[m.userIndex]}. ${m.options[m.userIndex]}</div>
+              <div class="rline right-a">Correct answer: ${letters[m.correctIndex]}. ${m.options[m.correctIndex]}</div>
+            </div>
+          `).join("")
+        }
+      </div>
+      <button class="btn-restart" id="restartBtn">Try Again</button>
+    </div>
+  `;
+
+  document.getElementById("restartBtn").addEventListener("click", startQuiz);
+}
+
+renderWelcome();
+</script>
+</body>
+</html>

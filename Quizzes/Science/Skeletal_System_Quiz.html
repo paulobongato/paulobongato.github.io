@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skeletal System Quiz - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Trebuchet MS', 'Comic Sans MS', Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+    margin: 0;
+    padding: 16px;
+    color: #1e293b;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.7rem;
+    color: #0369a1;
+    margin-bottom: 4px;
+  }
+  header p {
+    margin: 2px 0;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    margin-bottom: 16px;
+  }
+  #progress-bar-wrap {
+    background: #e2e8f0;
+    border-radius: 10px;
+    height: 14px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  #progress-bar {
+    background: #38bdf8;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .q-topic {
+    display: inline-block;
+    background: #fde68a;
+    color: #92400e;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .q-count {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.15s ease;
+    background: #f8fafc;
+  }
+  .option:hover {
+    border-color: #38bdf8;
+    background: #f0f9ff;
+  }
+  .option.selected {
+    border-color: #0284c7;
+    background: #e0f2fe;
+  }
+  .option.correct {
+    border-color: #16a34a;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: bold;
+  }
+  .option.incorrect {
+    border-color: #dc2626;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: bold;
+  }
+  .option .letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .option.selected .letter { background: #0284c7; color: white; }
+  .option.correct .letter { background: #16a34a; color: white; }
+  .option.incorrect .letter { background: #dc2626; color: white; }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.right { background: #dcfce7; color: #166534; }
+  .feedback.wrong { background: #fee2e2; color: #991b1b; }
+  button {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: transform 0.1s ease;
+  }
+  button:active { transform: scale(0.97); }
+  #submit-btn {
+    background: #38bdf8;
+    color: white;
+    width: 100%;
+  }
+  #submit-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+  }
+  #next-btn {
+    background: #0284c7;
+    color: white;
+    width: 100%;
+    display: none;
+  }
+  #next-btn.show { display: block; }
+  #restart-btn, #start-btn {
+    background: #16a34a;
+    color: white;
+    width: 100%;
+  }
+  .score-summary {
+    text-align: center;
+  }
+  .score-big {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #0369a1;
+    margin: 10px 0;
+  }
+  .score-msg {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  .review-item {
+    text-align: left;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .review-item.wrong-item { border-color: #f87171; background: #fff5f5; }
+  .review-item.right-item { border-color: #86efac; background: #f0fdf4; }
+  .review-q { font-weight: bold; margin-bottom: 6px; }
+  .review-line { font-size: 0.95rem; margin: 2px 0; }
+  .review-line.your-ans { color: #991b1b; }
+  .review-line.correct-ans { color: #166534; }
+  #start-screen { text-align: center; }
+  #start-screen p { line-height: 1.5; color: #475569; }
+  .emoji-big { font-size: 3rem; margin-bottom: 10px; }
+  @media (max-width: 480px) {
+    .q-text { font-size: 1.05rem; }
+    .score-big { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🦴 Skeletal System Quiz</h1>
+    <p>Grade 4 Science &middot; Parts, Functions &amp; Common Diseases</p>
+  </header>
+
+  <div class="card" id="start-screen">
+    <div class="emoji-big">🦴🔬</div>
+    <p><strong>Welcome!</strong> This quiz has 25 multiple-choice questions about the parts and functions of the skeletal system, and common diseases that affect it.</p>
+    <p>Answer each question and click <strong>Submit</strong> to see if you got it right. At the end, you'll see your final score and a review of every question you missed.</p>
+    <p>The questions are shuffled every time you play, so no two attempts are the same!</p>
+    <button id="start-btn" onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <div class="card" id="quiz-screen" style="display:none;">
+    <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+    <div class="q-count" id="q-count"></div>
+    <div class="q-topic" id="q-topic"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button id="submit-btn" onclick="submitAnswer()" disabled>Submit</button>
+    <button id="next-btn" onclick="nextQuestion()">Next Question →</button>
+  </div>
+
+  <div class="card score-summary" id="result-screen" style="display:none;">
+    <div class="emoji-big" id="result-emoji"></div>
+    <div class="score-msg">Your Score</div>
+    <div class="score-big" id="score-big"></div>
+    <div class="score-msg" id="score-msg"></div>
+    <button id="restart-btn" onclick="location.reload()">Try Again</button>
+  </div>
+
+  <div class="card" id="review-screen" style="display:none;">
+    <h2 style="text-align:center; color:#0369a1;">Answer Review</h2>
+    <div id="review-list"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===== Parts and Functions of the Skeletal System =====
+  { topic: "Parts & Functions", q: "How many bones does a fully grown adult have in their body?", options: ["150 bones", "206 bones", "300 bones", "350 bones"], correct: 1 },
+  { topic: "Parts & Functions", q: "About how many bones does a baby have at birth?", options: ["100 bones", "150 bones", "206 bones", "300 bones"], correct: 3 },
+  { topic: "Parts & Functions", q: "What two things make up the skeletal system?", options: ["Muscles and skin", "Bones and joints", "Nerves and blood vessels", "Organs and tissues"], correct: 1 },
+  { topic: "Parts & Functions", q: "What is cartilage?", options: ["A tough tissue that covers the ends of bones to prevent wear and tear", "A type of muscle that moves bones", "The liquid found inside blood vessels", "A disease that weakens bones"], correct: 0 },
+  { topic: "Parts & Functions", q: "What do we call the structure where two bones meet and fit together?", options: ["A tendon", "A ligament", "A joint", "A marrow"], correct: 2 },
+  { topic: "Parts & Functions", q: "Which body part connects bone to another bone and produces synovial fluid to keep joints moving smoothly?", options: ["Tendon", "Ligament", "Cartilage", "Muscle"], correct: 1 },
+  { topic: "Parts & Functions", q: "Which body part connects skeletal muscles to bones?", options: ["Ligament", "Cartilage", "Tendon", "Joint"], correct: 2 },
+  { topic: "Parts & Functions", q: "Where in the human body can you find the smallest bone?", options: ["In the ear", "In the hand", "In the foot", "In the skull"], correct: 0 },
+  { topic: "Parts & Functions", q: "Which bone is the longest and strongest bone in the human body?", options: ["Humerus", "Tibia", "Femur", "Radius"], correct: 2 },
+  { topic: "Parts & Functions", q: "Which skeletal part protects your brain?", options: ["Rib cage", "Skull", "Pelvis", "Spine"], correct: 1 },
+  { topic: "Parts & Functions", q: "Which skeletal part protects your heart, lungs, and liver?", options: ["Skull", "Pelvis", "Rib cage", "Femur"], correct: 2 },
+  { topic: "Parts & Functions", q: "Which skeletal part protects the urinary system, intestines, and reproductive organs?", options: ["Skull", "Pelvis", "Rib cage", "Spine"], correct: 1 },
+  { topic: "Parts & Functions", q: "What does the spine do for the body?", options: ["It supports the body and helps us stay upright, while protecting the spinal cord", "It produces most of our blood cells", "It helps us chew and eat food", "It stores extra water for the body"], correct: 0 },
+  { topic: "Parts & Functions", q: "Bones work together with joints and muscles to allow the body to do what?", options: ["Digest food", "Move (walk, run, jump)", "Breathe", "See and hear"], correct: 1 },
+  { topic: "Parts & Functions", q: "What important mineral do our bones store to help keep them (and our whole body) healthy?", options: ["Iron", "Calcium", "Sodium", "Potassium"], correct: 1 },
+
+  // ===== Common Diseases of the Skeletal System =====
+  { topic: "Common Diseases", q: "What is Rickets?", options: ["A break in a bone", "The softening and weakening of bones in children, usually from a lack of vitamin D", "An abnormal curve in the spine", "A stretching or tearing of a ligament"], correct: 1 },
+  { topic: "Common Diseases", q: "Rickets is usually caused by an extreme, long-term lack of which vitamin?", options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin E"], correct: 2 },
+  { topic: "Common Diseases", q: "What is a fracture?", options: ["A break in a bone", "A stretched ligament", "A curved spine", "A missing bone"], correct: 0 },
+  { topic: "Common Diseases", q: "What do we call a fracture where the broken bone pokes through the skin?", options: ["A closed fracture", "An open (compound) fracture", "A hairline fracture", "A stress fracture"], correct: 1 },
+  { topic: "Common Diseases", q: "Which of these commonly causes fractures?", options: ["Falls, car accidents, or sports injuries", "Eating too much calcium", "Drinking plenty of water", "Getting enough sleep"], correct: 0 },
+  { topic: "Common Diseases", q: "What is Osteoporosis?", options: ["A condition that weakens bones, making them fragile and more likely to break", "A stretching of ligaments in a joint", "A curve in the spine seen in children", "A vitamin D deficiency in babies"], correct: 0 },
+  { topic: "Common Diseases", q: "How does Osteoporosis usually develop?", options: ["Suddenly, in just a few days", "Slowly, over several years", "Only during childhood", "Only after a broken bone heals"], correct: 1 },
+  { topic: "Common Diseases", q: "What is Scoliosis?", options: ["A break in the arm bone", "A lack of calcium in the diet", "An abnormal curve of the spine that often forms an S or C shape", "A softening of the skull bones"], correct: 2 },
+  { topic: "Common Diseases", q: "Scoliosis often appears during which stage of life?", options: ["Old age", "Growth spurts or just before puberty", "Right after birth", "Only in adults over 50"], correct: 1 },
+  { topic: "Common Diseases", q: "What is a Sprain?", options: ["A break in a bone", "A stretching or tearing of ligaments in a joint", "A disease that softens bones in children", "An S-shaped curve in the spine"], correct: 1 }
+];
+
+let quiz = [];
+let currentIndex = 0;
+let score = 0;
+let userAnswers = [];
+let selectedOption = null;
+let answered = false;
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startQuiz() {
+  // Shuffle question order
+  const shuffledQuestions = shuffle(QUESTIONS);
+  // Shuffle each question's options, tracking the new correct index
+  quiz = shuffledQuestions.map(item => {
+    const optionIndices = shuffle(item.options.map((_, i) => i));
+    const newOptions = optionIndices.map(i => item.options[i]);
+    const newCorrect = optionIndices.indexOf(item.correct);
+    return { topic: item.topic, q: item.q, options: newOptions, correct: newCorrect };
+  });
+  currentIndex = 0;
+  score = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('review-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  selectedOption = null;
+  const item = quiz[currentIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  document.getElementById('progress-bar').style.width = ((currentIndex) / quiz.length * 100) + '%';
+  document.getElementById('q-count').textContent = `Question ${currentIndex + 1} of ${quiz.length}`;
+  document.getElementById('q-topic').textContent = item.topic;
+  document.getElementById('q-text').textContent = item.q;
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.id = 'opt-' + idx;
+    div.onclick = () => selectOption(idx);
+    div.innerHTML = `<span class="letter">${letters[idx]}</span><span>${opt}</span>`;
+    optionsDiv.appendChild(div);
+  });
+
+  const feedback = document.getElementById('feedback');
+  feedback.className = 'feedback';
+  feedback.textContent = '';
+
+  document.getElementById('submit-btn').style.display = 'block';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function selectOption(idx) {
+  if (answered) return;
+  selectedOption = idx;
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.getElementById('opt-' + idx).classList.add('selected');
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedOption === null || answered) return;
+  answered = true;
+  const item = quiz[currentIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+  const isCorrect = selectedOption === item.correct;
+
+  document.querySelectorAll('.option').forEach(el => el.onclick = null);
+  document.getElementById('opt-' + item.correct).classList.add('correct');
+  if (!isCorrect) {
+    document.getElementById('opt-' + selectedOption).classList.add('incorrect');
+  }
+
+  const feedback = document.getElementById('feedback');
+  feedback.classList.add('show');
+  if (isCorrect) {
+    feedback.classList.add('right');
+    feedback.textContent = '✅ Correct! Great job!';
+    score++;
+  } else {
+    feedback.classList.add('wrong');
+    feedback.textContent = `❌ Not quite. The correct answer is ${letters[item.correct]}: ${item.options[item.correct]}`;
+  }
+
+  userAnswers.push({
+    question: item.q,
+    topic: item.topic,
+    options: item.options,
+    yourAnswer: selectedOption,
+    correctAnswer: item.correct,
+    isCorrect: isCorrect
+  });
+
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('next-btn').classList.add('show');
+  document.getElementById('next-btn').textContent = (currentIndex === quiz.length - 1) ? 'See Final Score →' : 'Next Question →';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= quiz.length) {
+    showResults();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const pct = Math.round((score / quiz.length) * 100);
+  let emoji, msg;
+  if (pct === 100) { emoji = '🏆'; msg = "Perfect score! You're a skeletal system expert!"; }
+  else if (pct >= 80) { emoji = '🌟'; msg = "Excellent work!"; }
+  else if (pct >= 60) { emoji = '👍'; msg = "Good job! Keep practicing!"; }
+  else { emoji = '💪'; msg = "Keep studying — you'll get there!"; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('score-big').textContent = `${score} / ${quiz.length}`;
+  document.getElementById('score-msg').textContent = `${msg} (${pct}%)`;
+
+  const wrongAnswers = userAnswers.filter(a => !a.isCorrect);
+  const reviewScreen = document.getElementById('review-screen');
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+
+  if (wrongAnswers.length === 0) {
+    reviewScreen.style.display = 'block';
+    reviewList.innerHTML = '<p style="text-align:center; color:#166534; font-weight:bold;">You got every question right — no mistakes to review! 🎉</p>';
+  } else {
+    reviewScreen.style.display = 'block';
+    const letters = ['A', 'B', 'C', 'D'];
+    const intro = document.createElement('p');
+    intro.style.textAlign = 'center';
+    intro.style.color = '#475569';
+    intro.textContent = `Here are the ${wrongAnswers.length} question(s) you missed:`;
+    reviewList.appendChild(intro);
+
+    wrongAnswers.forEach((a, i) => {
+      const div = document.createElement('div');
+      div.className = 'review-item wrong-item';
+      div.innerHTML = `
+        <div class="review-q">${i + 1}. ${a.question}</div>
+        <div class="review-line your-ans">Your answer: ${letters[a.yourAnswer]}) ${a.options[a.yourAnswer]}</div>
+        <div class="review-line correct-ans">Correct answer: ${letters[a.correctAnswer]}) ${a.options[a.correctAnswer]}</div>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

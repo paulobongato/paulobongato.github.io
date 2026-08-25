@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physical and Chemical Changes Interactive Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .option-btn { transition: all 0.2s ease-in-out; }
+    .option-btn:hover:not(:disabled) { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-indigo-600 rounded-lg text-white">
+          <i class="fa-solid fa-flask text-xl"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Science Quiz</h1>
+          <p class="text-xs text-slate-400">Physical & Chemical Changes</p>
+        </div>
+      </div>
+      <div id="quiz-progress" class="hidden text-right">
+        <span class="text-xs text-slate-400 block uppercase tracking-wider">Progress</span>
+        <span id="question-number" class="text-sm font-semibold text-indigo-400">Question 1 of 25</span>
+      </div>
+    </div>
+    <!-- Progress Bar -->
+    <div class="w-full bg-slate-800 h-1.5 hidden" id="progress-container">
+      <div id="progress-bar" class="bg-indigo-500 h-1.5 transition-all duration-300 w-0"></div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full flex items-center justify-center">
+
+    <!-- START SCREEN -->
+    <div id="start-card" class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 md:p-10 w-full text-center shadow-xl backdrop-blur-sm">
+      <div class="w-20 h-20 bg-indigo-500/10 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-indigo-500/20">
+        <i class="fa-solid fa-atom text-4xl"></i>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold mb-4">Physical and Chemical Changes Quiz</h2>
+      <p class="text-slate-300 max-w-xl mx-auto text-sm md:text-base mb-8">
+        Test your knowledge based on the 5 science videos! Questions and answer options are randomized every time you take the quiz.
+      </p>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg mx-auto mb-8 text-left text-xs sm:text-sm text-slate-300">
+        <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex items-center gap-3">
+          <i class="fa-solid fa-list-check text-indigo-400 text-lg"></i>
+          <span>25 Questions</span>
+        </div>
+        <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex items-center gap-3">
+          <i class="fa-solid fa-shuffle text-emerald-400 text-lg"></i>
+          <span>Randomized Order</span>
+        </div>
+        <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 flex items-center gap-3">
+          <i class="fa-solid fa-lightbulb text-amber-400 text-lg"></i>
+          <span>Instant Feedback</span>
+        </div>
+      </div>
+
+      <button id="start-btn" class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition duration-200">
+        Start Quiz <i class="fa-solid fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+
+    <!-- QUESTION CARD -->
+    <div id="question-card" class="hidden bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 md:p-8 w-full shadow-xl backdrop-blur-sm">
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <span id="topic-badge" class="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium rounded-full">
+          Topic Badge
+        </span>
+        <span id="score-tracker" class="text-xs font-medium text-slate-400">Score: <span id="current-score" class="text-white">0</span></span>
+      </div>
+
+      <h3 id="question-text" class="text-lg md:text-xl font-medium text-slate-100 mb-6 leading-relaxed">
+        Question text goes here?
+      </h3>
+
+      <div id="options-container" class="space-y-3 mb-6">
+        <!-- Options injected dynamically -->
+      </div>
+
+      <!-- Explanation Box -->
+      <div id="explanation-box" class="hidden p-4 rounded-xl border text-sm mb-6 leading-relaxed">
+        <div class="flex items-center gap-2 font-semibold mb-1" id="explanation-title">
+          <i id="explanation-icon" class="fa-solid"></i>
+          <span id="explanation-status">Status</span>
+        </div>
+        <p id="explanation-text" class="text-slate-300"></p>
+      </div>
+
+      <!-- Next Action Footer -->
+      <div class="flex justify-end pt-2 border-t border-slate-700/50">
+        <button id="next-btn" disabled class="px-6 py-2.5 bg-slate-700 text-slate-400 font-semibold rounded-xl transition duration-200 cursor-not-allowed">
+          Next Question <i class="fa-solid fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULTS CARD -->
+    <div id="results-card" class="hidden bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 md:p-10 w-full text-center shadow-xl backdrop-blur-sm max-w-xl mx-auto">
+      <div id="trophy-icon" class="w-20 h-20 bg-amber-500/10 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-6 border border-amber-500/20">
+        <i class="fa-solid fa-trophy text-4xl"></i>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold mb-2">Quiz Completed!</h2>
+      <p class="text-slate-400 text-sm mb-6">Here is how you performed on Physical & Chemical Changes:</p>
+
+      <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-6 mb-6">
+        <div class="text-4xl md:text-5xl font-extrabold text-indigo-400 mb-2" id="final-percentage">0%</div>
+        <p class="text-slate-300 font-medium text-sm md:text-base" id="final-score-text">You scored 0 out of 25</p>
+      </div>
+
+      <div id="result-feedback" class="text-sm text-slate-300 mb-8 p-4 bg-slate-800 border border-slate-700 rounded-xl">
+        Feedback text
+      </div>
+
+      <button id="restart-btn" class="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition duration-200">
+        <i class="fa-solid fa-rotate-right mr-2"></i> Try Again (New Order)
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+    Based on educational content about Matter, Physical & Chemical Changes.
+  </footer>
+
+  <script>
+    const masterQuizData = [
+      // Video 1: What is Matter?
+      {
+        topic: "What is Matter?",
+        question: "According to science, how is 'matter' defined?",
+        options: [
+          "Anything that can be seen and touched with bare hands",
+          "Everything that has weight and takes up space (volume)",
+          "Only solid objects found on planet Earth",
+          "Substances that melt when heated above 0°C"
+        ],
+        answer: 1,
+        explanation: "Science defines matter as anything that has weight and takes up space (occupies volume)."
+      },
+      {
+        topic: "What is Matter?",
+        question: "What term refers to the amount of space an object occupies?",
+        options: [
+          "Weight",
+          "Density",
+          "Volume",
+          "Composition"
+        ],
+        answer: 2,
+        explanation: "Volume is the amount of space an object takes up. For example, a basketball has a larger volume than a marble."
+      },
+      {
+        topic: "What is Matter?",
+        question: "Which state of matter keeps its own shape and does not flow easily?",
+        options: [
+          "Gas",
+          "Liquid",
+          "Solid",
+          "Plasma"
+        ],
+        answer: 2,
+        explanation: "Solids maintain their own definite shape and do not flow at standard room temperatures (e.g., tables, sugar cubes, glass)."
+      },
+      {
+        topic: "What is Matter?",
+        question: "What happens when you lower an upside-down empty glass straight into a vessel of water?",
+        options: [
+          "The glass immediately fills completely with water",
+          "The air trapped inside prevents water from filling the glass completely",
+          "The air instantly turns into a solid",
+          "The glass floats upward and explodes"
+        ],
+        answer: 1,
+        explanation: "Air trapped in the glass occupies space (volume), preventing the water level inside the glass from rising as high as the outside water level."
+      },
+      {
+        topic: "What is Matter?",
+        question: "How does tilting a submerged inverted glass demonstrate that air is matter?",
+        options: [
+          "Bubbles of air escape and water replaces it, showing air occupies space",
+          "The water turns into gas immediately",
+          "The glass becomes heavier instantly",
+          "It shows air has no volume"
+        ],
+        answer: 0,
+        explanation: "Tilting the glass allows trapped air to escape as bubbles, letting water take its place, proving that air was taking up space."
+      },
+      {
+        topic: "What is Matter?",
+        question: "Which experiment demonstrates that air has weight?",
+        options: [
+          "Freezing water in an ice tray",
+          "Blowing up one of two balanced balloons on a meter stick and watching it tip downward",
+          "Mixing vinegar and baking soda in a beaker",
+          "Crushing a tin soda can with a hammer"
+        ],
+        answer: 1,
+        explanation: "Adding air to one balloon makes that end of a balanced meter stick tilt downwards, proving that air adds measurable weight."
+      },
+
+      // Video 2: Physical and Chemical Changes
+      {
+        topic: "Physical vs Chemical",
+        question: "What is the fundamental difference between a physical change and a chemical change?",
+        options: [
+          "Physical changes are permanent; chemical changes are temporary",
+          "Physical changes alter chemical makeup; chemical changes do not",
+          "Physical changes alter physical form without changing chemical composition; chemical changes alter composition",
+          "Physical changes only happen to gases, while chemical changes happen to solids"
+        ],
+        answer: 2,
+        explanation: "In a physical change, form or appearance changes but chemical makeup remains identical. In a chemical change, a reaction creates new chemical substances."
+      },
+      {
+        topic: "Physical vs Chemical",
+        question: "When an ice cube melts into water, why is it considered a physical change?",
+        options: [
+          "A new gas is produced",
+          "The chemical composition remains water (H₂O) while only the phase changes from solid to liquid",
+          "The ice changes color permanently",
+          "Heat energy is created out of nowhere"
+        ],
+        answer: 1,
+        explanation: "Melting ice is a phase change. The solid ice and liquid water are chemically identical—both are composed of water molecules."
+      },
+      {
+        topic: "Physical vs Chemical",
+        question: "What happens chemically when a wood log burns in a fire?",
+        options: [
+          "The wood is simply changing phase from solid to liquid",
+          "Wood reacts with oxygen to form ash, carbon dioxide, and water vapor",
+          "The wood retains its original chemical structure completely",
+          "No new substances are created during burning"
+        ],
+        answer: 1,
+        explanation: "Burning involves a chemical reaction with oxygen in the air, transforming wood into brand new chemical products like ash, CO₂, and water vapor."
+      },
+      {
+        topic: "Physical vs Chemical",
+        question: "What is the chemical name for the rust that forms on an iron nail exposed to air and moisture?",
+        options: [
+          "Ferrous Nitrate",
+          "Sodium Chloride",
+          "Iron Oxide",
+          "Carbonate"
+        ],
+        answer: 2,
+        explanation: "When iron reacts with oxygen, it produces a new reddish-brown compound known as iron oxide (rust)."
+      },
+
+      // Video 3: Examples of Changes
+      {
+        topic: "Examples of Changes",
+        question: "Mixing Mentos candies with Diet Coke causes a rapid release of carbon dioxide gas. Is this a physical or chemical change?",
+        options: [
+          "Chemical change, because explosion indicators are present",
+          "Physical change, because carbon dioxide gas is released physically without forming new chemical bonds",
+          "Chemical change, because a new liquid is synthesized",
+          "Neither physical nor chemical"
+        ],
+        answer: 1,
+        explanation: "Mentos and Diet Coke is a classic physical process (nucleation). Dissolved CO₂ gas rapidly escapes solution without forming new chemical substances."
+      },
+      {
+        topic: "Examples of Changes",
+        question: "What takes place on a subatomic level during a chemical change?",
+        options: [
+          "Molecules simply shrink in size",
+          "Electrons are shared or exchanged, creating new chemical bonds and new substances",
+          "Protons turn into neutrons",
+          "Atoms are created out of nothing"
+        ],
+        answer: 1,
+        explanation: "Chemical changes involve rearranging chemical bonds and exchanging/sharing electrons, producing new substances."
+      },
+      {
+        topic: "Examples of Changes",
+        question: "What type of change occurs when you fold paper, break a stick, or cut chocolate?",
+        options: [
+          "Chemical change",
+          "Physical change",
+          "Nuclear reaction",
+          "Biological change"
+        ],
+        answer: 1,
+        explanation: "Cutting, breaking, and folding alter only the physical size and shape of an object without changing its chemical identity."
+      },
+      {
+        topic: "Examples of Changes",
+        question: "If a solution (like salt water) can be separated back into its original components through evaporation, it is classified as a:",
+        options: [
+          "Chemical change",
+          "Physical change",
+          "Combustion reaction",
+          "Precipitate reaction"
+        ],
+        answer: 1,
+        explanation: "Solutions that can be separated by physical methods (like evaporation or filtration) undergo physical changes."
+      },
+      {
+        topic: "Examples of Changes",
+        question: "Hammering, rolling, or heating a metal to reshape it without changing its atomic structure is a:",
+        options: [
+          "Chemical change",
+          "Physical change",
+          "Oxidation change",
+          "Decomposition reaction"
+        ],
+        answer: 1,
+        explanation: "Malleability (shaping metal with a hammer) alters shape and size only, making it a physical change."
+      },
+
+      // Video 4: Chemical Change in Matter
+      {
+        topic: "Chemical Changes in Matter",
+        question: "What occurs when milk curdles?",
+        options: [
+          "A physical phase change that can be easily reversed",
+          "A chemical change producing new molecules/substances that cannot be reversed back into fresh milk",
+          "An evaporation process where water disappears",
+          "Freezing of liquid milk into solid ice"
+        ],
+        answer: 1,
+        explanation: "Curdling forms new substances through chemical reactions (often involving acids or bacteria) and cannot be reversed to restore fresh milk."
+      },
+      {
+        topic: "Chemical Changes in Matter",
+        question: "Can the ash left behind after burning wood be converted back into wood?",
+        options: [
+          "Yes, by cooling it down",
+          "Yes, by adding water",
+          "No, because a chemical change permanently transformed the wood into new substances",
+          "Yes, by compressing the ash under high pressure"
+        ],
+        answer: 2,
+        explanation: "Chemical changes create entirely new substances with different properties. Ashes cannot be turned back into original wood."
+      },
+
+      // Video 5: Evidence of Chemical Change
+      {
+        topic: "Evidence of Chemical Change",
+        question: "What helpful mnemonic device is introduced to remember the key indicators of a chemical change?",
+        options: [
+          "Please Excuse Coughs, Sneezes, and Burps",
+          "People Enjoy Cooking Soups and Breads",
+          "Physical Evaporation Creates Solid Bubbles",
+          "Potassium Explodes Easily In Cold Water"
+        ],
+        answer: 0,
+        explanation: "The mnemonic stands for: Precipitate, Energy change, Color change (unexpected), Smell change, and Burps (bubbles/gas)."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "What is a 'precipitate' in chemistry?",
+        options: [
+          "Rain or snow falling from clouds",
+          "A solid or cloudy substance formed when two liquid solutions interact",
+          "Gas bubbles rising inside a soda bottle",
+          "A liquid turning directly into a gas upon heating"
+        ],
+        answer: 1,
+        explanation: "A precipitate is a solid particle formation that emerges when two liquid solutions react chemically."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "What is an example of a precipitate reaction you might observe in everyday kitchen science?",
+        options: [
+          "Dissolving sugar in warm coffee",
+          "Mixing vinegar into milk, causing solid curds to form",
+          "Melting butter in a warm pan",
+          "Freezing orange juice into popsicles"
+        ],
+        answer: 1,
+        explanation: "Adding acid (like vinegar) to milk causes proteins to clump together and precipitate out as solid curds."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "A chemical reaction that absorbs heat and feels cold to the touch is called:",
+        options: [
+          "Exothermic",
+          "Endothermic",
+          "Isochoric",
+          "Radiant"
+        ],
+        answer: 1,
+        explanation: "Endothermic reactions absorb energy/heat from their surroundings, making them feel cold (like instant ice packs)."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "Why is adding red food coloring or Kool-Aid powder to water considered a physical change rather than a chemical color change?",
+        options: [
+          "Because the color change is unexpected",
+          "Because it is an expected color change from mixing dyes without producing a new chemical compound",
+          "Because it creates a hot flame",
+          "Because a solid precipitate immediately forms"
+        ],
+        answer: 1,
+        explanation: "Adding dye is an expected physical mixture. Chemical color changes are unexpected results of new compounds forming (like shiny copper turning green)."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "Smelling freshly baked cookies or sizzling bacon in the kitchen is evidence of:",
+        options: [
+          "Physical state change",
+          "Chemical changes releasing aromatic gas compounds",
+          "Nuclear decay",
+          "Simple evaporation without reaction"
+        ],
+        answer: 1,
+        explanation: "Cooking causes chemical reactions in food compounds, creating brand-new aromatic molecules that your nose detects as smell changes."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "What evidence of chemical change occurs when an Alka-Seltzer tablet is dropped into water?",
+        options: [
+          "Formation of a hard metal solid",
+          "Production of gas bubbles (fizzing)",
+          "Immediate freezing of the liquid",
+          "Sudden drop in volume"
+        ],
+        answer: 1,
+        explanation: "Alka-Seltzer reacts with water to release carbon dioxide gas, producing rapid bubbling and fizzing."
+      },
+      {
+        topic: "Evidence of Chemical Change",
+        question: "Which of the following is NOT evidence of a chemical change?",
+        options: [
+          "Release of light and heat during combustion",
+          "Formation of a solid precipitate from liquids",
+          "Shredding a piece of paper into small confetti pieces",
+          "Production of an unexpected odor or gas bubbles"
+        ],
+        answer: 2,
+        explanation: "Shredding paper changes only its physical size and shape, not its chemical composition. It is a physical change."
+      }
+    ];
+
+    // App State Variables
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    // DOM Elements
+    const startCard = document.getElementById('start-card');
+    const questionCard = document.getElementById('question-card');
+    const resultsCard = document.getElementById('results-card');
+    
+    const startBtn = document.getElementById('start-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const quizProgressText = document.getElementById('quiz-progress');
+    const questionNumberEl = document.getElementById('question-number');
+
+    const topicBadge = document.getElementById('topic-badge');
+    const currentScoreEl = document.getElementById('current-score');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationTitle = document.getElementById('explanation-title');
+    const explanationIcon = document.getElementById('explanation-icon');
+    const explanationStatus = document.getElementById('explanation-status');
+    const explanationText = document.getElementById('explanation-text');
+
+    const finalPercentage = document.getElementById('final-percentage');
+    const finalScoreText = document.getElementById('final-score-text');
+    const resultFeedback = document.getElementById('result-feedback');
+
+    // Utility Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Function to shuffle both questions and individual option choices
+    function prepareRandomizedQuizData() {
+      const shuffledQuestions = shuffleArray(masterQuizData);
+
+      return shuffledQuestions.map(item => {
+        const originalCorrectOptionText = item.options[item.answer];
+        const shuffledOptions = shuffleArray(item.options);
+        const newCorrectAnswerIndex = shuffledOptions.indexOf(originalCorrectOptionText);
+
+        return {
+          ...item,
+          options: shuffledOptions,
+          answer: newCorrectAnswerIndex
+        };
+      });
+    }
+
+    // Event Listeners
+    startBtn.addEventListener('click', startQuiz);
+    nextBtn.addEventListener('click', handleNextQuestion);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    function startQuiz() {
+      quizData = prepareRandomizedQuizData(); // Shuffle questions and options on every run
+      currentQuestionIndex = 0;
+      score = 0;
+      startCard.classList.add('hidden');
+      questionCard.classList.remove('hidden');
+      progressContainer.classList.remove('hidden');
+      quizProgressText.classList.remove('hidden');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      resetState();
+      const currentQ = quizData[currentQuestionIndex];
+
+      // Update UI Header
+      questionNumberEl.textContent = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+      progressBar.style.width = `${((currentQuestionIndex) / quizData.length) * 100}%`;
+      currentScoreEl.textContent = score;
+
+      // Question details
+      topicBadge.textContent = currentQ.topic;
+      questionTextEl.textContent = `${currentQuestionIndex + 1}. ${currentQ.question}`;
+
+      // Populate Options
+      currentQ.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full p-4 text-left border rounded-xl flex items-start gap-3 bg-slate-800/80 border-slate-700 text-slate-200 hover:bg-slate-700/60 transition`;
+        
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-full border border-slate-500 flex items-center justify-center text-xs font-semibold shrink-0 mt-0.5">${String.fromCharCode(65 + index)}</span>
+          <span class="text-sm md:text-base leading-snug">${option}</span>
+        `;
+
+        btn.addEventListener('click', () => selectOption(index, btn));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function resetState() {
+      selectedOption = null;
+      nextBtn.disabled = true;
+      nextBtn.className = "px-6 py-2.5 bg-slate-700 text-slate-400 font-semibold rounded-xl transition duration-200 cursor-not-allowed";
+      explanationBox.classList.add('hidden');
+      optionsContainer.innerHTML = '';
+    }
+
+    function selectOption(index, selectedBtn) {
+      if (selectedOption !== null) return; // Prevent changing choice
+      
+      selectedOption = index;
+      const currentQ = quizData[currentQuestionIndex];
+      const buttons = optionsContainer.querySelectorAll('.option-btn');
+
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (index === currentQ.answer) {
+        // Correct Choice
+        score++;
+        selectedBtn.classList.remove('bg-slate-800/80', 'border-slate-700');
+        selectedBtn.classList.add('bg-emerald-950/60', 'border-emerald-500', 'text-emerald-200');
+        selectedBtn.querySelector('span').classList.add('bg-emerald-500', 'text-slate-900', 'border-emerald-500');
+
+        showExplanation(true, currentQ.explanation);
+      } else {
+        // Incorrect Choice
+        selectedBtn.classList.remove('bg-slate-800/80', 'border-slate-700');
+        selectedBtn.classList.add('bg-rose-950/60', 'border-rose-500', 'text-rose-200');
+        selectedBtn.querySelector('span').classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+
+        // Highlight correct answer
+        const correctBtn = buttons[currentQ.answer];
+        correctBtn.classList.remove('bg-slate-800/80', 'border-slate-700');
+        correctBtn.classList.add('bg-emerald-950/40', 'border-emerald-600/80', 'text-emerald-300');
+
+        showExplanation(false, currentQ.explanation);
+      }
+
+      currentScoreEl.textContent = score;
+
+      // Enable Next Button
+      nextBtn.disabled = false;
+      nextBtn.className = "px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition duration-200";
+    }
+
+    function showExplanation(isCorrect, text) {
+      explanationBox.classList.remove('hidden');
+      explanationText.textContent = text;
+
+      if (isCorrect) {
+        explanationBox.className = "p-4 rounded-xl border text-sm mb-6 bg-emerald-950/30 border-emerald-500/40 text-emerald-300";
+        explanationIcon.className = "fa-solid fa-circle-check text-emerald-400";
+        explanationStatus.textContent = "Correct!";
+      } else {
+        explanationBox.className = "p-4 rounded-xl border text-sm mb-6 bg-rose-950/30 border-rose-500/40 text-rose-300";
+        explanationIcon.className = "fa-solid fa-circle-xmark text-rose-400";
+        explanationStatus.textContent = "Incorrect";
+      }
+    }
+
+    function handleNextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      questionCard.classList.add('hidden');
+      quizProgressText.classList.add('hidden');
+      progressBar.style.width = '100%';
+      resultsCard.classList.remove('hidden');
+
+      const percentage = Math.round((score / quizData.length) * 100);
+      finalPercentage.textContent = `${percentage}%`;
+      finalScoreText.textContent = `You scored ${score} out of ${quizData.length} questions correctly.`;
+
+      if (percentage >= 90) {
+        resultFeedback.textContent = "🌟 Outstanding! You have mastered the concepts of matter, physical changes, and chemical changes!";
+      } else if (percentage >= 70) {
+        resultFeedback.textContent = "👍 Great job! You have a solid understanding of physical and chemical changes.";
+      } else if (percentage >= 50) {
+        resultFeedback.textContent = "📚 Good effort! Review the video lessons on evidence of chemical changes to sharpen your score.";
+      } else {
+        resultFeedback.textContent = "💡 Keep practicing! Rewatch the lesson videos and try the quiz again to master the topic.";
+      }
+    }
+
+    function restartQuiz() {
+      resultsCard.classList.add('hidden');
+      progressContainer.classList.add('hidden');
+      startCard.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

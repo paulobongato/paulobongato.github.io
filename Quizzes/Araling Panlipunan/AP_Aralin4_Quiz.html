@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Ang Heograpiyang Pisikal ng Pilipinas</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --green: #15803d;
+    --green-bg: #dcfce7;
+    --green-border: #22c55e;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --red-border: #ef4444;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 720px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+    padding: 28px 24px;
+    margin-top: 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: var(--blue-dark);
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+  h2.subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    background: #dbeafe;
+    color: var(--blue-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .instructions {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .instructions ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+  .instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #e2e8f0;
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .center { text-align: center; }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--blue);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .choice:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: #eff6ff;
+  }
+  .choice.selected {
+    border-color: var(--blue);
+    background: #dbeafe;
+  }
+  .choice.correct {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .choice.incorrect {
+    border-color: var(--red-border);
+    background: var(--red-bg);
+    color: var(--red);
+    font-weight: 600;
+  }
+  .choice.disabled { cursor: default; }
+  .choice-letter {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+  }
+  .feedback-box {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct-box {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+  }
+  .feedback-box.incorrect-box {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+  }
+  .feedback-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .feedback-title.correct-text { color: var(--green); }
+  .feedback-title.incorrect-text { color: var(--red); }
+  .feedback-exp {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #334155;
+  }
+  .nav-row {
+    margin-top: 18px;
+  }
+  .score-hero {
+    text-align: center;
+    padding: 20px 0 8px 0;
+  }
+  .score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid var(--blue);
+    background: #eff6ff;
+  }
+  .score-circle .num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    line-height: 1;
+  }
+  .score-circle .den {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .score-msg {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .score-sub {
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item.wrong {
+    border-color: var(--red-border);
+    background: #fff5f5;
+  }
+  .review-item.right {
+    border-color: var(--green-border);
+    background: #f5fff7;
+  }
+  .review-q {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .review-line {
+    font-size: 0.92rem;
+    margin: 3px 0;
+  }
+  .review-line.wrong-answer { color: var(--red); }
+  .review-line.right-answer { color: var(--green); }
+  .review-exp {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: #475569;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 6px;
+  }
+  .section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 24px 0 12px 0;
+  }
+  .hidden { display: none !important; }
+  footer.tag {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; border-radius: 14px; }
+    h1 { font-size: 1.25rem; }
+    .score-circle { width: 120px; height: 120px; }
+    .score-circle .num { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Ang Heograpiyang Pisikal ng Pilipinas</h1>
+    <h2 class="subtitle">Aralin 4 &mdash; Pagsusulit sa Araling Panlipunan</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Araling Panlipunan</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">25 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>25 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Topograpiya ng Pilipinas, Mga Anyong-Lupa at Anyong-Tubig, at Kahalagahan ng mga Anyong-Lupa at Tubig (Pahina 53&ndash;67).</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 25</div>
+    </div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/25</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas &middot; Phoenix Publishing House, Inc.</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang tawag sa agham na may kinalaman sa pag-aaral ng mga katangiang pisikal o pang-ibabaw na katangian ng isang lugar o bansa?", "choices": ["Heolohiya", "Topograpiya", "Klimatolohiya", "Heograpiya"], "correct": 1, "exp": "Ang topograpiya ay ang agham na nag-aaral ng katangiang pisikal o pang-ibabaw na anyo ng isang lugar o bansa."}, {"q": "Humigit-kumulang ilang malaki at maliliit na pulo ang bumubuo sa kapuluan ng Pilipinas?", "choices": ["6,241", "7,107", "7,641", "8,641"], "correct": 2, "exp": "Ang Pilipinas ay binubuo ng humigit-kumulang 7,641 malaki at maliliit na pulo."}, {"q": "Anong tatlong malaking pangkat ng pulo ang bumubuo sa kapuluan ng Pilipinas?", "choices": ["Luzon, Palawan, Mindanao", "Luzon, Visayas, Mindanao", "Visayas, Bicol, Mindanao", "Luzon, Bicol, Sulu"], "correct": 1, "exp": "Ang mga pulo ng Pilipinas ay nahahati sa tatlong malaking pangkat: Luzon, Visayas, at Mindanao."}, {"q": "Humigit-kumulang na sukat ng Pilipinas sa kilometro kuwadrado (km²)?", "choices": ["200,000 km²", "250,000 km²", "300,000 km²", "350,000 km²"], "correct": 2, "exp": "Ang Pilipinas ay may sukat na humigit-kumulang 300,000 kilometro kuwadrado."}, {"q": "Anong hugis ang tinataglay ng Pilipinas ayon sa aklat?", "choices": ["Bilog", "Parihaba", "Tatsulok", "Hugis-puso"], "correct": 2, "exp": "Ang Pilipinas ay may tila tatsulok na hugis."}, {"q": "Saang rehiyon ng mundo matatagpuan ang Pilipinas?", "choices": ["Hilagang Asya", "Kanlurang Asya", "Timog-Silangang Asya", "Gitnang Silangan"], "correct": 2, "exp": "Ang Pilipinas ay matatagpuan sa Timog-Silangang Asya, nasa may dakong hilaga ng ekwador."}, {"q": "Aling katawang-tubig ang nakapaligid sa Pilipinas sa bahaging silangan?", "choices": ["Dagat Timog Tsina", "Dagat ng Celebes", "Karagatang Pasipiko", "Golpo ng Moro"], "correct": 2, "exp": "Sa silangan ng Pilipinas ay ang Karagatang Pasipiko."}, {"q": "Aling katawang-tubig ang nakapaligid sa Pilipinas sa bahaging kanluran?", "choices": ["Karagatang Pasipiko", "Dagat Timog Tsina", "Dagat ng Sulu", "Golpo ng Lingayen"], "correct": 1, "exp": "Sa kanluran ng Pilipinas ay ang Dagat Timog Tsina (kilala rin bilang Dagat Kanlurang Pilipinas)."}, {"q": "Ilang rehiyon ang binubuo ng Pilipinas ayon sa mapang pisikal na tinalakay sa aralin?", "choices": ["15", "16", "17", "18"], "correct": 3, "exp": "Ang Pilipinas ay binubuo ng labimpitong (18) rehiyon."}, {"q": "Alin sa mga sumusunod ang pinakamalaking pulo sa Pilipinas?", "choices": ["Mindanao", "Palawan", "Luzon", "Samar"], "correct": 2, "exp": "Ang Luzon ang pinakamalaking pulo sa Pilipinas."}, {"q": "Saang pulo matatagpuan ang Maynila, ang punong-lungsod o kabesera ng bansa?", "choices": ["Visayas", "Mindanao", "Luzon", "Palawan"], "correct": 2, "exp": "Ang Maynila, punong-lungsod ng Pilipinas, ay matatagpuan sa pulo ng Luzon."}, {"q": "Ilang rehiyon ang bumubuo sa Luzon?", "choices": ["6", "7", "8", "9"], "correct": 2, "exp": "May walong (8) rehiyon na makikita sa Luzon."}, {"q": "Ilang rehiyon ang bumubuo sa Visayas?", "choices": ["3", "4", "5", "6"], "correct": 1, "exp": "Ang Visayas ay may apat (4) na rehiyong kinabibilangan."}, {"q": "Anong tawag ang ibinibigay sa rehiyong binubuo ng Basilan, Lanao del Sur, Maguindanao, Sulu, at Tawi-Tawi?", "choices": ["CALABARZON", "SOCCSKSARGEN", "BARMM", "Caraga"], "correct": 2, "exp": "Ang Bangsamoro Autonomous Region in Muslim Mindanao (BARMM) ay binubuo ng Basilan, Lanao del Sur, Maguindanao, Sulu, at Tawi-Tawi."}, {"q": "Ang Mindanao ay itinuturing na tahanan ng marami sa mga sumusunod:", "choices": ["Katoliko", "Muslim", "Anito", "Kristiyano lamang"], "correct": 1, "exp": "Ang Mindanao ay tahanan ng maraming Muslim sa Pilipinas."}, {"q": "Alin sa mga sumusunod ang HINDI kabilang sa mga malaking isla ng Visayas?", "choices": ["Panay", "Cebu", "Mindoro", "Leyte"], "correct": 2, "exp": "Ang Mindoro ay bahagi ng Luzon (sa ilalim ng Rehiyon IV-B o MIMAROPA), hindi ng Visayas. Ang Panay, Negros, Cebu, Bohol, Leyte, at Samar ang malalaking isla ng Visayas."}, {"q": "Anong rehiyon ang binubuo ng Ilocos Norte, Ilocos Sur, La Union, at Pangasinan?", "choices": ["Rehiyon I", "Rehiyon II", "CAR", "Rehiyon III"], "correct": 0, "exp": "Ang Rehiyon I o Rehiyon ng Ilocos ay binubuo ng Ilocos Norte, Ilocos Sur, La Union, at Pangasinan."}, {"q": "Anong rehiyon ang tinatawag ding Lambak ng Cagayan?", "choices": ["Rehiyon I", "Rehiyon II", "Rehiyon III", "CAR"], "correct": 1, "exp": "Ang Rehiyon II ay tinatawag ding Lambak ng Cagayan."}, {"q": "Anong rehiyon ang binubuo ng Abra, Apayao, Benguet, Ifugao, Kalinga, at Mountain Province?", "choices": ["Rehiyon I", "Rehiyon II", "Cordillera Administrative Region (CAR)", "Rehiyon III"], "correct": 2, "exp": "Ang Cordillera Administrative Region (CAR) ay binubuo ng Abra, Apayao, Benguet, Ifugao, Kalinga, at Mountain Province."}, {"q": "Anong rehiyon ang kilala bilang CALABARZON?", "choices": ["Rehiyon III", "Rehiyon IV-A", "Rehiyon IV-B", "Rehiyon V"], "correct": 1, "exp": "Ang Rehiyon IV-A ay kilala bilang CALABARZON, binubuo ng Cavite, Laguna, Batangas, Rizal, at Quezon."}, {"q": "Anong rehiyon ang kilala bilang MIMAROPA?", "choices": ["Rehiyon IV-A", "Rehiyon IV-B", "Rehiyon V", "Rehiyon VI"], "correct": 1, "exp": "Ang Rehiyon IV-B ay kilala bilang MIMAROPA, binubuo ng Marinduque, Occidental Mindoro, Oriental Mindoro, Palawan, at Romblon."}, {"q": "Anong rehiyon ang tinatawag na Rehiyon ng Bicol?", "choices": ["Rehiyon III", "Rehiyon IV-B", "Rehiyon V", "Rehiyon VI"], "correct": 2, "exp": "Ang Rehiyon V ay ang Rehiyon ng Bicol."}, {"q": "Anong rehiyon ang tinatawag na Kanlurang Visayas?", "choices": ["Rehiyon VI", "Rehiyon VII", "Rehiyon VIII", "Negros Island Region"], "correct": 0, "exp": "Ang Rehiyon VI ay ang Kanlurang Visayas."}, {"q": "Anong rehiyon ang binubuo ng Bohol, Cebu, at Negros Oriental?", "choices": ["Rehiyon VI (Kanlurang Visayas)", "Rehiyon VII (Gitnang Visayas)", "Rehiyon VIII (Silangang Visayas)", "Negros Island Region"], "correct": 1, "exp": "Ang Rehiyon VII o Gitnang Visayas ay binubuo ng Bohol, Cebu, at Negros Oriental."}, {"q": "Anong espesyal na rehiyon ang binubuo lamang ng Negros Occidental at Negros Oriental?", "choices": ["Negros Island Region", "Rehiyon VI", "Rehiyon VII", "Caraga"], "correct": 0, "exp": "Ang Negros Island Region ay binubuo ng Negros Occidental at Negros Oriental."}, {"q": "Anong rehiyon ang binubuo ng Cotabato (North), General Santos, Sarangani, South Cotabato, at Sultan Kudarat?", "choices": ["Rehiyon X", "Rehiyon XI", "Rehiyon XII (SOCCSKSARGEN)", "Rehiyon XIII (Caraga)"], "correct": 2, "exp": "Ang Rehiyon XII o SOCCSKSARGEN ay binubuo ng Cotabato (North), General Santos, Sarangani, South Cotabato, at Sultan Kudarat."}, {"q": "Alin sa mga sumusunod ang pinakamataas na uri ng anyong-lupa?", "choices": ["Burol", "Talampas", "Bundok", "Kapatagan"], "correct": 2, "exp": "Ang bundok ang pinakamataas na anyong-lupa."}, {"q": "Ano ang pangalan ng pinakamataas na bundok sa Pilipinas, na matatagpuan sa Davao?", "choices": ["Bundok Banahaw", "Bundok Makiling", "Bundok Pulag", "Bundok Apo"], "correct": 3, "exp": "Ang Bundok Apo ang pinakamataas na bundok sa Pilipinas, matatagpuan sa Davao."}, {"q": "Aling bundok ang matatagpuan sa Laguna?", "choices": ["Bundok Apo", "Bundok Makiling", "Bundok Banahaw", "Bundok Pulag"], "correct": 1, "exp": "Ang Bundok Makiling ay matatagpuan sa Laguna."}, {"q": "Ano ang tawag sa pangkat o hilera ng mga bundok?", "choices": ["Bulubundukin", "Kapatagan", "Talampas", "Lambak"], "correct": 0, "exp": "Ang bulubundukin ay tawag sa pangkat o hilera ng mga bundok."}, {"q": "Ano ang pinakamahabang bulubundukin sa Pilipinas, matatagpuan sa Silangang Gitnang Luzon?", "choices": ["Cordillera", "Sierra Madre", "Zambales Mountains", "Diwata Range"], "correct": 1, "exp": "Ang Bulubundukin ng Sierra Madre ang pinakamahabang bulubundukin sa bansa."}, {"q": "Anong anyong-lupang mataas ang karaniwang may tuktok na hugis kono o balisungson at maaaring magbuga ng gas, lahar, at bato?", "choices": ["Burol", "Bulkan", "Talampas", "Tangway"], "correct": 1, "exp": "Ang bulkan ay isang anyong-lupang mataas na karaniwang may tuktok na hugis kono o balisungson at maaaring magbuga ng gas, malalaking bato, apog, lahar, at kumukulong putik."}, {"q": "Aling bulkan sa Albay ang kinikilala sa magandang perpektong hugis-kono nito?", "choices": ["Bulkang Pinatubo", "Bulkang Mayon", "Bulkang Taal", "Bulkang Kanlaon"], "correct": 1, "exp": "Ang Bulkang Mayon sa Albay ay kinikilala sa napakagandang perpektong hugis-kono nito."}, {"q": "Aling bulkan sa Zambales ang biglang sumabog noong Hunyo 15, 1991?", "choices": ["Bulkang Mayon", "Bulkang Taal", "Bulkang Pinatubo", "Bulkang Bulusan"], "correct": 2, "exp": "Ang Bulkang Pinatubo sa Zambales ay biglang sumabog noong Hunyo 15, 1991 at kumitil ng maraming buhay."}, {"q": "Aling bulkan sa Batangas ang itinuturing na pinakamaliit na aktibong bulkan sa daigdig?", "choices": ["Bulkang Taal", "Bulkang Mayon", "Bulkang Kanlaon", "Bulkang Bulusan"], "correct": 0, "exp": "Ang Bulkang Taal sa Batangas ay isa sa pinakamaliliit na bulkan sa daigdig at aktibo pa rin."}, {"q": "Aling bulkan ang matatagpuan sa isla ng Negros?", "choices": ["Bulkang Bulusan", "Bulkang Kanlaon", "Bulkang Pinatubo", "Bulkang Mayon"], "correct": 1, "exp": "Ang Bulkang Kanlaon ay aktibong bulkan sa isla ng Negros."}, {"q": "Ano ang tawag sa isang mataas na anyong-lupa na mas mababa sa bundok at karaniwang pabilog ang hugis?", "choices": ["Burol", "Talampas", "Kapatagan", "Bulubundukin"], "correct": 0, "exp": "Ang burol ay isang mataas na anyong-lupa na mas mababa sa bundok, at karaniwang pabilog ang hugis nito."}, {"q": "Ano ang pinakatanyag na burol sa Pilipinas na matatagpuan sa Bohol?", "choices": ["Sierra Madre", "Chocolate Hills", "Talampas ng Tagaytay", "Bundok Apo"], "correct": 1, "exp": "Ang Chocolate Hills sa Bohol ang pinakatanyag na burol sa Pilipinas."}, {"q": "Ano ang tawag sa isang mababa at patag na lupang matatagpuan sa pagitan ng mga bundok o burol?", "choices": ["Talampas", "Lambak", "Kapatagan", "Tangway"], "correct": 1, "exp": "Ang lambak ay isang mababa at patag na lupang matatagpuan sa pagitan ng mga bundok o burol."}, {"q": "Alin ang pinakamalawak na lambak sa Pilipinas, matatagpuan sa Rehiyon II?", "choices": ["Lambak ng Marikina", "Lambak ng Cotabato", "Lambak ng Cagayan", "Lambak ng La Trinidad"], "correct": 2, "exp": "Ang Lambak ng Cagayan ay ang pinakamalawak na lambak sa bansa."}, {"q": "Aling lambak sa Benguet ang kilala bilang \"Salad Bowl of the Philippines\"?", "choices": ["Lambak ng Cagayan", "Lambak ng La Trinidad", "Lambak ng Marikina", "Lambak ng Cotabato"], "correct": 1, "exp": "Ang Lambak ng La Trinidad sa Benguet ay kilala bilang \"Hardin ng mga Gulay\" o \"Salad Bowl of the Philippines.\""}, {"q": "Ano ang tawag sa patag na lupa na matatagpuan sa mataas na lugar?", "choices": ["Kapatagan", "Talampas", "Lambak", "Tangos"], "correct": 1, "exp": "Ang talampas ay isang patag na lupa na matatagpuan sa mataas na lugar."}, {"q": "Aling talampas ang tinaguriang \"Lungsod ng mga Pino\"?", "choices": ["Talampas ng Tagaytay", "Talampas ng Bukidnon", "Lungsod ng Baguio", "Talampas ng Pangasinan"], "correct": 2, "exp": "Ang Lungsod ng Baguio, na isang talampas, ay tinaguriang \"Lungsod ng mga Pino.\""}, {"q": "Ano ang tawag sa isang malawak na patag na lupa kung saan maraming tao ang naninirahan?", "choices": ["Talampas", "Kapatagan", "Burol", "Tangway"], "correct": 1, "exp": "Ang kapatagan ay isang malawak na patag na lupa na maraming naninirahang tao."}, {"q": "Alin ang pinakamalaking kapatagan sa Pilipinas, na binubuo ng bahagi ng Bulacan, Nueva Ecija, Pampanga, Pangasinan, at Tarlac?", "choices": ["Kapatagan ng Leyte", "Kapatagan ng Daet", "Gitnang Kapatagan ng Luzon", "Talampas ng Bukidnon"], "correct": 2, "exp": "Ang Gitnang Kapatagan ng Luzon ang pinakamalaking kapatagan sa bansa at kilala bilang \"Kamalig ng Bigas ng Pilipinas.\""}, {"q": "Ano ang tawag sa pahaba at nakausling lupa na halos napaliligiran ng tubig?", "choices": ["Tangos", "Tangway", "Kipot", "Look"], "correct": 1, "exp": "Ang tangway ay isang pahaba at nakausling lupa na halos napaliligiran ng tubig."}, {"q": "Ano ang katulad ng tangway ngunit mas maliit ang sukat?", "choices": ["Tangos", "Golpo", "Kipot", "Kapatagan"], "correct": 0, "exp": "Ang tangos ay katulad ng tangway ngunit mas maliit ang sukat nito."}, {"q": "Ano ang tawag sa isang mahabang anyong-tubig na umaagos mula sa mga bundok o burol patungo sa dagat?", "choices": ["Ilog", "Lawa", "Talon", "Bukal"], "correct": 0, "exp": "Ang ilog ay isang mahabang anyong-tubig na umaagos mula sa mga bundok o burol patungo sa dagat."}, {"q": "Ano ang pinakamahabang ilog sa Pilipinas na dumadaloy sa Cagayan, Isabela, at Nueva Vizcaya?", "choices": ["Ilog Pasig", "Ilog Agno", "Ilog Pampanga", "Ilog Cagayan"], "correct": 3, "exp": "Ang Ilog Cagayan ang pinakamahabang ilog sa Pilipinas."}, {"q": "Aling makasaysayang ilog sa Maynila ang naging daan ng gawaing pangkalakalan noong araw?", "choices": ["Ilog Agno", "Ilog Cagayan", "Ilog Pasig", "Ilog Pampanga"], "correct": 2, "exp": "Ang Ilog Pasig ay isang makasaysayang ilog na naging daan ng gawaing pangkalakalan."}, {"q": "Mayroong humigit-kumulang na ilang lawa ang matatagpuan sa kapuluan ng Pilipinas?", "choices": ["39", "49", "59", "69"], "correct": 2, "exp": "Mayroong humigit-kumulang 59 na lawa ang matatagpuan sa Pilipinas."}, {"q": "Ano ang pinakamalaking lawa sa Pilipinas na matatagpuan sa Laguna?", "choices": ["Lawa ng Taal", "Lawa ng Lanao", "Laguna de Bay", "Lawa ng Bulusan"], "correct": 2, "exp": "Ang Laguna de Bay ang pinakamalaking lawa sa bansa."}, {"q": "Ano ang pangalawang pinakamalaking lawa sa Pilipinas, matatagpuan sa Lanao del Sur?", "choices": ["Lawa ng Taal", "Lawa ng Lanao", "Laguna de Bay", "Lawa ng Bulusan"], "correct": 1, "exp": "Ang Lawa ng Lanao sa Lanao del Sur ang pangalawang pinakamalaking lawa sa bansa."}, {"q": "Ano ang pangatlong pinakamalaking lawa sa Pilipinas na may Bulkang Taal sa gitna nito?", "choices": ["Lawa ng Taal", "Lawa ng Lanao", "Laguna de Bay", "Lawa ng Bulusan"], "correct": 0, "exp": "Ang Lawa ng Taal sa Batangas ang pangatlong pinakamalaking lawa, at ang Bulkang Taal ay matatagpuan sa gitna nito."}, {"q": "Ano ang tawag sa tubig na bumabagsak mula sa isang matarik na dalisdis?", "choices": ["Talon", "Bukal", "Kipot", "Look"], "correct": 0, "exp": "Ang talon ay tubig na bumabagsak mula sa isang matarik na dalisdis."}, {"q": "Aling sikat na talon sa Laguna ang taun-taong pinupuntahan ng maraming turista?", "choices": ["Talon ng Maria Cristina", "Talon ng Pagsanjan", "Talon ng Aliw", "Talon ng Loboc"], "correct": 1, "exp": "Ang Talon ng Pagsanjan sa Laguna ay sikat na destinasyon ng mga turista."}, {"q": "Aling talon sa Mindanao ang pinagkukunan ng elektrisidad ng ilang lalawigan doon?", "choices": ["Talon ng Pagsanjan", "Talon ng Maria Cristina", "Talon ng Tinago", "Talon ng Loboc"], "correct": 1, "exp": "Ang Talon ng Maria Cristina sa Mindanao ay pinagkukunan ng elektrisidad ng ilang lalawigan doon."}, {"q": "Alin ang pinakamalaking anyong-tubig sa mundo na matatagpuan sa silangan ng Pilipinas?", "choices": ["Dagat Timog Tsina", "Dagat ng Celebes", "Karagatang Pasipiko", "Golpo ng Moro"], "correct": 2, "exp": "Ang Karagatang Pasipiko ang pinakamalaking anyong-tubig sa mundo, matatagpuan sa silangan ng Pilipinas."}, {"q": "Ano ang tawag sa anyong-tubig na nanggagaling sa ilalim ng lupa?", "choices": ["Bukal", "Look", "Kipot", "Golpo"], "correct": 0, "exp": "Ang bukal ay anyong-tubig na nanggagaling sa ilalim ng lupa."}, {"q": "Saan matatagpuan ang mga kilalang mainit na bukal o hot spring?", "choices": ["Aklan at Antique", "Tiwi, Albay at Calamba, Laguna", "Bukidnon at Lanao del Norte", "Baguio at Benguet"], "correct": 1, "exp": "Ang mga kilalang hot spring ay matatagpuan sa Tiwi, Albay at sa Calamba, Laguna."}, {"q": "Ano ang tawag sa bahagi ng dagat na halos napaliligiran ng lupa at kadalasang ginagawang daungan ng barko?", "choices": ["Golpo", "Look", "Kipot", "Tangos"], "correct": 1, "exp": "Ang look ay bahagi ng dagat na halos napaliligiran ng lupa, at kadalasang ginagawang daungan ng barko."}, {"q": "Ano ang tawag sa isang makitid na kanal o daang-tubig na nag-uugnay sa dalawang malalaking anyong-tubig?", "choices": ["Kipot", "Golpo", "Bukal", "Tangway"], "correct": 0, "exp": "Ang kipot ay isang makitid na kanal o daang-tubig na nag-uugnay sa dalawang malalaking anyong-tubig."}, {"q": "Aling kipot ang nag-uugnay sa Samar at Leyte?", "choices": ["Kipot ng Surigao", "Kipot ng San Juanico", "Kipot ng Verde Island", "Kipot ng Mindoro"], "correct": 1, "exp": "Ang Kipot ng San Juanico ay nag-uugnay sa Samar at Leyte."}, {"q": "Ano ang tawag sa malalaking look, gaya ng matatagpuan sa Lingayen at Albay?", "choices": ["Golpo", "Kipot", "Bukal", "Tangos"], "correct": 0, "exp": "Ang golpo ay tawag sa malalaking look."}, {"q": "Humigit-kumulang na ilang kilometro ang baybayin ng buong kapuluan ng Pilipinas ayon sa aklat?", "choices": ["17,460 km", "26,289 km", "36,289 km", "46,289 km"], "correct": 2, "exp": "Ayon sa aklat, ang buong kapuluan ng Pilipinas ay may baybaying umaabot sa humigit-kumulang 36,289 kilometro."}, {"q": "Dahil sa napakahabang baybayin nito, ang Pilipinas ay itinuturing na isang natural na:", "choices": ["gubat", "pangisdaan", "kagubatan", "disyerto"], "correct": 1, "exp": "Dahil sa napakahabang baybayin na umaabot sa 17,460 kilometro, itinuturing ang Pilipinas na isang natural na pangisdaan."}, {"q": "Alin sa mga sumusunod ang isang POSITIBONG epekto ng heograpiya at topograpiya ng Pilipinas sa pag-unlad ng bansa?", "choices": ["Suliranin sa komunikasyon at transportasyon", "Magandang lokasyon bilang sentro ng distribusyon ng produkto sa Timog-Silangang Asya", "Banta ng bulkan dahil sa Pacific Ring of Fire", "Pagkakaroon ng rehiyonalismo"], "correct": 1, "exp": "Isa sa positibong epekto, ang magandang lokasyon ng Pilipinas ay ginagawa itong sentro ng distribusyon ng mga produkto sa Timog-Silangang Asya."}, {"q": "Alin sa mga sumusunod ang isang positibong epekto ng pagiging kapuluan ng Pilipinas?", "choices": ["Mabagal na komunikasyon at transportasyon", "Magagandang pangisdaan mula hilaga hanggang timog ng bansa", "Pagbaha sa panahon ng tag-ulan", "Suliranin sa liblib na lugar"], "correct": 1, "exp": "Dahil sa napakahabang baybayin nito, maraming magagandang pangisdaan ang matatagpuan mula hilaga hanggang timog ng bansa."}, {"q": "Alin sa mga sumusunod ang isang positibong epekto na dulot ng magagandang daungan ng Pilipinas?", "choices": ["Nagiging lugar ito ng kalakalan sa pandaigdigang antas", "Nagiging sanhi ito ng pagbaha", "Nagpapataas ito ng banta ng bulkan", "Nagpapahirap ito sa komunikasyon"], "correct": 0, "exp": "Ang mga maiinam na daungan ng Pilipinas ay nagiging lugar ng kalakalan sa pandaigdigang antas."}, {"q": "Alin ang isang positibong epekto ng heograpiyang pisikal ng Pilipinas kaugnay ng klima?", "choices": ["Katamtamang klima dulot ng hanging nagmumula sa mga karagatang nakapaligid", "Sobrang init sa buong taon", "Tag-tuyot sa lahat ng panig ng bansa", "Malamig na panahon sa buong taon"], "correct": 0, "exp": "Dahil sa mga karagatang nakapaligid sa kapuluan, may katamtamang klima ang maraming lugar sa Pilipinas."}, {"q": "Alin sa mga sumusunod ang isang NEGATIBONG epekto na dulot ng pagiging kapuluan o arkipelago ng Pilipinas?", "choices": ["Maraming magagandang pangisdaan", "Katamtamang klima sa maraming lugar", "Rehiyonalismo at mabagal na komunikasyon at transportasyon", "Maraming daungan para sa kalakalan"], "correct": 2, "exp": "Dahil sa pagiging kapuluan, may suliranin sa komunikasyon at transportasyon at nagkakaroon din ng rehiyonalismo dahil sa layo-layo ng mga pulo."}, {"q": "Alin sa mga sumusunod ang isang negatibong epekto na may kinalaman sa mga liblib na lugar sa bansa?", "choices": ["Mabilis na naaabot ng pamahalaan ang mga ito", "Hindi agad naaabot ng pamahalaan ang mga ito", "Sila ang sentro ng kalakalan", "Wala silang katutubong pamayanan"], "correct": 1, "exp": "Maraming lugar, lalo na ang mga nasa liblib na pook, ay hindi agad naaabot ng pamahalaan."}, {"q": "Bakit itinuturing na banta ang lokasyon ng Pilipinas sa Pacific Ring of Fire?", "choices": ["Dahil nagdudulot ito ng tag-tuyot sa buong bansa", "Dahil sa maraming aktibong bulkan na maaaring pumutok anumang oras", "Dahil nagpapababa ito ng ani ng mga magsasaka", "Dahil ito ay nagiging sanhi ng pagbaha lamang"], "correct": 1, "exp": "Dahil sa maraming aktibong bulkan sa Pilipinas na bahagi ng Pacific Ring of Fire, banta ito sa kaligtasan ng mamamayan."}, {"q": "Bakit malimit na dinaranas ng Pilipinas ang matinding pagbaha, lalo na sa panahon ng tag-ulan?", "choices": ["Dahil sa kakulangan ng bulkan", "Dahil napaliligiran ito ng tubig at madalas puntahan ng bagyo", "Dahil sa sobrang taas ng mga bundok", "Dahil sa kawalan ng mga ilog"], "correct": 1, "exp": "Dahil ang Pilipinas ay napaliligiran ng tubig, suliranin nito ang malimit na pagpasok ng bagyo at ang mabilis na pagtaas ng tubig na nagiging sanhi ng pagbaha."}, {"q": "Ayon sa Department of Agriculture, humigit-kumulang na ilang probinsiya sa bansa ang apektado ng La Niña Phenomenon?", "choices": ["57", "67", "77", "87"], "correct": 2, "exp": "Ayon sa Department of Agriculture, 77 probinsiya sa bansa ang apektado ng La Niña, kabilang ang mga rehiyong nagmumula ng palay tulad ng Timog Katagalugan, Gitnang Luzon, at Caraga."}];
+
+const QUIZ_LENGTH = 25;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = []; // {qIndex, chosen, correct}
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  // shuffle the choice order for each question, tracking the new correct index
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    isCorrect: isCorrect
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg, sub;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa Aralin 4!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Library</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f7f5f2;
+    color: #2b2b2b;
+  }
+  header {
+    background: linear-gradient(135deg, #2a2a72, #1e3c72);
+    color: white;
+    padding: 40px 20px 30px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 2rem;
+  }
+  header p {
+    margin: 0;
+    opacity: 0.85;
+    font-size: 1rem;
+  }
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .nav-chip {
+    text-decoration: none;
+    border: 2px solid #999;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: white;
+    transition: transform 0.15s ease;
+  }
+  .nav-chip:hover {
+    transform: translateY(-2px);
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px 20px 60px;
+  }
+  .subject {
+    margin-top: 40px;
+  }
+  .subject h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+  .subject h2 .count {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 400;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  @media (min-width: 640px) {
+    .cards { grid-template-columns: 1fr 1fr; }
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: #2b2b2b;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+  }
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .card-arrow {
+    color: #bbb;
+    font-size: 1.2rem;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>📚 Quiz Library</h1>
+  <p>32 quizzes across 7 subjects</p>
+</header>
+<nav class="nav">
+<a href="#araling-panlipunan" class="nav-chip" style="border-color:#e07a5f;color:#e07a5f">🌏 Araling Panlipunan (6)</a>
+<a href="#christian-living" class="nav-chip" style="border-color:#8e7cc3;color:#8e7cc3">✝️ Christian Living (1)</a>
+<a href="#english" class="nav-chip" style="border-color:#3d84a8;color:#3d84a8">📖 English (5)</a>
+<a href="#filipino" class="nav-chip" style="border-color:#d4a017;color:#d4a017">🇵🇭 Filipino (4)</a>
+<a href="#math" class="nav-chip" style="border-color:#2a9d8f;color:#2a9d8f">🔢 Math (5)</a>
+<a href="#music" class="nav-chip" style="border-color:#e63946;color:#e63946">🎵 Music (3)</a>
+<a href="#science" class="nav-chip" style="border-color:#4361ee;color:#4361ee">🔬 Science (8)</a>
+</nav>
+<main>
+
+    <section class="subject" id="araling-panlipunan">
+      <h2 style="color:#e07a5f"><span class="emoji">🌏</span> Araling Panlipunan <span class="count">6 quizzes</span></h2>
+      <div class="cards">
+      <a class="card" href="Araling%20Panlipunan/AP_Aralin4_Quiz.html">
+        <span class="card-title">Pagsusulit: Ang Heograpiyang Pisikal ng Pilipinas</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Araling%20Panlipunan/AP_KLIMA_VIDOES.html">
+        <span class="card-title">Pagsusulit: Heograpiya at Klima ng Pilipinas</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Araling%20Panlipunan/AP_Mga_Bumubuo_ng_Komunidad_Quiz.html">
+        <span class="card-title">Pagsusulit: Mga Bumubuo ng Komunidad</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Araling%20Panlipunan/AP_Komunidad_Master_Quiz.html">
+        <span class="card-title">Pagsusulit: Mga Bumubuo ng Komunidad (Malawakang Pagsusulit)</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Araling%20Panlipunan/AP_Tungkulin_at_Gawain_Quiz.html">
+        <span class="card-title">Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Araling%20Panlipunan/AP_Aralin4_Reviewer.html">
+        <span class="card-title">Reviewer: Ang Heograpiyang Pisikal ng Pilipinas</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="subject" id="christian-living">
+      <h2 style="color:#8e7cc3"><span class="emoji">✝️</span> Christian Living <span class="count">1 quiz</span></h2>
+      <div class="cards">
+      <a class="card" href="Christian%20Living/CL_GMRC4_Holy_Rosary_Quiz.html">
+        <span class="card-title">Holy Rosary Quiz - Christian Living/GMRC 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="subject" id="english">
+      <h2 style="color:#3d84a8"><span class="emoji">📖</span> English <span class="count">5 quizzes</span></h2>
+      <div class="cards">
+      <a class="card" href="English/ENGLISH-Lesson6.html">
+        <span class="card-title">Canva Quiz - English Context Clues</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="English/ENGLISH-Lesson7.html">
+        <span class="card-title">Canva Quiz - English Prefixes &amp; Suffixes</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="English/context-clues-quiz.html">
+        <span class="card-title">Context Clues Quiz - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="English/friendly-letters-quiz.html">
+        <span class="card-title">Friendly Letters Quiz - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="English/prefixes-suffixes-quiz.html">
+        <span class="card-title">Prefixes and Suffixes Quiz - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="subject" id="filipino">
+      <h2 style="color:#d4a017"><span class="emoji">🇵🇭</span> Filipino <span class="count">4 quizzes</span></h2>
+      <div class="cards">
+      <a class="card" href="Filipino/FILIPINO_Quiz%20-%20Hugnayang%20Pangungusap%20%28Grade%204%29.html">
+        <span class="card-title">Pagsasanay sa Hugnayang Pangungusap - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Filipino/FILIPINO_Quiz%20-%20Pangatnig%20%28Grade%204%29.html">
+        <span class="card-title">Pagsasanay sa Pangatnig - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Filipino/FILIPINO_Pangngalan%20%28Kategorya%2C%20Uri%2C%20at%20Kayarian%29.html">
+        <span class="card-title">Pagsasanay sa Pangngalan - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Filipino/FILIPINO_Pangatnig.html">
+        <span class="card-title">Pangatnig Quiz - Canva Style</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="subject" id="math">
+      <h2 style="color:#2a9d8f"><span class="emoji">🔢</span> Math <span class="count">5 quizzes</span></h2>
+      <div class="cards">
+      <a class="card" href="Math/MATH-Quiz1.3.html">
+        <span class="card-title">Canva Quiz - Elementary Math Multiplication</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Math/grade2-addition-subtraction-quiz-timed.html">
+        <span class="card-title">Grade 2 Math Quiz: Addition &amp; Subtraction (Timed)</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Math/grade4-multiplication-quiz.html">
+        <span class="card-title">Grade 4 Math Quiz: Multiplication</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Math/grade4-multiplication-quiz-set2.html">
+        <span class="card-title">Grade 4 Math Quiz: Multiplication (Set 2)</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Math/grade4-multiplication-quiz-timed.html">
+        <span class="card-title">Grade 4 Math Quiz: Multiplication (Timed, Input Answer)</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="subject" id="music">
+      <h2 style="color:#e63946"><span class="emoji">🎵</span> Music <span class="count">3 quizzes</span></h2>
+      <div class="cards">
+      <a class="card" href="Music/MUSIC_Filipino_Composers_Quiz.html">
+        <span class="card-title">Grade 4 Music Quiz - Filipino Composers</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Music/music-texture-filipinocomp.html">
+        <span class="card-title">Grade 4 Music Quiz - Texture &amp; Filipino Composers</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Music/Music_Texture_Quiz.html">
+        <span class="card-title">Music Quiz: Texture</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="subject" id="science">
+      <h2 style="color:#4361ee"><span class="emoji">🔬</span> Science <span class="count">8 quizzes</span></h2>
+      <div class="cards">
+      <a class="card" href="Science/LONGTEST-quiz_physical-chemical-change.html">
+        <span class="card-title">Physical and Chemical Changes Interactive Quiz</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/Science_Quiz_Muscular_Respiratory_Digestive.html">
+        <span class="card-title">Science Quiz: Muscular, Respiratory &amp; Digestive Systems</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/Science_Quiz_Muscular_System.html">
+        <span class="card-title">Science Quiz: The Muscular System</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/SCIENCE_Gemini_Lesson1.6-2.html">
+        <span class="card-title">Skeletal System Challenge - Bone Edition</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/SCIENCE-GEMINI-Lesson1.6.html">
+        <span class="card-title">Skeletal System Interactive Canva Quiz</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/Skeletal_System_Quiz.html">
+        <span class="card-title">Skeletal System Quiz - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/Skeletal_and_Muscular_System_Quiz.html">
+        <span class="card-title">Skeletal and Muscular System Quiz - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      <a class="card" href="Science/Ultimate_Skeletal_Muscular_Review_Quiz.html">
+        <span class="card-title">Ultimate Skeletal and Muscular System Quiz - Grade 4</span>
+        <span class="card-arrow">→</span>
+      </a>
+      </div>
+    </section>
+
+</main>
+<footer>Generated index — click any quiz to start.</footer>
+</body>
+</html>

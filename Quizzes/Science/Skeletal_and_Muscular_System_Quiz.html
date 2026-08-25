@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skeletal and Muscular System Quiz - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Trebuchet MS', 'Comic Sans MS', Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+    margin: 0;
+    padding: 16px;
+    color: #1e293b;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    color: #0369a1;
+    margin-bottom: 4px;
+  }
+  header p {
+    margin: 2px 0;
+    color: #475569;
+    font-size: 0.95rem;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    margin-bottom: 16px;
+  }
+  #progress-bar-wrap {
+    background: #e2e8f0;
+    border-radius: 10px;
+    height: 14px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  #progress-bar {
+    background: #38bdf8;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .q-topic {
+    display: inline-block;
+    background: #fde68a;
+    color: #92400e;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .q-count {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.15s ease;
+    background: #f8fafc;
+  }
+  .option:hover {
+    border-color: #38bdf8;
+    background: #f0f9ff;
+  }
+  .option.selected {
+    border-color: #0284c7;
+    background: #e0f2fe;
+  }
+  .option.correct {
+    border-color: #16a34a;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: bold;
+  }
+  .option.incorrect {
+    border-color: #dc2626;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: bold;
+  }
+  .option .letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .option.selected .letter { background: #0284c7; color: white; }
+  .option.correct .letter { background: #16a34a; color: white; }
+  .option.incorrect .letter { background: #dc2626; color: white; }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.right { background: #dcfce7; color: #166534; }
+  .feedback.wrong { background: #fee2e2; color: #991b1b; }
+  button {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: transform 0.1s ease;
+  }
+  button:active { transform: scale(0.97); }
+  #submit-btn {
+    background: #38bdf8;
+    color: white;
+    width: 100%;
+  }
+  #submit-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+  }
+  #next-btn {
+    background: #0284c7;
+    color: white;
+    width: 100%;
+    display: none;
+  }
+  #next-btn.show { display: block; }
+  #restart-btn, #start-btn {
+    background: #16a34a;
+    color: white;
+    width: 100%;
+  }
+  .score-summary {
+    text-align: center;
+  }
+  .score-big {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #0369a1;
+    margin: 10px 0;
+  }
+  .score-msg {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  .review-item {
+    text-align: left;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .review-item.wrong-item { border-color: #f87171; background: #fff5f5; }
+  .review-item.right-item { border-color: #86efac; background: #f0fdf4; }
+  .review-q { font-weight: bold; margin-bottom: 6px; }
+  .review-line { font-size: 0.95rem; margin: 2px 0; }
+  .review-line.your-ans { color: #991b1b; }
+  .review-line.correct-ans { color: #166534; }
+  #start-screen { text-align: center; }
+  #start-screen p { line-height: 1.5; color: #475569; }
+  .emoji-big { font-size: 3rem; margin-bottom: 10px; }
+  @media (max-width: 480px) {
+    .q-text { font-size: 1.05rem; }
+    .score-big { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🦴💪 Skeletal &amp; Muscular System Quiz</h1>
+    <p>Grade 4 Science &middot; Lessons 1.6 &amp; 1.7</p>
+  </header>
+
+  <div class="card" id="start-screen">
+    <div class="emoji-big">🦴💪🔬</div>
+    <p><strong>Welcome!</strong> This quiz covers the parts, functions, and common diseases of the <strong>Skeletal System</strong> and the <strong>Muscular System</strong>.</p>
+    <p>Each attempt picks <strong>25 random questions</strong> from a larger question bank, so no two attempts are exactly the same!</p>
+    <p>Answer each question and click <strong>Submit</strong> to see if you got it right. At the end, you'll see your final score and a review of every question you missed.</p>
+    <button id="start-btn" onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <div class="card" id="quiz-screen" style="display:none;">
+    <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+    <div class="q-count" id="q-count"></div>
+    <div class="q-topic" id="q-topic"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button id="submit-btn" onclick="submitAnswer()" disabled>Submit</button>
+    <button id="next-btn" onclick="nextQuestion()">Next Question →</button>
+  </div>
+
+  <div class="card score-summary" id="result-screen" style="display:none;">
+    <div class="emoji-big" id="result-emoji"></div>
+    <div class="score-msg">Your Score</div>
+    <div class="score-big" id="score-big"></div>
+    <div class="score-msg" id="score-msg"></div>
+    <button id="restart-btn" onclick="location.reload()">Try Again</button>
+  </div>
+
+  <div class="card" id="review-screen" style="display:none;">
+    <h2 style="text-align:center; color:#0369a1;">Answer Review</h2>
+    <div id="review-list"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS_PER_ATTEMPT = 25;
+
+const QUESTIONS = [
+  // ===== SKELETAL SYSTEM: Parts & Functions =====
+  { topic: "Skeletal: Parts & Functions", q: "How many bones does a fully grown adult have in their body?", options: ["150 bones", "206 bones", "300 bones", "350 bones"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "About how many bones does a baby have at birth?", options: ["100 bones", "150 bones", "206 bones", "300 bones"], correct: 3 },
+  { topic: "Skeletal: Parts & Functions", q: "What happens to a baby's bones as they grow older?", options: ["They disappear", "Many of them fuse together to form the 206 adult bones", "They turn into muscle", "They stay exactly the same"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What special flexible material makes up some of a baby's bones before they harden?", options: ["Keratin", "Cartilage", "Bone marrow", "Collagen fiber"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Why does a baby's skull have small gaps between the bones?", options: ["To make the head lighter", "To allow the skull to adjust while the brain grows and develops", "So the baby can hear better", "To help the baby's hair grow"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the two main divisions of the human skeleton called?", options: ["Upper and lower skeleton", "Axial and appendicular skeleton", "Inner and outer skeleton", "Left and right skeleton"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which of these bones belongs to the axial skeleton?", options: ["Femur", "Humerus", "Skull", "Clavicle"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "Which of these bones belongs to the appendicular skeleton?", options: ["Vertebrae", "Ribs", "Sternum", "Femur"], correct: 3 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the strongest bone in the facial skeleton, which helps us chew and eat?", options: ["Cranium", "Mandible", "Clavicle", "Sternum"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which bone connects the shoulder blade to the forearm and is nicknamed the \"funny bone\"?", options: ["Radius", "Ulna", "Humerus", "Femur"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the two long bones that make up the forearm?", options: ["Humerus and femur", "Radius and ulna", "Tibia and fibula", "Carpal and tarsal bones"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which forearm bone mainly drives wrist movement and rotation?", options: ["Ulna", "Radius", "Humerus", "Clavicle"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the largest sesamoid bone in the human body?", options: ["Patella (kneecap)", "Femur", "Tibia", "Fibula"], correct: 0 },
+  { topic: "Skeletal: Parts & Functions", q: "Where is the patella located?", options: ["The wrist", "The front of the knee", "The ankle", "The elbow"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which bone is the longest and strongest bone in the human body?", options: ["Humerus", "Tibia", "Femur", "Radius"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "Which two bones run side by side in the lower leg?", options: ["Radius and ulna", "Tibia and fibula", "Femur and patella", "Carpal and metacarpal bones"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the medical name for the collarbone?", options: ["Scapula", "Clavicle", "Sternum", "Cranium"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the medical name for the shoulder blade?", options: ["Clavicle", "Scapula", "Sternum", "Humerus"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the medical name for the breastbone?", options: ["Sternum", "Clavicle", "Scapula", "Mandible"], correct: 0 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the small bones of the wrist called?", options: ["Tarsal bones", "Carpal bones", "Metacarpal bones", "Phalanges"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the small bones of the hand (between the wrist and fingers) called?", options: ["Metacarpal bones", "Carpal bones", "Tarsal bones", "Metatarsal bones"], correct: 0 },
+  { topic: "Skeletal: Parts & Functions", q: "What do we call the bones of the fingers and toes?", options: ["Metatarsals", "Carpals", "Phalanges", "Tarsals"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the small bones of the ankle called?", options: ["Carpal bones", "Tarsal bones", "Metacarpal bones", "Phalanges"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the bones of the foot (between the ankle and toes) called?", options: ["Metatarsal bones", "Metacarpal bones", "Carpal bones", "Tarsal bones"], correct: 0 },
+  { topic: "Skeletal: Parts & Functions", q: "Where in the human body can you find the smallest bone?", options: ["In the ear", "In the hand", "In the foot", "In the skull"], correct: 0 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the name of the U-shaped bone in the neck that supports the tongue?", options: ["Sacrum", "Coccyx", "Hyoid", "Mandible"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "About how many individual vertebrae are in an average adult's spine (not counting the sacrum and coccyx)?", options: ["12", "18", "24", "33"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "What are the two bony structures found at the very bottom of the spine?", options: ["Hyoid and sternum", "Sacrum and coccyx", "Clavicle and scapula", "Radius and ulna"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which skeletal part protects your brain and eyes?", options: ["Rib cage", "Skull", "Pelvis", "Spine"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which skeletal part protects your heart, lungs, and liver?", options: ["Skull", "Pelvis", "Rib cage", "Femur"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "Which skeletal part protects the urinary bladder, intestines, and reproductive organs?", options: ["Skull", "Pelvis", "Rib cage", "Spine"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What does the spine (vertebrae) mainly protect?", options: ["The heart", "The spinal cord", "The lungs", "The stomach"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What tough connective tissue attaches muscle to bone?", options: ["Ligament", "Cartilage", "Tendon", "Marrow"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "What tough connective tissue attaches bone to bone?", options: ["Tendon", "Ligament", "Cartilage", "Muscle fiber"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What fluid do ligaments help produce to lubricate joints for smooth movement?", options: ["Blood plasma", "Synovial fluid", "Bone marrow", "Cartilage fluid"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What do we call the structure where two bones meet and fit together?", options: ["A tendon", "A ligament", "A joint", "A marrow"], correct: 2 },
+  { topic: "Skeletal: Parts & Functions", q: "What important mineral (along with vitamin D) do our bones store to stay strong?", options: ["Iron", "Calcium", "Sodium", "Potassium"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Where in the human body are most red and white blood cells produced?", options: ["The skull", "Bone marrow", "Cartilage", "Tendons"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "What is the soft, spongy material found in the hollow center of bones?", options: ["Cartilage", "Bone marrow", "Synovial fluid", "Collagen"], correct: 1 },
+  { topic: "Skeletal: Parts & Functions", q: "Which of these is a good food source of calcium for healthy bones?", options: ["Milk and cheese", "Candy", "Soda", "Chips"], correct: 0 },
+  { topic: "Skeletal: Parts & Functions", q: "Bones work together with joints and muscles to allow the body to do what?", options: ["Digest food", "Move (walk, run, jump)", "Breathe", "See and hear"], correct: 1 },
+
+  // ===== SKELETAL SYSTEM: Common Diseases =====
+  { topic: "Skeletal: Diseases", q: "What is Rickets?", options: ["A break in a bone", "The softening and weakening of bones in children, usually from a lack of vitamin D", "An abnormal curve in the spine", "A stretching or tearing of a ligament"], correct: 1 },
+  { topic: "Skeletal: Diseases", q: "Rickets is usually caused by an extreme, long-term lack of which vitamin?", options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin E"], correct: 2 },
+  { topic: "Skeletal: Diseases", q: "What is a fracture?", options: ["A break in a bone", "A stretched ligament", "A curved spine", "A missing bone"], correct: 0 },
+  { topic: "Skeletal: Diseases", q: "What do we call a fracture where the broken bone pokes through the skin?", options: ["A closed fracture", "An open (compound) fracture", "A hairline fracture", "A stress fracture"], correct: 1 },
+  { topic: "Skeletal: Diseases", q: "Which of these commonly causes fractures?", options: ["Falls, car accidents, or sports injuries", "Eating too much calcium", "Drinking plenty of water", "Getting enough sleep"], correct: 0 },
+  { topic: "Skeletal: Diseases", q: "What is Osteoporosis?", options: ["A condition that weakens bones, making them fragile and more likely to break", "A stretching of ligaments in a joint", "A curve in the spine seen in children", "A vitamin D deficiency in babies"], correct: 0 },
+  { topic: "Skeletal: Diseases", q: "How does Osteoporosis usually develop?", options: ["Suddenly, in just a few days", "Slowly, over several years", "Only during childhood", "Only after a broken bone heals"], correct: 1 },
+  { topic: "Skeletal: Diseases", q: "What is Scoliosis?", options: ["A break in the arm bone", "A lack of calcium in the diet", "An abnormal curve of the spine that often forms an S or C shape", "A softening of the skull bones"], correct: 2 },
+  { topic: "Skeletal: Diseases", q: "Scoliosis often appears during which stage of life?", options: ["Old age", "Growth spurts or just before puberty", "Right after birth", "Only in adults over 50"], correct: 1 },
+  { topic: "Skeletal: Diseases", q: "What is a Sprain?", options: ["A break in a bone", "A stretching or tearing of ligaments in a joint", "A disease that softens bones in children", "An S-shaped curve in the spine"], correct: 1 },
+
+  // ===== MUSCULAR SYSTEM: Parts & Functions =====
+  { topic: "Muscular: Parts & Functions", q: "About how many muscles make up the human muscular system?", options: ["About 200", "About 400", "Over 600", "Over 1,000"], correct: 2 },
+  { topic: "Muscular: Parts & Functions", q: "Which of the following is NOT one of the three types of muscle?", options: ["Skeletal", "Cardiac", "Smooth", "Elastic"], correct: 3 },
+  { topic: "Muscular: Parts & Functions", q: "Which type of muscle is voluntary, striated, and attached to bones?", options: ["Cardiac", "Smooth", "Skeletal", "None of these"], correct: 2 },
+  { topic: "Muscular: Parts & Functions", q: "Which type of muscle is found only in the heart?", options: ["Skeletal", "Cardiac", "Smooth", "Voluntary"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "Which type of muscle is involuntary, non-striated, and controls processes like digestion and blood flow?", options: ["Skeletal", "Cardiac", "Smooth", "Striated"], correct: 2 },
+  { topic: "Muscular: Parts & Functions", q: "Which type of muscle never gets tired and pumps blood 24 hours a day?", options: ["Skeletal", "Cardiac", "Smooth", "Voluntary"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "Where can you find smooth muscle in the body?", options: ["Attached to bones like the arms and legs", "In the walls of organs and blood vessels, like the stomach and intestines", "Only in the heart", "Only in the face"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "What do skeletal muscles help the body do?", options: ["Digest food automatically", "Locomotion (movement) and posture", "Pump blood non-stop", "Grow new bone cells"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "Can muscles push bones as well as pull them?", options: ["Yes, muscles can push and pull equally", "No, muscles can only pull bones — they cannot push", "Yes, but only the muscles in the legs", "No, muscles cannot move bones at all"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "What happens to a muscle when it contracts?", options: ["It becomes longer and pushes the bone", "It becomes shorter and pulls the bone", "It turns into bone", "It disappears"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "What happens to a muscle when it relaxes?", options: ["It stays contracted forever", "It returns to its original length, allowing movement in the opposite direction", "It turns into a tendon", "It becomes a ligament"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "Muscles work in pairs. When you bend your arm, the biceps contracts. What happens to the triceps?", options: ["It also contracts", "It relaxes", "It grows shorter too", "It disappears"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "When you straighten your arm, which muscle contracts?", options: ["Biceps", "Triceps", "Quadriceps", "Deltoid"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "When you bend your arm, which muscle contracts?", options: ["Triceps", "Biceps", "Hamstring", "Calf muscle"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "What is voluntary movement?", options: ["A conscious, purposeful action controlled by the brain, such as walking or writing", "A random action that happens without control", "A movement only the heart can do", "A movement caused by digestion"], correct: 0 },
+  { topic: "Muscular: Parts & Functions", q: "What is involuntary movement?", options: ["A planned action like picking up an object", "A physical action that happens without your control, such as a tremor, tic, or spasm", "A movement you practice every day", "A movement that only happens while sleeping"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "What do muscles help the body maintain, even while you are standing or sitting still?", options: ["Digestion", "Posture and balance", "Blood sugar levels", "Body temperature only"], correct: 1 },
+  { topic: "Muscular: Parts & Functions", q: "What tough, cord-like tissue connects skeletal muscles to bones?", options: ["Ligament", "Cartilage", "Tendon", "Marrow"], correct: 2 },
+  { topic: "Muscular: Parts & Functions", q: "Which of these is an example of the muscular system working with the skeletal system?", options: ["Muscles produce blood cells for the bones", "Muscles pull on bones so the body can walk, run, and lift objects", "Bones digest food for the muscles", "Muscles turn into bones over time"], correct: 1 },
+
+  // ===== MUSCULAR SYSTEM: Common Diseases =====
+  { topic: "Muscular: Diseases", q: "What is a muscle cramp?", options: ["A sudden and painful tightening of a muscle", "A genetic muscle-wasting disease", "A tendon becoming irritated and swollen", "A break in a bone"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "Which of these can cause a muscle cramp?", options: ["Not drinking enough water", "Eating too much calcium", "Sleeping too much", "Wearing tight shoes"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What is a muscle strain?", options: ["A stretching or tearing of a ligament", "A muscle that is stretched too much or torn", "An irritated tendon", "A curved spine"], correct: 1 },
+  { topic: "Muscular: Diseases", q: "Which of these can cause a muscle strain?", options: ["Lifting something heavy without warming up", "Drinking plenty of water", "Eating a balanced diet", "Getting a good night's sleep"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What is muscle fatigue?", options: ["A permanent muscle disease", "A temporary condition where muscles become tired and weak after being used for a long time", "A tendon injury", "An abnormal spinal curve"], correct: 1 },
+  { topic: "Muscular: Diseases", q: "Which of these can cause muscle fatigue?", options: ["Using muscles for a long time without rest", "Resting for eight hours", "Eating calcium-rich food", "Stretching before exercise"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What is Tendonitis?", options: ["A break in a bone", "A condition in which a tendon becomes irritated and swollen", "A genetic muscle-wasting disease", "A nerve-muscle communication disorder"], correct: 1 },
+  { topic: "Muscular: Diseases", q: "Which of these can cause tendonitis?", options: ["Repeating the same movement many times", "Drinking water regularly", "Eating enough calcium", "Sleeping early"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What is a Sprain (as related to the muscular system)?", options: ["A break in a bone", "An injury from a ligament being stretched too much or torn", "A weakening of muscle fibers", "A vitamin D deficiency"], correct: 1 },
+  { topic: "Muscular: Diseases", q: "Which of these can cause a sprain?", options: ["Twisting an ankle while playing sports", "Eating too little protein", "Growing taller during puberty", "Sitting for too long"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What is Muscular Dystrophy?", options: ["A group of genetic diseases that cause muscles to become weak over time", "A short-term muscle cramp", "An injury to a tendon", "A curve in the spine"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What causes Muscular Dystrophy?", options: ["Changes in certain genes that affect how muscles grow and work", "Not drinking enough water", "Overusing a muscle during sports", "A vitamin D deficiency"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "What is Myasthenia Gravis?", options: ["A long-term disorder that causes muscle weakness because nerves and muscles have difficulty communicating", "A break in a bone", "A short-term muscle cramp", "An inherited bone disease"], correct: 0 },
+  { topic: "Muscular: Diseases", q: "In Myasthenia Gravis, what fails to work properly?", options: ["The signals between nerves and muscles", "The flow of calcium into bones", "The production of red blood cells", "The curvature of the spine"], correct: 0 }
+];
+
+let quiz = [];
+let currentIndex = 0;
+let score = 0;
+let userAnswers = [];
+let selectedOption = null;
+let answered = false;
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startQuiz() {
+  // Pick a random subset of questions for this attempt
+  const pool = shuffle(QUESTIONS);
+  const attemptCount = Math.min(QUESTIONS_PER_ATTEMPT, pool.length);
+  const selected = pool.slice(0, attemptCount);
+
+  // Shuffle each question's options, tracking the new correct index
+  quiz = selected.map(item => {
+    const optionIndices = shuffle(item.options.map((_, i) => i));
+    const newOptions = optionIndices.map(i => item.options[i]);
+    const newCorrect = optionIndices.indexOf(item.correct);
+    return { topic: item.topic, q: item.q, options: newOptions, correct: newCorrect };
+  });
+  currentIndex = 0;
+  score = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('review-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  selectedOption = null;
+  const item = quiz[currentIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  document.getElementById('progress-bar').style.width = ((currentIndex) / quiz.length * 100) + '%';
+  document.getElementById('q-count').textContent = `Question ${currentIndex + 1} of ${quiz.length}`;
+  document.getElementById('q-topic').textContent = item.topic;
+  document.getElementById('q-text').textContent = item.q;
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.id = 'opt-' + idx;
+    div.onclick = () => selectOption(idx);
+    div.innerHTML = `<span class="letter">${letters[idx]}</span><span>${opt}</span>`;
+    optionsDiv.appendChild(div);
+  });
+
+  const feedback = document.getElementById('feedback');
+  feedback.className = 'feedback';
+  feedback.textContent = '';
+
+  document.getElementById('submit-btn').style.display = 'block';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('next-btn').classList.remove('show');
+}
+
+function selectOption(idx) {
+  if (answered) return;
+  selectedOption = idx;
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.getElementById('opt-' + idx).classList.add('selected');
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedOption === null || answered) return;
+  answered = true;
+  const item = quiz[currentIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+  const isCorrect = selectedOption === item.correct;
+
+  document.querySelectorAll('.option').forEach(el => el.onclick = null);
+  document.getElementById('opt-' + item.correct).classList.add('correct');
+  if (!isCorrect) {
+    document.getElementById('opt-' + selectedOption).classList.add('incorrect');
+  }
+
+  const feedback = document.getElementById('feedback');
+  feedback.classList.add('show');
+  if (isCorrect) {
+    feedback.classList.add('right');
+    feedback.textContent = '✅ Correct! Great job!';
+    score++;
+  } else {
+    feedback.classList.add('wrong');
+    feedback.textContent = `❌ Not quite. The correct answer is ${letters[item.correct]}: ${item.options[item.correct]}`;
+  }
+
+  userAnswers.push({
+    question: item.q,
+    topic: item.topic,
+    options: item.options,
+    yourAnswer: selectedOption,
+    correctAnswer: item.correct,
+    isCorrect: isCorrect
+  });
+
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('next-btn').classList.add('show');
+  document.getElementById('next-btn').textContent = (currentIndex === quiz.length - 1) ? 'See Final Score →' : 'Next Question →';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= quiz.length) {
+    showResults();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const pct = Math.round((score / quiz.length) * 100);
+  let emoji, msg;
+  if (pct === 100) { emoji = '🏆'; msg = "Perfect score! You're a body-systems expert!"; }
+  else if (pct >= 80) { emoji = '🌟'; msg = "Excellent work!"; }
+  else if (pct >= 60) { emoji = '👍'; msg = "Good job! Keep practicing!"; }
+  else { emoji = '💪'; msg = "Keep studying — you'll get there!"; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('score-big').textContent = `${score} / ${quiz.length}`;
+  document.getElementById('score-msg').textContent = `${msg} (${pct}%)`;
+
+  const wrongAnswers = userAnswers.filter(a => !a.isCorrect);
+  const reviewScreen = document.getElementById('review-screen');
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+
+  if (wrongAnswers.length === 0) {
+    reviewScreen.style.display = 'block';
+    reviewList.innerHTML = '<p style="text-align:center; color:#166534; font-weight:bold;">You got every question right — no mistakes to review! 🎉</p>';
+  } else {
+    reviewScreen.style.display = 'block';
+    const letters = ['A', 'B', 'C', 'D'];
+    const intro = document.createElement('p');
+    intro.style.textAlign = 'center';
+    intro.style.color = '#475569';
+    intro.textContent = `Here are the ${wrongAnswers.length} question(s) you missed:`;
+    reviewList.appendChild(intro);
+
+    wrongAnswers.forEach((a, i) => {
+      const div = document.createElement('div');
+      div.className = 'review-item wrong-item';
+      div.innerHTML = `
+        <div class="review-q">${i + 1}. ${a.question}</div>
+        <div class="review-line your-ans">Your answer: ${letters[a.yourAnswer]}) ${a.options[a.yourAnswer]}</div>
+        <div class="review-line correct-ans">Correct answer: ${letters[a.correctAnswer]}) ${a.options[a.correctAnswer]}</div>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

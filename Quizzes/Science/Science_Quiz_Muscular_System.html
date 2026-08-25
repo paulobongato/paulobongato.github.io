@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Quiz: The Muscular System</title>
+<style>
+  :root {
+    --blue: #2E74B5;
+    --blue-dark: #1F4E79;
+    --green: #2e7d32;
+    --green-bg: #e8f5e9;
+    --red: #c62828;
+    --red-bg: #fdecea;
+    --gray-bg: #f4f6f8;
+    --border: #d7dee5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--gray-bg);
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 12px 60px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 640px;
+    padding: 28px 24px 32px;
+  }
+  h1 {
+    color: var(--blue-dark);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--blue);
+    font-weight: 600;
+    margin: 0 0 20px;
+    font-size: 1.05rem;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    background: var(--gray-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+  .meta-grid div span.label {
+    display: block;
+    color: #667;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .meta-grid div span.value {
+    font-weight: 600;
+    color: #222;
+  }
+  ul.instructions {
+    padding-left: 22px;
+    margin: 0 0 22px;
+    line-height: 1.6;
+  }
+  ul.instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 26px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow 0.15s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(46,116,181,0.35);
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary:disabled {
+    background: #a9c3d9;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+  .btn-row { text-align: center; margin-top: 8px; }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 6px;
+    transition: width 0.25s ease;
+  }
+  .progress-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    white-space: nowrap;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eaf2fa;
+    color: var(--blue-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 18px;
+    color: #1a1a1a;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover:not(.locked) { border-color: var(--blue); background: #f5faff; }
+  .option.selected { border-color: var(--blue); background: #eaf2fa; }
+  .option-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gray-bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #556;
+  }
+  .option.selected .option-letter { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .option.correct { border-color: var(--green); background: var(--green-bg); }
+  .option.correct .option-letter { background: var(--green); border-color: var(--green); color: #fff; }
+  .option.incorrect { border-color: var(--red); background: var(--red-bg); }
+  .option.incorrect .option-letter { background: var(--red); border-color: var(--red); color: #fff; }
+  .option.locked { cursor: default; }
+
+  .feedback {
+    display: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-bg); border: 1px solid #b7dfb9; color: #1b4d20; }
+  .feedback.incorrect-fb { background: var(--red-bg); border: 1px solid #f3b8b3; color: #7a1d1d; }
+  .feedback .fb-title { font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+
+  /* Results */
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 8px solid var(--blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .score-circle .num { font-size: 2rem; font-weight: 800; color: var(--blue-dark); line-height: 1; }
+  .score-circle .den { font-size: 0.85rem; color: #667; margin-top: 2px; }
+  .score-msg {
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #333;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item .rtopic {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .review-item .rq { font-weight: 600; margin-bottom: 8px; }
+  .review-item .rline { font-size: 0.9rem; margin-bottom: 3px; }
+  .review-item .rline.wrong { color: var(--red); }
+  .review-item .rline.right { color: var(--green); }
+  .review-item .rexpl { font-size: 0.85rem; color: #556; margin-top: 6px; font-style: italic; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px 26px; border-radius: 12px; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .score-circle { width: 110px; height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="app">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen">
+    <h1>Science Quiz</h1>
+    <p class="subtitle">The Muscular System</p>
+
+    <div class="meta-grid">
+      <div><span class="label">Subject</span><span class="value">Science</span></div>
+      <div><span class="label">Grade Level</span><span class="value">Grade 4</span></div>
+      <div><span class="label">Topic</span><span class="value">The Muscular System</span></div>
+      <div><span class="label">Questions</span><span class="value">25 (of 90 in the question bank)</span></div>
+    </div>
+
+    <ul class="instructions">
+      <li>This quiz has <strong>25 questions</strong>, randomly picked from a bank of 90 — so every attempt can be different!</li>
+      <li>Each question is <strong>multiple choice</strong> with 4 answer choices (A–D).</li>
+      <li>Answer one question at a time, then press <strong>Submit</strong> to check your answer.</li>
+      <li>You'll see right away whether you got it correct, along with a short explanation.</li>
+      <li>At the end, you'll get your final score and a review of any questions you missed.</li>
+      <li>Topics covered: types of muscles, how muscles work, voluntary vs. involuntary movement, the skeletal-muscular team, connective tissues, and common muscle-related conditions.</li>
+      <li>Do your best, and have fun learning about your muscles! 💪</li>
+    </ul>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="start-btn" style="width:100%;">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Q1 / 25</div>
+    </div>
+    <div class="topic-tag" id="topic-tag">Topic</div>
+    <p class="question-text" id="question-text">Question text</p>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-title" id="fb-title"></div>
+      <div id="fb-explanation"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="action-btn" style="width:100%;" disabled>Submit</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS SCREEN ============ -->
+  <div id="results-screen" class="hidden">
+    <h1>Quiz Complete!</h1>
+    <div class="score-circle">
+      <div class="num" id="score-num">0/25</div>
+      <div class="den">correct</div>
+    </div>
+    <p class="score-msg" id="score-msg"></p>
+    <div id="review-section"></div>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn btn-primary" id="retake-btn" style="width:100%;">Retake Quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ======================================================================
+// QUESTION BANK: 90 questions on the Muscular System (Lesson 1.7)
+// options[0] is ALWAYS the correct answer in source; shuffled at render time.
+// ======================================================================
+const QUESTION_BANK = [
+
+  // ===================== MUSCULAR SYSTEM OVERVIEW (6) =====================
+  { topic: "Muscular System Overview", q: "About how many muscles make up the muscular system, according to the lesson?",
+    options: ["Over 600", "About 100", "About 6,000", "About 60"],
+    explanation: "The muscular system is made up of over 600 muscles." },
+  { topic: "Muscular System Overview", q: "Which of these are functions of the muscles, according to the lesson?",
+    options: ["Helping you move, breathe, pump blood, and digest food", "Only helping you move your arms", "Only pumping blood", "Only helping you breathe"],
+    explanation: "Muscles help you move, breathe, pump blood, and even digest food." },
+  { topic: "Muscular System Overview", q: "The muscular system works with which body part to allow movement and support?",
+    options: ["Your bones", "Your skin", "Your hair", "Your teeth"],
+    explanation: "Muscles work with your bones to allow movement and support." },
+  { topic: "Muscular System Overview", q: "How important is the muscular system to your body, according to the lesson?",
+    options: ["It is one of the most important systems in the body", "It is one of the least important systems", "It only matters for athletes", "It has no real function"],
+    explanation: "The muscular system is one of the most important systems in your body." },
+  { topic: "Muscular System Overview", q: "Which of the following is TRUE about the muscular system?",
+    options: ["It helps with movement, breathing, pumping blood, and digestion", "It only helps you lift heavy objects", "It works completely separately from the bones", "It has no connection to breathing"],
+    explanation: "Muscles help with movement, breathing, pumping blood, and digestion, and they work with your bones for support." },
+  { topic: "Muscular System Overview", q: "What do your muscles work together with to allow your body to move and stay supported?",
+    options: ["Your bones", "Your skin", "Your hair", "Your teeth"],
+    explanation: "Muscles work with your bones to allow movement and support." },
+
+  // ===================== TYPES OF MUSCLES (4) =====================
+  { topic: "Types of Muscles", q: "How many main types of muscles are found in the body?",
+    options: ["Three", "Two", "Four", "Five"],
+    explanation: "There are three types of muscles: skeletal, cardiac, and smooth." },
+  { topic: "Types of Muscles", q: "What are the three types of muscles?",
+    options: ["Skeletal, cardiac, and smooth", "Skeletal, nervous, and smooth", "Cardiac, connective, and skeletal", "Smooth, elastic, and rigid"],
+    explanation: "The three types of muscles are skeletal muscle, cardiac muscle, and smooth muscle." },
+  { topic: "Types of Muscles", q: "Which type of muscle is attached to bones at joints, like the elbow?",
+    options: ["Skeletal muscle", "Cardiac muscle", "Smooth muscle", "None of these"],
+    explanation: "Skeletal muscles attach to bones at joints, such as the elbow." },
+  { topic: "Types of Muscles", q: "Which muscle type is found only in the heart?",
+    options: ["Cardiac muscle", "Skeletal muscle", "Smooth muscle", "None of these"],
+    explanation: "Cardiac muscle is the special type of muscle found only in the heart." },
+
+  // ===================== SKELETAL MUSCLES (7) =====================
+  { topic: "Skeletal Muscles", q: "Skeletal muscles are ___, meaning you can control them consciously.",
+    options: ["voluntary", "involuntary", "automatic", "uncontrollable"],
+    explanation: "Skeletal muscles are voluntary, striated fibers attached to bones." },
+  { topic: "Skeletal Muscles", q: "What kind of fibers do skeletal muscles have?",
+    options: ["Striated fibers", "Non-striated fibers", "No fibers at all", "Smooth fibers only"],
+    explanation: "Skeletal muscles are voluntary, striated fibers attached to bones." },
+  { topic: "Skeletal Muscles", q: "What are skeletal muscles attached to?",
+    options: ["Bones", "Other muscles only", "Skin only", "Blood vessels"],
+    explanation: "Skeletal muscles are voluntary, striated fibers attached to bones." },
+  { topic: "Skeletal Muscles", q: "Skeletal muscles are responsible for which two things?",
+    options: ["Locomotion and posture", "Digestion and blood flow", "Pumping blood and resting", "Breathing and sleeping"],
+    explanation: "Skeletal muscles are responsible for locomotion and posture." },
+  { topic: "Skeletal Muscles", q: "When do skeletal muscles flex, according to the lesson?",
+    options: ["When you lift something heavy or run in PE", "Only while you are sleeping", "Only when your heart beats", "Only while digesting food"],
+    explanation: "Skeletal muscles flex when you lift something heavy or run in PE." },
+  { topic: "Skeletal Muscles", q: "How do skeletal muscles work with each other?",
+    options: ["In pairs — when one contracts, the other relaxes", "All at the same time, always contracting together", "Independently, with no connection to each other", "They never move at all"],
+    explanation: "Skeletal muscles work in pairs; when one contracts, the other relaxes to help your body move smoothly." },
+  { topic: "Skeletal Muscles", q: "Which type of muscle would you use to consciously wave your hand?",
+    options: ["Skeletal muscle", "Cardiac muscle", "Smooth muscle", "None of these"],
+    explanation: "Skeletal muscles are voluntary, so you can control them consciously, like waving your hand." },
+
+  // ===================== CARDIAC MUSCLES (7) =====================
+  { topic: "Cardiac Muscles", q: "Where is cardiac muscle found?",
+    options: ["Only in the heart", "In the arms and legs", "In the stomach", "In the lungs"],
+    explanation: "Cardiac muscle is a special type of muscle found only in your heart." },
+  { topic: "Cardiac Muscles", q: "Is cardiac muscle voluntary or involuntary?",
+    options: ["Involuntary", "Voluntary", "Neither", "Both, depending on the situation"],
+    explanation: "Cardiac muscle is involuntary, striated cells found in the heart." },
+  { topic: "Cardiac Muscles", q: "What kind of fibers does cardiac muscle have?",
+    options: ["Striated fibers", "Non-striated fibers", "No fibers", "Elastic fibers only"],
+    explanation: "Cardiac muscle is made of involuntary, striated cells found in the heart." },
+  { topic: "Cardiac Muscles", q: "What makes cardiac muscle special compared to other muscles?",
+    options: ["It never gets tired", "It gets tired the fastest", "It cannot contract", "It is not connected to the heart"],
+    explanation: "Cardiac muscle is involuntary and never gets tired." },
+  { topic: "Cardiac Muscles", q: "What does cardiac muscle do 24 hours a day, 7 days a week?",
+    options: ["Contracts and relaxes to pump blood throughout the body", "Stays completely still", "Digests food", "Breathes air in and out"],
+    explanation: "Cardiac muscle contracts and relaxes continuously, pumping blood throughout your body 24/7." },
+  { topic: "Cardiac Muscles", q: "Cardiac muscle contracts ___ to pump blood.",
+    options: ["rhythmically", "randomly", "only once a day", "never"],
+    explanation: "Cardiac muscle contracts rhythmically to pump blood." },
+  { topic: "Cardiac Muscles", q: "What is the main job of cardiac muscle?",
+    options: ["To pump blood throughout the body", "To move your arms and legs", "To digest food", "To help you breathe"],
+    explanation: "Cardiac muscle contracts and relaxes continuously, pumping blood throughout your body." },
+
+  // ===================== SMOOTH MUSCLES (7) =====================
+  { topic: "Smooth Muscles", q: "What kind of fibers does smooth muscle have?",
+    options: ["Non-striated fibers", "Striated fibers", "No fibers", "Bone fibers"],
+    explanation: "Smooth muscle has involuntary, non-striated fibers found in the walls of organs and vessels." },
+  { topic: "Smooth Muscles", q: "Is smooth muscle voluntary or involuntary?",
+    options: ["Involuntary", "Voluntary", "Neither", "It depends on the person"],
+    explanation: "Smooth muscle is involuntary, non-striated fibers in the walls of organs and vessels." },
+  { topic: "Smooth Muscles", q: "Where can you find smooth muscles?",
+    options: ["In your stomach, intestines, and blood vessels", "Only in your arms and legs", "Only in your heart", "Only in your skin"],
+    explanation: "Smooth muscles are found in places like your stomach, intestines, and blood vessels." },
+  { topic: "Smooth Muscles", q: "What do smooth muscles control?",
+    options: ["Processes like digestion and blood flow", "Only voluntary hand movements", "Only your heartbeat", "Only your breathing rate"],
+    explanation: "Smooth muscle controls processes like digestion and blood flow." },
+  { topic: "Smooth Muscles", q: "How do smooth muscles move food through your digestive system?",
+    options: ["They work automatically", "You have to consciously push the food", "They don't move food at all", "Only your teeth do this job"],
+    explanation: "Smooth muscles work automatically to move food through your digestive system." },
+  { topic: "Smooth Muscles", q: "How do smooth muscles help control blood pressure?",
+    options: ["By tightening or relaxing blood vessels", "By pumping blood like the heart", "By producing more blood cells", "By filtering the blood"],
+    explanation: "Smooth muscles help control blood pressure by tightening or relaxing blood vessels." },
+  { topic: "Smooth Muscles", q: "Which muscle type would you find working automatically in your intestines?",
+    options: ["Smooth muscle", "Skeletal muscle", "Cardiac muscle", "None of these"],
+    explanation: "Smooth muscles are found in places like your stomach and intestines, working automatically." },
+
+  // ===================== HOW MUSCLES WORK (7) =====================
+  { topic: "How Muscles Work", q: "Can muscles push bones?",
+    options: ["No, muscles can only pull bones", "Yes, muscles can push and pull bones", "Yes, muscles only push bones", "Muscles do not interact with bones"],
+    explanation: "Muscles cannot push bones; they can only pull them." },
+  { topic: "How Muscles Work", q: "What connects muscles to bones?",
+    options: ["Tendons", "Ligaments", "Cartilage", "Skin"],
+    explanation: "Muscles are attached to bones by tendons." },
+  { topic: "How Muscles Work", q: "What happens to a muscle when it contracts?",
+    options: ["It becomes shorter and pulls the bone", "It becomes longer and pushes the bone", "It disappears temporarily", "It turns into bone"],
+    explanation: "When a muscle contracts, it becomes shorter and pulls the bone." },
+  { topic: "How Muscles Work", q: "What happens to a muscle when it relaxes?",
+    options: ["It returns to its original length", "It becomes permanently shorter", "It turns into a tendon", "It stops working forever"],
+    explanation: "When a muscle relaxes, it returns to its original length, allowing movement in the opposite direction." },
+  { topic: "How Muscles Work", q: "Why do muscles need to work in pairs to move a bone back and forth?",
+    options: ["Because muscles can only pull, not push", "Because bones are too heavy to move", "Because muscles have no connection to bones", "Because tendons block movement"],
+    explanation: "Muscles cannot push bones; they can only pull them, which is why they need to work in pairs." },
+  { topic: "How Muscles Work", q: "What allows movement in the opposite direction after a muscle relaxes?",
+    options: ["The muscle returning to its original length", "The bone growing longer", "The tendon disappearing", "The ligament contracting"],
+    explanation: "When a muscle relaxes, it returns to its original length, allowing movement in the opposite direction." },
+  { topic: "How Muscles Work", q: "When a muscle becomes shorter, what does it do to the bone it's attached to?",
+    options: ["Pulls it", "Pushes it", "Ignores it", "Breaks it"],
+    explanation: "When a muscle contracts, it becomes shorter and pulls the bone." },
+
+  // ===================== MUSCLES WORK IN PAIRS (7) =====================
+  { topic: "Muscles in Pairs", q: "Why do muscles work in pairs?",
+    options: ["Because one muscle contracts while the other relaxes", "Because muscles cannot work alone at all", "Because bones need two muscles to stay in place", "Because tendons require a pair to function"],
+    explanation: "Muscles work in pairs because one muscle contracts while the other relaxes." },
+  { topic: "Muscles in Pairs", q: "When you bend your arm, what does your biceps do?",
+    options: ["Contracts", "Relaxes", "Stays the same", "Disappears"],
+    explanation: "When bending your arm, the biceps contracts, causing the arm to bend." },
+  { topic: "Muscles in Pairs", q: "When you bend your arm, what does your triceps do?",
+    options: ["Relaxes", "Contracts", "Stays the same", "Tightens permanently"],
+    explanation: "When bending your arm, the triceps relaxes while the biceps contracts." },
+  { topic: "Muscles in Pairs", q: "When you straighten your arm, what does your triceps do?",
+    options: ["Contracts", "Relaxes", "Stays the same", "Disappears"],
+    explanation: "When straightening your arm, the triceps contracts, causing the arm to straighten." },
+  { topic: "Muscles in Pairs", q: "When you straighten your arm, what does your biceps do?",
+    options: ["Relaxes", "Contracts", "Stays the same", "Tightens permanently"],
+    explanation: "When straightening your arm, the biceps relaxes while the triceps contracts." },
+  { topic: "Muscles in Pairs", q: "Which muscle contracts to make your arm bend?",
+    options: ["Biceps", "Triceps", "Both at the same time", "Neither"],
+    explanation: "The biceps contracts, causing the arm to bend." },
+  { topic: "Muscles in Pairs", q: "Which muscle contracts to make your arm straighten?",
+    options: ["Triceps", "Biceps", "Both at the same time", "Neither"],
+    explanation: "The triceps contracts, causing the arm to straighten." },
+
+  // ===================== VOLUNTARY & INVOLUNTARY MOVEMENT (6) =====================
+  { topic: "Voluntary & Involuntary Movement", q: "What is voluntary movement?",
+    options: ["A conscious, purposeful action controlled by the brain", "A physical action that happens without your control", "A movement only your heart can do", "A movement that never involves the brain"],
+    explanation: "Voluntary movement is a conscious, purposeful action controlled by the brain, such as walking, writing, or picking up an object." },
+  { topic: "Voluntary & Involuntary Movement", q: "Which of these is an example of voluntary movement?",
+    options: ["Writing your name", "A muscle spasm", "A tic", "A tremor"],
+    explanation: "Writing is a conscious, purposeful action controlled by the brain, making it voluntary movement." },
+  { topic: "Voluntary & Involuntary Movement", q: "What is involuntary movement?",
+    options: ["A physical action that happens without your control", "A conscious action controlled by the brain", "An action you plan ahead of time", "An action only done by skeletal muscles"],
+    explanation: "Involuntary movement is a physical action that happens without your control, commonly including tremors, tics, and spasms." },
+  { topic: "Voluntary & Involuntary Movement", q: "Which of these is an example of involuntary movement?",
+    options: ["A muscle spasm", "Picking up an object", "Walking", "Writing"],
+    explanation: "A muscle spasm is a physical action that happens without your control, making it involuntary." },
+  { topic: "Voluntary & Involuntary Movement", q: "Which type of movement is controlled on purpose by the brain?",
+    options: ["Voluntary movement", "Involuntary movement", "Neither type", "Both equally"],
+    explanation: "Voluntary movement is a conscious, purposeful action controlled by the brain." },
+  { topic: "Voluntary & Involuntary Movement", q: "Tremors, tics, and spasms are examples of what kind of movement?",
+    options: ["Involuntary movement", "Voluntary movement", "Skeletal movement only", "Cardiac movement only"],
+    explanation: "Involuntary movement commonly includes tremors, tics, and spasms." },
+
+  // ===================== MUSCLES & POSTURE (4) =====================
+  { topic: "Muscles & Posture", q: "Are your muscles working even when you're just sitting still?",
+    options: ["Yes, muscles are always working", "No, muscles rest completely when sitting", "Only your heart muscle works while sitting", "Muscles only work while you sleep"],
+    explanation: "Muscles are always working, even when you are standing or sitting still." },
+  { topic: "Muscles & Posture", q: "Which of these do muscles help you do, according to the lesson?",
+    options: ["Stand upright, sit properly, keep your balance, and maintain good posture", "Only walk quickly", "Only lift heavy weights", "Only run long distances"],
+    explanation: "Muscles help you stand upright, sit properly, keep your balance, and maintain good posture." },
+  { topic: "Muscles & Posture", q: "What helps you keep your balance while standing?",
+    options: ["Your muscles", "Your hair", "Your skin", "Your fingernails"],
+    explanation: "Muscles are always working, helping you keep your balance and maintain good posture." },
+  { topic: "Muscles & Posture", q: "Muscles help maintain good posture by doing what, even while you're not moving?",
+    options: ["Continuously working", "Completely shutting off", "Growing bigger", "Turning into bone"],
+    explanation: "Muscles are always working, even when you're standing or sitting still, to help maintain posture." },
+
+  // ===================== SKELETAL-MUSCULAR TEAMWORK (7) =====================
+  { topic: "Skeletal-Muscular Teamwork", q: "How do the skeletal and muscular systems work together?",
+    options: ["They provide support, give the body shape, and allow movement", "They work completely separately with no connection", "Only the muscular system does any work", "Only the skeletal system allows movement"],
+    explanation: "The skeletal and muscular systems work together to provide support, give the body shape, and allow movement." },
+  { topic: "Skeletal-Muscular Teamwork", q: "What does the skeletal and muscular system working together allow you to do?",
+    options: ["Walk, run, and lift objects", "Only breathe", "Only digest food", "Only see and hear"],
+    explanation: "They allow movement such as walking, running, and lifting objects." },
+  { topic: "Skeletal-Muscular Teamwork", q: "Besides allowing movement, what else do the skeletal and muscular systems do together?",
+    options: ["Provide support and give the body shape", "Only produce blood cells", "Only filter waste", "Only regulate temperature"],
+    explanation: "They work together to provide support by holding the body upright and to give shape to the body." },
+  { topic: "Skeletal-Muscular Teamwork", q: "What does the skeletal system protect?",
+    options: ["Important organs, such as the brain, heart, and lungs", "Only the skin", "Only the hair", "Nothing at all"],
+    explanation: "The skeletal system protects important organs, such as the brain, heart, and lungs." },
+  { topic: "Skeletal-Muscular Teamwork", q: "What does the skeletal system serve as, for the muscles?",
+    options: ["A framework where muscles are attached", "A source of food for muscles", "A replacement for muscles", "An obstacle to movement"],
+    explanation: "The skeletal system serves as a framework where muscles are attached." },
+  { topic: "Skeletal-Muscular Teamwork", q: "Besides producing movement, what else does the muscular system help with?",
+    options: ["Maintaining posture and producing body heat", "Filtering blood only", "Digesting food only", "Growing new bones"],
+    explanation: "The muscular system pulls on bones to produce movement, helps maintain posture, and produces body heat." },
+  { topic: "Skeletal-Muscular Teamwork", q: "What produces body heat in the body, according to the lesson?",
+    options: ["The muscular system", "The skeletal system", "The skin only", "The hair"],
+    explanation: "The muscular system produces body heat, in addition to producing movement and maintaining posture." },
+
+  // ===================== CONNECTIVE TISSUES (7) =====================
+  { topic: "Connective Tissues", q: "What are connective tissues?",
+    options: ["Strong tissues that connect, support, and hold body parts together", "Weak tissues that break apart easily", "Tissues found only in the brain", "Tissues that replace bones"],
+    explanation: "Connective tissues are strong tissues that connect, support, and hold body parts together." },
+  { topic: "Connective Tissues", q: "What do connective tissues help the skeletal and muscular systems do?",
+    options: ["Work smoothly together", "Work against each other", "Stop working completely", "Grow larger"],
+    explanation: "Connective tissues help the skeletal and muscular systems work smoothly." },
+  { topic: "Connective Tissues", q: "What are the two main connective tissues discussed in this lesson?",
+    options: ["Tendons and ligaments", "Cartilage and marrow", "Skin and hair", "Blood and plasma"],
+    explanation: "The two main connective tissues are tendons and ligaments." },
+  { topic: "Connective Tissues", q: "What do tendons connect?",
+    options: ["Muscles to bones", "Bones to bones", "Skin to muscles", "Nerves to the brain"],
+    explanation: "Tendons connect muscles to bones and help muscles move bones." },
+  { topic: "Connective Tissues", q: "What do ligaments connect?",
+    options: ["Bones to bones", "Muscles to bones", "Skin to bones", "Muscles to muscles"],
+    explanation: "Ligaments connect bones to bones and help keep joints stable." },
+  { topic: "Connective Tissues", q: "Which connective tissue helps muscles move bones and produce movement?",
+    options: ["Tendons", "Ligaments", "Cartilage", "Marrow"],
+    explanation: "Tendons connect muscles to bones, help muscles move bones, and help produce movement." },
+  { topic: "Connective Tissues", q: "Which connective tissue keeps joints stable and helps prevent injuries?",
+    options: ["Ligaments", "Tendons", "Cartilage", "Marrow"],
+    explanation: "Ligaments connect bones to bones, keep joints stable, and help prevent injuries." },
+
+  // ===================== MUSCLE CRAMP (3) =====================
+  { topic: "Muscle Cramp", q: "What is a muscle cramp?",
+    options: ["A sudden and painful tightening of a muscle", "A slow and painless stretching of a muscle", "A break in the bone", "A tear in a ligament"],
+    explanation: "A muscle cramp is a sudden and painful tightening of a muscle." },
+  { topic: "Muscle Cramp", q: "Which of these can cause a muscle cramp?",
+    options: ["Not drinking enough water", "Drinking too much water", "Resting too much", "Stretching properly before exercise"],
+    explanation: "Muscle cramps can happen because of not drinking enough water, too much physical activity, muscle fatigue, or not stretching properly." },
+  { topic: "Muscle Cramp", q: "How might a muscle feel when it cramps?",
+    options: ["Hard, stiff, or difficult to move", "Soft and easy to move", "Numb and painless", "Cold and relaxed"],
+    explanation: "When a muscle cramps, it contracts and may feel hard, stiff, or difficult to move." },
+
+  // ===================== MUSCLE STRAIN (3) =====================
+  { topic: "Muscle Strain", q: "What is a muscle strain?",
+    options: ["When a muscle is stretched too much or torn", "When a muscle grows bigger than normal", "When a bone cracks", "When a tendon disappears"],
+    explanation: "A muscle strain happens when a muscle is stretched too much or torn." },
+  { topic: "Muscle Strain", q: "Which of these can cause a muscle strain?",
+    options: ["Not warming up before exercise", "Warming up properly before exercise", "Resting enough between workouts", "Drinking plenty of water"],
+    explanation: "Causes of muscle strains include running or exercising too hard, lifting something heavy, sudden movements, and not warming up before exercise." },
+  { topic: "Muscle Strain", q: "During what kinds of activities can a muscle strain happen?",
+    options: ["Sports, exercise, or sudden movements", "Only while sleeping", "Only while eating", "Only while sitting still"],
+    explanation: "A muscle strain can happen during sports, exercise, or sudden movements." },
+
+  // ===================== MUSCLE FATIGUE (3) =====================
+  { topic: "Muscle Fatigue", q: "What is muscle fatigue?",
+    options: ["A temporary condition where muscles become tired and weak after long use", "A permanent condition where muscles stop working forever", "A disease that only affects the heart", "A condition where muscles grow instantly stronger"],
+    explanation: "Muscle fatigue is a temporary condition in which muscles become tired and weak after being used for a long time." },
+  { topic: "Muscle Fatigue", q: "Which of these can cause muscle fatigue?",
+    options: ["Not getting enough rest", "Getting plenty of rest", "Drinking enough water", "Stretching properly"],
+    explanation: "Causes of muscle fatigue include using muscles for a long time, too much physical activity, not enough rest, and not drinking enough water." },
+  { topic: "Muscle Fatigue", q: "Is muscle fatigue a temporary or permanent condition?",
+    options: ["Temporary", "Permanent", "It lasts forever", "It cannot be treated"],
+    explanation: "Muscle fatigue is a temporary condition in which muscles become tired and weak." },
+
+  // ===================== TENDONITIS (3) =====================
+  { topic: "Tendonitis", q: "What is tendonitis?",
+    options: ["A condition in which a tendon becomes irritated and swollen", "A condition in which a bone becomes soft", "A condition in which a muscle disappears", "A condition in which blood stops flowing"],
+    explanation: "Tendonitis is a condition in which a tendon becomes irritated and swollen." },
+  { topic: "Tendonitis", q: "What is a tendon, as described in the lesson on tendonitis?",
+    options: ["A strong band of tissue that connects a muscle to a bone", "A strong band of tissue that connects a bone to a bone", "A type of blood cell", "A type of skeletal muscle"],
+    explanation: "A tendon is a strong band of tissue that connects a muscle to a bone." },
+  { topic: "Tendonitis", q: "Which of these can cause tendonitis?",
+    options: ["Repeating the same movement many times", "Resting a muscle completely", "Drinking enough water", "Warming up before exercise"],
+    explanation: "Causes of tendonitis include repeating the same movement many times, playing sports too often without rest, overusing a muscle, and an injury to the tendon." },
+
+  // ===================== SPRAIN (3) =====================
+  { topic: "Sprain", q: "What is a sprain?",
+    options: ["An injury when a ligament is stretched too much or torn", "An injury when a muscle is stretched too much or torn", "An injury when a bone breaks completely", "An injury when a tendon disappears"],
+    explanation: "A sprain is an injury that happens when a ligament is stretched too much or torn." },
+  { topic: "Sprain", q: "Which of these can cause a sprain?",
+    options: ["Twisting the ankle while playing sports", "Drinking plenty of water", "Warming up before exercise", "Getting enough rest"],
+    explanation: "Causes of sprains include falling while running, twisting the ankle while playing sports, landing awkwardly after jumping, and bending a joint too far." },
+  { topic: "Sprain", q: "A sprain is an injury to which type of tissue?",
+    options: ["A ligament", "A tendon", "A muscle", "A bone"],
+    explanation: "A sprain happens when a ligament is stretched too much or torn." },
+
+  // ===================== MUSCULAR DYSTROPHY (3) =====================
+  { topic: "Muscular Dystrophy", q: "What is muscular dystrophy?",
+    options: ["A group of genetic diseases that cause muscles to become weak over time", "A short-term injury that heals within a day", "A disease that only affects bones", "A condition caused by drinking too little water"],
+    explanation: "Muscular dystrophy is a group of genetic diseases that cause muscles to become weak over time." },
+  { topic: "Muscular Dystrophy", q: "What causes muscular dystrophy?",
+    options: ["Changes in certain genes that affect how muscles grow and work", "Not stretching before exercise", "Drinking too much water", "Overusing a tendon"],
+    explanation: "Muscular dystrophy is caused by changes in certain genes that affect how muscles grow and work." },
+  { topic: "Muscular Dystrophy", q: "What can muscular dystrophy make harder for a person to do?",
+    options: ["Move and do everyday activities", "Only see clearly", "Only hear well", "Only taste food"],
+    explanation: "Muscular dystrophy can make it harder for a person to move and do everyday activities." },
+
+  // ===================== MYASTHENIA GRAVIS (3) =====================
+  { topic: "Myasthenia Gravis", q: "What is myasthenia gravis?",
+    options: ["A long-term disorder that causes muscle weakness", "A short-term injury from a sprain", "A disease that only affects tendons", "A disease that only affects bones"],
+    explanation: "Myasthenia gravis is a long-term disorder that causes muscle weakness." },
+  { topic: "Myasthenia Gravis", q: "Why does myasthenia gravis cause muscle weakness?",
+    options: ["Because nerves and muscles have difficulty communicating", "Because bones become too weak", "Because tendons disappear completely", "Because ligaments become too tight"],
+    explanation: "Myasthenia gravis happens because the nerves and muscles have difficulty communicating with each other." },
+  { topic: "Myasthenia Gravis", q: "What normally tells your muscles when to move?",
+    options: ["Signals from the nerves", "Signals from the skin", "Signals from the bones", "Signals from the blood"],
+    explanation: "Our nerves send signals to our muscles to tell them when to move; in myasthenia gravis, these signals do not work properly." }
+];
+
+const TOTAL_QUESTIONS = 25;
+
+// ---------- State ----------
+let quizQuestions = [];   // 25 chosen questions, each with shuffled options + correctIndex
+let currentIndex = 0;
+let score = 0;
+let missed = [];
+let answeredThisQuestion = false;
+let selectedOptionIndex = null;
+
+// ---------- Helpers ----------
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuiz() {
+  const bankCopy = shuffleArray(QUESTION_BANK);
+  const chosen = bankCopy.slice(0, TOTAL_QUESTIONS);
+  quizQuestions = shuffleArray(chosen).map(item => {
+    const optionOrder = shuffleArray([0, 1, 2, 3]); // indices into original options array
+    const shuffledOptions = optionOrder.map(i => item.options[i]);
+    const correctIndex = optionOrder.indexOf(0);
+    return {
+      topic: item.topic,
+      q: item.q,
+      options: shuffledOptions,
+      correctIndex: correctIndex,
+      explanation: item.explanation
+    };
+  });
+  currentIndex = 0;
+  score = 0;
+  missed = [];
+}
+
+// ---------- DOM refs ----------
+const startScreen = document.getElementById('start-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const resultsScreen = document.getElementById('results-screen');
+
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const topicTag = document.getElementById('topic-tag');
+const questionText = document.getElementById('question-text');
+const optionsList = document.getElementById('options-list');
+const feedback = document.getElementById('feedback');
+const fbTitle = document.getElementById('fb-title');
+const fbExplanation = document.getElementById('fb-explanation');
+const actionBtn = document.getElementById('action-btn');
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  buildQuiz();
+  startScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  resultsScreen.classList.add('hidden');
+  renderQuestion();
+});
+
+document.getElementById('retake-btn').addEventListener('click', () => {
+  buildQuiz();
+  resultsScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  renderQuestion();
+});
+
+function renderQuestion() {
+  answeredThisQuestion = false;
+  selectedOptionIndex = null;
+  const item = quizQuestions[currentIndex];
+
+  progressFill.style.width = ((currentIndex) / TOTAL_QUESTIONS * 100) + '%';
+  progressLabel.textContent = 'Q' + (currentIndex + 1) + ' / ' + TOTAL_QUESTIONS;
+  topicTag.textContent = item.topic;
+  questionText.textContent = item.q;
+
+  optionsList.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.dataset.idx = idx;
+    const letter = String.fromCharCode(65 + idx);
+    div.innerHTML = '<div class="option-letter">' + letter + '</div><div class="option-text">' + opt + '</div>';
+    div.addEventListener('click', () => selectOption(idx));
+    optionsList.appendChild(div);
+  });
+
+  feedback.classList.remove('show', 'correct-fb', 'incorrect-fb');
+  actionBtn.textContent = 'Submit';
+  actionBtn.disabled = true;
+  actionBtn.onclick = handleSubmit;
+}
+
+function selectOption(idx) {
+  if (answeredThisQuestion) return;
+  selectedOptionIndex = idx;
+  [...optionsList.children].forEach(el => el.classList.remove('selected'));
+  optionsList.children[idx].classList.add('selected');
+  actionBtn.disabled = false;
+}
+
+function handleSubmit() {
+  if (selectedOptionIndex === null || answeredThisQuestion) return;
+  answeredThisQuestion = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedOptionIndex === item.correctIndex;
+
+  [...optionsList.children].forEach((el, idx) => {
+    el.classList.add('locked');
+    if (idx === item.correctIndex) el.classList.add('correct');
+    else if (idx === selectedOptionIndex) el.classList.add('incorrect');
+  });
+
+  feedback.classList.add('show');
+  if (isCorrect) {
+    score++;
+    feedback.classList.add('correct-fb');
+    feedback.classList.remove('incorrect-fb');
+    fbTitle.innerHTML = '✅ Correct!';
+  } else {
+    missed.push({
+      topic: item.topic,
+      q: item.q,
+      yourAnswer: item.options[selectedOptionIndex],
+      correctAnswer: item.options[item.correctIndex],
+      explanation: item.explanation
+    });
+    feedback.classList.add('incorrect-fb');
+    feedback.classList.remove('correct-fb');
+    fbTitle.innerHTML = '❌ Not quite — the correct answer is: ' + item.options[item.correctIndex];
+  }
+  fbExplanation.textContent = item.explanation;
+
+  actionBtn.textContent = (currentIndex === TOTAL_QUESTIONS - 1) ? 'See Results' : 'Next Question';
+  actionBtn.disabled = false;
+  actionBtn.onclick = handleNext;
+}
+
+function handleNext() {
+  currentIndex++;
+  if (currentIndex >= TOTAL_QUESTIONS) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  progressFill.style.width = '100%';
+  quizScreen.classList.add('hidden');
+  resultsScreen.classList.remove('hidden');
+
+  document.getElementById('score-num').textContent = score + '/' + TOTAL_QUESTIONS;
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  let msg;
+  if (pct === 100) msg = "Perfect score! You really know your muscles! 🌟";
+  else if (pct >= 80) msg = "Great job! You have a strong understanding of the muscular system.";
+  else if (pct >= 60) msg = "Good effort! Review the topics below to strengthen your knowledge.";
+  else msg = "Keep practicing! Review the explanations below and try again.";
+  document.getElementById('score-msg').textContent = msg + ' (' + pct + '%)';
+
+  const reviewSection = document.getElementById('review-section');
+  reviewSection.innerHTML = '';
+  if (missed.length === 0) {
+    const p = document.createElement('p');
+    p.style.textAlign = 'center';
+    p.style.color = '#2e7d32';
+    p.style.fontWeight = '600';
+    p.textContent = 'No mistakes — amazing work!';
+    reviewSection.appendChild(p);
+  } else {
+    const heading = document.createElement('h2');
+    heading.style.fontSize = '1.05rem';
+    heading.style.color = '#1F4E79';
+    heading.textContent = 'Review: Questions You Missed (' + missed.length + ')';
+    reviewSection.appendChild(heading);
+
+    missed.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML =
+        '<div class="rtopic">' + m.topic + '</div>' +
+        '<div class="rq">' + m.q + '</div>' +
+        '<div class="rline wrong">Your answer: ' + m.yourAnswer + '</div>' +
+        '<div class="rline right">Correct answer: ' + m.correctAnswer + '</div>' +
+        '<div class="rexpl">' + m.explanation + '</div>';
+      reviewSection.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsasanay sa Hugnayang Pangungusap - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 16px;
+    color: #2c3e50;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.5rem;
+    color: #2b579a;
+    margin-bottom: 4px;
+  }
+  header p {
+    color: #607d8b;
+    margin: 0;
+  }
+  #progress {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #2b579a;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #eef3fb;
+    border: 2px solid #dbe6f5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .choice:hover:not(:disabled) {
+    background: #dde9fa;
+  }
+  .choice.selected {
+    border-color: #2b579a;
+    background: #d7e6fb;
+  }
+  .choice:disabled {
+    cursor: default;
+  }
+  .choice.correct {
+    background: #d5f5df;
+    border-color: #34a853;
+    color: #1b6b33;
+    font-weight: bold;
+  }
+  .choice.incorrect {
+    background: #fbdede;
+    border-color: #e74c3c;
+    color: #a02c1f;
+    font-weight: bold;
+  }
+  .submit-btn, .next-btn, .restart-btn {
+    display: inline-block;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .submit-btn:disabled {
+    background: #a9bcd6;
+    cursor: not-allowed;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #d5f5df;
+    color: #1b6b33;
+  }
+  .feedback.incorrect-fb {
+    background: #fbdede;
+    color: #a02c1f;
+  }
+  .explain {
+    margin-top: 8px;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: #45525e;
+  }
+  .nav-row {
+    text-align: right;
+  }
+  #resultsScreen, #quizScreen, #startScreen {
+    display: none;
+  }
+  #startScreen { display: block; }
+  .score-big {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    color: #2b579a;
+    margin: 6px 0 4px;
+  }
+  .score-sub {
+    text-align: center;
+    color: #607d8b;
+    margin-bottom: 18px;
+  }
+  .review-item {
+    border-left: 5px solid #e74c3c;
+    background: #fff6f6;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .review-item.correctone {
+    border-left-color: #34a853;
+    background: #f5fdf7;
+  }
+  .review-item p { margin: 4px 0; }
+  .review-q { font-weight: 700; }
+  .review-your { color: #a02c1f; }
+  .review-correct { color: #1b6b33; }
+  .review-explain { color: #45525e; font-size: 0.92rem; }
+  .start-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .center { text-align: center; }
+  ul.info-list { line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Pagsasanay sa Hugnayang Pangungusap</h1>
+    <p>Ikaapat na Baitang (Grade 4) &mdash; Filipino</p>
+  </header>
+
+  <div id="startScreen" class="card">
+    <p style="font-size:1.05rem; line-height:1.6;">
+      Sasagutan mo ang <strong>10 katanungan</strong> tungkol sa <strong>Hugnayang Pangungusap</strong>:
+    </p>
+    <ul class="info-list">
+      <li>ang sugnay bilang bahagi ng pangungusap (simuno + panaguri),</li>
+      <li>ang kaibahan ng sugnay na <strong>makapag-iisa</strong> at sugnay na <strong>hindi makapag-iisa</strong>,</li>
+      <li>ang mga <strong>pangatnig</strong> na ginagamit (kung, kapag, dahil, sapagkat, upang, para, nang), at</li>
+      <li>ang pagbuo ng hugnayang pangungusap.</li>
+    </ul>
+    <p style="font-size:1rem;">Multiple choice ito (A-D). Random ang pagkakasunod-sunod ng mga tanong sa bawat pagsusulit, at may paliwanag pagkatapos sagutan ang bawat tanong.</p>
+    <button class="start-btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <div id="quizScreen">
+    <div id="progress"></div>
+    <div class="card">
+      <div class="question-text" id="questionText"></div>
+      <div id="choicesArea"></div>
+      <div class="feedback" id="feedbackBox"></div>
+      <div class="nav-row">
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()" disabled>Isumite</button>
+        <button class="next-btn" id="nextBtn" style="display:none;" onclick="nextQuestion()">Susunod</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" class="card">
+    <h2 class="center" style="color:#2b579a;">Resulta ng Pagsusulit</h2>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-sub" id="scoreSub"></div>
+    <div id="reviewList"></div>
+    <div class="center">
+      <button class="restart-btn" onclick="location.reload()">Ulitin ang Pagsusulit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOTAL_TO_SHOW = 10;
+
+const allQuestions = [
+  {
+    q: "Ano ang tawag sa pinagsamang simuno at panaguri sa loob ng isang pangungusap?",
+    choices: ["Parirala", "Sugnay", "Pantig", "Salita"],
+    answer: 1,
+    explain: "Ang sugnay ay bahagi ng pangungusap na may sariling simuno at panaguri."
+  },
+  {
+    q: "Alin ang tamang kahulugan ng Hugnayang Pangungusap?",
+    choices: [
+      "Pangungusap na may isang sugnay lamang",
+      "Pangungusap na binubuo ng pinagsamang sugnay na makapag-iisa at sugnay na hindi makapag-iisa",
+      "Pangungusap na walang simuno",
+      "Pangungusap na binubuo lamang ng mga pang-uri"
+    ],
+    answer: 1,
+    explain: "Kapag pinagsama ang sugnay na makapag-iisa at ang sugnay na hindi makapag-iisa, nabubuo ang Hugnayang Pangungusap."
+  },
+  {
+    q: "Ang sugnay na may simuno at panaguri at may buong kaisipan kahit ihiwalay sa pangungusap ay tinatawag na:",
+    choices: ["Sugnay na hindi makapag-iisa", "Sugnay na makapag-iisa", "Parirala", "Pang-abay"],
+    answer: 1,
+    explain: "Buo ang diwa o kaisipan ng sugnay na makapag-iisa kahit ihiwalay ito sa pangungusap."
+  },
+  {
+    q: "Ang sugnay na may simuno at panaguri ngunit hindi buo ang kaisipan kapag inihiwalay ay tinatawag na:",
+    choices: ["Sugnay na makapag-iisa", "Pangngalan", "Sugnay na hindi makapag-iisa", "Pang-uri"],
+    answer: 2,
+    explain: "Kapag inihiwalay ang sugnay na hindi makapag-iisa sa pangungusap, wala nang buong ibig sabihin o isa na lamang itong parirala."
+  },
+  {
+    q: 'Sa pangungusap na "Aalis na tayo ngayon dahil parating na ang ulan," alin ang sugnay na MAKAPAG-IISA?',
+    choices: ["dahil parating na ang ulan", "Aalis na tayo ngayon", "parating na ang ulan", "dahil parating"],
+    answer: 1,
+    explain: 'Buo ang ibig sabihin ng "Aalis na tayo ngayon" kahit ihiwalay sa buong pangungusap.'
+  },
+  {
+    q: 'Sa pangungusap na "Aalis na tayo ngayon dahil parating na ang ulan," alin ang sugnay na HINDI MAKAPAG-IISA?',
+    choices: ["Aalis na tayo ngayon", "tayo ngayon", "dahil parating na ang ulan", "Aalis na tayo"],
+    answer: 2,
+    explain: 'Kulang ang ibig sabihin ng "dahil parating na ang ulan" kapag ito ay inihiwalay sa unang sugnay.'
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng pangatnig na ginagamit sa hugnayang pangungusap?",
+    choices: ["maganda", "dahil", "mabilis", "bahay"],
+    answer: 1,
+    explain: '"Dahil" ay isa sa mga pangatnig na ginagamit upang pagsamahin ang dalawang sugnay.'
+  },
+  {
+    q: "Alin sa mga sumusunod ang HINDI kabilang sa mga pangatnig na binanggit sa aralin?",
+    choices: ["kung", "sapagkat", "saka", "upang"],
+    answer: 2,
+    explain: "Ang mga pangatnig na binanggit sa aralin ay: kung, kapag, dahil, sapagkat, upang, para, at nang."
+  },
+  {
+    q: 'Sa pangungusap na "Nag-aral siyang mabuti upang maipasa ang pagsusulit," ano ang pangatnig?',
+    choices: ["Nag-aral", "mabuti", "upang", "pagsusulit"],
+    answer: 2,
+    explain: '"Upang" ang ginamit na pangatnig upang iugnay ang dalawang sugnay sa pangungusap.'
+  },
+  {
+    q: 'Sa pangungusap na "Nag-aral siyang mabuti upang maipasa ang pagsusulit," alin ang sugnay na MAKAPAG-IISA?',
+    choices: ["Nag-aral siyang mabuti", "upang maipasa ang pagsusulit", "maipasa ang pagsusulit", "siyang mabuti"],
+    answer: 0,
+    explain: 'Buo ang ibig sabihin ng "Nag-aral siyang mabuti" kahit ihiwalay sa buong pangungusap.'
+  },
+  {
+    q: 'Sa pangungusap na "Nag-aral siyang mabuti upang maipasa ang pagsusulit," alin ang sugnay na HINDI MAKAPAG-IISA?',
+    choices: ["Nag-aral siyang mabuti", "Nag-aral siya", "upang maipasa ang pagsusulit", "mabuti"],
+    answer: 2,
+    explain: 'Kulang ang ibig sabihin ng "upang maipasa ang pagsusulit" kapag ito ay hiniwalay.'
+  },
+  {
+    q: 'Sa pangungusap na "Maraming paaralan ang nagkansela ng klase dahil sa masamang panahon dulot ng habagat," alin ang sugnay na MAKAPAG-IISA?',
+    choices: ["dahil sa masamang panahon dulot ng habagat", "Maraming paaralan ang nagkansela ng klase", "masamang panahon dulot ng habagat", "nagkansela ng klase"],
+    answer: 1,
+    explain: 'Buo ang diwa ng "Maraming paaralan ang nagkansela ng klase" kahit hiwalay sa pangungusap.'
+  },
+  {
+    q: 'Sa pangungusap na "Maraming paaralan ang nagkansela ng klase dahil sa masamang panahon dulot ng habagat," ano ang pangatnig na ginamit?',
+    choices: ["kung", "dahil", "upang", "para"],
+    answer: 1,
+    explain: '"Dahil" ang pangatnig na nag-uugnay sa dalawang sugnay sa pangungusap na ito.'
+  },
+  {
+    q: 'Sa pangungusap na "Kung boboto lamang nang tama ang mga Pilipino, magiging maayos ang pamamahala sa ating bansa," alin ang sugnay na HINDI MAKAPAG-IISA?',
+    choices: ["magiging maayos ang pamamahala sa ating bansa", "Kung boboto lamang nang tama ang mga Pilipino", "ang mga Pilipino", "ating bansa"],
+    answer: 1,
+    explain: 'Kulang ang ibig sabihin ng "Kung boboto lamang nang tama ang mga Pilipino" kapag hiniwalay sa kabuuan.'
+  },
+  {
+    q: 'Sa pangungusap na "Kung boboto lamang nang tama ang mga Pilipino, magiging maayos ang pamamahala sa ating bansa," alin ang sugnay na MAKAPAG-IISA?',
+    choices: ["Kung boboto lamang nang tama ang mga Pilipino", "boboto lamang nang tama", "magiging maayos ang pamamahala sa ating bansa", "ang mga Pilipino"],
+    answer: 2,
+    explain: 'Buo ang ibig sabihin ng "magiging maayos ang pamamahala sa ating bansa" kahit hiwalayin ito.'
+  },
+  {
+    q: "Ano ang ginagamit upang pagsamahin ang dalawang sugnay sa isang hugnayang pangungusap?",
+    choices: ["Pang-uri", "Pangatnig", "Pandiwa", "Pang-abay"],
+    answer: 1,
+    explain: "Ang pangatnig ang nag-uugnay sa sugnay na makapag-iisa at sugnay na hindi makapag-iisa."
+  },
+  {
+    q: "Piliin ang HUGNAYANG PANGUNGUSAP sa mga sumusunod:",
+    choices: ["Maganda ang bulaklak.", "Kumain kami ng hapunan.", "Umuwi agad si Ana dahil umuulan.", "Masipag ang mag-aaral."],
+    answer: 2,
+    explain: 'Binubuo ito ng dalawang sugnay: "Umuwi agad si Ana" (makapag-iisa) at "dahil umuulan" (hindi makapag-iisa).'
+  },
+  {
+    q: "Alin sa mga sumusunod ang HINDI hugnayang pangungusap (iisang sugnay lamang)?",
+    choices: ["Nagluto si Nanay habang naglalaro ang mga bata.", "Natulog agad ang bata pagkatapos maligo.", "Masaya ang mga bata sa parke.", "Aalis kami kapag tumigil ang ulan."],
+    answer: 2,
+    explain: 'Isang sugnay lamang ang "Masaya ang mga bata sa parke" - walang pangatnig na nag-uugnay sa ibang sugnay.'
+  },
+  {
+    q: '"Hindi pumasok si Juan ___ siya ay may sakit." Anong pangatnig ang angkop?',
+    choices: ["kung", "dahil", "upang", "para"],
+    answer: 1,
+    explain: '"Dahil" ang angkop dahil ito ang dahilan kung bakit hindi pumasok si Juan.'
+  },
+  {
+    q: '"___ umulan, kanselado ang laro." Anong pangatnig ang angkop?',
+    choices: ["Kapag", "Upang", "Para", "Sapagkat"],
+    answer: 0,
+    explain: '"Kapag" ang angkop dahil naglalarawan ito ng kalagayan o pangyayaring maaaring mangyari.'
+  },
+  {
+    q: '"Nagtitipid siya ng pera ___ makabili ng bagong sapatos." Anong pangatnig ang angkop?',
+    choices: ["dahil", "upang", "kung", "kapag"],
+    answer: 1,
+    explain: '"Upang" ang angkop dahil ipinapahayag nito ang layunin ng pagtitipid.'
+  },
+  {
+    q: "Alin sa mga sumusunod ang sugnay na MAY SIMUNO AT PANAGURI ngunit KULANG ang ibig sabihin kapag nag-iisa?",
+    choices: ["Masaya ang mga bata.", "dahil malakas ang ulan", "Umuwi na kami.", "Nagluto si Ate ng hapunan."],
+    answer: 1,
+    explain: 'Kulang ang ibig sabihin ng "dahil malakas ang ulan" kapag ito ay nag-iisa - kailangan pa nito ng kasamang sugnay.'
+  },
+  {
+    q: 'Sa pangungusap na "Titigil ang klase kapag lumakas ang bagyo," ilan ang sugnay dito?',
+    choices: ["Isa", "Dalawa", "Tatlo", "Wala"],
+    answer: 1,
+    explain: 'May dalawang sugnay: "Titigil ang klase" at "kapag lumakas ang bagyo," na pinag-ugnay ng pangatnig na "kapag".'
+  },
+  {
+    q: 'Sa pangungusap na "Nag-aral siyang mabuti upang maipasa ang pagsusulit," ano ang simuno ng unang sugnay?',
+    choices: ["siya", "mabuti", "pagsusulit", "Nag-aral"],
+    answer: 0,
+    explain: '"Siya" ang simuno sapagkat ito ang gumaganap ng kilos na "nag-aral".'
+  },
+  {
+    q: 'Sa pangungusap na "Aalis na tayo ngayon dahil parating na ang ulan," ano ang panaguri ng unang sugnay?',
+    choices: ["tayo", "Aalis", "ngayon", "ulan"],
+    answer: 1,
+    explain: '"Aalis" ang panaguri sapagkat ito ang naglalarawan ng kilos o ginagawa ng simuno.'
+  },
+  {
+    q: "Alin sa sumusunod na pares ng sugnay ang tamang bumubuo ng hugnayang pangungusap?",
+    choices: ['"Maganda" at "bulaklak"', '"Umuwi na kami" at "dahil dumating na ang bagyo"', '"Kumain" at "tumakbo"', '"Bahay" at "paaralan"'],
+    answer: 1,
+    explain: 'Ang "Umuwi na kami" (makapag-iisa) at "dahil dumating na ang bagyo" (hindi makapag-iisa) ay maaaring pagsamahin upang bumuo ng hugnayang pangungusap.'
+  },
+  {
+    q: 'Piliin ang pinakaangkop na pangatnig: "___ gustuhin mo, sasamahan kita sa palengke."',
+    choices: ["Dahil", "Kung", "Upang", "Sapagkat"],
+    answer: 1,
+    explain: '"Kung" ang angkop dahil naglalarawan ito ng isang kondisyon o kalagayan.'
+  },
+  {
+    q: 'Alin sa mga sumusunod ang tamang hugnayang pangungusap gamit ang pangatnig na "para"?',
+    choices: ["Nag-iipon si Rosa ng pera para makapag-aral ang kapatid niya.", "Maganda si Rosa at masipag.", "Umuwi si Rosa nang maaga.", "Nagluto si Rosa ng adobo."],
+    answer: 0,
+    explain: 'May dalawang sugnay na pinag-ugnay ng pangatnig na "para": "Nag-iipon si Rosa ng pera" at "para makapag-aral ang kapatid niya".'
+  },
+  {
+    q: "Bakit itinuturing na buo ang kaisipan ng sugnay na makapag-iisa?",
+    choices: ["Dahil mahaba ito.", "Dahil may kumpletong ibig sabihin ito kahit ihiwalay sa pangungusap.", "Dahil may pangatnig ito.", "Dahil nasa simula ito ng pangungusap."],
+    answer: 1,
+    explain: "Ang sugnay na makapag-iisa ay may sapat na kahulugan kahit hiwalay sa ibang bahagi ng pangungusap."
+  },
+  {
+    q: "Bakit hindi maaaring tumayo nang mag-isa ang sugnay na hindi makapag-iisa?",
+    choices: ["Dahil wala itong simuno.", "Dahil wala itong panaguri.", "Dahil kulang o hindi buo ang ibig sabihin nito kapag hiniwalay.", "Dahil masyadong maikli ito."],
+    answer: 2,
+    explain: "Kahit may simuno at panaguri ang sugnay na hindi makapag-iisa, hindi ito buo ang diwa kapag inihiwalay sa kabuuang pangungusap."
+  }
+];
+
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let selectedChoice = null;
+let answered = false;
+let results = []; // {q, choices, correctIdx, userIdx, isCorrect, explain}
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function shuffleQuestionChoices(question) {
+  const choiceObjs = question.choices.map((text, idx) => ({ text, isCorrect: idx === question.answer }));
+  const shuffled = shuffle(choiceObjs);
+  return {
+    q: question.q,
+    choices: shuffled.map(c => c.text),
+    answer: shuffled.findIndex(c => c.isCorrect),
+    explain: question.explain
+  };
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(allQuestions).slice(0, TOTAL_TO_SHOW).map(shuffleQuestionChoices);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedChoice = null;
+  answered = false;
+  const question = quizQuestions[currentIndex];
+  document.getElementById('progress').textContent = `Tanong ${currentIndex + 1} sa ${quizQuestions.length}`;
+  document.getElementById('questionText').textContent = question.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const choicesArea = document.getElementById('choicesArea');
+  choicesArea.innerHTML = '';
+  question.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = `${letters[idx]}. ${choice}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = `choice-${idx}`;
+    choicesArea.appendChild(btn);
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.className = 'feedback';
+  feedbackBox.innerHTML = '';
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectChoice(idx) {
+  if (answered) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answered) return;
+  answered = true;
+  const question = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === question.answer;
+  if (isCorrect) score++;
+
+  results.push({
+    q: question.q,
+    choices: question.choices,
+    correctIdx: question.answer,
+    userIdx: selectedChoice,
+    isCorrect,
+    explain: question.explain
+  });
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === question.answer) btn.classList.add('correct');
+    if (i === selectedChoice && !isCorrect) btn.classList.add('incorrect');
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.classList.add('show');
+  if (isCorrect) {
+    feedbackBox.classList.add('correct-fb');
+    feedbackBox.innerHTML = `Tama! Mahusay! <div class="explain">${question.explain}</div>`;
+  } else {
+    feedbackBox.classList.add('incorrect-fb');
+    feedbackBox.innerHTML = `Mali. Ang tamang sagot ay ${letters[question.answer]}. ${question.choices[question.answer]}.<div class="explain">${question.explain}</div>`;
+  }
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < quizQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+
+  document.getElementById('scoreBig').textContent = `${score} / ${quizQuestions.length}`;
+  const pct = Math.round((score / quizQuestions.length) * 100);
+  document.getElementById('scoreSub').textContent = `Iskor: ${pct}%`;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+
+  const wrongOnes = results.filter(r => !r.isCorrect);
+  const letters = ['A', 'B', 'C', 'D'];
+
+  if (wrongOnes.length === 0) {
+    const div = document.createElement('div');
+    div.className = 'review-item correctone';
+    div.innerHTML = `<p style="text-align:center; font-size:1.05rem;">Perpekto! Nasagot mo nang tama ang lahat ng tanong.</p>`;
+    reviewList.appendChild(div);
+  } else {
+    const heading = document.createElement('h3');
+    heading.style.color = '#2b579a';
+    heading.textContent = 'Mga Tanong na Mali ang Sagot:';
+    reviewList.appendChild(heading);
+
+    wrongOnes.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <p class="review-q">${r.q}</p>
+        <p class="review-your">Ang sagot mo: ${letters[r.userIdx]}. ${r.choices[r.userIdx]}</p>
+        <p class="review-correct">Tamang sagot: ${letters[r.correctIdx]}. ${r.choices[r.correctIdx]}</p>
+        <p class="review-explain">${r.explain}</p>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

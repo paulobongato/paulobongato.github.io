@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 4 Math Quiz: Multiplication (Set 2)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #fff9c4);
+    margin: 0;
+    padding: 16px;
+    color: #2b2b2b;
+  }
+  .app {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: 1.5rem;
+    color: #00695c;
+    margin: 8px 0 4px;
+  }
+  header p {
+    margin: 0;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  .progress-wrap {
+    background: #fff;
+    border-radius: 20px;
+    height: 16px;
+    overflow: hidden;
+    margin: 12px 0;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.15);
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #26a69a, #66bb6a);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  .qnum {
+    font-weight: 700;
+    color: #00796b;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+  .qtext {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 2px solid #cfd8dc;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: all 0.15s ease;
+    background: #fafafa;
+  }
+  .option:hover { border-color: #26a69a; background: #f1f8f7; }
+  .option.selected { border-color: #00796b; background: #e0f2f1; }
+  .option.correct { border-color: #2e7d32; background: #c8e6c9; }
+  .option.incorrect { border-color: #c62828; background: #ffcdd2; }
+  .option .letter {
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #00796b;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .option.correct .letter { background: #2e7d32; }
+  .option.incorrect .letter { background: #c62828; }
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 22px;
+    gap: 10px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+  }
+  button:active { transform: scale(0.97); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-submit { background: #00796b; color: #fff; }
+  .btn-next { background: #ef6c00; color: #fff; }
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.02rem;
+    display: none;
+  }
+  .feedback.correct { background: #c8e6c9; color: #1b5e20; display: block; }
+  .feedback.incorrect { background: #ffcdd2; color: #b71c1c; display: block; }
+  .result-card { text-align: center; }
+  .score-big {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #00695c;
+    margin: 10px 0;
+  }
+  .score-msg { font-size: 1.05rem; margin-bottom: 20px; color: #444; }
+  .review {
+    text-align: left;
+    margin-top: 20px;
+  }
+  .review h3 {
+    color: #00695c;
+    border-bottom: 2px solid #b2dfdb;
+    padding-bottom: 6px;
+  }
+  .review-item {
+    background: #fff3e0;
+    border-left: 5px solid #ef6c00;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+  }
+  .review-item .rq { font-weight: 700; margin-bottom: 4px; }
+  .review-item .rline { font-size: 0.95rem; margin: 2px 0; }
+  .review-item .wrong { color: #c62828; }
+  .review-item .right { color: #2e7d32; font-weight: 700; }
+  .no-mistakes {
+    background: #c8e6c9;
+    border-left: 5px solid #2e7d32;
+    border-radius: 8px;
+    padding: 14px;
+    font-weight: 700;
+    color: #1b5e20;
+    text-align: center;
+  }
+  .btn-restart {
+    background: #00796b;
+    color: #fff;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Grade 4 Math Quiz — Set 2</h1>
+    <p>Multiplication: 1-digit &amp; 2-digit Multipliers, Estimating Products, and Word Problems</p>
+  </header>
+
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // Topic 1: 3-4 digit x 1-digit
+  { q: "132 × 3 = ?", options: ["396", "386", "406", "393"], correct: 0 },
+  { q: "4021 × 2 = ?", options: ["8032", "8042", "8052", "8142"], correct: 1 },
+  { q: "2102 × 4 = ?", options: ["8398", "8408", "8418", "8308"], correct: 1 },
+  { q: "418 × 2 = ?", options: ["826", "816", "836", "846"], correct: 2 },
+  { q: "1364 × 3 = ?", options: ["3992", "4092", "4082", "4192"], correct: 1 },
+  { q: "957 × 6 = ?", options: ["5732", "5642", "5742", "5842"], correct: 2 },
+
+  // Topic 2: 2-3 digit x 2-digit
+  { q: "31 × 13 = ?", options: ["393", "403", "413", "343"], correct: 1 },
+  { q: "42 × 23 = ?", options: ["956", "886", "966", "976"], correct: 2 },
+  { q: "214 × 21 = ?", options: ["4484", "4494", "4294", "4594"], correct: 1 },
+  { q: "356 × 27 = ?", options: ["9602", "9512", "9612", "9712"], correct: 2 },
+  { q: "67 × 38 = ?", options: ["2536", "2446", "2546", "2646"], correct: 2 },
+  { q: "429 × 32 = ?", options: ["13718", "12728", "13728", "13628"], correct: 2 },
+
+  // Topic 3: Estimating products
+  { q: "Estimate the product of 36 × 7 by rounding 36 to the nearest ten.", options: ["252", "280", "300", "240"], correct: 1 },
+  { q: "Estimate the product of 512 × 3 by rounding 512 to the nearest hundred.", options: ["1500", "1536", "1400", "1600"], correct: 0 },
+  { q: "Estimate the product of 64 × 19 by rounding both numbers to the nearest ten.", options: ["1216", "1000", "1200", "1400"], correct: 2 },
+  { q: "Estimate the product of 348 × 5 by rounding 348 to the nearest hundred.", options: ["1740", "1400", "1500", "1600"], correct: 2 },
+  { q: "Estimate the product of 89 × 42 by rounding both numbers to the nearest ten.", options: ["3738", "3600", "3500", "3700"], correct: 1 },
+
+  // Topic 4: Multi-step word problems
+  { q: "A toy store receives 15 boxes of toy cars with 18 cars per box. They donate 4 boxes' worth of cars to a charity. How many toy cars remain?", options: ["270", "72", "198", "126"], correct: 2 },
+  { q: "Ana buys 5 packs of stickers with 36 stickers each. She shares 8 stickers with each of her 4 friends. How many stickers does she have left?", options: ["180", "32", "112", "148"], correct: 3 },
+  { q: "A theater has 9 rows with 22 seats each. If 37 seats are reserved and cannot be sold, how many seats can be sold?", options: ["198", "37", "125", "161"], correct: 3 },
+  { q: "A poultry farm has 7 cages with 45 chickens each. They sell 3 cages completely, then give away 15 chickens from what remains. How many chickens are left?", options: ["180", "315", "165", "150"], correct: 2 },
+
+  // Topic 5: Word problems involving multiplication (without/with regrouping)
+  { q: "A library has 26 shelves with 8 books on each shelf. How many books are there in total?", options: ["34", "198", "208", "218"], correct: 2 },
+  { q: "There are 312 pupils in Grade 4. Each pupil needs 2 pencils. How many pencils are needed in total?", options: ["314", "614", "624", "634"], correct: 2 },
+  { q: "A bus can carry 38 passengers. If there are 15 buses, how many passengers can they carry altogether?", options: ["53", "560", "570", "580"], correct: 2 },
+  { q: "A field has 211 rows of corn with 3 corn plants in each row. How many corn plants are there in total?", options: ["214", "623", "633", "643"], correct: 2 }
+];
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Build a shuffled question set, and shuffle option order within each question,
+// tracking the new index of the correct answer.
+let quiz = shuffle(QUESTIONS).map(orig => {
+  const optionOrder = shuffle(orig.options.map((text, idx) => ({ text, idx })));
+  const newCorrect = optionOrder.findIndex(o => o.idx === orig.correct);
+  return {
+    q: orig.q,
+    options: optionOrder.map(o => o.text),
+    correct: newCorrect
+  };
+});
+
+let current = 0;
+let score = 0;
+let selectedIndex = null;
+let answered = false;
+const userAnswers = []; // { selected, correct, correctText, selectedText, q }
+
+const LETTERS = ["A", "B", "C", "D"];
+const card = document.getElementById("quizCard");
+const progressBar = document.getElementById("progressBar");
+
+function renderQuestion() {
+  answered = false;
+  selectedIndex = null;
+  const item = quiz[current];
+  progressBar.style.width = `${(current / quiz.length) * 100}%`;
+
+  card.innerHTML = `
+    <div class="qnum">Question ${current + 1} of ${quiz.length}</div>
+    <div class="qtext">${item.q}</div>
+    <div class="options" id="optionsWrap">
+      ${item.options.map((opt, i) => `
+        <div class="option" data-idx="${i}">
+          <span class="letter">${LETTERS[i]}</span>
+          <span>${opt}</span>
+        </div>
+      `).join("")}
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="controls">
+      <span></span>
+      <button class="btn-submit" id="submitBtn" disabled>Submit</button>
+    </div>
+  `;
+
+  document.querySelectorAll(".option").forEach(el => {
+    el.addEventListener("click", () => {
+      if (answered) return;
+      document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+      el.classList.add("selected");
+      selectedIndex = parseInt(el.dataset.idx, 10);
+      document.getElementById("submitBtn").disabled = false;
+    });
+  });
+
+  document.getElementById("submitBtn").addEventListener("click", submitAnswer);
+}
+
+function submitAnswer() {
+  if (selectedIndex === null || answered) return;
+  answered = true;
+  const item = quiz[current];
+  const isCorrect = selectedIndex === item.correct;
+  if (isCorrect) score++;
+
+  userAnswers.push({
+    q: item.q,
+    selectedText: item.options[selectedIndex],
+    correctText: item.options[item.correct],
+    isCorrect
+  });
+
+  document.querySelectorAll(".option").forEach((el, i) => {
+    el.classList.remove("selected");
+    if (i === item.correct) el.classList.add("correct");
+    else if (i === selectedIndex) el.classList.add("incorrect");
+  });
+
+  const fb = document.getElementById("feedback");
+  fb.classList.add(isCorrect ? "correct" : "incorrect");
+  fb.textContent = isCorrect
+    ? "Correct! Great job."
+    : `Not quite. The correct answer is ${LETTERS[item.correct]}: ${item.options[item.correct]}.`;
+
+  const controls = document.querySelector(".controls");
+  controls.innerHTML = `
+    <span></span>
+    <button class="btn-next" id="nextBtn">${current + 1 === quiz.length ? "See Results" : "Next Question"}</button>
+  `;
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    current++;
+    if (current < quiz.length) {
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  });
+}
+
+function renderResults() {
+  progressBar.style.width = "100%";
+  const total = quiz.length;
+  const pct = Math.round((score / total) * 100);
+  let msg = "Keep practicing — you'll get there!";
+  if (pct === 100) msg = "Perfect score! Excellent work!";
+  else if (pct >= 80) msg = "Great job! You know your multiplication well.";
+  else if (pct >= 60) msg = "Good effort! Review the ones you missed.";
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+  card.innerHTML = `
+    <div class="result-card">
+      <div class="qnum">Quiz Complete</div>
+      <div class="score-big">${score} / ${total}</div>
+      <div class="score-msg">${pct}% — ${msg}</div>
+      <div class="review">
+        <h3>Review</h3>
+        ${mistakes.length === 0
+          ? `<div class="no-mistakes">You got every question right. Amazing!</div>`
+          : mistakes.map(m => `
+            <div class="review-item">
+              <div class="rq">${m.q}</div>
+              <div class="rline wrong">Your answer: ${m.selectedText}</div>
+              <div class="rline right">Correct answer: ${m.correctText}</div>
+            </div>
+          `).join("")
+        }
+      </div>
+      <button class="btn-restart" id="restartBtn">Try Again</button>
+    </div>
+  `;
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    quiz = shuffle(QUESTIONS).map(orig => {
+      const optionOrder = shuffle(orig.options.map((text, idx) => ({ text, idx })));
+      const newCorrect = optionOrder.findIndex(o => o.idx === orig.correct);
+      return { q: orig.q, options: optionOrder.map(o => o.text), correct: newCorrect };
+    });
+    current = 0;
+    score = 0;
+    userAnswers.length = 0;
+    renderQuestion();
+  });
+}
+
+renderQuestion();
+</script>
+</body>
+</html>

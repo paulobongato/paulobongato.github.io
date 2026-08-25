@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .option-btn {
+      transition: all 0.2s ease-in-out;
+    }
+    .option-btn.selected {
+      border-color: #2563eb;
+      background-color: #eff6ff;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between font-sans">
+
+  <!-- Header -->
+  <header class="bg-orange-600 text-white py-6 shadow-md">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold">Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad</h1>
+      <p class="text-orange-100 text-sm sm:text-base mt-1">Araling Panlipunan &bull; Baitang 2</p>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl w-full mx-auto p-4 my-6 flex-grow">
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center border border-slate-200">
+      <div class="w-20 h-20 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+        🏡
+      </div>
+      <h2 class="text-xl font-bold text-slate-800 mb-2">Handa ka na ba?</h2>
+      <p class="text-slate-600 mb-4">
+        Suriin natin kung gaano mo naunawaan ang <strong>tungkulin at gawain</strong> ng pamilya, paaralan, ospital, pook-libangan, pamilihan, simbahan, at pamahalaan sa ating komunidad.
+      </p>
+      <div class="bg-orange-50 border border-orange-200 rounded-xl p-4 text-left text-sm text-orange-800 mb-6">
+        <p class="font-bold mb-1">Mga Panuto:</p>
+        <ul class="list-disc list-inside space-y-1">
+          <li>May <strong>10 katanungan</strong> ang pagsusulit na ito.</li>
+          <li>May <strong>4 na pagpipilian (A, B, C, D)</strong> ang bawat tanong.</li>
+          <li>Pumili ng iyong sagot, pagkatapos ay pindutin ang <strong>"Ipasa ang Sagot"</strong>.</li>
+          <li>Makikita mo agad kung tama o mali ang iyong sagot.</li>
+          <li>Iba-iba ang pagkakasunod-sunod ng mga tanong sa bawat pagkuha.</li>
+        </ul>
+      </div>
+      <button onclick="startQuiz()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+        Simulan ang Pagsusulit
+      </button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="hidden bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-slate-200">
+      <!-- Progress & Score Header -->
+      <div class="flex justify-between items-center pb-4 mb-6 border-b border-slate-100 text-sm font-semibold text-slate-500">
+        <span id="question-progress">Tanong 1 ng 10</span>
+        <span id="score-tracker" class="text-orange-600">Iskor: 0</span>
+      </div>
+
+      <!-- Question Text -->
+      <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 mb-6">
+        <!-- Question inserted dynamically -->
+      </h3>
+
+      <!-- Options -->
+      <div id="options-container" class="space-y-3 mb-6">
+        <!-- Options inserted dynamically -->
+      </div>
+
+      <!-- Instant Feedback Banner -->
+      <div id="feedback-box" class="hidden p-4 rounded-xl mb-6 text-sm font-medium"></div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-3">
+        <button id="submit-btn" onclick="submitAnswer()" disabled class="bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all">
+          Ipasa ang Sagot
+        </button>
+        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all">
+          Susunod na Tanong ➔
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-slate-200">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">Tapos na ang Pagsusulit!</h2>
+        <p class="text-slate-600">Narito ang buod ng iyong naging resulta:</p>
+
+        <div class="my-6 inline-block bg-orange-50 border border-orange-200 rounded-2xl p-6 px-10">
+          <span class="block text-4xl font-extrabold text-orange-700" id="final-score">0 / 10</span>
+          <span class="text-xs uppercase tracking-wider font-bold text-orange-500 mt-1 block" id="score-percentage">0%</span>
+        </div>
+      </div>
+
+      <!-- Mistakes Review Section -->
+      <div id="mistakes-section" class="mb-8">
+        <!-- List of incorrect answers inserted dynamically -->
+      </div>
+
+      <!-- Restart Button -->
+      <div class="text-center border-t border-slate-100 pt-6">
+        <button onclick="startQuiz()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all">
+          Subukang Muli (Bagong Pagkakasunod-sunod)
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200">
+    Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad &copy; 2026
+  </footer>
+
+  <script>
+    // Question Bank (10 Questions, 4 choices each: A, B, C, D)
+    const rawQuestions = [
+      {
+        text: "Ano ang tungkulin ng pamilya sa komunidad?",
+        options: [
+          "Itaguyod ang pangangailangan ng mga kasapi",
+          "Magbigay ng edukasyon sa lahat",
+          "Magpapanatili ng kaayusan at kapayapaan",
+          "Magpahayag ng mga paniniwala tungkol sa Panginoon"
+        ],
+        correctIndex: 0,
+        explanation: "Ang tungkulin ng pamilya ay itaguyod ang pangangailangan ng mga kasapi. Nagbibigay ito ng mga pangangailangan natin at inaalagaan tayo upang tayo ay mabuhay."
+      },
+      {
+        text: "Ano ang tungkulin ng paaralan?",
+        options: [
+          "Magbigay ng edukasyon sa lahat",
+          "Pagtataguyod ng serbisyong pangkalusugan",
+          "Ibigay ang pangangailangan ng mga tao",
+          "Pagpapanatili ng kaayusan sa lugar"
+        ],
+        correctIndex: 0,
+        explanation: "Ang tungkulin ng paaralan ay magbigay ng edukasyon sa lahat. Nagtuturo ito ng mga kaalaman, kasanayan, at wastong pag-uugali at asal."
+      },
+      {
+        text: "Sino ang tinatawag na pinuno ng paaralan?",
+        options: ["Guro", "Punong-guro", "Librarian", "Dyanitor"],
+        correctIndex: 1,
+        explanation: "Ang punong-guro ang pinuno ng paaralan. Katulong niya ang mga guro, librarian, at dyanitor sa pagbibigay ng edukasyon sa lahat."
+      },
+      {
+        text: "Ano ang tungkulin ng ospital?",
+        options: [
+          "Pagtataguyod ng serbisyong pangkalusugan",
+          "Magbigay ng edukasyon sa lahat",
+          "Nagbibigay ng pagkakataong makapaglibang",
+          "Ibigay ang pangangailangan ng mga tao"
+        ],
+        correctIndex: 0,
+        explanation: "Ang tungkulin ng ospital ay pagtataguyod ng serbisyong pangkalusugan. Nagbibigay ito ng serbisyong pangkalusugan, libreng gamot, at bakuna."
+      },
+      {
+        text: "Sino sa ospital ang nagbibigay ng serbisyong pangkalusugan sa mga pasyente?",
+        options: [
+          "Doktor at Nars",
+          "Bumbero at Pulis",
+          "Tindero at Tindera",
+          "Punong-guro at Guro"
+        ],
+        correctIndex: 0,
+        explanation: "Ang Doktor at Nars ang mga nagbibigay ng serbisyong pangkalusugan sa ospital."
+      },
+      {
+        text: "Ano ang tungkulin ng pook-libangan sa komunidad?",
+        options: [
+          "Nagbibigay ng pagkakataong makapaglibang ang mga kasapi ng komunidad",
+          "Pagpapanatili ng kaayusan at kapayapaan",
+          "Magbigay ng edukasyon sa lahat",
+          "Ibigay ang pangangailangan ng mga tao tulad ng pagkain"
+        ],
+        correctIndex: 0,
+        explanation: "Ang tungkulin ng pook-libangan ay nagbibigay ng pagkakataong makapaglibang ang mga kasapi ng komunidad. Dito pinagdarausan ang mga palaro, pagtitipon, pagdiriwang, at programa."
+      },
+      {
+        text: "Ano ang tungkulin ng pamilihan?",
+        options: [
+          "Ibigay ang pangangailangan ng mga tao tulad ng pagkain at damit",
+          "Magpahayag ng paniniwala tungkol sa Panginoon",
+          "Pagtataguyod ng serbisyong pangkalusugan",
+          "Nagbibigay ng pagkakataong makapaglibang"
+        ],
+        correctIndex: 0,
+        explanation: "Ang tungkulin ng pamilihan ay ibigay ang pangangailangan ng mga tao tulad ng pagkain, damit, at iba pa. Dito nabibili ang mga bagay na kailangan ng mga tao."
+      },
+      {
+        text: "Sino sa pamilihan ang tumutulong magbuhat ng mga bagay na binili?",
+        options: ["Tagapamahala", "Tindero/Tindera", "Kargador", "Hardinero"],
+        correctIndex: 2,
+        explanation: "Ang kargador ang tumutulong magbuhat ng mga bagay na binili sa pamilihan, kasama ang tagapamahala at tindero/tindera."
+      },
+      {
+        text: "Ano ang tungkulin ng simbahan?",
+        options: [
+          "Magpahayag ng mga paniniwala tungkol sa Panginoon",
+          "Magbigay ng edukasyon sa lahat",
+          "Pagpapanatili ng kaayusan at kapayapaan",
+          "Ibigay ang pangangailangan ng mga tao"
+        ],
+        correctIndex: 0,
+        explanation: "Ang tungkulin ng simbahan ay magpahayag ng mga paniniwala tungkol sa Panginoon. Nangangaral at nagtuturo ito ng mabuting asal ayon sa relihiyon."
+      },
+      {
+        text: "Sino sa pamahalaan ang may tungkulin na patayin ang sunog?",
+        options: ["Pulis", "Bumbero", "Sundalo", "Basurero"],
+        correctIndex: 1,
+        explanation: "Ang bumbero ang may tungkulin na patayin ang sunog. Katulong niya ang pulis, sundalo, kawani, at basurero sa pagpapanatili ng kaayusan at kapayapaan sa lugar."
+      }
+    ];
+
+    // State variables
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let selectedOptionLetter = null;
+    let score = 0;
+    let userAnswers = [];
+
+    const optionLetters = ["A", "B", "C", "D"];
+
+    // Helper: Fisher-Yates Shuffle
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function startQuiz() {
+      // Shuffle the questions list
+      const shuffledRaw = shuffleArray(rawQuestions);
+
+      // Format questions with shuffled options & consistent letters A-D
+      currentQuestions = shuffledRaw.map((q) => {
+        // Shuffle options for each question
+        const indexedOptions = q.options.map((optText, origIndex) => ({
+          text: optText,
+          isCorrect: origIndex === q.correctIndex
+        }));
+
+        const shuffledOptions = shuffleArray(indexedOptions);
+
+        // Assign A, B, C, D
+        let correctLetter = "";
+        const finalOptions = shuffledOptions.map((item, idx) => {
+          const letter = optionLetters[idx];
+          if (item.isCorrect) correctLetter = letter;
+          return {
+            letter: letter,
+            text: item.text
+          };
+        });
+
+        return {
+          text: q.text,
+          options: finalOptions,
+          correctLetter: correctLetter,
+          explanation: q.explanation
+        };
+      });
+
+      currentIndex = 0;
+      score = 0;
+      userAnswers = [];
+
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = currentQuestions[currentIndex];
+      selectedOptionLetter = null;
+
+      // Update Progress Header
+      document.getElementById('question-progress').textContent = `Tanong ${currentIndex + 1} ng ${currentQuestions.length}`;
+      document.getElementById('score-tracker').textContent = `Iskor: ${score}`;
+
+      // Set Question Text with CONSISTENT numbering
+      document.getElementById('question-text').textContent = `${currentIndex + 1}. ${q.text}`;
+
+      // Render 4 Options
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-400 flex items-start gap-3 bg-white shadow-sm`;
+        btn.onclick = () => selectOption(opt.letter, btn);
+        btn.innerHTML = `
+          <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-sm shrink-0">${opt.letter}</span>
+          <span class="text-slate-700 font-medium text-sm sm:text-base mt-0.5">${opt.text}</span>
+        `;
+        container.appendChild(btn);
+      });
+
+      // Reset feedback and action buttons
+      const feedbackBox = document.getElementById('feedback-box');
+      feedbackBox.className = 'hidden p-4 rounded-xl mb-6 text-sm font-medium';
+      feedbackBox.innerHTML = '';
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.className = 'bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all';
+      submitBtn.classList.remove('hidden');
+
+      document.getElementById('next-btn').classList.add('hidden');
+    }
+
+    function selectOption(letter, btnElement) {
+      if (document.getElementById('submit-btn').classList.contains('hidden')) return; // Already submitted
+
+      selectedOptionLetter = letter;
+
+      // Highlight selected styling
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(b => {
+        b.classList.remove('selected', 'border-orange-600', 'bg-orange-50');
+        b.classList.add('border-slate-200', 'bg-white');
+      });
+
+      btnElement.classList.add('selected', 'border-orange-600', 'bg-orange-50');
+      btnElement.classList.remove('border-slate-200', 'bg-white');
+
+      // Enable submit button
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = false;
+      submitBtn.className = 'bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer';
+    }
+
+    function submitAnswer() {
+      if (!selectedOptionLetter) return;
+
+      const q = currentQuestions[currentIndex];
+      const isCorrect = selectedOptionLetter === q.correctLetter;
+
+      if (isCorrect) score++;
+
+      // Save answer details
+      userAnswers.push({
+        num: currentIndex + 1,
+        question: q.text,
+        selected: selectedOptionLetter,
+        correct: q.correctLetter,
+        isCorrect: isCorrect,
+        explanation: q.explanation,
+        options: q.options
+      });
+
+      // Show Instant Feedback
+      const feedbackBox = document.getElementById('feedback-box');
+      feedbackBox.classList.remove('hidden');
+
+      if (isCorrect) {
+        feedbackBox.className = 'p-4 rounded-xl mb-6 text-sm font-medium bg-emerald-50 border border-emerald-200 text-emerald-800';
+        feedbackBox.innerHTML = `
+          <div class="flex items-center gap-2 mb-1 font-bold text-emerald-700">
+            <span>✓ Tamang Sagot!</span>
+          </div>
+          <p>${q.explanation}</p>
+        `;
+      } else {
+        feedbackBox.className = 'p-4 rounded-xl mb-6 text-sm font-medium bg-rose-50 border border-rose-200 text-rose-800';
+        feedbackBox.innerHTML = `
+          <div class="flex items-center gap-2 mb-1 font-bold text-rose-700">
+            <span>✕ Mali ang iyong sagot.</span>
+          </div>
+          <p class="mb-1">Ang tamang sagot ay <strong>${q.correctLetter}</strong>.</p>
+          <p class="text-slate-600">${q.explanation}</p>
+        `;
+      }
+
+      // Disable buttons and show visual indicators for options
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach((b, idx) => {
+        b.disabled = true;
+        b.classList.remove('hover:border-orange-400');
+        const optLetter = q.options[idx].letter;
+
+        if (optLetter === q.correctLetter) {
+          b.classList.add('border-emerald-500', 'bg-emerald-50');
+        } else if (optLetter === selectedOptionLetter && !isCorrect) {
+          b.classList.add('border-rose-500', 'bg-rose-50');
+        }
+      });
+
+      // Toggle Buttons
+      document.getElementById('submit-btn').classList.add('hidden');
+      document.getElementById('next-btn').classList.remove('hidden');
+      document.getElementById('score-tracker').textContent = `Iskor: ${score}`;
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < currentQuestions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      const total = currentQuestions.length;
+      document.getElementById('final-score').textContent = `${score} / ${total}`;
+      const percentage = Math.round((score / total) * 100);
+      document.getElementById('score-percentage').textContent = `${percentage}% Kabuuang Iskor`;
+
+      // Render Mistakes / Review Section
+      const mistakesSection = document.getElementById('mistakes-section');
+      const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+      if (mistakes.length === 0) {
+        mistakesSection.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center text-emerald-800">
+            <p class="text-lg font-bold">🎉 Napakahusay! Perfect Score!</p>
+            <p class="text-sm mt-1">Nakuha mo nang tama ang lahat ng ${total} tanong sa pagsusulit.</p>
+          </div>
+        `;
+      } else {
+        let html = `
+          <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <span>⚠️ Mga Kamalian at Tamang Sagot (${mistakes.length})</span>
+          </h3>
+          <div class="space-y-4">
+        `;
+
+        mistakes.forEach((m) => {
+          const correctOpt = m.options.find(o => o.letter === m.correct);
+          const userOpt = m.options.find(o => o.letter === m.selected);
+
+          html += `
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-left">
+              <p class="font-bold text-slate-800 text-sm mb-2">${m.num}. ${m.question}</p>
+              <div class="text-xs space-y-1 mb-2">
+                <p class="text-rose-600 font-medium">Iyong Sagot: <strong>${m.selected}) ${userOpt.text}</strong></p>
+                <p class="text-emerald-700 font-medium">Tamang Sagot: <strong>${m.correct}) ${correctOpt.text}</strong></p>
+              </div>
+              <p class="text-xs text-slate-600 italic bg-white p-2.5 rounded-lg border border-slate-100">
+                📌 <strong>Paliwanag:</strong> ${m.explanation}
+              </p>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        mistakesSection.innerHTML = html;
+      }
+    }
+  </script>
+</body>
+</html>

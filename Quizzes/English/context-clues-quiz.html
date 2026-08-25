@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Context Clues Quiz - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Comic Sans MS', 'Segoe UI', Verdana, sans-serif;
+    background: linear-gradient(135deg, #fef6e4 0%, #e0f7fa 100%);
+    margin: 0;
+    padding: 16px;
+    color: #333;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  h1 {
+    text-align: center;
+    color: #2b6cb0;
+    font-size: 1.6em;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+  }
+  #progress {
+    text-align: center;
+    font-weight: bold;
+    color: #2b6cb0;
+    margin-bottom: 12px;
+  }
+  .question-card {
+    background: #f7fafc;
+    border: 2px solid #cbd5e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: 1.15em;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #2d3748;
+  }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #ffffff;
+    border: 2px solid #a0aec0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .option:hover:not(:disabled) {
+    background: #ebf8ff;
+    border-color: #4299e1;
+  }
+  .option.selected {
+    border-color: #4299e1;
+    background: #ebf8ff;
+  }
+  .option.correct {
+    background: #c6f6d5;
+    border-color: #38a169;
+    color: #22543d;
+    font-weight: bold;
+  }
+  .option.incorrect {
+    background: #fed7d7;
+    border-color: #e53e3e;
+    color: #742a2a;
+    font-weight: bold;
+  }
+  .option:disabled {
+    cursor: not-allowed;
+  }
+  button.submit-btn {
+    background: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto 0;
+  }
+  button.submit-btn:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+  }
+  button.submit-btn:hover:not(:disabled) {
+    background: #2c5282;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .feedback.correct-fb {
+    background: #c6f6d5;
+    color: #22543d;
+  }
+  .feedback.incorrect-fb {
+    background: #fed7d7;
+    color: #742a2a;
+  }
+  .nav-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    margin: 16px auto 0;
+  }
+  .nav-btn:hover { background: #2f855a; }
+  #results {
+    text-align: center;
+  }
+  #results h2 {
+    color: #2b6cb0;
+    font-size: 1.8em;
+  }
+  #scoreLine {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .review-item {
+    text-align: left;
+    background: #f7fafc;
+    border: 2px solid #cbd5e0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .review-item.wrong {
+    border-color: #e53e3e;
+    background: #fff5f5;
+  }
+  .review-item.right {
+    border-color: #38a169;
+    background: #f0fff4;
+  }
+  .review-label {
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .review-label.wrong-label { color: #c53030; }
+  .review-label.right-label { color: #2f855a; }
+  .restart-btn {
+    background: #dd6b20;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+  .restart-btn:hover { background: #c05621; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Context Clues Quiz</h1>
+  <p class="subtitle">Grade 4 English &middot; 25 Questions</p>
+  <div id="progress"></div>
+  <div id="quizArea"></div>
+  <div id="results" style="display:none;"></div>
+</div>
+
+<script>
+const allQuestions = [
+  {
+    q: "What are context clues?",
+    options: [
+      "Words or sentences around an unfamiliar word that help us understand its meaning",
+      "Words that must always be looked up in a dictionary",
+      "Words that make a sentence longer",
+      "Words used only at the end of a story"
+    ],
+    correct: 0
+  },
+  {
+    q: "Which of these is a reason why context clues are important?",
+    options: [
+      "They make books look longer",
+      "They help us understand what we read without always using a dictionary",
+      "They replace the need to read the whole sentence",
+      "They only work with difficult words"
+    ],
+    correct: 1
+  },
+  {
+    q: "What is a synonym?",
+    options: [
+      "A word that has the opposite meaning of another word",
+      "A word that has the same or almost the same meaning as another word",
+      "A word that gives examples of another word",
+      "A word that defines another word directly"
+    ],
+    correct: 1
+  },
+  {
+    q: "What is an antonym?",
+    options: [
+      "A word that has the opposite meaning of another word",
+      "A word that has the same meaning as another word",
+      "A word that lists examples",
+      "A word that sounds the same as another word"
+    ],
+    correct: 0
+  },
+  {
+    q: "Which signal word often points to a synonym clue?",
+    options: ["unlike", "or", "such as", "means"],
+    correct: 1
+  },
+  {
+    q: "Which signal word often points to an antonym clue?",
+    options: ["unlike", "or", "including", "refers to"],
+    correct: 0
+  },
+  {
+    q: "Which signal word often points to an exemplification (example) clue?",
+    options: ["but", "means", "such as", "however"],
+    correct: 2
+  },
+  {
+    q: "Which signal word often points to a definition clue?",
+    options: ["instead", "unlike", "or", "means"],
+    correct: 3
+  },
+  {
+    q: "Which type of context clue gives examples to help explain an unfamiliar word?",
+    options: ["Synonym clue", "Antonym clue", "Exemplification clue", "Definition clue"],
+    correct: 2
+  },
+  {
+    q: "Which type of context clue tells the meaning of a word directly in the sentence?",
+    options: ["Synonym clue", "Antonym clue", "Exemplification clue", "Definition clue"],
+    correct: 3
+  },
+  {
+    q: 'The little puppy was tiny, or very small, when we first brought it home. What does "tiny" mean?',
+    options: ["heavy", "small", "loud", "old"],
+    correct: 1
+  },
+  {
+    q: 'The hikers were exhausted, or very tired, after walking up the steep mountain. What does "exhausted" mean?',
+    options: ["excited", "tired", "careful", "hungry"],
+    correct: 1
+  },
+  {
+    q: 'Unlike the crowded playground, the library was quiet and almost empty. What does "crowded" mean?',
+    options: ["full of people", "very noisy", "very clean", "very bright"],
+    correct: 0
+  },
+  {
+    q: 'The soup was not bland. Instead, it was full of rich flavors. What does "bland" mean?',
+    options: ["sweet", "spicy", "lacking flavor", "warm"],
+    correct: 2
+  },
+  {
+    q: 'Many citrus fruits, such as oranges, lemons, calamansi, and pomelos, are rich in Vitamin C. What does "citrus fruits" mean?',
+    options: ["vegetables", "fruits with juicy, sour flesh", "dried fruits", "tropical flowers"],
+    correct: 1
+  },
+  {
+    q: 'The farmer grows vegetables, including carrots, cabbage, tomatoes, and eggplants. What does "vegetables" mean?',
+    options: ["kinds of fruits", "plants grown for food", "flowering plants only", "wild plants"],
+    correct: 1
+  },
+  {
+    q: 'A recyclable material is something that can be used again to make new products. What does "recyclable" mean?',
+    options: ["easy to throw away", "able to be used again", "very expensive", "difficult to find"],
+    correct: 1
+  },
+  {
+    q: 'A habitat is the natural home where plants or animals live. What does "habitat" mean?',
+    options: ["a playground", "a food source", "a natural home", "a shelter built by people"],
+    correct: 2
+  },
+  {
+    q: 'The teacher was generous, or always willing to share her time and supplies with her students. What does "generous" mean?',
+    options: ["selfish", "willing to share", "quiet", "hardworking"],
+    correct: 1
+  },
+  {
+    q: 'The gardener planted many flowering plants, such as roses, sunflowers, orchids, and daisies. What does "flowering plants" mean?',
+    options: ["plants that produce flowers", "plants that grow underwater", "plants that do not need sunlight", "plants with large leaves only"],
+    correct: 0
+  },
+  {
+    q: 'The ancient castle was very old and had stood for hundreds of years. Which type of context clue is used?',
+    options: ["Synonyms", "Antonyms", "Exemplification", "Definition"],
+    correct: 0
+  },
+  {
+    q: 'Unlike her optimistic friend, Mia was pessimistic and believed that everything would go wrong. Which type of context clue is used?',
+    options: ["Synonyms", "Antonyms", "Exemplification", "Definition"],
+    correct: 1
+  },
+  {
+    q: 'A resource is something that people use to help them meet their needs or solve problems. Which type of context clue is used?',
+    options: ["Synonyms", "Antonyms", "Exemplification", "Definition"],
+    correct: 3
+  },
+  {
+    q: 'Many reptiles, such as snakes, turtles, lizards, and crocodiles, have dry, scaly skin. Which type of context clue is used?',
+    options: ["Synonyms", "Antonyms", "Exemplification", "Definition"],
+    correct: 2
+  },
+  {
+    q: 'The river was shallow, not deep, so the children could safely walk across it. Which type of context clue is used?',
+    options: ["Synonyms", "Antonyms", "Exemplification", "Definition"],
+    correct: 1
+  }
+];
+
+let quizData = [];
+let currentIndex = 0;
+let score = 0;
+let userAnswers = [];
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuiz() {
+  const shuffledQuestions = shuffleArray(allQuestions);
+  quizData = shuffledQuestions.map(orig => {
+    const optionIndices = orig.options.map((opt, idx) => ({ opt, idx }));
+    const shuffledOptions = shuffleArray(optionIndices);
+    const newCorrectIndex = shuffledOptions.findIndex(o => o.idx === orig.correct);
+    return {
+      q: orig.q,
+      options: shuffledOptions.map(o => o.opt),
+      correct: newCorrectIndex
+    };
+  });
+  currentIndex = 0;
+  score = 0;
+  userAnswers = [];
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = quizData.length;
+  document.getElementById('progress').textContent = `Question ${currentIndex + 1} of ${total}`;
+  const data = quizData[currentIndex];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let html = `<div class="question-card">
+    <div class="question-text">${currentIndex + 1}. ${data.q}</div>`;
+
+  data.options.forEach((opt, i) => {
+    html += `<button class="option" data-index="${i}" onclick="selectOption(${i})">${letters[i]}. ${opt}</button>`;
+  });
+
+  html += `<button class="submit-btn" id="submitBtn" disabled onclick="submitAnswer()">Submit</button>
+    <div id="feedbackArea"></div>
+  </div>`;
+
+  document.getElementById('quizArea').innerHTML = html;
+}
+
+let selectedOption = null;
+
+function selectOption(i) {
+  selectedOption = i;
+  document.querySelectorAll('.option').forEach(btn => btn.classList.remove('selected'));
+  document.querySelectorAll('.option')[i].classList.add('selected');
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedOption === null) return;
+  const data = quizData[currentIndex];
+  const options = document.querySelectorAll('.option');
+  const isCorrect = selectedOption === data.correct;
+
+  options.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === data.correct) btn.classList.add('correct');
+    if (i === selectedOption && !isCorrect) btn.classList.add('incorrect');
+  });
+
+  document.getElementById('submitBtn').disabled = true;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const feedbackDiv = document.getElementById('feedbackArea');
+  if (isCorrect) {
+    score++;
+    feedbackDiv.innerHTML = `<div class="feedback correct-fb">Correct! Great job.</div>`;
+  } else {
+    feedbackDiv.innerHTML = `<div class="feedback incorrect-fb">Not quite. The correct answer is ${letters[data.correct]}. ${data.options[data.correct]}</div>`;
+  }
+
+  userAnswers.push({
+    question: data.q,
+    options: data.options,
+    userIndex: selectedOption,
+    correctIndex: data.correct,
+    isCorrect: isCorrect
+  });
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'nav-btn';
+  nextBtn.textContent = (currentIndex === quizData.length - 1) ? 'See Results' : 'Next Question';
+  nextBtn.onclick = goNext;
+  document.getElementById('quizArea').appendChild(nextBtn);
+
+  selectedOption = null;
+}
+
+function goNext() {
+  currentIndex++;
+  selectedOption = null;
+  if (currentIndex < quizData.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('progress').textContent = '';
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.style.display = 'block';
+
+  const total = quizData.length;
+  const percent = Math.round((score / total) * 100);
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let message = '';
+  if (percent === 100) message = "Perfect score! Excellent work!";
+  else if (percent >= 80) message = "Great job!";
+  else if (percent >= 60) message = "Good effort! Keep practicing.";
+  else message = "Keep practicing — you'll get better!";
+
+  let html = `<h2>Quiz Complete!</h2>
+    <div id="scoreLine">You scored ${score} out of ${total} (${percent}%)</div>
+    <p>${message}</p>`;
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+  if (mistakes.length > 0) {
+    html += `<h3 style="color:#c53030; text-align:left;">Review Your Mistakes</h3>`;
+    mistakes.forEach(a => {
+      html += `<div class="review-item wrong">
+        <div class="review-label wrong-label">Question: ${a.question}</div>
+        <div>Your answer: ${letters[a.userIndex]}. ${a.options[a.userIndex]}</div>
+        <div class="review-label right-label">Correct answer: ${letters[a.correctIndex]}. ${a.options[a.correctIndex]}</div>
+      </div>`;
+    });
+  } else {
+    html += `<div class="review-item right"><div class="review-label right-label">You got every question correct!</div></div>`;
+  }
+
+  html += `<button class="restart-btn" onclick="prepareQuiz()">Try Again</button>`;
+
+  resultsDiv.innerHTML = html;
+}
+
+prepareQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Quiz: Muscular, Respiratory &amp; Digestive Systems</title>
+<style>
+  :root {
+    --blue: #2E74B5;
+    --blue-dark: #1F4E79;
+    --green: #2e7d32;
+    --green-bg: #e8f5e9;
+    --red: #c62828;
+    --red-bg: #fdecea;
+    --gray-bg: #f4f6f8;
+    --border: #d7dee5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--gray-bg);
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 12px 60px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 640px;
+    padding: 28px 24px 32px;
+  }
+  h1 {
+    color: var(--blue-dark);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--blue);
+    font-weight: 600;
+    margin: 0 0 20px;
+    font-size: 1.05rem;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    background: var(--gray-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+  .meta-grid div span.label {
+    display: block;
+    color: #667;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .meta-grid div span.value {
+    font-weight: 600;
+    color: #222;
+  }
+  ul.instructions {
+    padding-left: 22px;
+    margin: 0 0 22px;
+    line-height: 1.6;
+  }
+  ul.instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 26px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow 0.15s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(46,116,181,0.35);
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary:disabled {
+    background: #a9c3d9;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+  .btn-row { text-align: center; margin-top: 8px; }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 6px;
+    transition: width 0.25s ease;
+  }
+  .progress-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    white-space: nowrap;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eaf2fa;
+    color: var(--blue-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 18px;
+    color: #1a1a1a;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover:not(.locked) { border-color: var(--blue); background: #f5faff; }
+  .option.selected { border-color: var(--blue); background: #eaf2fa; }
+  .option-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gray-bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #556;
+  }
+  .option.selected .option-letter { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .option.correct { border-color: var(--green); background: var(--green-bg); }
+  .option.correct .option-letter { background: var(--green); border-color: var(--green); color: #fff; }
+  .option.incorrect { border-color: var(--red); background: var(--red-bg); }
+  .option.incorrect .option-letter { background: var(--red); border-color: var(--red); color: #fff; }
+  .option.locked { cursor: default; }
+
+  .feedback {
+    display: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-bg); border: 1px solid #b7dfb9; color: #1b4d20; }
+  .feedback.incorrect-fb { background: var(--red-bg); border: 1px solid #f3b8b3; color: #7a1d1d; }
+  .feedback .fb-title { font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+
+  /* Results */
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 8px solid var(--blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .score-circle .num { font-size: 2rem; font-weight: 800; color: var(--blue-dark); line-height: 1; }
+  .score-circle .den { font-size: 0.85rem; color: #667; margin-top: 2px; }
+  .score-msg {
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #333;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item .rtopic {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .review-item .rq { font-weight: 600; margin-bottom: 8px; }
+  .review-item .rline { font-size: 0.9rem; margin-bottom: 3px; }
+  .review-item .rline.wrong { color: var(--red); }
+  .review-item .rline.right { color: var(--green); }
+  .review-item .rexpl { font-size: 0.85rem; color: #556; margin-top: 6px; font-style: italic; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px 26px; border-radius: 12px; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .score-circle { width: 110px; height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="app">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen">
+    <h1>Science Quiz</h1>
+    <p class="subtitle">The Muscular, Respiratory, and Digestive Systems</p>
+
+    <div class="meta-grid">
+      <div><span class="label">Subject</span><span class="value">Science</span></div>
+      <div><span class="label">Grade Level</span><span class="value">Grade 4</span></div>
+      <div><span class="label">Topics</span><span class="value">Muscular, Respiratory, Digestive Systems</span></div>
+      <div><span class="label">Questions</span><span class="value">15 (of 45 in the question bank)</span></div>
+    </div>
+
+    <ul class="instructions">
+      <li>This quiz has <strong>15 questions</strong>, randomly picked from a bank of 45 — so every attempt can be different!</li>
+      <li>Each question is <strong>multiple choice</strong> with 4 answer choices (A–D).</li>
+      <li>Answer one question at a time, then press <strong>Submit</strong> to check your answer.</li>
+      <li>You'll see right away whether you got it correct, along with a short explanation.</li>
+      <li>At the end, you'll get your final score and a review of any questions you missed.</li>
+      <li>Do your best, and have fun learning about your body! 💪🫁🍽️</li>
+    </ul>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="start-btn" style="width:100%;">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Q1 / 15</div>
+    </div>
+    <div class="topic-tag" id="topic-tag">Topic</div>
+    <p class="question-text" id="question-text">Question text</p>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-title" id="fb-title"></div>
+      <div id="fb-explanation"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="action-btn" style="width:100%;" disabled>Submit</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS SCREEN ============ -->
+  <div id="results-screen" class="hidden">
+    <h1>Quiz Complete!</h1>
+    <div class="score-circle">
+      <div class="num" id="score-num">0/15</div>
+      <div class="den">correct</div>
+    </div>
+    <p class="score-msg" id="score-msg"></p>
+    <div id="review-section"></div>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn btn-primary" id="retake-btn" style="width:100%;">Retake Quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ======================================================================
+// QUESTION BANK: 45 questions (15 Muscular, 15 Respiratory, 15 Digestive)
+// options[0] is ALWAYS the correct answer in source; shuffled at render time.
+// ======================================================================
+const QUESTION_BANK = [
+
+  // ===================== MUSCULAR SYSTEM (15) =====================
+  { topic: "Muscular System", q: "What is the main function of the muscular system?",
+    options: ["Movement, stability, and support","Digesting food","Filtering blood","Producing hormones"],
+    explanation: "The muscular system is responsible for movement, stability, and support of the body." },
+  { topic: "Muscular System", q: "About how many muscles make up the human body?",
+    options: ["About 700","About 70","About 7,000","About 100"],
+    explanation: "There are about 700 muscles that make up almost half of your body weight." },
+  { topic: "Muscular System", q: "Muscles make up about how much of your total body weight?",
+    options: ["Almost half","About one-tenth","Almost all of it","Less than one-fourth"],
+    explanation: "The muscles that make up your body account for almost half of your total body weight." },
+  { topic: "Muscular System", q: "Which three types of muscle tissue make up the muscular system?",
+    options: ["Skeletal, cardiac, and smooth","Skeletal, nervous, and smooth","Cardiac, connective, and skeletal","Smooth, elastic, and rigid"],
+    explanation: "The three types of muscle tissue are skeletal, cardiac, and smooth muscles." },
+  { topic: "Muscular System", q: "What connects skeletal muscles to bones?",
+    options: ["Tendons","Ligaments","Cartilage","Marrow"],
+    explanation: "Skeletal muscles are attached to bones by tendons, allowing them to move bones." },
+  { topic: "Muscular System", q: "When you flex your arm (bringing your hand toward your shoulder), what happens to your biceps and triceps?",
+    options: ["The biceps contract and the triceps relax","The biceps relax and the triceps contract","Both muscles contract","Both muscles relax"],
+    explanation: "When you flex your arm, your biceps contract while the triceps relax." },
+  { topic: "Muscular System", q: "When you extend your arm (moving your bones away from each other), what happens to your biceps and triceps?",
+    options: ["The biceps relax and the triceps contract","The biceps contract and the triceps relax","Both muscles contract","Both muscles relax"],
+    explanation: "When you extend your arm, the biceps relax and the triceps contract." },
+  { topic: "Muscular System", q: "Which type of muscle performs voluntary movements that you consciously control?",
+    options: ["Skeletal muscle","Smooth muscle","Cardiac muscle","Both smooth and cardiac muscle"],
+    explanation: "Skeletal muscles perform voluntary movements, such as walking or clapping your hands." },
+  { topic: "Muscular System", q: "Where are smooth muscles typically found?",
+    options: ["In the walls of internal organs, such as the stomach and intestines","Attached to bones by tendons","Only in the heart","In the skin"],
+    explanation: "Smooth muscles are found in the walls of many internal organs, such as the stomach, intestines, kidneys, and veins." },
+  { topic: "Muscular System", q: "Where are cardiac muscles found?",
+    options: ["In the heart","In the arms and legs","In the stomach","In the lungs"],
+    explanation: "Cardiac muscles are the muscles found in the heart." },
+  { topic: "Muscular System", q: "What kind of movement do smooth and cardiac muscles perform?",
+    options: ["Involuntary movement — they work automatically","Voluntary movement — you consciously control them","No movement at all","Only reflex movement"],
+    explanation: "Smooth and cardiac muscles perform involuntary movements, meaning they work automatically without you thinking about it." },
+  { topic: "Muscular System", q: "What controls the movement of your skeletal muscles?",
+    options: ["Signals from the brain","Signals from the stomach","Signals from the skin","Signals from the bones"],
+    explanation: "Skeletal muscles perform voluntary movements controlled by signals from the brain." },
+  { topic: "Muscular System", q: "Which of these is an example of a voluntary movement done by skeletal muscles?",
+    options: ["Clapping your hands","Your heart beating","Food moving through your intestines","Blinking involuntarily during sleep"],
+    explanation: "Voluntary movements controlled by skeletal muscles include things like clapping your hands, walking, or rolling your tongue." },
+  { topic: "Muscular System", q: "What should you do before and after exercise to help prevent muscle injuries?",
+    options: ["Stretching","Skipping meals","Holding your breath","Sitting still for an hour"],
+    explanation: "Incorporating stretching activities before and after exercise helps minimize the risk of muscle injuries." },
+  { topic: "Muscular System", q: "What helps ensure proper muscle recovery after exercise?",
+    options: ["Sufficient rest and quality sleep","Avoiding water","Skipping stretching","Exercising without breaks"],
+    explanation: "Sufficient rest and quality sleep are important for proper muscle recovery, along with regular exercise and stretching." },
+
+  // ===================== RESPIRATORY SYSTEM (15) =====================
+  { topic: "Respiratory System", q: "Which organs are the main site of gas exchange in the respiratory system?",
+    options: ["The lungs","The heart","The stomach","The kidneys"],
+    explanation: "The lungs are where the respiratory system facilitates gas exchange." },
+  { topic: "Respiratory System", q: "During gas exchange, what does your body take in and what does it release?",
+    options: ["Takes in oxygen, releases carbon dioxide","Takes in carbon dioxide, releases oxygen","Takes in nitrogen, releases oxygen","Takes in oxygen, releases nitrogen"],
+    explanation: "Your lungs take in oxygen from the air and release carbon dioxide, a waste gas." },
+  { topic: "Respiratory System", q: "Which body system helps you inhale air through the nose and carry it to the lungs?",
+    options: ["The muscular system","The digestive system","The skeletal system","The immune system"],
+    explanation: "The muscular system aids in inhaling air through the nose, carrying it to the lungs, where the respiratory system facilitates gas exchange." },
+  { topic: "Respiratory System", q: "After gas exchange happens in the lungs, which system transports oxygen-rich blood to the rest of the body?",
+    options: ["The circulatory system","The digestive system","The muscular system","The skeletal system"],
+    explanation: "The circulatory system transports the oxygen-rich blood to the different parts of the body, providing energy and nourishment." },
+  { topic: "Respiratory System", q: "What gas is released from your body when you exhale?",
+    options: ["Carbon dioxide","Oxygen","Nitrogen","Hydrogen"],
+    explanation: "During exhalation, the respiratory system eliminates carbon dioxide with the help of the muscular system." },
+  { topic: "Respiratory System", q: "What is the name of the dome-shaped muscle below the lungs that helps you breathe in and out?",
+    options: ["Diaphragm","Trachea","Esophagus","Sternum"],
+    explanation: "The diaphragm is the muscle that helps move air into and out of the lungs as it contracts and relaxes." },
+  { topic: "Respiratory System", q: "What are the tiny air sacs in the lungs where gas exchange takes place called?",
+    options: ["Alveoli","Bronchi","Capillaries","Cartilage rings"],
+    explanation: "Gas exchange happens in tiny air sacs in the lungs called alveoli." },
+  { topic: "Respiratory System", q: "What is the name of the tube that connects your throat to your lungs, often called the windpipe?",
+    options: ["Trachea","Esophagus","Larynx","Bronchiole"],
+    explanation: "The trachea, or windpipe, carries air from your throat down toward your lungs." },
+  { topic: "Respiratory System", q: "Which gas does your body need so cells can produce energy?",
+    options: ["Oxygen","Carbon dioxide","Nitrogen","Methane"],
+    explanation: "Cells need oxygen, delivered through the blood, to produce energy for the body." },
+  { topic: "Respiratory System", q: "According to health tips for the respiratory system, which activities can help enhance your lung function?",
+    options: ["Yoga or deep breathing exercises","Holding your breath often","Avoiding all exercise","Eating more sugary snacks"],
+    explanation: "Practicing yoga or deep breathing exercises can enhance your lung function and help maintain a healthy respiratory system." },
+  { topic: "Respiratory System", q: "What should you avoid to protect your respiratory system?",
+    options: ["Inhalation of harmful substances and unhealthy habits","Drinking water","Getting enough sleep","Eating fruits and vegetables"],
+    explanation: "Avoiding the inhalation of harmful substances and steering clear of unhealthy habits protects your respiratory system." },
+  { topic: "Respiratory System", q: "Exercises that increase your heart rate are essential for maintaining a healthy...",
+    options: ["Respiratory system","Skeletal system only","Hair and nails","Sense of taste"],
+    explanation: "Engaging in exercises that increase your heart rate is essential for maintaining a healthy respiratory system." },
+  { topic: "Respiratory System", q: "Which body part first takes in air when you breathe?",
+    options: ["The nose","The stomach","The small intestine","The liver"],
+    explanation: "Air first enters the body through the nose before traveling to the lungs." },
+  { topic: "Respiratory System", q: "What is the main purpose of the respiratory system?",
+    options: ["To bring oxygen into the body and remove carbon dioxide","To digest food and absorb nutrients","To move bones and produce movement","To filter waste from the blood only"],
+    explanation: "The respiratory system's main job is to bring oxygen into the body and remove carbon dioxide through gas exchange in the lungs." },
+  { topic: "Respiratory System", q: "Which system works together with the respiratory system to remove carbon dioxide during exhalation?",
+    options: ["The muscular system","The digestive system","The skeletal system","None, it works alone"],
+    explanation: "During exhalation, the respiratory system eliminates carbon dioxide with the help of the muscular system." },
+
+  // ===================== DIGESTIVE SYSTEM (15) =====================
+  { topic: "Digestive System", q: "What is the main job of the digestive system?",
+    options: ["To break down food and absorb nutrients","To pump blood throughout the body","To bring oxygen into the body","To support and protect the body"],
+    explanation: "The digestive system breaks down the food you eat and absorbs nutrients from it." },
+  { topic: "Digestive System", q: "What is another name for the digestive tract that food passes through?",
+    options: ["The gastrointestinal (GI) tract","The respiratory tract","The circulatory tract","The nervous tract"],
+    explanation: "The GI tract, or alimentary canal, is the pathway food follows through the digestive system." },
+  { topic: "Digestive System", q: "About how long is the gastrointestinal (GI) tract in the human body?",
+    options: ["7.5 meters","1 meter","3.5 meters","12 meters"],
+    explanation: "The GI tract is a 7.5-meter-long tube of organs that serves as a pathway for food." },
+  { topic: "Digestive System", q: "Which of these lists the main organs of the GI tract in the correct order?",
+    options: ["Mouth, esophagus, stomach, small intestine, large intestine, anus","Mouth, stomach, esophagus, large intestine, small intestine, anus","Esophagus, mouth, stomach, small intestine, large intestine, anus","Mouth, esophagus, small intestine, stomach, large intestine, anus"],
+    explanation: "Food travels from the mouth, through the esophagus, stomach, small intestine, large intestine, and out through the anus." },
+  { topic: "Digestive System", q: "Which of these are considered accessory organs of the digestive system?",
+    options: ["The liver, gallbladder, and pancreas","The heart and lungs","The brain and spinal cord","The skull and ribs"],
+    explanation: "Accessory organs, including the teeth, tongue, salivary glands, liver, gallbladder, and pancreas, aid in the digestive process." },
+  { topic: "Digestive System", q: "What is mechanical digestion?",
+    options: ["The physical breakdown of food into smaller pieces","The chemical breakdown of food using enzymes","The absorption of nutrients into the blood","The removal of waste through the anus"],
+    explanation: "Mechanical digestion is the physical breakdown of food into smaller pieces, starting with the teeth." },
+  { topic: "Digestive System", q: "What is the term for the involuntary muscle movement that transports food through the esophagus, stomach, and intestines?",
+    options: ["Peristalsis","Digestion","Absorption","Circulation"],
+    explanation: "Peristalsis is an involuntary muscle movement that transports food through the digestive tract." },
+  { topic: "Digestive System", q: "What is chemical digestion?",
+    options: ["The breakdown of food into nutrients using enzymes, bile, and acids","The physical breakdown of food by chewing","The movement of food through peristalsis","The elimination of waste through the anus"],
+    explanation: "Chemical digestion uses special juices containing enzymes, bile, and acids to speed up the breakdown of food into nutrients." },
+  { topic: "Digestive System", q: "Where does chemical digestion begin, and what does it start breaking down there?",
+    options: ["In the mouth, with the help of saliva breaking down starches and fats","In the stomach, breaking down proteins first","In the small intestine, breaking down all nutrients","In the large intestine, breaking down water"],
+    explanation: "Chemical digestion starts in the mouth with the help of saliva, which begins breaking down starches and fats." },
+  { topic: "Digestive System", q: "Which organ mainly breaks down proteins during chemical digestion?",
+    options: ["The stomach","The mouth","The large intestine","The esophagus"],
+    explanation: "In the stomach, proteins are broken down as part of chemical digestion." },
+  { topic: "Digestive System", q: "Which organ completes the digestion process and absorbs most of the nutrients your body uses?",
+    options: ["The small intestine","The stomach","The large intestine","The liver"],
+    explanation: "The small intestine completes the digestion process by breaking down carbohydrates and fats, and most nutrients are absorbed here." },
+  { topic: "Digestive System", q: "What does the large intestine do with food that was not digested in the small intestine?",
+    options: ["It absorbs excess water and forms it into waste called feces","It breaks it down into pure oxygen","It sends it back to the mouth","It stores it permanently without changing it"],
+    explanation: "The walls of the large intestine absorb excess water, and the undigested food forms waste called feces." },
+  { topic: "Digestive System", q: "What is the term for undigested food that forms waste and is eliminated through the anus?",
+    options: ["Feces","Bile","Enzymes","Saliva"],
+    explanation: "Undigested food forms waste, called feces, which is eliminated through the anus." },
+  { topic: "Digestive System", q: "Which body system works with the digestive system through peristalsis to move food along the GI tract?",
+    options: ["The muscular system","The respiratory system","The skeletal system","The nervous system only"],
+    explanation: "The muscular system aids with the peristalsis movement in the esophagus and intestines, helping break down food into nutrients." },
+  { topic: "Digestive System", q: "What helps support a healthy digestive system and prevent constipation?",
+    options: ["Drinking enough water and eating a balanced diet with fruits, vegetables, and whole grains","Skipping meals often","Avoiding water completely","Eating only sugary snacks"],
+    explanation: "A balanced diet with fruits, vegetables, and whole grains, along with drinking enough water, aids digestion and helps prevent constipation." }
+];
+
+const TOTAL_QUESTIONS = 15;
+
+// ---------- State ----------
+let quizQuestions = [];   // 15 chosen questions, each with shuffled options + correctIndex
+let currentIndex = 0;
+let score = 0;
+let missed = [];
+let answeredThisQuestion = false;
+let selectedOptionIndex = null;
+
+// ---------- Helpers ----------
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuiz() {
+  const bankCopy = shuffleArray(QUESTION_BANK);
+  const chosen = bankCopy.slice(0, TOTAL_QUESTIONS);
+  quizQuestions = shuffleArray(chosen).map(item => {
+    const optionOrder = shuffleArray([0, 1, 2, 3]); // indices into original options array
+    const shuffledOptions = optionOrder.map(i => item.options[i]);
+    const correctIndex = optionOrder.indexOf(0);
+    return {
+      topic: item.topic,
+      q: item.q,
+      options: shuffledOptions,
+      correctIndex: correctIndex,
+      explanation: item.explanation
+    };
+  });
+  currentIndex = 0;
+  score = 0;
+  missed = [];
+}
+
+// ---------- DOM refs ----------
+const startScreen = document.getElementById('start-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const resultsScreen = document.getElementById('results-screen');
+
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const topicTag = document.getElementById('topic-tag');
+const questionText = document.getElementById('question-text');
+const optionsList = document.getElementById('options-list');
+const feedback = document.getElementById('feedback');
+const fbTitle = document.getElementById('fb-title');
+const fbExplanation = document.getElementById('fb-explanation');
+const actionBtn = document.getElementById('action-btn');
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  buildQuiz();
+  startScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  resultsScreen.classList.add('hidden');
+  renderQuestion();
+});
+
+document.getElementById('retake-btn').addEventListener('click', () => {
+  buildQuiz();
+  resultsScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  renderQuestion();
+});
+
+function renderQuestion() {
+  answeredThisQuestion = false;
+  selectedOptionIndex = null;
+  const item = quizQuestions[currentIndex];
+
+  progressFill.style.width = ((currentIndex) / TOTAL_QUESTIONS * 100) + '%';
+  progressLabel.textContent = 'Q' + (currentIndex + 1) + ' / ' + TOTAL_QUESTIONS;
+  topicTag.textContent = item.topic;
+  questionText.textContent = item.q;
+
+  optionsList.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.dataset.idx = idx;
+    const letter = String.fromCharCode(65 + idx);
+    div.innerHTML = '<div class="option-letter">' + letter + '</div><div class="option-text">' + opt + '</div>';
+    div.addEventListener('click', () => selectOption(idx));
+    optionsList.appendChild(div);
+  });
+
+  feedback.classList.remove('show', 'correct-fb', 'incorrect-fb');
+  actionBtn.textContent = 'Submit';
+  actionBtn.disabled = true;
+  actionBtn.onclick = handleSubmit;
+}
+
+function selectOption(idx) {
+  if (answeredThisQuestion) return;
+  selectedOptionIndex = idx;
+  [...optionsList.children].forEach(el => el.classList.remove('selected'));
+  optionsList.children[idx].classList.add('selected');
+  actionBtn.disabled = false;
+}
+
+function handleSubmit() {
+  if (selectedOptionIndex === null || answeredThisQuestion) return;
+  answeredThisQuestion = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedOptionIndex === item.correctIndex;
+
+  [...optionsList.children].forEach((el, idx) => {
+    el.classList.add('locked');
+    if (idx === item.correctIndex) el.classList.add('correct');
+    else if (idx === selectedOptionIndex) el.classList.add('incorrect');
+  });
+
+  feedback.classList.add('show');
+  if (isCorrect) {
+    score++;
+    feedback.classList.add('correct-fb');
+    feedback.classList.remove('incorrect-fb');
+    fbTitle.innerHTML = '✅ Correct!';
+  } else {
+    missed.push({
+      topic: item.topic,
+      q: item.q,
+      yourAnswer: item.options[selectedOptionIndex],
+      correctAnswer: item.options[item.correctIndex],
+      explanation: item.explanation
+    });
+    feedback.classList.add('incorrect-fb');
+    feedback.classList.remove('correct-fb');
+    fbTitle.innerHTML = '❌ Not quite — the correct answer is: ' + item.options[item.correctIndex];
+  }
+  fbExplanation.textContent = item.explanation;
+
+  actionBtn.textContent = (currentIndex === TOTAL_QUESTIONS - 1) ? 'See Results' : 'Next Question';
+  actionBtn.disabled = false;
+  actionBtn.onclick = handleNext;
+}
+
+function handleNext() {
+  currentIndex++;
+  if (currentIndex >= TOTAL_QUESTIONS) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  progressFill.style.width = '100%';
+  quizScreen.classList.add('hidden');
+  resultsScreen.classList.remove('hidden');
+
+  document.getElementById('score-num').textContent = score + '/' + TOTAL_QUESTIONS;
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  let msg;
+  if (pct === 100) msg = "Perfect score! You really know your body systems! 🌟";
+  else if (pct >= 80) msg = "Great job! You have a strong understanding of these systems.";
+  else if (pct >= 60) msg = "Good effort! Review the topics below to strengthen your knowledge.";
+  else msg = "Keep practicing! Review the explanations below and try again.";
+  document.getElementById('score-msg').textContent = msg + ' (' + pct + '%)';
+
+  const reviewSection = document.getElementById('review-section');
+  reviewSection.innerHTML = '';
+  if (missed.length === 0) {
+    const p = document.createElement('p');
+    p.style.textAlign = 'center';
+    p.style.color = '#2e7d32';
+    p.style.fontWeight = '600';
+    p.textContent = 'No mistakes — amazing work!';
+    reviewSection.appendChild(p);
+  } else {
+    const heading = document.createElement('h2');
+    heading.style.fontSize = '1.05rem';
+    heading.style.color = '#1F4E79';
+    heading.textContent = 'Review: Questions You Missed (' + missed.length + ')';
+    reviewSection.appendChild(heading);
+
+    missed.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML =
+        '<div class="rtopic">' + m.topic + '</div>' +
+        '<div class="rq">' + m.q + '</div>' +
+        '<div class="rline wrong">Your answer: ' + m.yourAnswer + '</div>' +
+        '<div class="rline right">Correct answer: ' + m.correctAnswer + '</div>' +
+        '<div class="rexpl">' + m.explanation + '</div>';
+      reviewSection.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

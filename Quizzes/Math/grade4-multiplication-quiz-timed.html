@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 4 Math Quiz: Multiplication (Timed, Input Answer)</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #fff9c4);
+    margin: 0;
+    padding: 16px;
+    color: #2b2b2b;
+  }
+  .app { max-width: 640px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 16px; }
+  header h1 { font-size: 1.4rem; color: #00695c; margin: 8px 0 4px; }
+  header p { margin: 0; color: #555; font-size: 0.9rem; }
+  .progress-wrap {
+    background: #fff; border-radius: 20px; height: 14px; overflow: hidden;
+    margin: 12px 0; box-shadow: inset 0 0 3px rgba(0,0,0,0.15);
+  }
+  .progress-bar {
+    height: 100%; background: linear-gradient(90deg, #26a69a, #66bb6a);
+    width: 0%; transition: width 0.3s ease;
+  }
+  .timer-wrap {
+    display: flex; justify-content: center; align-items: center;
+    margin: 10px 0 4px; gap: 8px;
+  }
+  .timer {
+    font-size: 1.3rem; font-weight: 800; color: #00796b;
+    background: #fff; padding: 6px 18px; border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 90px; text-align: center;
+  }
+  .timer.warn { color: #e65100; }
+  .timer.danger { color: #c62828; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  .card {
+    background: #fff; border-radius: 16px; padding: 22px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  .qnum { font-weight: 700; color: #00796b; font-size: 0.9rem; margin-bottom: 6px; }
+  .qtext { font-size: 1.15rem; line-height: 1.5; margin-bottom: 18px; font-weight: 600; }
+  .answer-row { display: flex; gap: 10px; align-items: center; }
+  input[type="number"] {
+    flex: 1; font-size: 1.3rem; padding: 12px 14px; border: 2px solid #cfd8dc;
+    border-radius: 10px; font-family: inherit; text-align: center;
+  }
+  input[type="number"]:focus { outline: none; border-color: #00796b; }
+  input[type="number"].correct { border-color: #2e7d32; background: #c8e6c9; }
+  input[type="number"].incorrect { border-color: #c62828; background: #ffcdd2; }
+  .controls { display: flex; justify-content: flex-end; align-items: center; margin-top: 22px; gap: 10px; }
+  button {
+    font-family: inherit; font-size: 1rem; font-weight: 700; padding: 12px 22px;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+  }
+  button:active { transform: scale(0.97); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-submit { background: #00796b; color: #fff; }
+  .btn-next { background: #ef6c00; color: #fff; }
+  .feedback {
+    margin-top: 16px; padding: 12px 14px; border-radius: 10px;
+    font-weight: 700; font-size: 1.02rem; display: none;
+  }
+  .feedback.correct { background: #c8e6c9; color: #1b5e20; display: block; }
+  .feedback.incorrect { background: #ffcdd2; color: #b71c1c; display: block; }
+  .result-card { text-align: center; }
+  .score-big { font-size: 2.6rem; font-weight: 800; color: #00695c; margin: 10px 0; }
+  .score-msg { font-size: 1.05rem; margin-bottom: 20px; color: #444; }
+  .review { text-align: left; margin-top: 20px; }
+  .review h3 { color: #00695c; border-bottom: 2px solid #b2dfdb; padding-bottom: 6px; }
+  .review-item {
+    background: #fff3e0; border-left: 5px solid #ef6c00; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 12px;
+  }
+  .review-item .rq { font-weight: 700; margin-bottom: 4px; }
+  .review-item .rline { font-size: 0.95rem; margin: 2px 0; }
+  .review-item .wrong { color: #c62828; }
+  .review-item .right { color: #2e7d32; font-weight: 700; }
+  .no-mistakes {
+    background: #c8e6c9; border-left: 5px solid #2e7d32; border-radius: 8px;
+    padding: 14px; font-weight: 700; color: #1b5e20; text-align: center;
+  }
+  .btn-restart { background: #00796b; color: #fff; margin-top: 20px; }
+  .hint { font-size: 0.85rem; color: #777; margin-top: 8px; }
+  .welcome-card { text-align: center; }
+  .welcome-icon { font-size: 3rem; margin-bottom: 8px; }
+  .welcome-card h2 { color: #00695c; margin: 6px 0 14px; font-size: 1.3rem; }
+  .welcome-list { text-align: left; background: #f1f8f7; border-radius: 10px; padding: 16px 20px; margin: 0 0 20px; }
+  .welcome-list li { margin-bottom: 8px; line-height: 1.4; }
+  .btn-start { background: #ef6c00; color: #fff; font-size: 1.1rem; padding: 14px 32px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Grade 4 Math Quiz — Timed</h1>
+    <p>Type your answer. 30 questions, drawn at random from a 120-question bank. 1:15 per question.</p>
+  </header>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none;"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="timer-wrap" id="timerWrap" style="display:none;"><div class="timer" id="timer">1:15</div></div>
+
+  <div class="card" id="quizCard"></div>
+</div>
+
+<script>
+const QUESTION_BANK = [
+  { q: "125 × 6 = ?", a: 750 },
+  { q: "328 × 4 = ?", a: 1312 },
+  { q: "792 × 3 = ?", a: 2376 },
+  { q: "1520 × 2 = ?", a: 3040 },
+  { q: "323 × 5 = ?", a: 1615 },
+  { q: "674 × 5 = ?", a: 3370 },
+  { q: "4611 × 9 = ?", a: 41499 },
+  { q: "1106 × 4 = ?", a: 4424 },
+  { q: "6574 × 6 = ?", a: 39444 },
+  { q: "320 × 7 = ?", a: 2240 },
+  { q: "194 × 8 = ?", a: 1552 },
+  { q: "467 × 7 = ?", a: 3269 },
+  { q: "122 × 40 = ?", a: 4880 },
+  { q: "59 × 16 = ?", a: 944 },
+  { q: "421 × 34 = ?", a: 14314 },
+  { q: "19 × 13 = ?", a: 247 },
+  { q: "48 × 16 = ?", a: 768 },
+  { q: "23 × 35 = ?", a: 805 },
+  { q: "332 × 34 = ?", a: 11288 },
+  { q: "58 × 33 = ?", a: 1914 },
+  { q: "96 × 28 = ?", a: 2688 },
+  { q: "88 × 21 = ?", a: 1848 },
+  { q: "31 × 40 = ?", a: 1240 },
+  { q: "238 × 46 = ?", a: 10948 },
+  { q: "Estimate the product of 39 × 7 by rounding 39 to the nearest ten.", a: 280 },
+  { q: "Estimate the product of 18 × 5 by rounding 18 to the nearest ten.", a: 100 },
+  { q: "Estimate the product of 51 × 8 by rounding 51 to the nearest ten.", a: 400 },
+  { q: "Estimate the product of 19 × 5 by rounding 19 to the nearest ten.", a: 100 },
+  { q: "Estimate the product of 83 × 7 by rounding 83 to the nearest ten.", a: 560 },
+  { q: "Estimate the product of 327 × 9 by rounding 327 to the nearest hundred.", a: 2700 },
+  { q: "Estimate the product of 515 × 9 by rounding 515 to the nearest hundred.", a: 4500 },
+  { q: "Estimate the product of 256 × 6 by rounding 256 to the nearest hundred.", a: 1800 },
+  { q: "Estimate the product of 252 × 5 by rounding 252 to the nearest hundred.", a: 1500 },
+  { q: "Estimate the product of 872 × 6 by rounding 872 to the nearest hundred.", a: 5400 },
+  { q: "Estimate the product of 62 × 57 by rounding both numbers to the nearest ten.", a: 3600 },
+  { q: "Estimate the product of 39 × 28 by rounding both numbers to the nearest ten.", a: 1200 },
+  { q: "Estimate the product of 76 × 74 by rounding both numbers to the nearest ten.", a: 5600 },
+  { q: "Estimate the product of 22 × 17 by rounding both numbers to the nearest ten.", a: 400 },
+  { q: "A bookstore has 18 shelves with 9 books on each shelf. How many books are there in total?", a: 162 },
+  { q: "There are 145 pupils in Grade 4. Each pupil needs 4 crayons. How many crayons are needed in total?", a: 580 },
+  { q: "A jeepney can carry 16 passengers. If there are 23 jeepneys, how many passengers can they carry altogether?", a: 368 },
+  { q: "A rice field has 132 rows of rice plants with 5 plants in each row. How many rice plants are there in total?", a: 660 },
+  { q: "A candy shop has 27 jars with 34 candies in each jar. How many candies are there in total?", a: 918 },
+  { q: "There are 6 classrooms with 38 desks in each classroom. How many desks are there in total?", a: 228 },
+  { q: "A fruit vendor has 19 crates with 24 apples in each crate. How many apples does she have in total?", a: 456 },
+  { q: "A parking lot has 14 rows with 21 parking spaces in each row. How many parking spaces are there in total?", a: 294 },
+  { q: "A printer prints 8 pages every minute. How many pages does it print in 47 minutes?", a: 376 },
+  { q: "A tricycle can carry 4 passengers. If there are 56 tricycles, how many passengers can they carry altogether?", a: 224 },
+  { q: "A warehouse has 215 boxes with 3 items in each box. How many items are there in total?", a: 645 },
+  { q: "A baker makes 7 trays of pandesal with 48 pieces on each tray. How many pieces of pandesal did the baker make?", a: 336 },
+  { q: "A stadium has 33 sections with 62 seats in each section. How many seats does the stadium have in total?", a: 2046 },
+  { q: "A school orders 124 packs of paper with 5 reams in each pack. How many reams of paper did the school order?", a: 620 },
+  { q: "A poultry farm collects 9 eggs from each of its 76 hens every day. How many eggs are collected in one day?", a: 684 },
+  { q: "A toy factory packs 6 toy robots into each box. If they made 234 boxes, how many toy robots did they pack?", a: 1404 },
+  { q: "A grocery store receives 22 crates of soda with 24 bottles per crate. They sell 9 crates completely. How many bottles of soda remain?", a: 312 },
+  { q: "A school buys 8 boxes of chalk with 45 pieces each. Teachers use 6 boxes completely during the term. How many pieces of chalk are left?", a: 90 },
+  { q: "Mario has 6 bags of marbles with 52 marbles in each bag. He gives 15 marbles to each of his 3 cousins. How many marbles does he have left?", a: 267 },
+  { q: "A vendor has 9 boxes of eggs with 30 eggs in each box. She sells 7 eggs to each of 12 customers. How many eggs does she have left?", a: 186 },
+  { q: "A community hall has 18 rows with 16 chairs each. If 47 chairs are removed for repair, how many chairs remain?", a: 241 },
+  { q: "A parking building has 25 floors with 34 parking slots on each floor. If 68 slots are closed for maintenance, how many slots can still be used?", a: 782 },
+  { q: "An orchard has 14 rows of mango trees with 20 trees in each row. If 53 trees are cut down due to disease, how many trees remain?", a: 227 },
+  { q: "A cinema has 12 rows with 28 seats each. If 39 seats are marked as out of order, how many seats are available?", a: 297 },
+  { q: "A farmer has 6 sacks of rice with 48 kilos each. He sells 2 sacks completely, then gives away 9 kilos from what remains. How many kilos does he have left?", a: 183 },
+  { q: "A vendor has 9 baskets with 36 oranges each. She sells 4 baskets completely, then gives away 12 oranges from what remains. How many oranges does she have left?", a: 168 },
+  { q: "A bakery has 7 trays of pandesal with 60 pieces each. They sell 3 trays completely, then donate 18 pieces from what remains. How many pieces are left?", a: 222 },
+  { q: "A warehouse has 8 pallets of canned goods with 72 cans each. They ship out 5 pallets completely, then use 14 cans from what remains for a sample check. How many cans are left?", a: 202 },
+  { q: "A school buys 14 packs of notebooks with 12 notebooks per pack, and also 8 boxes of pens with 20 pens per box. How many more notebooks than pens did the school buy?", a: 8 },
+  { q: "A farm has 11 coops with 15 chickens each, and 6 pens with 24 ducks each. How many more chickens than ducks does the farm have?", a: 21 },
+  { q: "A library received 16 boxes of storybooks with 25 books per box, and 9 boxes of comic books with 30 books per box. How many books did the library receive in total?", a: 670 },
+  { q: "A canteen prepared 23 trays of siopao with 18 pieces each, and 14 trays of empanada with 22 pieces each. How many pieces of food did the canteen prepare in total?", a: 722 },
+  { q: "213 × 3 = ?", a: 639 },
+  { q: "326 × 4 = ?", a: 1304 },
+  { q: "4123 × 2 = ?", a: 8246 },
+  { q: "1578 × 5 = ?", a: 7890 },
+  { q: "704 × 6 = ?", a: 4224 },
+  { q: "2211 × 4 = ?", a: 8844 },
+  { q: "23 × 12 = ?", a: 276 },
+  { q: "34 × 21 = ?", a: 714 },
+  { q: "123 × 12 = ?", a: 1476 },
+  { q: "246 × 34 = ?", a: 8364 },
+  { q: "58 × 47 = ?", a: 2726 },
+  { q: "312 × 23 = ?", a: 7176 },
+  { q: "Estimate the product of 42 × 8 by rounding 42 to the nearest ten.", a: 320 },
+  { q: "Estimate the product of 396 × 4 by rounding 396 to the nearest hundred.", a: 1600 },
+  { q: "Estimate the product of 58 × 22 by rounding both numbers to the nearest ten.", a: 1200 },
+  { q: "Estimate the product of 213 × 6 by rounding 213 to the nearest hundred.", a: 1200 },
+  { q: "Estimate the product of 77 × 31 by rounding both numbers to the nearest ten.", a: 2400 },
+  { q: "A bakery bakes 24 trays of cupcakes each day, with 12 cupcakes per tray. If 3 trays worth of cupcakes are sold, how many cupcakes are left from that day's baking?", a: 252 },
+  { q: "Mrs. Santos buys 3 boxes of pencils with 24 pencils each. She gives 2 pencils to each of her 15 students. How many pencils are left?", a: 42 },
+  { q: "A school has 6 classrooms with 34 chairs each. If 45 chairs are broken and removed, how many chairs remain?", a: 159 },
+  { q: "A farmer has 8 baskets with 25 mangoes each. He sells 4 baskets completely, then gives away 10 mangoes from what's left. How many mangoes does he have left?", a: 90 },
+  { q: "A store has 34 boxes of markers with 6 markers in each box. How many markers are there in total?", a: 204 },
+  { q: "There are 213 students in Grade 4. Each student needs 3 notebooks. How many notebooks are needed in total?", a: 639 },
+  { q: "A van can carry 45 passengers. If there are 12 vans, how many passengers can they carry altogether?", a: 540 },
+  { q: "A garden has 122 rows of flowers with 4 flowers in each row. How many flowers are there in total?", a: 488 },
+  { q: "132 × 3 = ?", a: 396 },
+  { q: "4021 × 2 = ?", a: 8042 },
+  { q: "2102 × 4 = ?", a: 8408 },
+  { q: "418 × 2 = ?", a: 836 },
+  { q: "1364 × 3 = ?", a: 4092 },
+  { q: "957 × 6 = ?", a: 5742 },
+  { q: "31 × 13 = ?", a: 403 },
+  { q: "42 × 23 = ?", a: 966 },
+  { q: "214 × 21 = ?", a: 4494 },
+  { q: "356 × 27 = ?", a: 9612 },
+  { q: "67 × 38 = ?", a: 2546 },
+  { q: "429 × 32 = ?", a: 13728 },
+  { q: "Estimate the product of 36 × 7 by rounding 36 to the nearest ten.", a: 280 },
+  { q: "Estimate the product of 512 × 3 by rounding 512 to the nearest hundred.", a: 1500 },
+  { q: "Estimate the product of 64 × 19 by rounding both numbers to the nearest ten.", a: 1200 },
+  { q: "Estimate the product of 348 × 5 by rounding 348 to the nearest hundred.", a: 1500 },
+  { q: "Estimate the product of 89 × 42 by rounding both numbers to the nearest ten.", a: 3600 },
+  { q: "A toy store receives 15 boxes of toy cars with 18 cars per box. They donate 4 boxes' worth of cars to a charity. How many toy cars remain?", a: 198 },
+  { q: "Ana buys 5 packs of stickers with 36 stickers each. She shares 8 stickers with each of her 4 friends. How many stickers does she have left?", a: 148 },
+  { q: "A theater has 9 rows with 22 seats each. If 37 seats are reserved and cannot be sold, how many seats can be sold?", a: 161 },
+  { q: "A poultry farm has 7 cages with 45 chickens each. They sell 3 cages completely, then give away 15 chickens from what remains. How many chickens are left?", a: 165 },
+  { q: "A library has 26 shelves with 8 books on each shelf. How many books are there in total?", a: 208 },
+  { q: "There are 312 pupils in Grade 4. Each pupil needs 2 pencils. How many pencils are needed in total?", a: 624 },
+  { q: "A bus can carry 38 passengers. If there are 15 buses, how many passengers can they carry altogether?", a: 570 },
+  { q: "A field has 211 rows of corn with 3 corn plants in each row. How many corn plants are there in total?", a: 633 }
+];
+
+const QUESTIONS_PER_ATTEMPT = 30;
+const SECONDS_PER_QUESTION = 75; // 1 minute 15 seconds
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildQuiz() {
+  return shuffle(QUESTION_BANK).slice(0, QUESTIONS_PER_ATTEMPT);
+}
+
+let quiz = buildQuiz();
+let current = 0;
+let score = 0;
+let answered = false;
+let timerInterval = null;
+let nextTimerInterval = null;
+let timeLeft = SECONDS_PER_QUESTION;
+const AUTO_ADVANCE_SECONDS = 10;
+const userAnswers = [];
+
+const card = document.getElementById("quizCard");
+const progressBar = document.getElementById("progressBar");
+const timerEl = document.getElementById("timer");
+const progressWrap = document.getElementById("progressWrap");
+const timerWrap = document.getElementById("timerWrap");
+
+function renderWelcome() {
+  progressWrap.style.display = "none";
+  timerWrap.style.display = "none";
+  card.innerHTML = `
+    <div class="welcome-card">
+      <div class="welcome-icon">🧮</div>
+      <h2>Ready for your multiplication challenge?</h2>
+      <ul class="welcome-list">
+        <li><strong>30 questions</strong>, picked at random from a bank of 120 — a new mix every time.</li>
+        <li>Topics: multiplying by 1-digit and 2-digit numbers, estimating products, and word problems.</li>
+        <li>Type your answer in the box — no multiple choice.</li>
+        <li>You get <strong>1 minute 15 seconds</strong> per question. If time runs out, it's marked and you move on.</li>
+        <li>After each answer, the next question starts automatically within <strong>10 seconds</strong> — or click Next to continue right away.</li>
+        <li>At the end, you'll see your score and a review of every question you missed.</li>
+      </ul>
+      <button class="btn-start" id="startBtn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById("startBtn").addEventListener("click", startQuiz);
+}
+
+function startQuiz() {
+  progressWrap.style.display = "";
+  timerWrap.style.display = "";
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  userAnswers.length = 0;
+  clearInterval(nextTimerInterval);
+  renderQuestion();
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = SECONDS_PER_QUESTION;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      autoSubmitOnTimeout();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  timerEl.textContent = formatTime(Math.max(timeLeft, 0));
+  timerEl.classList.remove("warn", "danger");
+  if (timeLeft <= 10) timerEl.classList.add("danger");
+  else if (timeLeft <= 30) timerEl.classList.add("warn");
+}
+
+function renderQuestion() {
+  answered = false;
+  clearInterval(nextTimerInterval);
+  const item = quiz[current];
+  progressBar.style.width = `${(current / quiz.length) * 100}%`;
+
+  card.innerHTML = `
+    <div class="qnum">Question ${current + 1} of ${quiz.length}</div>
+    <div class="qtext">${item.q}</div>
+    <div class="answer-row">
+      <input type="number" id="answerInput" placeholder="Type your answer" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="hint">Press Enter or click Submit to check your answer.</div>
+    <div class="feedback" id="feedback"></div>
+    <div class="controls">
+      <button class="btn-submit" id="submitBtn">Submit</button>
+    </div>
+  `;
+
+  const input = document.getElementById("answerInput");
+  input.focus();
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !answered) submitAnswer();
+  });
+  document.getElementById("submitBtn").addEventListener("click", () => {
+    if (!answered) submitAnswer();
+  });
+
+  startTimer();
+}
+
+function evaluateAndShowFeedback(userValue, timedOut) {
+  answered = true;
+  clearInterval(timerInterval);
+  const item = quiz[current];
+  const input = document.getElementById("answerInput");
+  input.disabled = true;
+
+  const isCorrect = userValue !== null && Number(userValue) === item.a;
+  if (isCorrect) score++;
+
+  userAnswers.push({
+    q: item.q,
+    selectedText: timedOut ? (userValue === null || userValue === "" ? "(no answer — time ran out)" : `${userValue} (time ran out)`) : String(userValue),
+    correctText: String(item.a),
+    isCorrect
+  });
+
+  input.classList.add(isCorrect ? "correct" : "incorrect");
+
+  const fb = document.getElementById("feedback");
+  fb.classList.add(isCorrect ? "correct" : "incorrect");
+  if (timedOut) {
+    fb.textContent = isCorrect
+      ? `Time's up, but that's correct!`
+      : `Time's up! The correct answer is ${item.a}.`;
+  } else {
+    fb.textContent = isCorrect
+      ? "Correct! Great job."
+      : `Not quite. The correct answer is ${item.a}.`;
+  }
+
+  function proceed() {
+    clearInterval(nextTimerInterval);
+    current++;
+    if (current < quiz.length) {
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  }
+
+  const nextLabel = current + 1 === quiz.length ? "See Results" : "Next Question";
+  let countdown = AUTO_ADVANCE_SECONDS;
+  const controls = document.querySelector(".controls");
+  controls.innerHTML = `<button class="btn-next" id="nextBtn">${nextLabel} (${countdown})</button>`;
+  document.getElementById("nextBtn").addEventListener("click", proceed);
+  document.getElementById("nextBtn").focus();
+
+  clearInterval(nextTimerInterval);
+  nextTimerInterval = setInterval(() => {
+    countdown--;
+    const btn = document.getElementById("nextBtn");
+    if (btn) btn.textContent = `${nextLabel} (${Math.max(countdown, 0)})`;
+    if (countdown <= 0) {
+      proceed();
+    }
+  }, 1000);
+}
+
+function submitAnswer() {
+  const input = document.getElementById("answerInput");
+  const val = input.value.trim();
+  evaluateAndShowFeedback(val === "" ? null : val, false);
+}
+
+function autoSubmitOnTimeout() {
+  if (answered) return;
+  const input = document.getElementById("answerInput");
+  const val = input ? input.value.trim() : "";
+  evaluateAndShowFeedback(val === "" ? null : val, true);
+}
+
+function renderResults() {
+  progressBar.style.width = "100%";
+  timerEl.textContent = "--:--";
+  const total = quiz.length;
+  const pct = Math.round((score / total) * 100);
+  let msg = "Keep practicing — you'll get there!";
+  if (pct === 100) msg = "Perfect score! Excellent work!";
+  else if (pct >= 80) msg = "Great job! You know your multiplication well.";
+  else if (pct >= 60) msg = "Good effort! Review the ones you missed.";
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+
+  card.innerHTML = `
+    <div class="result-card">
+      <div class="qnum">Quiz Complete</div>
+      <div class="score-big">${score} / ${total}</div>
+      <div class="score-msg">${pct}% — ${msg}</div>
+      <div class="review">
+        <h3>Review</h3>
+        ${mistakes.length === 0
+          ? `<div class="no-mistakes">You got every question right. Amazing!</div>`
+          : mistakes.map(m => `
+            <div class="review-item">
+              <div class="rq">${m.q}</div>
+              <div class="rline wrong">Your answer: ${m.selectedText}</div>
+              <div class="rline right">Correct answer: ${m.correctText}</div>
+            </div>
+          `).join("")
+        }
+      </div>
+      <button class="btn-restart" id="restartBtn">Try Again (New Random Set)</button>
+    </div>
+  `;
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    quiz = buildQuiz();
+    current = 0;
+    score = 0;
+    userAnswers.length = 0;
+    renderQuestion();
+  });
+}
+
+renderWelcome();
+</script>
+</body>
+</html>

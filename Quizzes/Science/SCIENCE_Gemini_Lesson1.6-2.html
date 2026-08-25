@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeletal System Challenge - Bone Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0d0c0b;
+            --bg-card: #181614;
+            --bone-ivory: #f4ebd9;
+            --bone-light: #e6dac3;
+            --bone-muted: #a39885;
+            --bone-dark: #2a2622;
+            --marrow-gold: #d4a359;
+            --marrow-glow: rgba(212, 163, 89, 0.4);
+            --correct-green: #4eb869;
+            --wrong-red: #d94848;
+            --border-bone: #3d3730;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(212, 163, 89, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(244, 235, 217, 0.03) 0%, transparent 40%);
+            color: var(--bone-ivory);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            min-height: 650px;
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-bone);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 163, 89, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Header & Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--bone-dark);
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--marrow-gold), var(--bone-ivory));
+            box-shadow: 0 0 12px var(--marrow-gold);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .header-bar {
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-bone);
+            background: rgba(13, 12, 11, 0.4);
+        }
+
+        .title-badge {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--marrow-gold);
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-progress {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--bone-muted);
+            letter-spacing: 1px;
+        }
+
+        /* Main Display Screen */
+        .slide {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px;
+            flex: 1;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+            margin: auto 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .bone-icon-large {
+            font-size: 70px;
+            color: var(--bone-ivory);
+            filter: drop-shadow(0 0 15px var(--marrow-glow));
+            animation: pulseBone 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseBone {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px var(--marrow-glow)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 25px var(--marrow-gold)); }
+        }
+
+        .start-title {
+            font-family: 'Cinzel', serif;
+            font-size: 38px;
+            color: var(--bone-ivory);
+            letter-spacing: 2px;
+        }
+
+        .start-subtitle {
+            color: var(--bone-muted);
+            font-size: 15px;
+            max-width: 550px;
+            line-height: 1.6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--marrow-gold), #b88339);
+            color: #0d0c0b;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 16px 45px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(212, 163, 89, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 15px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 163, 89, 0.5);
+            background: linear-gradient(135deg, #e6b36a, var(--marrow-gold));
+        }
+
+        /* Questions Layout */
+        .question-box {
+            text-align: center;
+            width: 100%;
+            max-width: 780px;
+            margin: 10px 0 25px 0;
+        }
+
+        .question-number {
+            color: var(--marrow-gold);
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--bone-ivory);
+            line-height: 1.45;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+            max-width: 780px;
+        }
+
+        @media (max-width: 700px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: var(--bone-dark);
+            border: 2px solid var(--border-bone);
+            border-radius: 10px;
+            color: var(--bone-ivory);
+            padding: 16px 20px;
+            font-size: 15px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--marrow-gold);
+            background-color: #35302a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(212, 163, 89, 0.2);
+        }
+
+        .option-btn .opt-prefix {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--marrow-gold);
+            min-width: 24px;
+        }
+
+        .option-btn.correct-flash {
+            background-color: rgba(78, 184, 105, 0.25) !important;
+            border-color: var(--correct-green) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 15px rgba(78, 184, 105, 0.4) !important;
+        }
+
+        .option-btn.wrong-flash {
+            background-color: rgba(217, 72, 72, 0.25) !important;
+            border-color: var(--wrong-red) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 15px rgba(217, 72, 72, 0.4) !important;
+        }
+
+        /* Animated Skeleton Avatar Floor & Jump */
+        .avatar-bar {
+            width: 100%;
+            padding: 15px 40px;
+            background: rgba(13, 12, 11, 0.6);
+            border-top: 1px solid var(--border-bone);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .bone-avatar-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bone-avatar {
+            width: 44px;
+            height: 44px;
+            background: var(--bone-dark);
+            border: 2px solid var(--bone-ivory);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--bone-ivory);
+            box-shadow: 0 0 10px rgba(244, 235, 217, 0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .bone-avatar.jump {
+            animation: boneJump 0.5s ease;
+        }
+
+        @keyframes boneJump {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(-15deg); color: var(--marrow-gold); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        .game-container.shake {
+            animation: containerShake 0.4s ease-in-out;
+        }
+
+        @keyframes containerShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .avatar-status {
+            font-size: 13px;
+            color: var(--bone-muted);
+            font-weight: 500;
+        }
+
+        /* Results Screen */
+        .results-container {
+            text-align: center;
+            width: 100%;
+            max-width: 780px;
+            margin: auto 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .results-title {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            color: var(--bone-ivory);
+        }
+
+        .score-card {
+            background: var(--bone-dark);
+            border: 2px solid var(--marrow-gold);
+            border-radius: 12px;
+            padding: 25px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 25px var(--marrow-glow);
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--marrow-gold);
+            font-family: 'Cinzel', serif;
+        }
+
+        .badge-rank {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--bone-ivory);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .review-list {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(13, 12, 11, 0.7);
+            border: 1px solid var(--border-bone);
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .review-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-bone);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item.pass { color: var(--correct-green); }
+        .review-item.fail { color: var(--wrong-red); }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            background: none;
+            border: 1px solid var(--border-bone);
+            color: var(--bone-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .sound-toggle:hover {
+            color: var(--bone-ivory);
+            border-color: var(--bone-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container" id="gameContainer">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Top Header Bar -->
+        <div class="header-bar">
+            <div class="title-badge">
+                <i class="fa-solid fa-bone"></i> SKELETAL OSTEOLOGY
+            </div>
+            <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">
+                <i class="fa-solid fa-volume-high" id="soundIcon"></i> Sound ON
+            </button>
+            <div class="level-progress" id="progressText">0 / 20 BONES</div>
+        </div>
+
+        <!-- SLIDE 1: START SCREEN -->
+        <div class="slide active" id="slide-start">
+            <div class="start-screen">
+                <div class="bone-icon-large">
+                    <i class="fa-solid fa-skull"></i>
+                </div>
+                <h1 class="start-title">SKELETAL SYSTEM QUIZ</h1>
+                <p class="start-subtitle">
+                    Test your knowledge on bone structures, joint functions, tissue connections, and bone health from Lesson 1.6!
+                </p>
+                <button class="btn-primary" onclick="startQuiz()">Begin Assessment</button>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: QUIZ QUESTION SCREEN -->
+        <div class="slide" id="slide-quiz">
+            <div class="question-box">
+                <div class="question-number" id="qNumber">QUESTION 01</div>
+                <h2 class="question-text" id="qText">Loading question...</h2>
+            </div>
+
+            <div class="options-grid" id="optionsGrid">
+                <!-- Buttons rendered dynamically -->
+            </div>
+            <div></div>
+        </div>
+
+        <!-- SLIDE 3: RESULTS SCREEN -->
+        <div class="slide" id="slide-results">
+            <div class="results-container">
+                <h1 class="results-title">QUIZ COMPLETE</h1>
+                
+                <div class="score-card">
+                    <span style="font-size: 12px; color: var(--bone-muted); letter-spacing: 1px;">FINAL ACCURACY</span>
+                    <span class="score-number" id="finalScore">0 / 20</span>
+                    <span class="badge-rank" id="rankBadge">OSTEOLOGY NOVICE</span>
+                </div>
+
+                <div style="width: 100%;">
+                    <div style="font-size: 13px; color: var(--bone-muted); margin-bottom: 6px; text-align: left;">QUESTION BREAKDOWN:</div>
+                    <div class="review-list" id="reviewList">
+                        <!-- Review items -->
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="restartQuiz()">Re-examine Bones</button>
+            </div>
+        </div>
+
+        <!-- Bottom Avatar Status Bar -->
+        <div class="avatar-bar">
+            <div class="bone-avatar-container">
+                <div class="bone-avatar" id="boneAvatar">
+                    <i class="fa-solid fa-skeleton" id="avatarIcon">☠</i>
+                </div>
+                <div class="avatar-status" id="avatarStatus">Ready to test your skeletal knowledge.</div>
+            </div>
+            <div style="font-size: 12px; color: var(--bone-muted);" id="percentBadge">0%</div>
+        </div>
+    </div>
+
+    <script>
+        // PDF-Based 20 Question Dataset
+        const rawQuizData = [
+            {
+                q: "Approximately how many bones does a baby have at birth?",
+                options: ["206 bones", "~300 bones", "~150 bones", "400 bones"],
+                correctText: "~300 bones"
+            },
+            {
+                q: "How many bones make up the adult human skeleton?",
+                options: ["300 bones", "180 bones", "206 bones", "250 bones"],
+                correctText: "206 bones"
+            },
+            {
+                q: "What flexible material forms some of a baby's bones before they harden and fuse?",
+                options: ["Tendons", "Cartilage", "Ligaments", "Synovial Fluid"],
+                correctText: "Cartilage"
+            },
+            {
+                q: "What soft inner tissue inside bones produces red and white blood cells?",
+                options: ["Yellow Cartilage", "Bone Marrow", "Compact Bone", "Periosteum"],
+                correctText: "Bone Marrow"
+            },
+            {
+                q: "Which tissue connects bone to bone and produces synovial fluid to lubricate joints?",
+                options: ["Tendon", "Skeletal Muscle", "Ligament", "Cartilage"],
+                correctText: "Ligament"
+            },
+            {
+                q: "What strong, cordlike tissue connects skeletal muscles to bones?",
+                options: ["Tendon", "Ligament", "Marrow", "Vertebrae"],
+                correctText: "Tendon"
+            },
+            {
+                q: "What is the structure called where two or more bones meet and fit together?",
+                options: ["Fracture", "Joint", "Suture", "Marrow"],
+                correctText: "Joint"
+            },
+            {
+                q: "Which major part of the skeletal system protects the head and brain?",
+                options: ["Rib Cage", "Pelvis", "Skull", "Vertebrae"],
+                correctText: "Skull"
+            },
+            {
+                q: "The rib cage serves to protect which vital internal organs?",
+                options: ["Brain and Spinal Cord", "Lungs, Liver, and Heart", "Kidneys and Bladder", "Stomach and Intestines"],
+                correctText: "Lungs, Liver, and Heart"
+            },
+            {
+                q: "Which is the longest and strongest bone in the human body?",
+                options: ["Humerus", "Radius", "Femur", "Ulna"],
+                correctText: "Femur"
+            },
+            {
+                q: "In the forearm, which bone provides stability while the other drives wrist rotation?",
+                options: ["Radius gives stability; Ulna rotates", "Ulna gives stability; Radius rotates", "Femur gives stability; Humerus rotates", "Tibia gives stability; Fibula rotates"],
+                correctText: "Ulna gives stability; Radius rotates"
+            },
+            {
+                q: "Which bone structure protects the urinary system, intestines, and reproductive organs?",
+                options: ["Pelvis", "Rib Cage", "Spine", "Skull"],
+                correctText: "Pelvis"
+            },
+            {
+                q: "Besides support and protection, bones store important minerals such as:",
+                options: ["Iron and Sodium", "Calcium and Vitamin D", "Potassium and Zinc", "Magnesium and Copper"],
+                correctText: "Calcium and Vitamin D"
+            },
+            {
+                q: "What memory key does the summary suggest for keeping our bones healthy?",
+                options: ["S.U.N. (Sunlight, Ultra, Nutrition)", "E.D. (Exercise and Diet)", "B.O.N.E. (Breathe, Oxygen, Nourish, Energy)", "C.A.L. (Calcium, Activity, Life)"],
+                correctText: "E.D. (Exercise and Diet)"
+            },
+            {
+                q: "What condition causes softening and weakening of bones in children, usually due to Vitamin D deficiency?",
+                options: ["Osteoporosis", "Scoliosis", "Rickets", "Sprain"],
+                correctText: "Rickets"
+            },
+            {
+                q: "If a broken bone punctures through the skin, what type of fracture is it?",
+                options: ["Closed Fracture", "Greenstick Fracture", "Open (Compound) Fracture", "Stress Fracture"],
+                correctText: "Open (Compound) Fracture"
+            },
+            {
+                q: "Which condition causes bones to become weak, fragile, and break easily over many years?",
+                options: ["Osteoporosis", "Rickets", "Scoliosis", "Sprain"],
+                correctText: "Osteoporosis"
+            },
+            {
+                q: "What condition is characterized by an abnormal S- or C-shaped curvature of the spine?",
+                options: ["Fracture", "Scoliosis", "Osteoporosis", "Rickets"],
+                correctText: "Scoliosis"
+            },
+            {
+                q: "What injury occurs when ligaments connecting bones at a joint are stretched or torn?",
+                options: ["Fracture", "Sprain", "Scoliosis", "Rickets"],
+                correctText: "Sprain"
+            },
+            {
+                q: "In adults, red bone marrow producing blood cells is primarily found in which bones?",
+                options: ["Hands and feet only", "Spine, hips, ribs, and breastbone", "Ears and nose", "Skull sutures only"],
+                correctText: "Spine, hips, ribs, and breastbone"
+            }
+        ];
+
+        let quizData = [];
+        let currentIndex = 0;
+        let score = 0;
+        let userResponses = [];
+        let soundEnabled = true;
+
+        // Fisher-Yates Shuffle Utility
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Prepare randomized quiz dataset (shuffles both questions & choices)
+        function prepareRandomizedQuiz() {
+            // 1. Shuffle questions
+            const shuffledQuestions = shuffleArray(rawQuizData);
+
+            // 2. Shuffle options for each question
+            quizData = shuffledQuestions.map(item => {
+                const shuffledOpts = shuffleArray(item.options);
+                const correctIdx = shuffledOpts.indexOf(item.correctText);
+                return {
+                    q: item.q,
+                    options: shuffledOpts,
+                    correct: correctIdx,
+                    correctText: item.correctText
+                };
+            });
+        }
+
+        // Web Audio API Sound Synthesizer (No external MP3 files required)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                }
+            } catch (e) {}
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundToggle');
+            if (soundEnabled) {
+                btn.innerHTML = `<i class="fa-solid fa-volume-high" id="soundIcon"></i> Sound ON`;
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-volume-xmark" id="soundIcon"></i> Sound OFF`;
+            }
+        }
+
+        function startQuiz() {
+            playSound('click');
+            prepareRandomizedQuiz(); // Randomize every run
+            currentIndex = 0;
+            score = 0;
+            userResponses = [];
+            showSlide('slide-quiz');
+            loadQuestion();
+        }
+
+        function showSlide(slideId) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.getElementById(slideId).classList.add('active');
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= quizData.length) {
+                endQuiz();
+                return;
+            }
+
+            const current = quizData[currentIndex];
+            const pct = Math.round((currentIndex / quizData.length) * 100);
+
+            // Progress bar
+            document.getElementById('progressBar').style.width = pct + '%';
+            document.getElementById('progressText').innerText = `${currentIndex + 1} / ${quizData.length} BONES`;
+            document.getElementById('percentBadge').innerText = `${pct}% COMPLETE`;
+
+            // Question Text
+            document.getElementById('qNumber').innerText = `QUESTION ${String(currentIndex + 1).padStart(2, '0')}`;
+            document.getElementById('qText').innerText = current.q;
+
+            // Render options
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+
+            current.options.forEach((optText, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="opt-prefix">${letters[i]})</span> <span>${optText}</span>`;
+                btn.onclick = () => handleAnswer(i, btn);
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('avatarStatus').innerText = "Analyzing bone structure...";
+        }
+
+        function handleAnswer(selectedIndex, btnElement) {
+            const current = quizData[currentIndex];
+            const isCorrect = (selectedIndex === current.correct);
+
+            // Disable all options
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            const avatar = document.getElementById('boneAvatar');
+            const container = document.getElementById('gameContainer');
+
+            if (isCorrect) {
+                score++;
+                playSound('correct');
+                btnElement.classList.add('correct-flash');
+                userResponses.push({ q: current.q, ok: true, choice: current.options[selectedIndex] });
+
+                avatar.classList.add('jump');
+                setTimeout(() => avatar.classList.remove('jump'), 500);
+                document.getElementById('avatarStatus').innerText = "Correct! Solid skeletal knowledge.";
+            } else {
+                playSound('wrong');
+                btnElement.classList.add('wrong-flash');
+                allBtns[current.correct].classList.add('correct-flash');
+                userResponses.push({ q: current.q, ok: false, choice: current.options[selectedIndex] });
+
+                container.classList.add('shake');
+                setTimeout(() => container.classList.remove('shake'), 400);
+                document.getElementById('avatarStatus').innerText = "Fracture! Incorrect bone connection.";
+            }
+
+            setTimeout(() => {
+                currentIndex++;
+                loadQuestion();
+            }, 1250);
+        }
+
+        function endQuiz() {
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('percentBadge').innerText = '100% COMPLETE';
+            showSlide('slide-results');
+
+            document.getElementById('finalScore').innerText = `${score} / ${quizData.length}`;
+
+            let rank = "SKELETON APPRENTICE";
+            if (score === 20) rank = "BONAFIDE OSTEOLOGY MASTER! ☠️";
+            else if (score >= 16) rank = "SENIOR BONE SPECIALIST";
+            else if (score >= 12) rank = "SKILLED ANATOMIST";
+            else if (score >= 8) rank = "STUDENT OF ANATOMY";
+
+            document.getElementById('rankBadge').innerText = rank;
+
+            const logList = document.getElementById('reviewList');
+            logList.innerHTML = '';
+
+            userResponses.forEach((res, i) => {
+                const item = document.createElement('div');
+                item.className = `review-item ${res.ok ? 'pass' : 'fail'}`;
+                item.innerHTML = `
+                    <span>Q${i+1}: ${res.ok ? '✓ Correct' : '✗ Incorrect'}</span>
+                    <span style="opacity: 0.8; font-size: 11px;">${res.q.substring(0, 35)}...</span>
+                `;
+                logList.appendChild(item);
+            });
+
+            document.getElementById('avatarStatus').innerText = "Assessment complete!";
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+    </script>
+</body>
+</html>

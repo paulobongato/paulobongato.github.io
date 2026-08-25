@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsasanay sa Pangatnig - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 16px;
+    color: #2c3e50;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.5rem;
+    color: #2b579a;
+    margin-bottom: 4px;
+  }
+  header p {
+    color: #607d8b;
+    margin: 0;
+  }
+  #progress {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #2b579a;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #eef3fb;
+    border: 2px solid #dbe6f5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .choice:hover:not(:disabled) {
+    background: #dde9fa;
+  }
+  .choice.selected {
+    border-color: #2b579a;
+    background: #d7e6fb;
+  }
+  .choice:disabled {
+    cursor: default;
+  }
+  .choice.correct {
+    background: #d5f5df;
+    border-color: #34a853;
+    color: #1b6b33;
+    font-weight: bold;
+  }
+  .choice.incorrect {
+    background: #fbdede;
+    border-color: #e74c3c;
+    color: #a02c1f;
+    font-weight: bold;
+  }
+  .submit-btn, .next-btn, .restart-btn {
+    display: inline-block;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .submit-btn:disabled {
+    background: #a9bcd6;
+    cursor: not-allowed;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #d5f5df;
+    color: #1b6b33;
+  }
+  .feedback.incorrect-fb {
+    background: #fbdede;
+    color: #a02c1f;
+  }
+  .nav-row {
+    text-align: right;
+  }
+  #resultsScreen, #quizScreen, #startScreen {
+    display: none;
+  }
+  #startScreen { display: block; }
+  .score-big {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    color: #2b579a;
+    margin: 6px 0 4px;
+  }
+  .score-sub {
+    text-align: center;
+    color: #607d8b;
+    margin-bottom: 18px;
+  }
+  .review-item {
+    border-left: 5px solid #e74c3c;
+    background: #fff6f6;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .review-item.correctone {
+    border-left-color: #34a853;
+    background: #f5fdf7;
+  }
+  .review-item p { margin: 4px 0; }
+  .review-q { font-weight: 700; }
+  .review-your { color: #a02c1f; }
+  .review-correct { color: #1b6b33; }
+  .start-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .center { text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Pagsasanay sa Pangatnig</h1>
+    <p>Ikaapat na Baitang (Grade 4) &mdash; Filipino</p>
+  </header>
+
+  <div id="startScreen" class="card center">
+    <p style="font-size:1.05rem; line-height:1.6;">
+      Sasagutan mo ang 15 katanungan tungkol sa <strong>pangatnig</strong>: pagkilala nito,
+      angkop na pangatnig ayon sa diwa ng pangungusap, at magkatimbang / di-magkatimbang na pangatnig.
+      Random ang pagkakasunod-sunod ng mga tanong sa bawat pagsusulit.
+    </p>
+    <button class="start-btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <div id="quizScreen">
+    <div id="progress"></div>
+    <div class="card">
+      <div class="question-text" id="questionText"></div>
+      <div id="choicesArea"></div>
+      <div class="feedback" id="feedbackBox"></div>
+      <div class="nav-row">
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()" disabled>Isumite</button>
+        <button class="next-btn" id="nextBtn" style="display:none;" onclick="nextQuestion()">Susunod</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" class="card">
+    <h2 class="center" style="color:#2b579a;">Resulta ng Pagsusulit</h2>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-sub" id="scoreSub"></div>
+    <div id="reviewList"></div>
+    <div class="center">
+      <button class="restart-btn" onclick="location.reload()">Ulitin ang Pagsusulit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const allQuestions = [
+  {
+    q: "Alin sa mga sumusunod na salita ang PANGATNIG?",
+    choices: ["Maganda", "Kumain", "At", "Bahay"],
+    answer: 2
+  },
+  {
+    q: "Sa pangungusap na \"Naglaro ang mga bata sa parke ngunit umuwi sila nang maaga,\" alin ang pangatnig?",
+    choices: ["Naglaro", "ngunit", "parke", "umuwi"],
+    answer: 1
+  },
+  {
+    q: "Alin sa mga sumusunod ang HINDI pangatnig?",
+    choices: ["dahil", "kaya", "maganda", "o"],
+    answer: 2
+  },
+  {
+    q: "Sa pangungusap na \"Gustung-gusto ko ang tsaa pati na rin ang kape,\" ano ang pangatnig?",
+    choices: ["Gustung-gusto", "tsaa", "pati", "kape"],
+    answer: 2
+  },
+  {
+    q: "Alin sa mga sumusunod ang pangatnig na ginagamit upang mag-ugnay ng dalawang magkatulad na bagay?",
+    choices: ["subalit", "at", "dahil", "kung"],
+    answer: 1
+  },
+  {
+    q: "\"Nag-aral si Ana nang mabuti ___ pumasa siya sa pagsusulit.\" Anong pangatnig ang angkop?",
+    choices: ["ngunit", "o", "kaya", "bagama't"],
+    answer: 2
+  },
+  {
+    q: "\"Masipag si Pedro ___ kulang pa rin sa oras ang ginagawa niya.\" Anong pangatnig ang angkop?",
+    choices: ["kaya", "dahil", "bagama't", "at"],
+    answer: 2
+  },
+  {
+    q: "\"Kakain ba tayo ng kanin ___ tinapay sa almusal?\" Anong pangatnig ang angkop?",
+    choices: ["dahil", "o", "kaya", "sapagkat"],
+    answer: 1
+  },
+  {
+    q: "\"Umiyak ang bata ___ nawala ang kanyang laruan.\" Anong pangatnig ang angkop?",
+    choices: ["dahil", "o", "ngunit", "at"],
+    answer: 0
+  },
+  {
+    q: "\"Magsipilyo ka ___ huwag kang magkasakit ng ngipin.\" Anong pangatnig ang angkop?",
+    choices: ["o", "upang", "subalit", "pati"],
+    answer: 1
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng MAGKATIMBANG na pangatnig?",
+    choices: ["dahil", "kung", "at", "upang"],
+    answer: 2
+  },
+  {
+    q: "Ang mga pangatnig na \"dahil,\" \"kung,\" at \"bagama't\" ay tinatawag na:",
+    choices: ["Magkatimbang na Pangatnig", "Di-Magkatimbang na Pangatnig", "Pang-uri", "Pandiwa"],
+    answer: 1
+  },
+  {
+    q: "Alin ang HALIMBAWA ng DI-MAGKATIMBANG na pangatnig?",
+    choices: ["at", "o", "saka", "kapag"],
+    answer: 3
+  },
+  {
+    q: "Sa pangungusap na \"Pupunta kami sa palengke o sa mall,\" anong uri ng pangatnig ang ginamit?",
+    choices: ["Magkatimbang", "Di-Magkatimbang", "Pang-abay", "Pangngalan"],
+    answer: 0
+  },
+  {
+    q: "Sa pangungusap na \"Hindi siya pumasok sapagkat may sakit siya,\" anong uri ng pangatnig ang ginamit?",
+    choices: ["Magkatimbang", "Di-Magkatimbang", "Pantukoy", "Pang-uri"],
+    answer: 1
+  },
+  {
+    q: "Sa pangungusap na \"Maligaya ang mga bata sapagkat may pista sa kanilang barangay,\" alin ang pangatnig?",
+    choices: ["Maligaya", "sapagkat", "pista", "barangay"],
+    answer: 1
+  },
+  {
+    q: "Alin sa mga sumusunod ang PANGATNIG?",
+    choices: ["mabilis", "habang", "guro", "paaralan"],
+    answer: 1
+  },
+  {
+    q: "Sa pangungusap na \"Naglinis si Maria sa bahay saka nagluto ng hapunan,\" ano ang pangatnig?",
+    choices: ["Naglinis", "bahay", "saka", "hapunan"],
+    answer: 2
+  },
+  {
+    q: "\"Hindi ako makakapunta sa party ___ may lagnat ako.\" Anong pangatnig ang angkop?",
+    choices: ["dahil", "o", "saka", "at"],
+    answer: 0
+  },
+  {
+    q: "\"Pipiliin mo ba ang asul ___ pulang kulay?\" Anong pangatnig ang angkop?",
+    choices: ["dahil", "o", "kaya", "sapagkat"],
+    answer: 1
+  },
+  {
+    q: "\"Nag-ipon si Juan ng pera ___ makabili siya ng bagong sapatos.\" Anong pangatnig ang angkop?",
+    choices: ["dahil", "upang", "ngunit", "o"],
+    answer: 1
+  },
+  {
+    q: "\"Malakas ang ulan ___ hindi pa rin natigil ang laro.\" Anong pangatnig ang angkop?",
+    choices: ["kaya", "dahil", "subalit", "upang"],
+    answer: 2
+  },
+  {
+    q: "Alin ang HALIMBAWA ng MAGKATIMBANG na pangatnig?",
+    choices: ["kapag", "saka", "bagama't", "nang"],
+    answer: 1
+  },
+  {
+    q: "Ang mga pangatnig na \"at,\" \"o,\" at \"pati\" ay tinatawag na:",
+    choices: ["Di-Magkatimbang na Pangatnig", "Magkatimbang na Pangatnig", "Pang-uri", "Pangngalan"],
+    answer: 1
+  },
+  {
+    q: "Sa pangungusap na \"Aawit ako habang tumutugtog ang gitara,\" anong uri ng pangatnig ang ginamit?",
+    choices: ["Magkatimbang", "Di-Magkatimbang", "Pantukoy", "Pang-abay"],
+    answer: 1
+  }
+];
+
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let selectedChoice = null;
+let answered = false;
+let results = []; // {q, choices, correctIdx, userIdx, isCorrect}
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function shuffleQuestionChoices(question) {
+  const choiceObjs = question.choices.map((text, idx) => ({ text, isCorrect: idx === question.answer }));
+  const shuffled = shuffle(choiceObjs);
+  return {
+    q: question.q,
+    choices: shuffled.map(c => c.text),
+    answer: shuffled.findIndex(c => c.isCorrect)
+  };
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(allQuestions).map(shuffleQuestionChoices);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedChoice = null;
+  answered = false;
+  const question = quizQuestions[currentIndex];
+  document.getElementById('progress').textContent = `Tanong ${currentIndex + 1} sa ${quizQuestions.length}`;
+  document.getElementById('questionText').textContent = question.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const choicesArea = document.getElementById('choicesArea');
+  choicesArea.innerHTML = '';
+  question.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = `${letters[idx]}. ${choice}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = `choice-${idx}`;
+    choicesArea.appendChild(btn);
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.className = 'feedback';
+  feedbackBox.textContent = '';
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectChoice(idx) {
+  if (answered) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answered) return;
+  answered = true;
+  const question = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === question.answer;
+  if (isCorrect) score++;
+
+  results.push({
+    q: question.q,
+    choices: question.choices,
+    correctIdx: question.answer,
+    userIdx: selectedChoice,
+    isCorrect
+  });
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === question.answer) btn.classList.add('correct');
+    if (i === selectedChoice && !isCorrect) btn.classList.add('incorrect');
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.classList.add('show');
+  if (isCorrect) {
+    feedbackBox.classList.add('correct-fb');
+    feedbackBox.textContent = 'Tama! Mahusay!';
+  } else {
+    feedbackBox.classList.add('incorrect-fb');
+    feedbackBox.textContent = `Mali. Ang tamang sagot ay ${letters[question.answer]}. ${question.choices[question.answer]}.`;
+  }
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < quizQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+
+  document.getElementById('scoreBig').textContent = `${score} / ${quizQuestions.length}`;
+  const pct = Math.round((score / quizQuestions.length) * 100);
+  document.getElementById('scoreSub').textContent = `Iskor: ${pct}%`;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+
+  const wrongOnes = results.filter(r => !r.isCorrect);
+  const letters = ['A', 'B', 'C', 'D'];
+
+  if (wrongOnes.length === 0) {
+    const div = document.createElement('div');
+    div.className = 'review-item correctone';
+    div.innerHTML = `<p style="text-align:center; font-size:1.05rem;">Perpekto! Nasagot mo nang tama ang lahat ng tanong.</p>`;
+    reviewList.appendChild(div);
+  } else {
+    const heading = document.createElement('h3');
+    heading.style.color = '#2b579a';
+    heading.textContent = 'Mga Tanong na Mali ang Sagot:';
+    reviewList.appendChild(heading);
+
+    wrongOnes.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <p class="review-q">${r.q}</p>
+        <p class="review-your">Ang sagot mo: ${letters[r.userIdx]}. ${r.choices[r.userIdx]}</p>
+        <p class="review-correct">Tamang sagot: ${letters[r.correctIdx]}. ${r.choices[r.correctIdx]}</p>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

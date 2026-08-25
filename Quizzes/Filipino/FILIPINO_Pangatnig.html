@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pangatnig Quiz - Canva Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #7d2ae8 0%, #00c4cc 100%);
+            min-height: 100vh;
+        }
+        .canva-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background-color: #f3f4f6;
+        }
+        .option-selected {
+            border-color: #7d2ae8 !important;
+            background-color: #f3e8ff !important;
+        }
+        .correct {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        .incorrect {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div id="quiz-container" class="canva-card w-full max-w-2xl rounded-3xl p-8 overflow-hidden">
+        <!-- Start Screen -->
+        <div id="start-screen" class="text-center">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Magsanay Tayo: Pangatnig</h1>
+            <p class="text-gray-600 mb-8">Subukin ang iyong kaalaman tungkol sa mga salitang nag-uugnay sa ating mga pangungusap!</p>
+            <div class="flex justify-center mb-8">
+                <img src="https://img.icons8.com/bubbles/200/design.png" alt="Canva Style Icon" class="w-32 h-32">
+            </div>
+            <button onclick="startQuiz()" class="bg-[#7d2ae8] text-white px-10 py-3 rounded-full font-bold text-lg hover:bg-[#6a22c5] transition-colors shadow-lg">
+                Simulan ang Quiz
+            </button>
+        </div>
+
+        <!-- Quiz Content -->
+        <div id="quiz-content" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <span id="question-count" class="text-gray-500 font-semibold uppercase tracking-wider">Tanong 1/25</span>
+                <span id="score-display" class="text-[#00c4cc] font-bold">Puntos: 0</span>
+            </div>
+            
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+                <div id="progress" class="progress-bar bg-gradient-to-r from-[#7d2ae8] to-[#00c4cc] h-2.5 rounded-full" style="width: 4%"></div>
+            </div>
+
+            <div id="question-area">
+                <h2 id="question-text" class="text-2xl font-bold text-gray-800 mb-8">Loading question...</h2>
+                <div id="options-grid" class="grid grid-cols-1 gap-4">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <div id="feedback-area" class="mt-8 hidden">
+                <div id="feedback-message" class="p-4 rounded-xl font-semibold mb-4"></div>
+                <p id="rationale-text" class="text-gray-600 text-sm mb-4"></p>
+                <button id="next-btn" onclick="nextQuestion()" class="w-full bg-[#00c4cc] text-white py-3 rounded-xl font-bold hover:bg-[#00a8ad] transition-all">
+                    Susunod na Tanong
+                </button>
+            </div>
+
+            <button id="submit-btn" onclick="checkAnswer()" class="w-full mt-8 bg-[#7d2ae8] text-white py-3 rounded-xl font-bold hover:bg-[#6a22c5] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                I-submit ang Sagot
+            </button>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Quiz Finished!</h2>
+            <div id="final-score" class="text-6xl font-bold text-[#7d2ae8] my-6">0/25</div>
+            <p id="result-message" class="text-gray-600 mb-8 font-semibold"></p>
+            
+            <div id="mistakes-review" class="text-left mb-8 max-h-60 overflow-y-auto border-t border-b py-4">
+                <h3 class="font-bold text-gray-700 mb-4 uppercase text-xs tracking-widest">Balik-aral sa mga maling sagot:</h3>
+                <div id="mistakes-list" class="space-y-4"></div>
+            </div>
+
+            <button onclick="restartQuiz()" class="bg-[#7d2ae8] text-white px-8 py-3 rounded-full font-bold hover:bg-[#6a22c5] transition-colors shadow-md">
+                Ulitin ang Quiz
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+            {
+                q: "Ano ang pangunahing gamit ng pangatnig sa isang pangungusap?",
+                options: ["Nagbibigay ng turing sa pandiwa", "Nag-uugnay ng mga salita o ideya", "Nagsasaad ng kilos o galaw", "Naglalarawan sa pangngalan"],
+                correct: 1,
+                rationale: "Ang pangatnig ay mga katagang nag-uugnay sa magkakasunod na salita, sugnay, o parirala upang maging malinaw ang mensahe."
+            },
+            {
+                q: "Aling pangatnig ang ginagamit kapag nais magdagdag ng impormasyon?",
+                options: ["O", "Ngunit", "At", "Dahil"],
+                correct: 2,
+                rationale: "Ang 'at' (pati na rin ang saka, pati) ay ginagamit sa pagdaragdag o pagsisingit ng kasunod na ideya."
+            },
+            {
+                q: "Anong pangatnig ang ginagamit sa pagpili sa pagitan ng dalawang bagay?",
+                options: ["Habang", "O", "Kaya", "Sapagkat"],
+                correct: 1,
+                rationale: "Ang 'o' (pati na rin ang ni, maging) ay ginagamit sa pagpipilian o pagbubukod ng mga kaisipan."
+            },
+            {
+                q: "Anong pangatnig ang angkop dito: 'Gusto niyang lumabas ___ umuulan.'",
+                options: ["at", "ngunit", "saka", "dahil"],
+                correct: 1,
+                rationale: "Ginagamit ang 'ngunit' o 'pero' sa pagsalungat o pagkontra sa naunang ideya."
+            },
+            {
+                q: "Anong pangatnig ang nagbibigay ng dahilan o sanhi?",
+                options: ["Dahil", "Kaya", "O", "At"],
+                correct: 0,
+                rationale: "Ang 'dahil', 'sapagkat', at 'palibhasa' ay nagpapakilala ng sanhi o dahilan ng isang pangyayari."
+            },
+            {
+                q: "Alin ang nagpapahayag ng bunga o resulta?",
+                options: ["Kung", "Kaya", "Maging", "Pati"],
+                correct: 1,
+                rationale: "Ang 'kaya' at 'kung gayon' ay ginagamit upang linawin ang resulta ng isang sitwasyon."
+            },
+            {
+                q: "Anong pangatnig ang ginagamit sa dalawang gawaing sabay na nangyayari?",
+                options: ["Sapagkat", "Habang", "Ngunit", "O"],
+                correct: 1,
+                rationale: "Ang 'habang' ay tumutukoy sa dalawang kilos o gawain na sabay na ginagawa."
+            },
+            {
+                q: "Ano ang tawag sa pangatnig na nag-uugnay ng dalawang kaisipang magkatimbang?",
+                options: ["Paninsay", "Pamukod", "Magkatimbang", "Di-magkatimbang"],
+                correct: 2,
+                rationale: "Ang magkatimbang na pangatnig ay nagdurugtong ng mga salita o payak na pangungusap na may pantay na kahalagahan."
+            },
+            {
+                q: "Alin sa mga ito ang halimbawa ng pangatnig na panalungat?",
+                options: ["Subalit", "Saka", "Pati", "Maging"],
+                correct: 0,
+                rationale: "Ang 'subalit' ay katumbas ng 'pero' o 'ngunit' na nagpapakita ng pagsalungat."
+            },
+            {
+                q: "Punan ang patlang: 'Magaling siyang kumanta ___ sumayaw.'",
+                options: ["ngunit", "saka", "dahil", "kapag"],
+                correct: 1,
+                rationale: "Ang 'saka' ay ginagamit sa pagdaragdag ng impormasyon, katulad ng 'at'."
+            },
+            {
+                q: "Anong uri ng pangatnig ang 'sapagkat'?",
+                options: ["Pananhi", "Panubali", "Pamukod", "Paninsay"],
+                correct: 0,
+                rationale: "Tinatawag itong pananhi dahil ito ay nagbibigay ng sanhi o dahilan."
+            },
+            {
+                q: "Alin ang nagpapakita ng pag-aalinlangan o kondisyon?",
+                options: ["At", "Kung", "Kaya", "Saka"],
+                correct: 1,
+                rationale: "Ang 'kung', 'kapag', at 'pag' ay nagsasabi ng kondisyon o pag-aalinlangan bago mangyari ang isang bagay."
+            },
+            {
+                q: "Anong pangatnig ang ginagamit sa negatibong pagpipilian (hal. '___ tumawag ___ sumulat')?",
+                options: ["O", "Ni", "At", "Kaya"],
+                correct: 1,
+                rationale: "Ang 'ni' ay ginagamit sa pagbubukod, madalas sa mga negatibong pahayag."
+            },
+            {
+                q: "Ano ang ibig sabihin ng 'pati' sa pangungusap?",
+                options: ["Pagsalungat", "Pagpili", "Pagdaragdag", "Paglilinaw"],
+                correct: 2,
+                rationale: "Katulad ng 'at', ang 'pati' ay ginagamit sa pagdaragdag ng paksa o ideya."
+            },
+            {
+                q: "Punan ang patlang: 'Bibili ako ng tsirelas ___ may matitira akong pera.'",
+                options: ["dahil", "kung", "ngunit", "saka"],
+                correct: 1,
+                rationale: "Ginamit ang 'kung' dahil ito ay isang kondisyon na nakadepende sa matitirang pera."
+            },
+            {
+                q: "Alin sa mga sumusunod ang 'Di-magkatimbang' na pangatnig?",
+                options: ["At", "O", "Sapagkat", "Pati"],
+                correct: 2,
+                rationale: "Ang 'sapagkat' ay di-magkatimbang dahil iniuugnay nito ang isang sugnay na di-makapag-iisa sa sugnay na makapag-iisa."
+            },
+            {
+                q: "Anong pangatnig ang angkop: 'Mabigat ang trapiko ___ nahuli ako sa klase.'",
+                options: ["sapagkat", "kaya", "pero", "habang"],
+                correct: 1,
+                rationale: "Ang pagkahuli ay bunga ng trapiko, kaya 'kaya' ang tamang pangatnig."
+            },
+            {
+                q: "Ang pangatnig na 'maging' ay ginagamit sa?",
+                options: ["Pagpipilian/Pagbubukod", "Pagdaragdag", "Pagsalungat", "Pagbibigay sanhi"],
+                correct: 0,
+                rationale: "Ang 'maging' ay ginagamit sa pagbubukod o pagpili ng mga kaisipan."
+            },
+            {
+                q: "Punan ang patlang: 'Kumakain sila ___ nag-uusap.'",
+                options: ["o", "habang", "ngunit", "dahil"],
+                correct: 1,
+                rationale: "Nagaganap ang pagkain at pag-uusap nang sabay, kaya 'habang' ang angkop."
+            },
+            {
+                q: "Ano ang ipinapakita ng pangatnig na 'palibhasa'?",
+                options: ["Resulta", "Kondisyon", "Dahilan", "Pagsalungat"],
+                correct: 2,
+                rationale: "Ang 'palibhasa' ay nagpapakilala ng isang kilalang dahilan o kalagayan."
+            },
+            {
+                q: "Alin ang hindi kabilang sa grupo ng magkatimbang na pangatnig?",
+                options: ["At", "O", "Habang", "Saka"],
+                correct: 2,
+                rationale: "Ang 'habang' ay madalas ituring na di-magkatimbang dahil ito ay nagpapakita ng ugnayang panahon/subordinate."
+            },
+            {
+                q: "Anong pangatnig ang katumbas ng 'because' sa Ingles?",
+                options: ["Kaya", "Dahil", "Ngunit", "Kapag"],
+                correct: 1,
+                rationale: "Ang 'dahil' at 'sapagkat' ay ang katumbas ng 'because'."
+            },
+            {
+                q: "Anong pangatnig ang katumbas ng 'but' sa Ingles?",
+                options: ["Pati", "Ngunit", "Maging", "Kung"],
+                correct: 1,
+                rationale: "Ang 'ngunit', 'subalit', at 'pero' ay ang katumbas ng 'but'."
+            },
+            {
+                q: "Punan ang patlang: 'Masaya si Kim ___ malungkot si Pat.'",
+                options: ["at", "pero", "dahil", "saka"],
+                correct: 1,
+                rationale: "Ito ay pagpapakita ng magkasalungat na emosyon, kaya 'pero' ang sagot."
+            },
+            {
+                q: "Ano ang tungkulin ng pangatnig sa 'Mag-aral ka nang mabuti ___ pumasa ka'?",
+                options: ["Pagpili", "Pagbibigay resulta", "Pagsalungat", "Pagdaragdag"],
+                correct: 1,
+                rationale: "Ang pagpasa ay ang layunin o resulta ng pag-aaral nang mabuti, kaya 'upang' o 'kaya' ang lohika rito."
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+        let mistakes = [];
+
+        function startQuiz() {
+            // Shuffle and pick 25
+            currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+            currentIndex = 0;
+            score = 0;
+            mistakes = [];
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            selectedOption = null;
+            const qData = currentQuestions[currentIndex];
+            
+            document.getElementById('question-count').innerText = `Tanong ${currentIndex + 1}/25`;
+            document.getElementById('score-display').innerText = `Puntos: ${score}`;
+            document.getElementById('progress').style.width = `${((currentIndex + 1) / 25) * 100}%`;
+            
+            document.getElementById('question-text').innerText = qData.q;
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+            
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-4 rounded-2xl border-2 border-gray-200 font-semibold text-gray-700 hover:border-[#7d2ae8]";
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsGrid.appendChild(btn);
+            });
+
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('feedback-area').classList.add('hidden');
+        }
+
+        function selectOption(index, element) {
+            selectedOption = index;
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('option-selected'));
+            element.classList.add('option-selected');
+            document.getElementById('submit-btn').disabled = false;
+        }
+
+        function checkAnswer() {
+            const qData = currentQuestions[currentIndex];
+            const options = document.querySelectorAll('.option-btn');
+            
+            document.getElementById('submit-btn').classList.add('hidden');
+            document.getElementById('feedback-area').classList.remove('hidden');
+            
+            const msg = document.getElementById('feedback-message');
+            const rationale = document.getElementById('rationale-text');
+            
+            options.forEach(btn => btn.disabled = true);
+
+            if (selectedOption === qData.correct) {
+                score++;
+                options[selectedOption].classList.add('correct');
+                msg.innerText = "Tama! Ang galing mo!";
+                msg.className = "p-4 rounded-xl font-semibold mb-4 bg-green-100 text-green-800";
+            } else {
+                options[selectedOption].classList.add('incorrect');
+                options[qData.correct].classList.add('correct');
+                msg.innerText = "Mali ang napili mong sagot.";
+                msg.className = "p-4 rounded-xl font-semibold mb-4 bg-red-100 text-red-800";
+                
+                mistakes.push({
+                    q: qData.q,
+                    correctAns: qData.options[qData.correct]
+                });
+            }
+            
+            rationale.innerText = qData.rationale;
+            document.getElementById('score-display').innerText = `Puntos: ${score}`;
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < 25) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = `${score}/25`;
+            
+            const msg = document.getElementById('result-message');
+            if (score >= 20) msg.innerText = "Napakahusay! Isa kang dalubhasa sa Pangatnig!";
+            else if (score >= 15) msg.innerText = "Magaling! Kaunti na lang at maperpekto mo na.";
+            else msg.innerText = "Huwag mawalan ng pag-asa. Balikan ang mga aralin at subukan uli!";
+
+            const mistakesList = document.getElementById('mistakes-list');
+            mistakesList.innerHTML = '';
+            
+            if (mistakes.length === 0) {
+                mistakesList.innerHTML = '<p class="text-green-600 font-bold text-center py-4">Perfect Score! Wala kang maling sagot. 🎉</p>';
+            } else {
+                mistakes.forEach(m => {
+                    const item = document.createElement('div');
+                    item.className = "bg-gray-50 p-3 rounded-lg border-l-4 border-red-400";
+                    item.innerHTML = `
+                        <p class="text-sm font-bold text-gray-800">${m.q}</p>
+                        <p class="text-xs text-green-600">Tamang Sagot: ${m.correctAns}</p>
+                    `;
+                    mistakesList.appendChild(item);
+                });
+            }
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+    </script>
+</body>
+</html>
