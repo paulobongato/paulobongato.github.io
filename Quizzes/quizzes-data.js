@@ -303,6 +303,7 @@ const QUIZ_DATA = [
         quizzes: [
           { title: 'Science 4 Quiz 1.2: Science Inventions', file: 'Science/GR4-INVENTIONS-01.html', grade: 'Grade 4' },
           { title: 'Science 4 Reviewer Quiz: Science Inventions', file: 'Science/GR4-INVENTIONS-02.html', grade: 'Grade 4' },
+          { title: 'Scientists & Their Contributions (Matching)', file: 'Science/GR4-INVENTIONS-MATCHING-01.html', grade: 'Grade 4' },
         ]
       },
       {

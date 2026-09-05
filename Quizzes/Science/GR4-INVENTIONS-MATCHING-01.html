@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science 4 Quiz: Scientists & Their Contributions (Matching)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .match-btn { transition: all 0.15s ease-in-out; }
+    .match-btn.selected { border-color: #2563eb; background-color: #eff6ff; box-shadow: 0 0 0 2px #93c5fd; }
+    .match-btn.paired { opacity: 0.4; cursor: not-allowed; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white py-6 shadow-md">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h1 class="text-2xl sm:text-3xl font-bold">🔬 Scientists & Their Contributions</h1>
+      <p class="text-blue-100 text-sm sm:text-base mt-1">Matching-type quiz: Foreign Scientists and Filipino Scientists (Lesson 1.4)</p>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl w-full mx-auto p-4 my-6 flex-grow">
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center border border-slate-200">
+      <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+        🔗
+      </div>
+      <h2 class="text-xl font-bold text-slate-800 mb-2">Ready to match scientists to their contributions?</h2>
+      <p class="text-slate-600 mb-6">
+        This is an <strong>interactive matching-type quiz</strong> with <strong>2 rounds of 10 pairs each</strong> (20 points total):
+        <strong>Round 1 — Foreign Scientists</strong> and <strong>Round 2 — Filipino Scientists</strong>.
+        Tap a name in Column A, then tap its matching contribution in Column B. The order of names and contributions is shuffled every attempt,
+        and you'll see which pairs were correct right after you submit each round.
+      </p>
+      <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+        Start Quiz
+      </button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="hidden bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-slate-200">
+      <!-- Topic + Progress & Score Header -->
+      <div class="flex justify-between items-center pb-4 mb-2 text-sm font-semibold text-slate-500">
+        <span id="topic-badge" class="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-medium rounded-full">Topic</span>
+        <span id="score-tracker" class="text-blue-600">Score: 0</span>
+      </div>
+      <div class="flex justify-between items-center pb-4 mb-6 border-b border-slate-100 text-sm font-semibold text-slate-500">
+        <span id="question-progress">Round 1 of 2</span>
+      </div>
+
+      <!-- Instructions Text -->
+      <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 mb-4">
+        <!-- Instructions inserted dynamically -->
+      </h3>
+
+      <!-- Matching-Type UI -->
+      <div id="matching-container" class="mb-6">
+        <p class="text-xs text-slate-500 mb-3">Column A: Scientist &middot; Column B: Contribution. Tap a scientist on the left, then tap their matching contribution on the right. Tap a pair below to undo it.</p>
+        <div class="grid grid-cols-2 gap-2 mb-3 text-center">
+          <span class="text-xs font-bold uppercase tracking-wide text-slate-400">Column A</span>
+          <span class="text-xs font-bold uppercase tracking-wide text-slate-400">Column B</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div id="match-left-col" class="space-y-2"></div>
+          <div id="match-right-col" class="space-y-2"></div>
+        </div>
+        <div id="match-pairs-list" class="space-y-2"></div>
+      </div>
+
+      <!-- Instant Feedback Banner -->
+      <div id="feedback-box" class="hidden p-4 rounded-xl mb-6 text-sm font-medium"></div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-3">
+        <button id="submit-btn" disabled class="bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all">
+          Submit Matches
+        </button>
+        <button id="next-btn" onclick="nextRound()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all">
+          Next Round ➔
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-slate-200">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">Quiz Completed!</h2>
+        <p class="text-slate-600">Here's a summary of your results:</p>
+
+        <div class="my-6 inline-block bg-blue-50 border border-blue-200 rounded-2xl p-6 px-10">
+          <span class="block text-4xl font-extrabold text-blue-700" id="final-score">0 / 20</span>
+          <span class="text-xs uppercase tracking-wider font-bold text-blue-500 mt-1 block" id="score-percentage">0%</span>
+        </div>
+      </div>
+
+      <!-- Mistakes Review Section -->
+      <div id="mistakes-section" class="mb-8">
+        <!-- List of incorrect pairs inserted dynamically -->
+      </div>
+
+      <!-- Restart Button -->
+      <div class="text-center border-t border-slate-100 pt-6">
+        <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all">
+          Try Again (New Order)
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200">
+    Science 4 &middot; Science Inventions (Matching) &copy; 2026
+  </footer>
+
+  <script>
+    // Two matching rounds — transcribed from "Lesson 1.4 Science Invention Foreign.pdf" and
+    // "Lesson 1.4 Science Inventions Filipino.pdf" (10 scientists each).
+    const rounds = [
+      {
+        title: "Round 1: Foreign Scientists",
+        instructions: "Direction: Match each foreign scientist (Column A) with their contribution (Column B).",
+        pairs: [
+          { scientist: "Albert Einstein", contribution: "Established the relationship between mass and energy, work that influenced the development of GPS technology." },
+          { scientist: "Isaac Newton", contribution: "Explained gravity, the force that pulls objects toward the Earth, and developed the Laws of Motion." },
+          { scientist: "Thomas Edison", contribution: "Invented the phonograph, a device that could record and play back sound, and improved the incandescent light bulb." },
+          { scientist: "Alexander Graham Bell", contribution: "Discovered the telephone, which revolutionized communication between people over long distances." },
+          { scientist: "Nikola Tesla", contribution: "Invented the alternating current (AC) motor, which changed the way electricity is transmitted and used." },
+          { scientist: "Galileo Galilei", contribution: "Improved the telescope and made important discoveries about the Moon, planets, and stars." },
+          { scientist: "Johannes Gutenberg", contribution: "Invented the printing press, making it much easier and faster to print books and other written materials." },
+          { scientist: "Alexander Fleming", contribution: "Discovered penicillin, the world's first widely used antibiotic." },
+          { scientist: "Marie Curie", contribution: "Discovered the elements radium and polonium and conducted pioneering research on radioactivity." },
+          { scientist: "Charles Babbage", contribution: "Designed the Analytical Engine, considered the first concept of a programmable computer." }
+        ]
+      },
+      {
+        title: "Round 2: Filipino Scientists",
+        instructions: "Direction: Match each Filipino scientist (Column A) with their contribution (Column B).",
+        pairs: [
+          { scientist: "Fe Del Mundo", contribution: "Invented the low-cost bamboo incubator to help care for premature and sick babies." },
+          { scientist: "Angel Alcala", contribution: "Established marine protected areas to conserve coral reefs and marine life." },
+          { scientist: "Gregorio Y. Zara", contribution: "Invented the two-way videophone, allowing people to see and talk to each other from different locations." },
+          { scientist: "Ramon C. Barba", contribution: "Developed a method using potassium nitrate to make mango trees flower and bear fruit year-round." },
+          { scientist: "Arturo Alcaraz", contribution: "Pioneered the development of geothermal energy in the Philippines by harnessing heat from volcanoes." },
+          { scientist: "Julian Banzon", contribution: "Developed alternative fuels made from coconut and sugarcane." },
+          { scientist: "Eduardo Quisumbing", contribution: "Conducted extensive research on Philippine orchids and medicinal plants." },
+          { scientist: "Baldomero Olivera", contribution: "Discovered medicinal compounds from cone snail venom that are used in developing pain-relieving medicine." },
+          { scientist: "Maria Orosa", contribution: "Invented banana ketchup and developed nutritious food products such as Soyalac and Darak." },
+          { scientist: "Rolando C. Dela Cruz", contribution: "Developed a topical skin cream from cashew nuts and other natural ingredients to help remove warts and certain skin growths." }
+        ]
+      }
+    ];
+
+    // State variables
+    let currentRoundIndex = 0;
+    let totalRounds = rounds.length;
+    let score = 0;
+    let roundReviews = []; // populated as each round is submitted
+
+    // Matching-round working state
+    let matchLeft = [];   // shuffled scientist names
+    let matchRight = [];  // shuffled contribution texts
+    let matchSelectedScientist = null;
+    let matchPairs = {};  // scientist -> contribution
+    let matchSubmitted = false;
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function startQuiz() {
+      currentRoundIndex = 0;
+      score = 0;
+      roundReviews = [];
+
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+
+      loadRound();
+    }
+
+    function totalPairCount() {
+      return rounds.reduce((sum, r) => sum + r.pairs.length, 0);
+    }
+
+    // ---------- Matching-round rendering ----------
+    function loadRound() {
+      const round = rounds[currentRoundIndex];
+
+      matchLeft = shuffleArray(round.pairs.map(p => p.scientist));
+      matchRight = shuffleArray(round.pairs.map(p => p.contribution));
+      matchSelectedScientist = null;
+      matchPairs = {};
+      matchSubmitted = false;
+
+      document.getElementById('topic-badge').textContent = round.title;
+      document.getElementById('question-progress').textContent = `Round ${currentRoundIndex + 1} of ${totalRounds}`;
+      document.getElementById('score-tracker').textContent = `Score: ${score} / ${totalPairCount()}`;
+      document.getElementById('question-text').textContent = round.instructions;
+
+      renderMatching();
+      resetFeedbackAndButtons();
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.onclick = submitMatching;
+      submitBtn.textContent = 'Submit Matches';
+    }
+
+    function renderMatching() {
+      const round = rounds[currentRoundIndex];
+      const leftCol = document.getElementById('match-left-col');
+      const rightCol = document.getElementById('match-right-col');
+      const pairsList = document.getElementById('match-pairs-list');
+
+      leftCol.innerHTML = '';
+      matchLeft.forEach(name => {
+        const isPaired = !!matchPairs[name];
+        const btn = document.createElement('button');
+        btn.className = `match-btn w-full text-left p-3 rounded-xl border-2 border-slate-200 bg-white shadow-sm text-sm font-semibold text-slate-700 ${isPaired ? 'paired' : ''} ${matchSelectedScientist === name ? 'selected' : ''}`;
+        btn.disabled = isPaired || matchSubmitted;
+        btn.textContent = name;
+        btn.onclick = () => selectScientist(name);
+        leftCol.appendChild(btn);
+      });
+
+      const pairedContributions = new Set(Object.values(matchPairs));
+      rightCol.innerHTML = '';
+      matchRight.forEach(text => {
+        const isPaired = pairedContributions.has(text);
+        const btn = document.createElement('button');
+        btn.className = `match-btn w-full text-left p-3 rounded-xl border-2 border-slate-200 bg-white shadow-sm text-xs text-slate-600 ${isPaired ? 'paired' : ''}`;
+        btn.disabled = isPaired || matchSubmitted;
+        btn.textContent = text;
+        btn.onclick = () => selectContribution(text);
+        rightCol.appendChild(btn);
+      });
+
+      pairsList.innerHTML = '';
+      Object.keys(matchPairs).forEach(scientist => {
+        const contribution = matchPairs[scientist];
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-2 p-2.5 rounded-lg border border-blue-200 bg-blue-50 text-xs';
+        row.innerHTML = `
+          <span><strong>${scientist}</strong> ➔ ${contribution}</span>
+          <button class="text-blue-600 font-bold px-2" ${matchSubmitted ? 'disabled style="visibility:hidden"' : ''}>✕</button>
+        `;
+        if (!matchSubmitted) {
+          row.querySelector('button').onclick = () => unpair(scientist);
+        }
+        pairsList.appendChild(row);
+      });
+
+      if (Object.keys(matchPairs).length === round.pairs.length && !matchSubmitted) {
+        enableSubmit();
+      } else if (!matchSubmitted) {
+        disableSubmit();
+      }
+    }
+
+    function selectScientist(name) {
+      if (matchSubmitted || matchPairs[name]) return;
+      matchSelectedScientist = matchSelectedScientist === name ? null : name;
+      renderMatching();
+    }
+
+    function selectContribution(text) {
+      if (matchSubmitted || !matchSelectedScientist) return;
+      matchPairs[matchSelectedScientist] = text;
+      matchSelectedScientist = null;
+      renderMatching();
+    }
+
+    function unpair(scientist) {
+      if (matchSubmitted) return;
+      delete matchPairs[scientist];
+      renderMatching();
+    }
+
+    function submitMatching() {
+      const round = rounds[currentRoundIndex];
+      if (Object.keys(matchPairs).length !== round.pairs.length) return;
+      matchSubmitted = true;
+
+      let correctCount = 0;
+      const details = round.pairs.map(p => {
+        const yourAnswer = matchPairs[p.scientist];
+        const isCorrect = yourAnswer === p.contribution;
+        if (isCorrect) correctCount++;
+        return {
+          scientist: p.scientist,
+          yourAnswer: yourAnswer,
+          correctAnswer: p.contribution,
+          isCorrect: isCorrect
+        };
+      });
+
+      score += correctCount;
+      roundReviews.push({ title: round.title, correctCount: correctCount, total: round.pairs.length, details: details });
+
+      renderMatching(); // lock the buttons (disabled state honors matchSubmitted)
+
+      // Colour-code the pair rows
+      const pairsList = document.getElementById('match-pairs-list');
+      pairsList.innerHTML = '';
+      details.forEach(d => {
+        const row = document.createElement('div');
+        const base = 'p-2.5 rounded-lg border text-xs';
+        row.className = d.isCorrect
+          ? `${base} border-emerald-300 bg-emerald-50 text-emerald-800`
+          : `${base} border-rose-300 bg-rose-50 text-rose-800`;
+        row.innerHTML = d.isCorrect
+          ? `<strong>${d.scientist}</strong> ➔ ${d.yourAnswer} ✓`
+          : `<strong>${d.scientist}</strong> ➔ ${d.yourAnswer} ✕<br><span class="text-emerald-700">Correct: ${d.correctAnswer}</span>`;
+        pairsList.appendChild(row);
+      });
+
+      const feedbackBox = document.getElementById('feedback-box');
+      feedbackBox.classList.remove('hidden');
+      if (correctCount === details.length) {
+        feedbackBox.className = 'p-4 rounded-xl mb-6 text-sm font-medium bg-emerald-50 border border-emerald-200 text-emerald-800';
+        feedbackBox.innerHTML = `<div class="flex items-center gap-2 font-bold text-emerald-700"><span>✓ All ${details.length} matches correct!</span></div>`;
+      } else {
+        feedbackBox.className = 'p-4 rounded-xl mb-6 text-sm font-medium bg-amber-50 border border-amber-200 text-amber-800';
+        feedbackBox.innerHTML = `<div class="flex items-center gap-2 font-bold text-amber-700"><span>You matched ${correctCount} out of ${details.length} correctly.</span></div>`;
+      }
+
+      document.getElementById('score-tracker').textContent = `Score: ${score} / ${totalPairCount()}`;
+      finishQuestionUI();
+
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.textContent = (currentRoundIndex + 1 < totalRounds) ? 'Next Round ➔' : 'See Results ➔';
+    }
+
+    // ---------- Shared helpers ----------
+    function resetFeedbackAndButtons() {
+      const feedbackBox = document.getElementById('feedback-box');
+      feedbackBox.className = 'hidden p-4 rounded-xl mb-6 text-sm font-medium';
+      feedbackBox.innerHTML = '';
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.className = 'bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all';
+      submitBtn.classList.remove('hidden');
+      submitBtn.textContent = 'Submit Matches';
+
+      document.getElementById('next-btn').classList.add('hidden');
+    }
+
+    function enableSubmit() {
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = false;
+      submitBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer';
+    }
+
+    function disableSubmit() {
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.className = 'bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all';
+    }
+
+    function finishQuestionUI() {
+      document.getElementById('submit-btn').classList.add('hidden');
+      document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextRound() {
+      currentRoundIndex++;
+      if (currentRoundIndex < totalRounds) {
+        loadRound();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      const total = totalPairCount();
+      document.getElementById('final-score').textContent = `${score} / ${total}`;
+      const percentage = Math.round((score / total) * 100);
+      document.getElementById('score-percentage').textContent = `${percentage}% Overall Score`;
+
+      const mistakesSection = document.getElementById('mistakes-section');
+      const anyMistakes = roundReviews.some(r => r.correctCount < r.total);
+
+      if (!anyMistakes) {
+        mistakesSection.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center text-emerald-800">
+            <p class="text-lg font-bold">🎉 Excellent! Perfect Score!</p>
+            <p class="text-sm mt-1">You matched all ${total} scientists to their contributions correctly.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+          <span>⚠️ Pairs to Review</span>
+        </h3>
+        <div class="space-y-4">
+      `;
+
+      roundReviews.forEach(review => {
+        const missed = review.details.filter(d => !d.isCorrect);
+        if (missed.length === 0) return;
+        html += `
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-left">
+            <p class="font-bold text-slate-800 text-sm mb-2">${review.title} (matched ${review.correctCount}/${review.total})</p>
+            <div class="text-xs space-y-2">
+        `;
+        missed.forEach(d => {
+          html += `
+            <p class="text-slate-700"><strong>${d.scientist}</strong> — your answer: <span class="text-rose-600">${d.yourAnswer}</span><br>
+            <span class="text-emerald-700">Correct: ${d.correctAnswer}</span></p>
+          `;
+        });
+        html += `</div></div>`;
+      });
+
+      html += `</div>`;
+      mistakesSection.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
