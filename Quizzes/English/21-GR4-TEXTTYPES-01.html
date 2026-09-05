@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Types, Friendly Letters &amp; Visual Elements Quiz - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Trebuchet MS', 'Comic Sans MS', Verdana, sans-serif;
+    background: linear-gradient(135deg, #fdf2e9 0%, #eef2ff 50%, #e6fbf7 100%);
+    margin: 0;
+    padding: 16px;
+    color: #1e293b;
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 18px; }
+  .header-inner {
+    background: rgba(255,255,255,0.85);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 1.25rem;
+    color: #4338ca;
+    margin: 0;
+    text-align: left;
+  }
+  header .logo {
+    font-size: 1.8rem;
+    margin-right: 8px;
+  }
+  header .title-row { display: flex; align-items: center; }
+  #restartHeaderBtn {
+    background: #eef2ff;
+    color: #4338ca;
+    border: none;
+    font-weight: bold;
+    font-size: 0.8rem;
+    padding: 9px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  #restartHeaderBtn:hover { background: #e0e7ff; }
+  .card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+    margin-bottom: 16px;
+  }
+  .hidden { display: none !important; }
+
+  /* START SCREEN */
+  #startScreen { text-align: center; }
+  #startScreen .big-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px; height: 80px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    font-size: 2.2rem;
+    margin-bottom: 14px;
+    box-shadow: 0 10px 24px rgba(236,72,153,0.28);
+  }
+  #startScreen h2 { font-size: 1.4rem; color: #0f172a; margin: 4px 0 10px; }
+  #startScreen p.desc { color: #475569; font-size: 0.95rem; line-height: 1.55; max-width: 540px; margin: 0 auto 16px; }
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 560px;
+    margin: 0 auto 18px;
+    text-align: left;
+  }
+  .topic-card {
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+  .topic-card .tag { font-weight: bold; font-size: 0.7rem; display: block; margin-bottom: 3px; }
+  .topic-card.t1 { background: #f3e8ff; }
+  .topic-card.t1 .tag { color: #7e22ce; }
+  .topic-card.t2 { background: #ffe4ec; }
+  .topic-card.t2 .tag { color: #db2777; }
+  .topic-card.t3 { background: #d1fae5; }
+  .topic-card.t3 .tag { color: #047857; }
+  .info-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px;
+    max-width: 560px;
+    margin: 0 auto 20px;
+    text-align: left;
+    font-size: 0.85rem;
+    color: #475569;
+  }
+  .info-box strong { color: #1e293b; }
+  #startBtn {
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 1.05rem;
+    padding: 15px 34px;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(236,72,153,0.28);
+  }
+  #startBtn:hover { filter: brightness(1.05); }
+
+  /* QUIZ SCREEN */
+  #progress-bar-wrap {
+    background: #e2e8f0;
+    border-radius: 10px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  #progress-bar {
+    background: linear-gradient(90deg, #f97316, #ec4899);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #64748b;
+    margin-bottom: 14px;
+  }
+  #scoreTracker { color: #db2777; }
+  .q-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  #qBadge {
+    background: #db2777;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 10px;
+  }
+  #categoryTag {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.72rem;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 10px;
+  }
+  #sentenceBox {
+    background: linear-gradient(120deg, #fff7ed, #f8fafc, #ecfeff);
+    border: 1px solid #fde3c8;
+    border-radius: 16px;
+    padding: 16px 18px;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: #0f172a;
+    margin-bottom: 18px;
+  }
+  #optionsGrid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .option-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 13px 14px;
+    border-radius: 14px;
+    border: 2px solid #e2e8f0;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #1e293b;
+    transition: all 0.15s ease;
+  }
+  .option-card:hover:not(.disabled) { border-color: #ec4899; background: #fff5fa; }
+  .option-card.selected { border-color: #ec4899; background: #fdf2f8; }
+  .option-card.correct { border-color: #10b981; background: #ecfdf5; }
+  .option-card.incorrect { border-color: #f43f5e; background: #fff1f2; }
+  .opt-label {
+    width: 30px; height: 30px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #475569;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .option-card.selected .opt-label { background: #ec4899; color: white; }
+  .option-card.correct .opt-label { background: #10b981; color: white; }
+  .option-card.incorrect .opt-label { background: #f43f5e; color: white; }
+  .opt-icon { margin-left: auto; font-size: 1.1rem; color: #10b981; }
+  .opt-icon.wrong { color: #f43f5e; }
+
+  #feedbackBox {
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  #feedbackBox.correct { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+  #feedbackBox.incorrect { background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; }
+  #feedbackBox .fb-icon {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: bold; flex-shrink: 0; margin-top: 2px;
+  }
+  #feedbackBox.correct .fb-icon { background: #10b981; }
+  #feedbackBox.incorrect .fb-icon { background: #f43f5e; }
+  #feedbackBox h4 { margin: 0 0 4px; font-size: 0.95rem; }
+  #feedbackBox p { margin: 0; font-size: 0.85rem; line-height: 1.5; }
+
+  .action-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 14px;
+  }
+  #submitBtn, #nextBtn {
+    border: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 12px 22px;
+    border-radius: 14px;
+    cursor: pointer;
+    color: white;
+  }
+  #submitBtn { background: linear-gradient(135deg, #f97316, #ec4899); }
+  #submitBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+  #nextBtn { background: #0f172a; }
+
+  /* RESULTS SCREEN */
+  #resultsScreen { text-align: center; }
+  #scoreBadge {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    color: white;
+    font-size: 1.6rem;
+    font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 10px 24px rgba(236,72,153,0.28);
+  }
+  #resultTitle { font-size: 1.3rem; color: #0f172a; margin: 0 0 6px; }
+  #scoreSummaryText { color: #475569; font-size: 0.92rem; margin: 0 0 20px; }
+  #tryAgainBtn {
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 13px 24px;
+    border-radius: 14px;
+    cursor: pointer;
+    margin-bottom: 26px;
+  }
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 18px;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .review-header h3 { margin: 0; font-size: 1.05rem; color: #0f172a; }
+  #mistakesCountTag {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.72rem;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  #reviewContainer { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .review-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+  .review-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .review-badge { background: #ffe4e6; color: #be123c; font-weight: bold; font-size: 0.72rem; padding: 3px 10px; border-radius: 8px; }
+  .review-cat { font-size: 0.72rem; color: #64748b; font-weight: bold; }
+  .review-q { font-size: 0.9rem; color: #0f172a; margin-bottom: 10px; line-height: 1.5; }
+  .review-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem; margin-bottom: 10px; }
+  .review-your { background: #ffe4e6; border: 1px solid #fecdd3; color: #9f1239; padding: 8px 10px; border-radius: 10px; }
+  .review-correct { background: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; padding: 8px 10px; border-radius: 10px; }
+  .review-explain { background: white; border: 1px solid #e2e8f0; padding: 9px 10px; border-radius: 10px; font-size: 0.8rem; color: #475569; line-height: 1.5; }
+  .no-mistakes {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+  .no-mistakes .emoji { font-size: 2.2rem; margin-bottom: 6px; }
+  .no-mistakes h4 { color: #065f46; margin: 0 0 4px; }
+  .no-mistakes p { color: #047857; font-size: 0.85rem; margin: 0; }
+
+  footer { text-align: center; color: #94a3b8; font-size: 0.75rem; margin: 24px 0 8px; }
+
+  @media (max-width: 520px) {
+    .topic-grid { grid-template-columns: repeat(2, 1fr); }
+    .review-answers { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-inner">
+      <div class="title-row">
+        <span class="logo">📖</span>
+        <h1>Text Types, Letters &amp; Visual Elements Quiz</h1>
+      </div>
+      <button id="restartHeaderBtn" onclick="initQuiz()">🔀 Reshuffle &amp; Restart</button>
+    </div>
+  </header>
+
+  <!-- START SCREEN -->
+  <div id="startScreen" class="card">
+    <div class="big-icon">🎯</div>
+    <h2>Lessons 8&ndash;10 Review Quiz</h2>
+    <p class="desc">
+      Test what you know about <strong>Narrative &amp; Enumeration Text Types</strong>, <strong>Friendly Letters</strong>,
+      and <strong>Visual Elements &amp; Non-Verbal Cues</strong>! You'll be asked about story structure, list-style texts,
+      the five parts of a letter, different letter purposes, shapes, colors, lines, graphics, and the ways people
+      communicate without words.
+    </p>
+
+    <div class="topic-grid">
+      <div class="topic-card t1">
+        <span class="tag">LESSON 8</span>
+        Narrative &amp; Enumeration Text Types
+      </div>
+      <div class="topic-card t2">
+        <span class="tag">LESSON 9</span>
+        Friendly Letter
+      </div>
+      <div class="topic-card t3">
+        <span class="tag">LESSON 10</span>
+        Visual Elements &amp; Non-Verbal Cues
+      </div>
+    </div>
+
+    <div class="info-box">
+      <p style="margin:0 0 6px;"><strong>ℹ️ How this quiz works</strong></p>
+      <p style="margin:0;">Each attempt picks 30 random questions from a bank of 45 and shuffles both the question order and the answer choices &mdash; so it's a little different every time. Choose your answer, click <strong>Submit Answer</strong>, and you'll immediately see if you were right along with an explanation. At the end, you'll get your score and a full review of anything you missed.</p>
+    </div>
+
+    <button id="startBtn" onclick="startQuiz()">Start Quiz Now &rarr;</button>
+  </div>
+
+  <!-- QUIZ CARD -->
+  <div id="quizCard" class="card hidden">
+    <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+    <div class="progress-labels">
+      <span id="questionProgressText">Question 1 of 30</span>
+      <span id="scoreTracker">⭐ Score: 0</span>
+    </div>
+
+    <div class="q-top-row">
+      <span id="qBadge">Question 1</span>
+      <span id="categoryTag">🏷️ <span id="categoryText">Narrative Text</span></span>
+    </div>
+
+    <div id="questionContainer">
+      <div id="sentenceBox"></div>
+    </div>
+
+    <div id="optionsGrid"></div>
+
+    <div id="feedbackBox" class="hidden">
+      <div class="fb-icon" id="feedbackIcon">✓</div>
+      <div>
+        <h4 id="feedbackTitle">Correct!</h4>
+        <p id="feedbackText"></p>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button id="submitBtn" onclick="submitAnswer()" disabled>Submit Answer ➤</button>
+      <button id="nextBtn" class="hidden" onclick="nextQuestion()"><span id="nextBtnText">Next Question</span> &rarr;</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="resultsScreen" class="card hidden">
+    <div id="scoreBadge">0%</div>
+    <h2 id="resultTitle">Quiz Completed!</h2>
+    <p id="scoreSummaryText">You scored 0 out of 30 questions correctly.</p>
+
+    <button id="tryAgainBtn" onclick="initQuiz()">🔄 Try Again (New Random Set)</button>
+
+    <div class="review-header">
+      <h3>📋 Detailed Answer Review</h3>
+      <span id="mistakesCountTag">0 Mistakes</span>
+    </div>
+
+    <div id="reviewContainer"></div>
+  </div>
+
+  <footer>English Language Arts &bull; Grade 4 &bull; Lessons 8&ndash;10 Interactive Quiz</footer>
+</div>
+
+<script>
+  // ============ MASTER QUESTION BANK (45 questions — 30 shown per attempt) ============
+  const masterQuestions = [
+
+    // --- Lesson 8: Narrative Text (7) ---
+    { id:1, sentence:"What is a narrative text?",
+      options:["A type of text that presents a list of facts or steps","A type of text that tells a story","A type of text that compares two objects","A type of text that gives a formal apology"],
+      answer:1, category:"Narrative Text",
+      explanation:"A narrative is a type of text that tells a story." },
+
+    { id:2, sentence:"Which of the following is an example of a narrative text?",
+      options:["A recipe with a list of ingredients","A checklist of classroom rules","A folktale about a clever rabbit","A guide on preventing the flu"],
+      answer:2, category:"Narrative Text",
+      explanation:"Folktales, along with short stories, novels, myths, legends, and fables, are examples of narrative texts because they tell a story." },
+
+    { id:3, sentence:"What is the purpose of a narrative text?",
+      options:["To amuse or entertain the reader by telling a story","To list steps in the correct order","To persuade the reader to buy something","To present facts about a certain category"],
+      answer:0, category:"Narrative Text",
+      explanation:"Narrative texts are written to amuse or entertain readers by telling a story." },
+
+    { id:4, sentence:"In the structure of a narrative text, which part introduces the characters, setting, and time of the story?",
+      options:["Resolution or ending","Complication or problem","Orientation or Introduction","Heading"],
+      answer:2, category:"Narrative Text",
+      explanation:"The Orientation or Introduction is the opening part where the characters, setting, and time of the story are established." },
+
+    { id:5, sentence:"In the story “The True Friend,” the squirrel losing its balance and falling into the rain water is an example of which part of the narrative structure?",
+      options:["Orientation or Introduction","Complication or problem","Resolution or ending","Greeting"],
+      answer:1, category:"Narrative Text",
+      explanation:"This event creates the problem in the story, so it belongs to the Complication or problem part of the narrative structure." },
+
+    { id:6, sentence:"Narrative texts are most often written using which verb tense?",
+      options:["Present tense","Future tense","Past tense","Present perfect tense"],
+      answer:2, category:"Narrative Text",
+      explanation:"Narrative texts are most often written using past tense, since they tell about events that already happened." },
+
+    { id:7, sentence:"What kind of words do narrative texts use to connect and arrange events in the order they happened?",
+      options:["Comparison words, like “similar to”","Time order words","Signal words, like “first, second” only","Words that show cause and effect only"],
+      answer:1, category:"Narrative Text",
+      explanation:"Narrative texts use time order words to connect and arrange the events of the story in chronological order." },
+
+    // --- Lesson 8: Enumeration Text (8) ---
+    { id:8, sentence:"What is an enumeration text?",
+      options:["A text that tells a made-up story about characters","A text that presents information, a list of facts, ideas, or steps/directions","A text written to express personal gratitude","A text that is always written as a poem"],
+      answer:1, category:"Enumeration Text",
+      explanation:"An enumeration text presents information such as facts, ideas, or a list of steps or directions." },
+
+    { id:9, sentence:"Which of the following is an example of an enumeration text?",
+      options:["A myth about the origin of the moon","A recipe listing ingredients and steps","A short story about two friends","A fable with a moral lesson"],
+      answer:1, category:"Enumeration Text",
+      explanation:"A recipe that lists ingredients and steps is an example of an enumeration text." },
+
+    { id:10, sentence:"According to the notes, which statement about enumeration texts is correct?",
+      options:["They must always be written in numbered lists","They can be presented in sentences using commas or simply listed within a paragraph","They can never include examples","They are only used for recipes"],
+      answer:1, category:"Enumeration Text",
+      explanation:"Enumeration texts do not necessarily present details in numbered lists or bullet items — they can be written in sentences using commas or simply listed within a paragraph." },
+
+    { id:11, sentence:"What is the purpose of an enumeration text?",
+      options:["To amuse the reader with a made-up story","To list things under a certain category and provide supporting details","To express thankfulness to someone","To show emotions through facial expressions"],
+      answer:1, category:"Enumeration Text",
+      explanation:"Enumeration texts list things under a certain category and provide details to support the main ideas." },
+
+    { id:12, sentence:"In the structure of an enumeration text, what usually follows the title and the main idea or topic?",
+      options:["A resolution to a problem","A list of examples, or supporting details","A greeting to the reader","A complication in the plot"],
+      answer:1, category:"Enumeration Text",
+      explanation:"After the title and main idea, an enumeration text presents a list of examples or supporting details." },
+
+    { id:13, sentence:"Which of these is a transition word commonly used in enumeration texts to introduce an example?",
+      options:["Suddenly","For instance","Meanwhile","Once upon a time"],
+      answer:1, category:"Enumeration Text",
+      explanation:"Enumeration texts often use transition words such as “for example,” “for instance,” “moreover,” and “also” to add examples or ideas." },
+
+    { id:14, sentence:"In the passage about the different types of candy, which words are used as signal words to show order?",
+      options:["Happy, sad, angry","First, second, finally","Heading, greeting, closing","Straight, curved, dashed"],
+      answer:1, category:"Enumeration Text",
+      explanation:"The passage uses signal words such as “first,” “second,” and “finally” to show the order of the types of candy being listed." },
+
+    { id:15, sentence:"Which verb tense is most commonly used in enumeration texts?",
+      options:["Past tense","Future tense","Present tense","Past perfect tense"],
+      answer:2, category:"Enumeration Text",
+      explanation:"Enumeration texts commonly use the present tense of the verb." },
+
+    // --- Lesson 9: Friendly Letter Parts (5) ---
+    { id:16, sentence:"Which part of a friendly letter includes the writer's address and the date it was written?",
+      options:["Greeting","Heading","Body","Signature"],
+      answer:1, category:"Friendly Letter Parts",
+      explanation:"The Heading is placed at the top of the letter and includes the writer's address and the date." },
+
+    { id:17, sentence:"Which part of a friendly letter is the friendly opening that addresses the recipient, such as “Dear Tom,”?",
+      options:["Heading","Greeting","Closing","Body"],
+      answer:1, category:"Friendly Letter Parts",
+      explanation:"“Dear Tom,” is the Greeting — it addresses the recipient at the start of the letter." },
+
+    { id:18, sentence:"Which part of a friendly letter holds the main message the writer wants to share?",
+      options:["Heading","Greeting","Body","Signature"],
+      answer:2, category:"Friendly Letter Parts",
+      explanation:"The Body contains the main content and message of the letter." },
+
+    { id:19, sentence:"Which part of a friendly letter comes right before the writer's name, such as “Best,” or “Take care,”?",
+      options:["Heading","Greeting","Body","Closing"],
+      answer:3, category:"Friendly Letter Parts",
+      explanation:"The Closing is the polite phrase written right before the signature, such as “Best,” or “Sincerely,”." },
+
+    { id:20, sentence:"What is the correct order of the five parts of a friendly letter, from first to last?",
+      options:["Greeting, Heading, Body, Signature, Closing","Heading, Greeting, Body, Closing, Signature","Body, Greeting, Heading, Closing, Signature","Signature, Closing, Body, Greeting, Heading"],
+      answer:1, category:"Friendly Letter Parts",
+      explanation:"A friendly letter follows this order: Heading, Greeting, Body, Closing, and finally the Signature." },
+
+    // --- Lesson 9: Letter Types & Purpose (7) ---
+    { id:21, sentence:"What is the purpose of a Letter of Gratitude?",
+      options:["To request that someone attend an event","To express thankfulness and appreciation to someone","To explain the reason for an absence","To politely decline an invitation"],
+      answer:1, category:"Letter Types & Purpose",
+      explanation:"A Letter of Gratitude is written to express thankfulness and appreciation for someone's kindness, support, or action." },
+
+    { id:22, sentence:"According to the notes, which of these is NOT a step in writing a Letter of Gratitude?",
+      options:["Focus on the recipient and what they did","Be specific and use vivid details","Use a cold, formal tone with no feelings mentioned","End with gratitude and a compliment"],
+      answer:2, category:"Letter Types & Purpose",
+      explanation:"The notes say to add how the recipient's action made you feel, since sharing this makes the letter more meaningful — not to leave feelings out." },
+
+    { id:23, sentence:"What is the purpose of a Letter of Invitation?",
+      options:["To thank someone for their kindness","To serve as a request for the recipient to attend a certain event or occasion","To explain why someone missed school","To apologize for declining an invitation"],
+      answer:1, category:"Letter Types & Purpose",
+      explanation:"A Letter of Invitation serves as a request for the recipient to attend a specific event or occasion and provides details about it." },
+
+    { id:24, sentence:"Which of these is one of the key objectives of a Letter of Invitation, according to the notes?",
+      options:["Provide the date, time, and location of the event","Apologize for a past absence","List the writer's school grades","Explain a family emergency"],
+      answer:0, category:"Letter Types & Purpose",
+      explanation:"A Letter of Invitation should provide necessary details such as the date, time, location, and other information like dress code or items to bring." },
+
+    { id:25, sentence:"What is the purpose of a Letter to Decline an Invitation?",
+      options:["To happily accept an invitation","To politely refuse an invitation while keeping the relationship friendly","To invite someone to a new event","To thank someone for a birthday gift"],
+      answer:1, category:"Letter Types & Purpose",
+      explanation:"This letter politely refuses an invitation. Doing so through a letter helps keep and maintain relationships." },
+
+    { id:26, sentence:"According to the notes, which of these is a step in politely declining an invitation?",
+      options:["Wait as long as possible before replying","Thank the host for the invitation","Avoid giving any reason for not attending","Write a very long, detailed explanation"],
+      answer:1, category:"Letter Types & Purpose",
+      explanation:"The notes say to reply promptly, thank the host, explain why you won't be attending, and keep it short — not to over-explain." },
+
+    { id:27, sentence:"What is the purpose of a Letter of Excuse?",
+      options:["To invite someone to a celebration","To communicate the reason for missing something","To express thanks for a favor","To describe a picture or drawing"],
+      answer:1, category:"Letter Types & Purpose",
+      explanation:"A Letter of Excuse is a means to communicate your reason for missing out on something, such as a day of school." },
+
+    // --- Lesson 9: Reading Comprehension (3) ---
+    { id:28, sentence:"In the sample letter, why couldn't Mike Thompson attend Jessica's birthday party?",
+      options:["He forgot about the party","He had a prior commitment on the same day","He was feeling sick","He never received the invitation"],
+      answer:1, category:"Letter Reading Comprehension",
+      explanation:"Mike Thompson explained that he had a prior commitment on the same day and would not be able to attend." },
+
+    { id:29, sentence:"In the sample excuse letter, why was Diana Concepcion absent from school?",
+      options:["She had a stomachache","She was on a family trip","She had a dentist appointment","She was helping at home"],
+      answer:0, category:"Letter Reading Comprehension",
+      explanation:"Mrs. Adora Concepcion wrote that Diana had a stomachache, which is why she was unable to attend school." },
+
+    { id:30, sentence:"In the sample gratitude letter, what did Veronica Richards thank Miss Clara for?",
+      options:["Giving her daughter a birthday gift","Helping her daughter learn to enjoy and succeed in a subject she used to dread","Inviting her daughter to a party","Excusing her daughter's absence from school"],
+      answer:1, category:"Letter Reading Comprehension",
+      explanation:"Veronica thanked Miss Clara for helping her daughter, Mia, develop a liking for history — a subject Mia used to dread — and for encouraging her participation in class." },
+
+    // --- Lesson 10: Visual Elements (9) ---
+    { id:31, sentence:"What are visual elements, according to the notes?",
+      options:["Words used to describe a friendly letter","The important parts in a picture or design that help us understand what we see","The steps listed in a recipe","The five parts of a friendly letter"],
+      answer:1, category:"Visual Elements",
+      explanation:"Visual elements are the important parts in a picture or design that help us understand what we see, including shapes, lines, colors, and graphics." },
+
+    { id:32, sentence:"What are shapes, according to the notes?",
+      options:["Marks that connect two points","The different forms or outlines that you see in pictures or designs","What you see when light shines on something","Pictures or symbols that help tell a story"],
+      answer:1, category:"Visual Elements",
+      explanation:"Shapes are the different forms or outlines that you see in pictures or designs — they can be round, square, or any other form." },
+
+    { id:33, sentence:"Which type of shape is found in nature, such as leaves or clouds, and is uneven and not regular?",
+      options:["Geometric shapes","Organic shapes","Primary shapes","Symmetrical shapes"],
+      answer:1, category:"Visual Elements",
+      explanation:"Organic shapes are found in nature, like leaves or clouds. They are uneven and not regular." },
+
+    { id:34, sentence:"Squares, circles, and triangles, which have straight or curved lines, are examples of which type of shape?",
+      options:["Organic shapes","Geometric shapes","Graphic shapes","Non-verbal shapes"],
+      answer:1, category:"Visual Elements",
+      explanation:"Geometric shapes, like squares, circles, and triangles, have straight or curved lines." },
+
+    { id:35, sentence:"What is color, according to the notes?",
+      options:["A mark that connects two points","What you see when light shines on something; it makes pictures bright and shows feelings","A symbol that helps explain something","A gesture used in communication"],
+      answer:1, category:"Visual Elements",
+      explanation:"Color is what you see when light shines on something. It makes pictures bright and can show feelings — for example, red can mean excitement and blue can mean calm." },
+
+    { id:36, sentence:"According to the notes, which three colors are the primary colors?",
+      options:["Green, orange, purple","Red, blue, yellow","Black, white, gray","Pink, brown, gold"],
+      answer:1, category:"Visual Elements",
+      explanation:"Primary colors are Red, Blue, and Yellow — these are the main colors." },
+
+    { id:37, sentence:"Green, orange, and purple are called secondary colors because they are made by...",
+      options:["Mixing two primary colors","Using only black and white","Drawing organic shapes","Adding graphics to a picture"],
+      answer:0, category:"Visual Elements",
+      explanation:"Secondary colors, like green, orange, and purple, are made by mixing two primary colors." },
+
+    { id:38, sentence:"What are graphics, according to the notes?",
+      options:["Marks that connect two points","Pictures, drawings, or symbols that help tell a story or explain something","The main message of a letter","A type of facial expression"],
+      answer:1, category:"Visual Elements",
+      explanation:"Graphics are pictures, drawings, or symbols that help tell a story or explain something, and they help people understand ideas quickly." },
+
+    { id:39, sentence:"What are lines, according to the notes?",
+      options:["Marks that connect two points, which can be straight, curved, thick, thin, or dashed","The forms or outlines you see in a design","What you see when light shines on an object","Pictures that help tell a story"],
+      answer:0, category:"Visual Elements",
+      explanation:"Lines are marks that connect two points. They can be straight, curved, thick, thin, or dashed, and are used to define shapes, create patterns, and guide the viewer's eye." },
+
+    // --- Lesson 10: Non-Verbal Cues (6) ---
+    { id:40, sentence:"What are non-verbal cues?",
+      options:["Written parts of a friendly letter","Visual elements in communication that help people understand meaning, emotions, and intentions through what they see","Signal words used in enumeration texts","The events in a narrative story"],
+      answer:1, category:"Non-Verbal Cues",
+      explanation:"Non-verbal cues are visual elements in communication. They help people understand meaning, emotions, and intentions through what they see, not just what they hear." },
+
+    { id:41, sentence:"Which non-verbal cue shows emotions like happiness, anger, sadness, or confusion?",
+      options:["Gestures","Facial expressions","Eye contact","Visual aids"],
+      answer:1, category:"Non-Verbal Cues",
+      explanation:"Facial expressions show emotions such as happiness, anger, sadness, and confusion." },
+
+    { id:42, sentence:"Which non-verbal cue supports or replaces words, such as pointing, waving, or a thumbs-up?",
+      options:["Gestures","Body language/posture","Eye contact","Graphics"],
+      answer:0, category:"Non-Verbal Cues",
+      explanation:"Gestures support or replace words, such as pointing, waving, or giving a thumbs-up." },
+
+    { id:43, sentence:"Which non-verbal cue shows how you hold your body, such as crossed arms or a slumped posture, and can signal mood or attitude?",
+      options:["Facial expressions","Eye contact","Body language/posture","Visual aids"],
+      answer:2, category:"Non-Verbal Cues",
+      explanation:"Body language or posture shows how you hold your body. Crossed arms or a slumped posture can signal mood or attitude." },
+
+    { id:44, sentence:"Which non-verbal cue can indicate interest, confidence, or discomfort depending on its amount and direction?",
+      options:["Eye contact","Gestures","Graphics","Lines"],
+      answer:0, category:"Non-Verbal Cues",
+      explanation:"Eye contact can indicate interest, confidence, or discomfort, depending on how much and in what direction someone looks." },
+
+    { id:45, sentence:"Which non-verbal cue helps clarify complex ideas using things like drawings, graphic organizers, diagrams, or charts?",
+      options:["Facial expressions","Visual aids","Body language/posture","Eye contact"],
+      answer:1, category:"Non-Verbal Cues",
+      explanation:"Visual aids, such as drawings, graphic organizers, diagrams, or charts, help clarify complex ideas." }
+  ];
+
+  const QUESTIONS_PER_ATTEMPT = 30;
+
+  // State
+  let currentQuestions = [];
+  let currentIndex = 0;
+  let selectedOptionIndex = null;
+  let userAnswers = [];
+  let score = 0;
+
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function buildAttemptQuestions() {
+    const shuffledBank = shuffleArray(masterQuestions);
+    const subset = shuffledBank.slice(0, QUESTIONS_PER_ATTEMPT);
+
+    return subset.map(orig => {
+      const optionIndices = orig.options.map((opt, idx) => ({ opt, idx }));
+      const shuffledOptions = shuffleArray(optionIndices);
+      const newAnswerIndex = shuffledOptions.findIndex(o => o.idx === orig.answer);
+      return {
+        id: orig.id,
+        sentence: orig.sentence,
+        options: shuffledOptions.map(o => o.opt),
+        answer: newAnswerIndex,
+        category: orig.category,
+        explanation: orig.explanation
+      };
+    });
+  }
+
+  function initQuiz() {
+    currentQuestions = buildAttemptQuestions();
+    currentIndex = 0;
+    score = 0;
+    userAnswers = [];
+    selectedOptionIndex = null;
+
+    document.getElementById("startScreen").classList.remove("hidden");
+    document.getElementById("quizCard").classList.add("hidden");
+    document.getElementById("resultsScreen").classList.add("hidden");
+  }
+
+  function startQuiz() {
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("quizCard").classList.remove("hidden");
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    selectedOptionIndex = null;
+    const q = currentQuestions[currentIndex];
+    const total = currentQuestions.length;
+
+    document.getElementById("questionProgressText").textContent = `Question ${currentIndex + 1} of ${total}`;
+    document.getElementById("scoreTracker").textContent = `⭐ Score: ${score}`;
+    document.getElementById("progress-bar").style.width = `${((currentIndex + 1) / total) * 100}%`;
+
+    document.getElementById("qBadge").textContent = `Question ${currentIndex + 1}`;
+    document.getElementById("categoryText").textContent = q.category || "General";
+
+    document.getElementById("sentenceBox").textContent = q.sentence;
+
+    const optionsGrid = document.getElementById("optionsGrid");
+    optionsGrid.innerHTML = "";
+    const optionLabels = ["A", "B", "C", "D"];
+
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "option-card";
+      btn.id = `optBtn_${idx}`;
+      btn.onclick = () => selectOption(idx);
+
+      const label = document.createElement("span");
+      label.className = "opt-label";
+      label.textContent = optionLabels[idx];
+
+      const text = document.createElement("span");
+      text.textContent = opt;
+      text.style.flexGrow = "1";
+
+      const icon = document.createElement("span");
+      icon.className = "opt-icon";
+      icon.id = `optIcon_${idx}`;
+      icon.textContent = "";
+
+      btn.appendChild(label);
+      btn.appendChild(text);
+      btn.appendChild(icon);
+      optionsGrid.appendChild(btn);
+    });
+
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.classList.add("hidden");
+    feedbackBox.className = "hidden";
+
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.classList.remove("hidden");
+    submitBtn.disabled = true;
+
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.classList.add("hidden");
+
+    document.getElementById("nextBtnText").textContent =
+      (currentIndex === total - 1) ? "Finish & See Results" : "Next Question";
+  }
+
+  function selectOption(index) {
+    if (userAnswers[currentIndex] && userAnswers[currentIndex].submitted) return;
+
+    selectedOptionIndex = index;
+    const totalOpts = currentQuestions[currentIndex].options.length;
+
+    for (let i = 0; i < totalOpts; i++) {
+      const btn = document.getElementById(`optBtn_${i}`);
+      btn.className = "option-card" + (i === index ? " selected" : "");
+    }
+
+    document.getElementById("submitBtn").disabled = false;
+  }
+
+  function submitAnswer() {
+    if (selectedOptionIndex === null) return;
+
+    const q = currentQuestions[currentIndex];
+    const isCorrect = selectedOptionIndex === q.answer;
+    if (isCorrect) score++;
+
+    userAnswers[currentIndex] = {
+      questionId: q.id,
+      questionObj: q,
+      selectedIndex: selectedOptionIndex,
+      isCorrect: isCorrect,
+      submitted: true
+    };
+
+    q.options.forEach((_, idx) => {
+      const btn = document.getElementById(`optBtn_${idx}`);
+      btn.onclick = null;
+      btn.classList.add("disabled");
+      const icon = document.getElementById(`optIcon_${idx}`);
+
+      if (idx === q.answer) {
+        btn.className = "option-card correct disabled";
+        icon.textContent = "✓";
+        icon.classList.remove("wrong");
+      } else if (idx === selectedOptionIndex && !isCorrect) {
+        btn.className = "option-card incorrect disabled";
+        icon.textContent = "✕";
+        icon.classList.add("wrong");
+      } else {
+        btn.className = "option-card disabled";
+      }
+    });
+
+    const feedbackBox = document.getElementById("feedbackBox");
+    const feedbackIcon = document.getElementById("feedbackIcon");
+    const feedbackTitle = document.getElementById("feedbackTitle");
+    const feedbackText = document.getElementById("feedbackText");
+
+    feedbackBox.classList.remove("hidden");
+
+    if (isCorrect) {
+      feedbackBox.className = "correct";
+      feedbackIcon.textContent = "✓";
+      feedbackTitle.textContent = "Correct Answer!";
+    } else {
+      feedbackBox.className = "incorrect";
+      feedbackIcon.textContent = "✕";
+      feedbackTitle.textContent = `Incorrect. Correct choice was (${["A","B","C","D"][q.answer]})`;
+    }
+    feedbackText.textContent = q.explanation;
+
+    document.getElementById("scoreTracker").textContent = `⭐ Score: ${score}`;
+    document.getElementById("submitBtn").classList.add("hidden");
+    document.getElementById("nextBtn").classList.remove("hidden");
+  }
+
+  function nextQuestion() {
+    if (currentIndex < currentQuestions.length - 1) {
+      currentIndex++;
+      loadQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    document.getElementById("quizCard").classList.add("hidden");
+    document.getElementById("resultsScreen").classList.remove("hidden");
+
+    const total = currentQuestions.length;
+    const percentage = Math.round((score / total) * 100);
+
+    document.getElementById("scoreBadge").textContent = `${percentage}%`;
+    document.getElementById("scoreSummaryText").textContent = `You answered ${score} out of ${total} questions correctly.`;
+
+    const titleElem = document.getElementById("resultTitle");
+    if (percentage === 100) {
+      titleElem.textContent = "🌟 Perfect Score! Reading & Writing Star!";
+    } else if (percentage >= 80) {
+      titleElem.textContent = "🎉 Great Job! Excellent Understanding!";
+    } else if (percentage >= 60) {
+      titleElem.textContent = "👍 Good Effort! Practice Makes Perfect!";
+    } else {
+      titleElem.textContent = "📚 Keep Reviewing Lessons 8-10!";
+    }
+
+    const reviewContainer = document.getElementById("reviewContainer");
+    reviewContainer.innerHTML = "";
+
+    const mistakes = userAnswers.filter(a => a && !a.isCorrect);
+    document.getElementById("mistakesCountTag").textContent =
+      `${mistakes.length} ${mistakes.length === 1 ? 'Mistake' : 'Mistakes'}`;
+
+    if (mistakes.length === 0) {
+      reviewContainer.innerHTML = `
+        <div class="no-mistakes">
+          <div class="emoji">🏆</div>
+          <h4>No Mistakes Made!</h4>
+          <p>You answered all ${total} questions correctly!</p>
+        </div>`;
+    } else {
+      const labels = ["A", "B", "C", "D"];
+      userAnswers.forEach((ans, qSeqIndex) => {
+        if (ans && !ans.isCorrect) {
+          const q = ans.questionObj;
+          const card = document.createElement("div");
+          card.className = "review-card";
+          card.innerHTML = `
+            <div class="review-top">
+              <span class="review-badge">Question ${qSeqIndex + 1} &bull; Incorrect</span>
+              <span class="review-cat">${q.category || 'General'}</span>
+            </div>
+            <p class="review-q">${q.sentence}</p>
+            <div class="review-answers">
+              <div class="review-your"><strong>Your Choice:</strong> (${labels[ans.selectedIndex]}) ${q.options[ans.selectedIndex]}</div>
+              <div class="review-correct"><strong>Correct Choice:</strong> (${labels[q.answer]}) ${q.options[q.answer]}</div>
+            </div>
+            <div class="review-explain"><strong>💡 Explanation:</strong> ${q.explanation}</div>
+          `;
+          reviewContainer.appendChild(card);
+        }
+      });
+    }
+  }
+
+  window.onload = function () { initQuiz(); };
+</script>
+</body>
+</html>

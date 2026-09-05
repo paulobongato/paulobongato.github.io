@@ -1,0 +1,423 @@
+<title>Visual Elements Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F3F5F9;
+    --paper-alt:#EAEEF7;
+    --card:#FFFFFF;
+    --ink:#1F2A44;
+    --ink-soft:#48526B;
+    --muted:#6B7488;
+    --rule:#D6DCE9;
+    --accent:#3454D1;
+    --accent-soft:#E4E9FB;
+    --accent-ink:#FFFFFF;
+    --correct:#1F8A55;
+    --correct-soft:#E1F3EA;
+    --incorrect:#C6403A;
+    --incorrect-soft:#FBE7E5;
+    --shadow:rgba(31,42,68,.14);
+    --stamp:#C6403A;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141924;
+      --paper-alt:#1A2030;
+      --card:#1D2434;
+      --ink:#E9ECF6;
+      --ink-soft:#C3CADE;
+      --muted:#8892A8;
+      --rule:#2C3448;
+      --accent:#7C93F5;
+      --accent-soft:#28304E;
+      --accent-ink:#0F1424;
+      --correct:#4CC38A;
+      --correct-soft:#173226;
+      --incorrect:#F2827B;
+      --incorrect-soft:#3A1E1D;
+      --shadow:rgba(0,0,0,.45);
+      --stamp:#F2827B;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141924;
+    --paper-alt:#1A2030;
+    --card:#1D2434;
+    --ink:#E9ECF6;
+    --ink-soft:#C3CADE;
+    --muted:#8892A8;
+    --rule:#2C3448;
+    --accent:#7C93F5;
+    --accent-soft:#28304E;
+    --accent-ink:#0F1424;
+    --correct:#4CC38A;
+    --correct-soft:#173226;
+    --incorrect:#F2827B;
+    --incorrect-soft:#3A1E1D;
+    --shadow:rgba(0,0,0,.45);
+    --stamp:#F2827B;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.q-text{ text-wrap:balance; }
+  a{ color:var(--accent); }
+
+  .wrap{ max-width:720px; margin:0 auto; padding:0 20px 96px; }
+
+  /* ---------- sticky top bar ---------- */
+  .topbar{ position:sticky; top:0; z-index:20; background:var(--paper); border-bottom:1px solid var(--rule); }
+  .topbar-inner{ max-width:720px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 20px; }
+  .topbar-title{ font-family:'Lora',Georgia,serif; font-weight:600; font-size:1rem; letter-spacing:.01em; }
+  .progress-pill{ display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .progress-track{ width:84px; height:6px; border-radius:99px; background:var(--rule); overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--accent); width:0%; transition:width .25s ease; }
+
+  /* ---------- worksheet header ---------- */
+  .sheet-header{ padding:36px 0 20px; }
+  .eyebrow{ font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  h1.title{ font-family:'Lora',Georgia,serif; font-weight:600; font-size:2.15rem; line-height:1.15; margin:.35em 0 .2em; }
+  .subtitle{ color:var(--ink-soft); font-size:1rem; line-height:1.5; max-width:52ch; margin:0 0 22px; }
+
+  .header-card{ background:var(--card); border:1px solid var(--rule); border-radius:14px; box-shadow:0 1px 2px var(--shadow); padding:18px 20px; display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; }
+  .header-fields{ display:flex; flex-wrap:wrap; gap:20px 28px; }
+  .field{ display:flex; flex-direction:column; gap:4px; min-width:150px; }
+  .field label{ font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .field input{ font-family:'Lora',Georgia,serif; font-size:1rem; color:var(--ink); background:transparent; border:none; border-bottom:1px solid var(--rule); padding:2px 0 4px; outline:none; width:100%; }
+  .field input:focus{ border-bottom-color:var(--accent); }
+  .field .static-val{ font-family:'Lora',Georgia,serif; font-size:1rem; padding:2px 0 4px; color:var(--ink-soft); }
+
+  .score-stamp{ width:74px; height:74px; border-radius:50%; border:3px solid var(--stamp); color:var(--stamp); display:flex; align-items:center; justify-content:center; flex-direction:column; font-family:'Caveat',cursive; transform:rotate(-8deg); opacity:0; transition:opacity .3s ease, transform .3s ease; text-align:center; line-height:1; }
+  .score-stamp.show{ opacity:1; transform:rotate(-8deg) scale(1); }
+  .score-stamp .num{ font-size:1.5rem; font-weight:700; }
+  .score-stamp .of{ font-size:.85rem; font-weight:600; }
+
+  .best-note{ grid-column:1/-1; font-family:'Caveat',cursive; font-size:1.15rem; color:var(--stamp); opacity:0; transition:opacity .3s ease; }
+  .best-note.show{ opacity:1; }
+
+  /* ---------- sections ---------- */
+  .part{ margin-top:44px; }
+  .part-head{ display:flex; align-items:baseline; gap:12px; border-bottom:2px solid var(--ink); padding-bottom:10px; margin-bottom:22px; }
+  .part-tag{ font-family:'Lora',Georgia,serif; font-weight:600; font-size:1.3rem; color:var(--accent); }
+  .part-title{ font-family:'Lora',Georgia,serif; font-size:1.15rem; color:var(--ink); }
+
+  /* ---------- question card ---------- */
+  .q{ background:var(--card); border:1px solid var(--rule); border-radius:12px; padding:20px 22px 18px; margin-bottom:16px; position:relative; transition:border-color .2s ease, box-shadow .2s ease; }
+  .q-top{ display:flex; gap:12px; align-items:baseline; margin-bottom:10px; }
+  .q-num{ font-family:'Lora',Georgia,serif; font-weight:600; color:var(--muted); min-width:1.6em; }
+  .q-text{ font-family:'Lora',Georgia,serif; font-size:1.03rem; line-height:1.55; color:var(--ink); }
+
+  .options{ display:flex; flex-direction:column; gap:8px; margin-top:4px; margin-left:calc(1.6em + 12px); }
+  .opt{ display:flex; align-items:center; gap:12px; background:transparent; border:1px solid var(--rule); border-radius:9px; padding:9px 14px 9px 9px; cursor:pointer; font-family:'Karla',sans-serif; font-size:.95rem; color:var(--ink); text-align:left; width:100%; }
+  .opt:hover{ border-color:var(--accent); }
+  .opt:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .bubble{ width:26px; height:26px; border-radius:50%; border:1.6px solid var(--muted); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem; color:var(--muted); flex:none; transition:background .15s ease, border-color .15s ease, color .15s ease; }
+  .opt.selected{ border-color:var(--accent); background:var(--accent-soft); }
+  .opt.selected .bubble{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+
+  /* graded states */
+  .q.correct{ border-color:var(--correct); box-shadow:0 0 0 1px var(--correct) inset; }
+  .q.incorrect{ border-color:var(--incorrect); box-shadow:0 0 0 1px var(--incorrect) inset; }
+  .q.skipped{ border-color:var(--rule); }
+
+  .graded .opt{ cursor:default; }
+  .graded .opt:hover{ border-color:var(--rule); }
+  .graded .opt.is-correct-answer{ border-color:var(--correct); background:var(--correct-soft); }
+  .graded .opt.is-correct-answer .bubble{ background:var(--correct); border-color:var(--correct); color:#fff; }
+  .graded .opt.is-wrong-pick{ border-color:var(--incorrect); background:var(--incorrect-soft); }
+  .graded .opt.is-wrong-pick .bubble{ background:var(--incorrect); border-color:var(--incorrect); color:#fff; }
+
+  .mark{ position:absolute; top:14px; right:16px; font-family:'Caveat',cursive; font-weight:700; font-size:1.7rem; transform:rotate(-6deg); opacity:0; }
+  .q.correct .mark{ opacity:1; color:var(--correct); }
+  .q.incorrect .mark{ opacity:1; color:var(--incorrect); }
+  .q.skipped .mark{ opacity:1; color:var(--muted); font-size:1rem; font-family:'Karla',sans-serif; font-weight:600; transform:none; }
+
+  /* ---------- bottom action bar ---------- */
+  .actionbar{ position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--paper); border-top:1px solid var(--rule); box-shadow:0 -4px 14px var(--shadow); }
+  .actionbar-inner{ max-width:720px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 20px; }
+  .actionbar-text{ font-size:.85rem; color:var(--muted); }
+  .actionbar-text strong{ color:var(--ink); font-variant-numeric:tabular-nums; }
+  .btn{ font-family:'Karla',sans-serif; font-weight:700; font-size:.92rem; border:none; border-radius:9px; padding:11px 20px; cursor:pointer; background:var(--accent); color:var(--accent-ink); transition:transform .12s ease, opacity .15s ease; }
+  .btn:active{ transform:scale(.97); }
+  .btn.secondary{ background:transparent; border:1.5px solid var(--ink); color:var(--ink); }
+  .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .summary-line{ text-align:center; font-family:'Lora',Georgia,serif; font-size:1.05rem; color:var(--ink-soft); margin:8px 0 6px; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+  @media (max-width:520px){
+    h1.title{ font-size:1.7rem; }
+    .header-card{ grid-template-columns:1fr; }
+    .score-stamp{ justify-self:start; }
+    .options{ margin-left:0; }
+    .q-top{ flex-direction:column; gap:2px; }
+  }
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-title">Visual Elements Quiz</div>
+    <div class="progress-pill">
+      <span id="progressLabel">0 / 15 answered</span>
+      <span class="progress-track"><span class="progress-fill" id="progressFill"></span></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="sheet-header">
+    <div class="eyebrow">English &middot; Visual Elements &amp; Non&#8209;Verbal Cues</div>
+    <h1 class="title">Visual Elements Quiz</h1>
+    <p class="subtitle">Fifteen questions on shapes, color, graphics, and lines, plus the five non&#8209;verbal cues: facial expressions, gestures, body language, eye contact, and visual aids.</p>
+
+    <div class="header-card">
+      <div class="header-fields">
+        <div class="field">
+          <label for="nameInput">Name</label>
+          <input id="nameInput" type="text" placeholder="Your name" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <div class="static-val" id="dateVal"></div>
+        </div>
+        <div class="best-note" id="bestNote"></div>
+      </div>
+      <div class="score-stamp" id="scoreStamp">
+        <span class="num" id="scoreNum">0</span>
+        <span class="of">/ 15</span>
+      </div>
+    </div>
+  </header>
+
+  <div id="quizBody"></div>
+
+  <p class="summary-line" id="summaryLine" style="display:none;"></p>
+</div>
+
+<div class="actionbar">
+  <div class="actionbar-inner">
+    <div class="actionbar-text" id="actionText"><strong id="answeredCount">0</strong> of 15 answered</div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn secondary" id="retakeBtn" style="display:none;">Retake quiz</button>
+      <button class="btn" id="submitBtn">Check my answers</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SECTIONS = {
+    A: "Shapes, Color, Graphics &amp; Lines",
+    B: "Non-Verbal Cues"
+  };
+
+  var QUESTIONS = [
+    {section:"A", text:"Which statement best defines “visual elements”?", options:["The important parts in a picture or design that help us understand what we see.","The spoken words that explain a picture.","The price tag attached to an artwork.","The frame that surrounds a painting."], answer:0},
+    {section:"A", text:"According to the notes, visual elements include:", options:["Titles, captions, and footnotes","Shapes, lines, colors, and graphics","Sounds, smells, and tastes","Letters, numbers, and punctuation marks"], answer:1},
+    {section:"A", text:"How are “shapes” defined in the notes?", options:["Marks that connect two points","What you see when light shines on something","The different forms or outlines you see in pictures or designs","Pictures, drawings, or symbols that tell a story"], answer:2},
+    {section:"A", text:"Which of these is an organic shape rather than a geometric shape?", options:["Square","Triangle","Leaf","Rectangle"], answer:2},
+    {section:"A", text:"How is “color” defined in the notes?", options:["What you see when light shines on something","Marks that connect two points","A form found only in nature","A symbol that replaces a word"], answer:0},
+    {section:"A", text:"Which set of colors are the primary colors?", options:["Green, Orange, Purple","Red, Blue, Yellow","Black, White, Gray","Pink, Brown, Gold"], answer:1},
+    {section:"A", text:"Secondary colors like green, orange, and purple are made by:", options:["Adding white to a primary color","Mixing two primary colors together","Using only black and white","Leaving the canvas unpainted"], answer:1},
+    {section:"A", text:"What are “graphics”?", options:["Marks that connect two points in an artwork","The three main colors used in painting","Pictures, drawings, or symbols that help tell a story or explain something","A person's posture and gestures"], answer:2},
+    {section:"A", text:"Lines are marks that connect two points, and — beyond defining shapes — they can also:", options:["Change primary colors into secondary colors","Create patterns, convey emotion, and guide the viewer's eye through an artwork","Replace the need for facial expressions","Erase mistakes made while drawing"], answer:1},
+
+    {section:"B", text:"How are “non-verbal cues” defined in the notes?", options:["Visual elements in communication that help people understand meaning, emotions, and intentions through what they see","Written instructions found in a letter","The primary and secondary colors used in art","A list of items needed for a task"], answer:0},
+    {section:"B", text:"Which non-verbal cue shows emotions like happiness, anger, sadness, or confusion?", options:["Eye contact","Visual aids","Facial expressions","Gestures"], answer:2},
+    {section:"B", text:"Pointing, waving, and giving a thumbs-up are examples of:", options:["Gestures","Eye contact","Body language","Visual aids"], answer:0},
+    {section:"B", text:"Crossed arms or a slumped posture are examples of which non-verbal cue?", options:["Facial expressions","Body language/posture","Eye contact","Visual aids"], answer:1},
+    {section:"B", text:"The amount and direction of eye contact can indicate:", options:["The primary colors in a picture","Interest, confidence, or discomfort","The type of line used in a drawing","Whether a shape is geometric or organic"], answer:1},
+    {section:"B", text:"Drawings, graphic organizers, diagrams, and charts are examples of:", options:["Visual aids","Gestures","Primary colors","Organic shapes"], answer:0}
+  ];
+
+  var LETTERS = ["A","B","C","D"];
+  var state = new Array(QUESTIONS.length).fill(null);
+  var graded = false;
+
+  var quizBody = document.getElementById("quizBody");
+  var lastSection = null;
+
+  QUESTIONS.forEach(function(q, i){
+    if (q.section !== lastSection){
+      lastSection = q.section;
+      var head = document.createElement("div");
+      head.className = "part-head";
+      head.innerHTML = '<span class="part-tag">Part ' + q.section + '</span><span class="part-title">' + SECTIONS[q.section] + '</span>';
+      var partWrap = document.createElement("div");
+      partWrap.className = "part";
+      partWrap.appendChild(head);
+      quizBody.appendChild(partWrap);
+    }
+
+    var card = document.createElement("div");
+    card.className = "q";
+    card.id = "q" + i;
+
+    var top = document.createElement("div");
+    top.className = "q-top";
+    var num = document.createElement("span");
+    num.className = "q-num";
+    num.textContent = (i + 1) + ".";
+    var txt = document.createElement("span");
+    txt.className = "q-text";
+    txt.textContent = q.text;
+    top.appendChild(num);
+    top.appendChild(txt);
+    card.appendChild(top);
+
+    var mark = document.createElement("span");
+    mark.className = "mark";
+    card.appendChild(mark);
+
+    var opts = document.createElement("div");
+    opts.className = "options";
+    q.options.forEach(function(optText, oi){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "opt";
+      btn.setAttribute("data-qi", i);
+      btn.setAttribute("data-oi", oi);
+      btn.innerHTML = '<span class="bubble">' + LETTERS[oi] + '</span><span class="opt-label"></span>';
+      btn.querySelector(".opt-label").textContent = optText;
+      btn.addEventListener("click", onSelect);
+      opts.appendChild(btn);
+    });
+    card.appendChild(opts);
+
+    quizBody.appendChild(card);
+  });
+
+  var dateVal = document.getElementById("dateVal");
+  dateVal.textContent = new Date().toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"});
+
+  function onSelect(e){
+    if (graded) return;
+    var btn = e.currentTarget;
+    var qi = parseInt(btn.getAttribute("data-qi"), 10);
+    var oi = parseInt(btn.getAttribute("data-oi"), 10);
+    state[qi] = oi;
+    var card = document.getElementById("q" + qi);
+    card.querySelectorAll(".opt").forEach(function(o){ o.classList.remove("selected"); });
+    btn.classList.add("selected");
+    updateProgress();
+  }
+
+  function updateProgress(){
+    var answered = state.filter(function(s){ return s !== null; }).length;
+    document.getElementById("progressLabel").textContent = answered + " / " + QUESTIONS.length + " answered";
+    document.getElementById("progressFill").style.width = (answered / QUESTIONS.length * 100) + "%";
+    document.getElementById("answeredCount").textContent = answered;
+  }
+
+  function bestScore(){
+    try{
+      var v = localStorage.getItem("visual-elements-quiz-best");
+      return v ? parseInt(v, 10) : null;
+    }catch(e){ return null; }
+  }
+  function saveBest(score){
+    try{
+      var b = bestScore();
+      if (b === null || score > b){ localStorage.setItem("visual-elements-quiz-best", String(score)); return score; }
+      return b;
+    }catch(e){ return score; }
+  }
+
+  function grade(){
+    graded = true;
+    document.body.classList.add("graded");
+    var score = 0;
+    QUESTIONS.forEach(function(q, i){
+      var card = document.getElementById("q" + i);
+      var picked = state[i];
+      var mark = card.querySelector(".mark");
+      card.querySelectorAll(".opt").forEach(function(o){
+        var oi = parseInt(o.getAttribute("data-oi"), 10);
+        o.disabled = true;
+        if (oi === q.answer){ o.classList.add("is-correct-answer"); }
+        if (picked !== null && picked === oi && oi !== q.answer){ o.classList.add("is-wrong-pick"); }
+      });
+      if (picked === null){
+        card.classList.add("skipped");
+        mark.textContent = "skipped";
+      } else if (picked === q.answer){
+        card.classList.add("correct");
+        mark.textContent = "✓";
+        score++;
+      } else {
+        card.classList.add("incorrect");
+        mark.textContent = "✗";
+      }
+    });
+
+    var stamp = document.getElementById("scoreStamp");
+    document.getElementById("scoreNum").textContent = score;
+    stamp.classList.add("show");
+
+    var best = saveBest(score);
+    var bestNote = document.getElementById("bestNote");
+    if (best !== null){
+      bestNote.textContent = score >= best ? "New best score!" : ("Best so far: " + best + " / " + QUESTIONS.length);
+      bestNote.classList.add("show");
+    }
+
+    var pct = Math.round(score / QUESTIONS.length * 100);
+    var summary = document.getElementById("summaryLine");
+    summary.style.display = "block";
+    var note = pct === 100 ? "Perfect score — great work!" : pct >= 80 ? "Nice work — almost there!" : pct >= 60 ? "Good effort — review the misses and try again." : "Keep reviewing — look over Parts A–B and retake it.";
+    summary.textContent = "You scored " + score + " out of " + QUESTIONS.length + " (" + pct + "%). " + note;
+
+    document.getElementById("submitBtn").style.display = "none";
+    document.getElementById("retakeBtn").style.display = "inline-block";
+    document.getElementById("actionText").innerHTML = "<strong>" + score + " / " + QUESTIONS.length + "</strong> correct";
+
+    window.scrollTo({top:0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  }
+
+  function retake(){
+    graded = false;
+    document.body.classList.remove("graded");
+    state = new Array(QUESTIONS.length).fill(null);
+    QUESTIONS.forEach(function(q, i){
+      var card = document.getElementById("q" + i);
+      card.classList.remove("correct","incorrect","skipped");
+      card.querySelectorAll(".opt").forEach(function(o){
+        o.disabled = false;
+        o.classList.remove("selected","is-correct-answer","is-wrong-pick");
+      });
+      card.querySelector(".mark").textContent = "";
+    });
+    document.getElementById("scoreStamp").classList.remove("show");
+    document.getElementById("bestNote").classList.remove("show");
+    document.getElementById("summaryLine").style.display = "none";
+    document.getElementById("submitBtn").style.display = "inline-block";
+    document.getElementById("retakeBtn").style.display = "none";
+    updateProgress();
+    window.scrollTo({top:0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  }
+
+  document.getElementById("submitBtn").addEventListener("click", grade);
+  document.getElementById("retakeBtn").addEventListener("click", retake);
+
+  updateProgress();
+
+  var best0 = bestScore();
+  if (best0 !== null){
+    var bn = document.getElementById("bestNote");
+    bn.textContent = "Best so far: " + best0 + " / " + QUESTIONS.length;
+    bn.classList.add("show");
+  }
+})();
+</script>

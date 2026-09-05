@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Kontekstong Pahiwatig at Onomatopeya</title>
+<style>
+
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1e40af;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --red: #b91c1c;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+      background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+      padding: 28px 24px;
+      margin-top: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: var(--blue-dark);
+      margin: 0 0 4px 0;
+      text-align: center;
+    }
+    h2.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 0 20px 0;
+      font-weight: 500;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--blue-dark);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+    .instructions {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 16px 0;
+      line-height: 1.6;
+    }
+    .instructions ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+    .instructions li { margin-bottom: 6px; }
+    .btn {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .btn:hover { background: var(--blue-dark); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .center { text-align: center; }
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--blue);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .topic-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .choice {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .choice:hover:not(.disabled) {
+      border-color: var(--blue);
+      background: #eff6ff;
+    }
+    .choice.selected {
+      border-color: var(--blue);
+      background: #dbeafe;
+    }
+    .choice.correct {
+      border-color: var(--green-border);
+      background: var(--green-bg);
+      color: var(--green);
+      font-weight: 600;
+    }
+    .choice.incorrect {
+      border-color: var(--red-border);
+      background: var(--red-bg);
+      color: var(--red);
+      font-weight: 600;
+    }
+    .choice.disabled { cursor: default; }
+    .choice-letter {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      background: #fff;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.85rem;
+    }
+    .feedback-box {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      animation: slideIn 0.25s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-box.correct-box {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+    .feedback-box.incorrect-box {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+    .feedback-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .feedback-title.correct-text { color: var(--green); }
+    .feedback-title.incorrect-text { color: var(--red); }
+    .feedback-exp {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+    .nav-row {
+      margin-top: 18px;
+    }
+    .score-hero {
+      text-align: center;
+      padding: 20px 0 8px 0;
+    }
+    .score-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 10px solid var(--blue);
+      background: #eff6ff;
+    }
+    .score-circle .num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      line-height: 1;
+    }
+    .score-circle .den {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .score-msg {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .score-sub {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .review-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .review-item.wrong {
+      border-color: var(--red-border);
+      background: #fff5f5;
+    }
+    .review-item.right {
+      border-color: var(--green-border);
+      background: #f5fff7;
+    }
+    .review-q {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .review-line {
+      font-size: 0.92rem;
+      margin: 3px 0;
+    }
+    .review-line.wrong-answer { color: var(--red); }
+    .review-line.right-answer { color: var(--green); }
+    .review-exp {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      color: #475569;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 6px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 24px 0 12px 0;
+    }
+    .hidden { display: none !important; }
+    footer.tag {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      margin-top: 14px;
+    }
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; border-radius: 14px; }
+      h1 { font-size: 1.25rem; }
+      .score-circle { width: 120px; height: 120px; }
+      .score-circle .num { font-size: 1.7rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Kontekstong Pahiwatig at Onomatopeya</h1>
+    <h2 class="subtitle">Unang Trimester — Pagsusulit sa Filipino 4</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Filipino</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Pagtukoy ng kahulugan ng salita sa pamamagitan ng kontekstong pahiwatig, at pagbibigay-kahulugan sa ipinapahiwatig ng pangungusap sa pamamagitan ng onomatopeya.</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Unang Trimester · Filipino 4 · La Salle Green Hills</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang ibig sabihin ng nalanta sa pangungusap? Ang mga halaman ay nalanta dahil sa tindi ng init ng araw at kawalan ng ulan ng tatlong buwan.", "choices": ["nabasa dahil sa dilig ng tubig", "ibang kulay at naging malago", "lumaki at nagkaroon ng maraming bunga", "natuyo, nanghina, at malapit nang mamatay"], "correct": 3, "exp": "Ipinapahiwatig ng \"tindi ng init\" at \"kawalan ng ulan\" na ang mga halaman ay natuyo, nanghina, at malapit nang mamatay."}, {"q": "Anong pahiwatig sa pangungusap ang pinakamagandang patunay sa kahulugan ng pighati? Hindi maitago ang pighati ni Ben. Umiiyak siya gabi-gabi at ayaw niyang kumain mula nang mawala ang kanyang alagang aso.", "choices": ["alagang aso", "mula nang mawala", "maitago ang pighati", "umiiyak gabi-gabi at ayaw kumain"], "correct": 3, "exp": "Ang \"umiiyak gabi-gabi at ayaw kumain\" ang pinakamalinaw na pahiwatig ng matinding lungkot o pighati."}, {"q": "Anong kilos ni Lito ang nagbibigay-pahiwatig sa kahulugan ng salitang nag-atubili sa pangungusap? Si Lito ay nag-atubili na pumasok sa madilim na kuwarto. Huminto siya sa may pinto, lumingon sa kanyang ina, at nag-isip kung itutuloy ang pagpasok.", "choices": ["ang pag-iyak niya dahil sa takot", "ang pagtawag niya sa kanyang ina", "ang kanyang paghinto, paglingon, at pag-iisip", "ang kanyang pagpasok nang mabilis sa kuwarto"], "correct": 2, "exp": "Ipinapahiwatig ng paghinto, paglingon, at pag-iisip ni Lito na siya ay nag-aalinlangan o nag-aatubili."}, {"q": "Anong pangyayari ang pinakamalapit na dahilan ng tunog sa loob ng pangungusap? Madilim ang gabi at malakas ang ulan. Biglang narinig ni Juan ang \"BBOOOOMM!\" na sinundan ng biglang pagkawala ng kuryente sa buong barangay.", "choices": ["may nahulog na baso sa kusina", "may dumaang malaking trak sa tapat ng bahay", "may sumabog sa poste ng kuryente dahil sa kidlat", "may kumakatok nang malakas sa kanilang pintuan"], "correct": 2, "exp": "Ipinapahiwatig ng malakas na tunog at biglang pagkawala ng kuryente na may sumabog na poste dahil sa kidlat."}, {"q": "Alin sa sumusunod na pangungusap ang gumamit ng onomatopeya upang ilarawan ang isang kapaligirang tahimik at mapayapa?", "choices": ["Ang twit-twit ng mga ibon ay maririnig sa umaga.", "Ang tsug-tsug ng tren ay gumising sa buong bayan.", "Ang kraakk at booom ay tanda ng malakas na ulan.", "Ang blaagg ng nahulog na kahon ay narinig noong kalaliman ng gabi."], "correct": 0, "exp": "Ang \"twit-twit\" ng mga ibon ay malumanay na tunog na naglalarawan ng tahimik at mapayapang kapaligiran."}, {"q": "Batay sa pangungusap, anong reaksiyon ang inaasahang maramdaman ni Selya pagkarinig ng tunog? Habang naglalakad si Selya sa gubat, narinig niya ang \"Sssssssss...\" sa ilalim ng mga tuyong dahon.", "choices": ["naawa kaya ito nilapitan", "mag-ingat at lumayo rito", "matuwa dahil isa itong hayop", "magdiwang kaya nagtatalon"], "correct": 1, "exp": "Ang tunog na \"Sssssssss\" ay maaaring galing sa ahas kaya nararapat mag-ingat at lumayo."}, {"q": "Dahil sa kaniyang ___________, natapos niya ang proyekto kahit maraming naging pagsubok.", "choices": ["katamaran", "pagtitiyaga", "pag-aalinlangan", "pagkukunwari"], "correct": 1, "exp": "Ang pagtitiyaga ang nagpapaliwanag kung paano natapos ang proyekto sa kabila ng mga pagsubok."}, {"q": "___________ ang mga dahon sa puno dahil sa malakas na hangin.", "choices": ["Kumaway", "Kumislap", "Kumilos", "Kumalansing"], "correct": 0, "exp": "Ang \"kumaway\" ang salitang naglalarawan sa paggalaw ng mga dahon dahil sa hangin."}, {"q": "Ang batang ___________ ay marunong gumalang at sumunod sa kaniyang mga magulang.", "choices": ["masunurin", "makulit", "maramdamin", "mapaglaro"], "correct": 0, "exp": "Ang batang gumagalang at sumusunod sa magulang ay tinatawag na masunurin."}, {"q": "Hindi niya ipinagmalaki ang kaniyang mataas na marka sapagkat siya ay ___________.", "choices": ["mayabang", "mapagkumbaba", "makasarili", "palaaway"], "correct": 1, "exp": "Ang hindi pagyayabang sa tagumpay ay tanda ng pagiging mapagkumbaba."}, {"q": "___________ ang kaniyang paliwanag kaya madaling naunawaan ng mga kaklase ang aralin.", "choices": ["Malabo", "Magulo", "Malinaw", "Mahina"], "correct": 2, "exp": "Ang malinaw na paliwanag ang dahilan kung bakit madaling naunawaan ng mga kaklase ang aralin."}, {"q": "Habang nag-aaral si Ana, narinig niya ang ___________ ng orasan sa kaniyang kuwarto.", "choices": ["tik-tak", "aw-aw", "kokak", "lagapak"], "correct": 0, "exp": "Ang \"tik-tak\" ang onomatopeyang tumutukoy sa tunog ng orasan."}, {"q": "___________! Biglang bumagsak ang malaking kahon mula sa estante.", "choices": ["Tiktilaok!", "Lagapak!", "Meow!", "Tiktak!"], "correct": 1, "exp": "Ang \"Lagapak!\" ang onomatopeyang tumutukoy sa tunog ng biglang pagbagsak ng malaking bagay."}, {"q": "Narinig ng mga bata ang ___________ ng kulog bago nagsimulang bumuhos ang ulan.", "choices": ["dagundong", "kring-kring", "kokak-kokak", "tsug-tsug"], "correct": 0, "exp": "Ang \"dagundong\" ang onomatopeyang tumutukoy sa malakas na tunog ng kulog."}, {"q": "___________! Narinig ni Carlo ang tilaok ng tandang kinaumagahan.", "choices": ["Aw-aw!", "Tiktilaok!", "Meow!", "Kokak!"], "correct": 1, "exp": "Ang \"Tiktilaok!\" ang onomatopeyang tumutukoy sa tunog ng tandang."}, {"q": "Habang bumibiyahe ang tren, naririnig ang ___________ ng makina nito.", "choices": ["tsug-tsug", "tik-tak", "kokak-kokak", "aw-aw"], "correct": 0, "exp": "Ang \"tsug-tsug\" ang onomatopeyang tumutukoy sa tunog ng makina ng tren."}, {"q": "Ano ang ibig sabihin ng salitang \"nanglumo\"? Nanglumo si Rosa nang malaman niyang bumagsak siya sa pagsusulit.", "choices": ["natuwa nang husto", "nawalan ng lakas ng loob dahil sa lungkot", "nagalit nang matindi", "nagulat sa balita"], "correct": 1, "exp": "Ang \"nanglumo\" ay nangangahulugang nawalan ng lakas ng loob dahil sa matinding lungkot."}, {"q": "Ano ang ibig sabihin ng salitang \"kimkim\"? Matagal nang kimkim ni Elena ang sama ng loob sa kaniyang kapatid dahil hindi pa rin ito humihingi ng tawad.", "choices": ["ipinagsasabi sa lahat", "itinatago sa sarili at hindi ipinahahayag", "agad na kinalimutan", "ipinagmamalaki sa iba"], "correct": 1, "exp": "Ang \"kimkim\" ay nangangahulugang itinatago sa sarili at hindi ipinahahayag sa iba."}, {"q": "Anong pahiwatig sa pangungusap ang nagpapakita ng kahulugan ng namutla? Namutla si Carlo nang makita niya ang malaking gagamba sa kaniyang kuwarto.", "choices": ["natuwa at nagulat", "nagbago ang kulay ng mukha dahil sa matinding takot", "tumawa nang malakas", "tumakbo palayo agad"], "correct": 1, "exp": "Ang pagkakita sa gagamba ang naging dahilan ng pagbabago ng kulay ng mukha dahil sa takot, kaya siya namutla."}, {"q": "Anong kilos ang nagbibigay-pahiwatig sa kahulugan ng natigilan? Natigilan ang mga estudyante nang biglang pumasok ang punongguro sa silid-aralan.", "choices": ["nagalak at sumigaw", "biglang huminto ang kilos o pananalita dahil sa gulat", "nagpatuloy sa ginagawa", "umalis kaagad sa silid"], "correct": 1, "exp": "Ang biglang pagpasok ng punongguro ang nagdulot ng pagkakatigil ng mga estudyante dahil sa gulat."}, {"q": "Ano ang ibig sabihin ng salitang \"namilipit\"? Namilipit sa sakit ang paa ni Migo matapos itong madapa sa hagdan.", "choices": ["nakadama ng matinding sakit", "nakadama ng ginhawa", "nakatulog nang mahimbing", "nakaramdam ng gutom"], "correct": 0, "exp": "Ang \"namilipit\" ay nangangahulugang nakadama ng matinding sakit hanggang sa pumiga ang katawan."}, {"q": "Anong pahiwatig ang nagpapakita ng kahulugan ng napahiya? Napahiya si Bea nang mapansin niyang nakabaligtad pala ang suot niyang blusa buong araw.", "choices": ["nakaramdam ng galak", "nakaramdam ng kahihiyan", "nakaramdam ng pagmamalaki", "nakaramdam ng inip"], "correct": 1, "exp": "Ang pagkakamaling nakabaligtad ang blusa buong araw ay nagdulot ng kahihiyan kay Bea."}, {"q": "Ano ang ibig sabihin ng salitang \"kumunot ang noo\"? Kumunot ang noo ni Nanay habang binabasa niya ang liham mula sa paaralan.", "choices": ["natuwa at ngumiti", "nag-alala o nag-isip nang malalim", "nakatulog agad", "natawa nang malakas"], "correct": 1, "exp": "Ang \"kumunot ang noo\" ay nangangahulugang nag-aalala o nag-iisip nang malalim tungkol sa isang bagay."}, {"q": "Ano ang ibig sabihin ng salitang \"sumigla\"? Sumigla ang mukha ni Tonyo nang marinig niyang mananalo sila sa laro.", "choices": ["naging masigla at masaya", "naging malungkot", "naging galit", "naging tamad"], "correct": 0, "exp": "Ang \"sumigla\" ay nangangahulugang naging masigla at masaya dahil sa magandang balita."}, {"q": "Anong pahiwatig ang pinakamagandang patunay sa kahulugan ng napahagulgol? Napahagulgol si Bianca nang malaman niyang pumanaw na ang kaniyang alagang aso.", "choices": ["tumawa nang malakas", "umiyak nang malakas at hindi mapigilan", "tumahimik na lang", "natulog kaagad"], "correct": 1, "exp": "Ang balitang pumanaw ang alagang aso ay nagdulot ng matinding lungkot kaya siya napahagulgol."}, {"q": "Ano ang ibig sabihin ng salitang \"nanlaki ang mata\"? Nanlaki ang mata ni Migs nang makita niya ang laki ng regalong ibinigay sa kaniya.", "choices": ["nagulat nang husto", "nagalit nang husto", "nahiya nang husto", "natakot nang husto"], "correct": 0, "exp": "Ang \"nanlaki ang mata\" ay nangangahulugang nagulat nang husto sa isang nakita o narinig."}, {"q": "Ano ang ibig sabihin ng salitang \"nanginig\"? Nanginig ang boses ni Ella habang nagsasalita siya sa harap ng maraming tao.", "choices": ["lumakas at naging matatag", "kumurog dahil sa takot o kaba", "naging malumanay at kalmado", "tumigil sa pagsasalita"], "correct": 1, "exp": "Ang \"nanginig\" ang boses ay nangangahulugang kumurog dahil sa takot o kaba sa harap ng maraming tao."}, {"q": "Anong pahiwatig ang nagpapakita ng kahulugan ng natulala? Natulala si Carding nang makita niyang nawala ang kaniyang pitaka.", "choices": ["natuwang bigla", "napahinto sa pag-iisip dahil sa matinding gulat", "nagalak nang husto", "nagmadaling umuwi"], "correct": 1, "exp": "Ang pagkawala ng pitaka ay nagdulot ng pagkatulala o pagkahinto sa pag-iisip dahil sa gulat."}, {"q": "Ano ang ibig sabihin ng salitang \"humimlay\"? Humimlay si Lola sa duyan matapos ang mahabang paglalakbay.", "choices": ["nagsimulang maglinis", "nahiga o nagpahinga", "nagluto ng pagkain", "lumabas ng bahay"], "correct": 1, "exp": "Ang \"humimlay\" ay nangangahulugang nahiga o nagpahinga matapos ang isang pagod na gawain."}, {"q": "Ano ang ibig sabihin ng salitang \"kinabahan\"? Kinabahan si Julia bago siya umakyat sa entablado para sumayaw.", "choices": ["nakaramdam ng kaba o pangamba", "nakaramdam ng galak", "nakaramdam ng antok", "nakaramdam ng gutom"], "correct": 0, "exp": "Ang \"kinabahan\" ay nangangahulugang nakaramdam ng kaba o pangamba bago gumawa ng isang bagay."}, {"q": "Anong pahiwatig ang nagpapakita ng kahulugan ng nasindak? Nasindak ang mga bata nang marinig nila ang malakas na kulog sa gabi.", "choices": ["sobrang natuwa", "sobrang natakot o nagulat", "sobrang naiinip", "sobrang nagalit"], "correct": 1, "exp": "Ang \"nasindak\" ay nangangahulugang sobrang natakot o nagulat sa isang biglaang pangyayari."}, {"q": "___________! Sumigaw si Ben nang matapakan niya ang matalas na bato.", "choices": ["Aray!", "Meow!", "Tiktilaok!", "Kring-kring!"], "correct": 0, "exp": "Ang \"Aray!\" ang onomatopeyang tumutukoy sa reaksiyon kapag nasaktan."}, {"q": "Narinig ni Maya ang ___________ ng pusang gutom sa labas ng kanilang bahay.", "choices": ["ngiyaw", "tiktilaok", "atungal", "inga"], "correct": 0, "exp": "Ang \"ngiyaw\" ang onomatopeyang tumutukoy sa tunog ng pusa."}, {"q": "Habang naglalaro ang mga bata sa parke, naririnig ang ___________ ng mga ibong lumilipad.", "choices": ["lagapak", "huni", "dagundong", "lagutok"], "correct": 1, "exp": "Ang \"huni\" ang onomatopeyang tumutukoy sa tunog ng mga ibon."}, {"q": "___________ ang mga bisikleta habang bumabagtas sa makipot na daan.", "choices": ["Kiling-kiling", "Kokak-kokak", "Ungol-ungol", "Aw-aw"], "correct": 0, "exp": "Ang \"kiling-kiling\" ang onomatopeyang tumutukoy sa tunog ng kampanilya ng bisikleta."}, {"q": "Narinig ng mga bata ang ___________ ng mga palaka sa may batis kinagabihan.", "choices": ["atungal", "tiktak", "kokak", "tsug-tsug"], "correct": 2, "exp": "Ang \"kokak\" ang onomatopeyang tumutukoy sa tunog ng palaka."}, {"q": "___________ ang tuyong dahon nang tapakan ito ni Bea sa daan patungong paaralan.", "choices": ["Kaluskos", "Lagapak", "Kring-kring", "Ngiyaw"], "correct": 0, "exp": "Ang \"kaluskos\" ang onomatopeyang tumutukoy sa tunog ng tuyong dahon na natatapakan."}, {"q": "Malakas ang ___________ ng kalabaw habang naglalakad ito papunta sa bukid.", "choices": ["atungal", "huni", "sipol", "hagikhik"], "correct": 0, "exp": "Ang \"atungal\" ang onomatopeyang tumutukoy sa tunog ng kalabaw o baka."}, {"q": "___________ ng mga bata nang mapanood nila ang komedya sa telebisyon.", "choices": ["Hagulgol", "Hikbi", "Hagikhik", "Kalansing"], "correct": 2, "exp": "Ang \"hagikhik\" ang onomatopeyang tumutukoy sa tawa ng mga bata."}, {"q": "Marahang ___________ ang tubig sa batis habang dumadaloy ito papunta sa ilog.", "choices": ["lagaslas", "dagundong", "kalabog", "atungal"], "correct": 0, "exp": "Ang \"lagaslas\" ang onomatopeyang tumutukoy sa marahang tunog ng umaagos na tubig."}, {"q": "___________ ang kahoy sa kalan habang nagliliyab ang apoy sa kusina.", "choices": ["Lagutok", "Huni", "Tiktak", "Ngiyaw"], "correct": 0, "exp": "Ang \"lagutok\" ang onomatopeyang tumutukoy sa tunog ng nasusunog na kahoy."}, {"q": "Narinig sa malayo ang ___________ ng kampana ng simbahan tuwing umaga.", "choices": ["tiktak", "kalansing", "atungal", "tsug-tsug"], "correct": 1, "exp": "Ang \"kalansing\" ang onomatopeyang tumutukoy sa tunog ng kampana."}, {"q": "___________! Napasigaw si Neneng nang matapakan niya ang kawad na naiwang nakalatag sa sahig.", "choices": ["Aray!", "Ngiyaw!", "Kokak!", "Tiktilaok!"], "correct": 0, "exp": "Ang \"Aray!\" ang onomatopeyang tumutukoy sa reaksiyon kapag nasaktan."}, {"q": "Mabilis ang ___________ ng puso ni Jerome bago siya tumakbo sa karera.", "choices": ["tibok-tibok", "lagutok", "kaluskos", "huni"], "correct": 0, "exp": "Ang \"tibok-tibok\" ang onomatopeyang tumutukoy sa tunog ng pagtibok ng puso."}, {"q": "Naririnig ang ___________ ng manok bago pa man sumikat ang araw sa kanayunan.", "choices": ["tiktilaok", "ngiyaw", "inga", "atungal"], "correct": 0, "exp": "Ang \"tiktilaok\" ang onomatopeyang tumutukoy sa tunog ng tandang o manok."}];
+
+const QUIZ_LENGTH = 15;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = []; // {qIndex, chosen, correct}
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  // shuffle the choice order for each question, tracking the new correct index
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    isCorrect: isCorrect,
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg, sub;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa paksang ito!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

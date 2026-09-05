@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canva Style Quiz: Pagpapayaman ng Talasalitaan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins & Quicksand -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'Poppins', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        canvaPurple: '#7d2ae8',
+                        canvaTeal: '#00c4cc',
+                        canvaPeach: '#ff6b6b',
+                        canvaYellow: '#ffde59',
+                        canvaDark: '#1e1e24',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-shape {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .custom-shape-delayed {
+            animation: floatDelayed 8s ease-in-out infinite;
+        }
+        @keyframes floatDelayed {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(15px) rotate(-8deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .slide-transition {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-[#f4f7f6] font-sans min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden select-none">
+
+    <!-- Background Abstract Decorative Canva Elements -->
+    <div class="absolute top-10 left-10 w-32 h-32 bg-canvaPurple/10 rounded-full blur-xl custom-shape"></div>
+    <div class="absolute bottom-10 right-10 w-44 h-44 bg-canvaTeal/10 rounded-full blur-xl custom-shape-delayed"></div>
+    <div class="absolute top-1/3 right-12 w-16 h-16 bg-canvaYellow/20 rounded-lg rotate-12 custom-shape"></div>
+    <div class="absolute bottom-1/4 left-16 w-24 h-24 bg-canvaPeach/10 rounded-full blur-lg custom-shape-delayed"></div>
+
+    <!-- MAIN CANVA CONTAINER -->
+    <main class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden relative border border-gray-100 z-10 flex flex-col min-h-[600px]">
+        
+        <!-- Header/Navbar inside Canva template -->
+        <header class="bg-canvaPurple text-white px-6 py-4 flex justify-between items-center select-none shadow-md">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/20 p-2 rounded-lg">
+                    <i class="fa-solid fa-graduation-cap text-canvaYellow text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-bold text-sm md:text-base tracking-wide">PAGSASANAY SA FILIPINO</h1>
+                    <p class="text-[10px] md:text-xs opacity-80">Karagdagang Pagsasanay sa Talasalitaan</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="slide-number" class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold font-heading">Slide 1 ng 12</span>
+                <button onclick="restartQuiz()" class="hover:bg-white/10 p-2 rounded-full transition-all" title="Ulitin ang Quiz">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Body -->
+        <div class="flex-1 p-6 md:p-10 flex flex-col justify-between relative">
+            
+            <!-- START PRESENTATION SLIDE -->
+            <div id="start-slide" class="slide-transition flex flex-col items-center text-center my-auto py-6">
+                <!-- Canva Style Banner graphic -->
+                <div class="relative mb-6">
+                    <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-canvaPurple to-canvaTeal blur opacity-75"></div>
+                    <div class="relative bg-white p-6 rounded-full shadow-lg">
+                        <i class="fa-solid fa-book-open text-5xl text-canvaPurple"></i>
+                    </div>
+                </div>
+                <h2 class="font-heading font-bold text-3xl md:text-4xl text-gray-800 mb-3 tracking-tight">
+                    Pagpapayaman ng <span class="text-canvaPurple">Talasalitaan</span>
+                </h2>
+                <p class="text-gray-500 max-w-lg mb-8 text-sm md:text-base leading-relaxed">
+                    Mula sa file na <span class="font-semibold text-canvaTeal">"Karagdagang Pagsasanay sa mga Salitang Magkasingkahulugan at Magkasalungat.pdf"</span>. Subukin natin ang iyong husay sa wikang Filipino!
+                </p>
+                
+                <div class="bg-canvaPurple/5 border border-canvaPurple/10 p-4 rounded-2xl mb-8 max-w-md w-full text-left">
+                    <h3 class="font-heading font-semibold text-canvaPurple text-sm mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info"></i> Gabay sa Pagsagot:
+                    </h3>
+                    <ul class="text-xs text-gray-600 space-y-1">
+                        <li>🎯 <strong>Part 1 (Slides 1-5):</strong> Kasingkahulugan ng mga salita.</li>
+                        <li>🌓 <strong>Part 2 (Slides 6-10):</strong> Mga salitang magkasalungat.</li>
+                        <li>🏆 <strong>Resulta:</strong> May sertipiko ng karangalan sa dulo!</li>
+                    </ul>
+                </div>
+
+                <button onclick="startQuiz()" class="bg-canvaPurple hover:bg-canvaPurple/90 text-white font-heading font-bold px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-3 text-lg">
+                    <span>Magsimula na</span>
+                    <i class="fa-solid fa-circle-play text-xl"></i>
+                </button>
+            </div>
+
+            <!-- QUESTION / INTERACTIVE QUIZ SLIDE -->
+            <div id="quiz-slide" class="hidden slide-transition flex-1 flex flex-col justify-between">
+                <!-- Quiz Progress Bar -->
+                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden mb-6">
+                    <div id="progress-bar" class="bg-gradient-to-r from-canvaPurple to-canvaTeal h-full w-0 transition-all duration-300"></div>
+                </div>
+
+                <!-- Main Grid Layout (Left: Slide Design, Right: Options) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch flex-1">
+                    
+                    <!-- Left Side: Visual Template Card (Canva Style Presentation Slide Visual) -->
+                    <div class="lg:col-span-5 bg-gradient-to-tr from-canvaPurple/10 via-canvaTeal/5 to-white rounded-2xl p-6 border border-gray-200/50 flex flex-col justify-between relative overflow-hidden min-h-[220px] lg:min-h-auto">
+                        <!-- Tiny sticker element -->
+                        <div class="absolute -top-6 -right-6 w-20 h-20 bg-canvaYellow/20 rounded-full"></div>
+                        <div class="absolute -bottom-6 -left-6 w-20 h-20 bg-canvaPeach/20 rounded-full"></div>
+
+                        <div>
+                            <span id="question-type-badge" class="bg-canvaPurple text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-4">
+                                Kasingkahulugan
+                            </span>
+                            <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2" id="question-index-label">Tanong 1</div>
+                            <h3 id="question-text" class="text-lg md:text-xl font-heading font-bold text-gray-800 leading-snug">
+                                Nababahala si Carlos dahil sa pagkakasakit ng kaniyang ama.
+                            </h3>
+                        </div>
+
+                        <!-- Mini footer design inside slide mock -->
+                        <div class="flex items-center justify-between border-t border-gray-200/60 pt-4 mt-4">
+                            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">Aralin I</span>
+                            <i class="fa-solid fa-palette text-canvaPurple/30 text-lg"></i>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Choice Selection Area -->
+                    <div class="lg:col-span-7 flex flex-col justify-center">
+                        <p class="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">Piliin ang tamang sagot:</p>
+                        <div id="options-container" class="space-y-3">
+                            <!-- Options rendered dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Navigation / Hint Area -->
+                <div class="flex flex-col md:flex-row justify-between items-center mt-6 pt-4 border-t border-gray-100 gap-4">
+                    <!-- Hint -->
+                    <div class="flex items-center gap-2 text-sm text-gray-500 self-start md:self-center">
+                        <i class="fa-regular fa-lightbulb text-canvaYellow text-lg animate-pulse"></i>
+                        <span id="hint-text" class="italic">Mag-isip nang mabuti!</span>
+                    </div>
+
+                    <!-- Next button -->
+                    <button id="next-btn" onclick="nextQuestion()" class="w-full md:w-auto bg-gray-300 text-gray-600 font-heading font-bold px-6 py-3 rounded-xl cursor-not-allowed transition-all flex items-center justify-center gap-2" disabled>
+                        <span>Susunod</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- RESULT SLIDE (Sertipiko ng Karangalan) -->
+            <div id="result-slide" class="hidden slide-transition flex flex-col items-center justify-center my-auto py-4">
+                
+                <!-- Certificate Card with Canva Vibe -->
+                <div class="w-full max-w-2xl bg-gradient-to-tr from-yellow-50 via-white to-amber-50 p-6 md:p-10 rounded-2xl border-4 border-double border-canvaYellow shadow-xl text-center relative mb-8">
+                    <!-- Elegant corners -->
+                    <div class="absolute top-2 left-2 text-canvaYellow text-lg"><i class="fa-solid fa-leaf"></i></div>
+                    <div class="absolute top-2 right-2 text-canvaYellow text-lg"><i class="fa-solid fa-leaf"></i></div>
+                    <div class="absolute bottom-2 left-2 text-canvaYellow text-lg"><i class="fa-solid fa-leaf"></i></div>
+                    <div class="absolute bottom-2 right-2 text-canvaYellow text-lg"><i class="fa-solid fa-leaf"></i></div>
+
+                    <div class="text-amber-600 font-heading text-xs uppercase tracking-widest font-bold mb-3">Sertipiko ng Karangalan</div>
+                    <h3 class="font-heading text-2xl md:text-3xl font-bold text-gray-800 mb-2">PAGKILALA SA KAHUSAYAN</h3>
+                    <p class="text-xs text-gray-500 italic mb-6">Iginagawad sa mag-aaral dahil sa natatanging pagsisikap sa pagsasanay sa Wikang Filipino</p>
+                    
+                    <!-- Score Circle -->
+                    <div class="inline-flex flex-col items-center justify-center bg-white border-4 border-canvaTeal rounded-full w-28 h-28 md:w-32 md:h-32 shadow-md mb-6 relative">
+                        <span id="result-score" class="text-3xl md:text-4xl font-bold text-canvaTeal">10/10</span>
+                        <span class="text-[9px] uppercase tracking-wider text-gray-400 font-semibold">Kabuuang Puntos</span>
+                    </div>
+
+                    <h4 id="result-feedback-title" class="font-heading font-bold text-lg md:text-xl text-gray-800 mb-1">Kamangha-manghang Galing!</h4>
+                    <p id="result-feedback-desc" class="text-xs md:text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
+                        Nakuha mo ang perpektong marka! Kitang-kita ang gilas at kasanayan mo sa mga salitang magkasingkahulugan at magkasalungat.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-sm">
+                    <button onclick="restartQuiz()" class="flex-1 bg-canvaPurple hover:bg-canvaPurple/90 text-white font-heading font-bold px-6 py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Subukan Muli</span>
+                    </button>
+                    <button onclick="shareResult()" class="flex-1 bg-canvaTeal hover:bg-canvaTeal/90 text-white font-heading font-bold px-6 py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <span>Ibahagi</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Canva slide indicator at the bottom -->
+        <footer class="bg-gray-50 px-6 py-3 flex justify-between items-center text-xs text-gray-400 select-none border-t border-gray-100">
+            <span>Disenyo na hango sa Canva Presentation Templates</span>
+            <span class="flex items-center gap-1"><i class="fa-solid fa-heart text-canvaPeach animate-pulse"></i> Filipino Aralin</span>
+        </footer>
+    </main>
+
+    <!-- Modal for Explanations/Rationale -->
+    <div id="explanation-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 transform scale-95 transition-all duration-300">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span id="modal-status-icon" class="text-2xl"></span>
+                    <h4 id="modal-title" class="font-heading font-bold text-lg text-gray-800">Tamang Sagot!</h4>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <p id="modal-explanation" class="text-sm text-gray-600 leading-relaxed mb-6">
+                Explanation text goes here.
+            </p>
+            <button onclick="closeModal()" class="w-full bg-canvaPurple hover:bg-canvaPurple/90 text-white font-heading font-bold py-3 rounded-xl transition-all">
+                Ipagpatuloy
+            </button>
+        </div>
+    </div>
+
+    <!-- AUDIO EFFECTS USING WEB AUDIO API (No external assets needed) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            // Check state
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            }
+        }
+    </script>
+
+    <!-- INTERACTIVE ENGINE & DATA -->
+    <script>
+        // Quiz Questions Data Pool
+        const quizData = [
+            {
+                type: "kasingkahulugan",
+                badgeText: "Kasingkahulugan",
+                question: "Nabahala si Carlos dahil sa pagkakasakit ng kaniyang ama.",
+                hint: "Isipin mo ang nararamdaman ng isang tao kung may mangyaring masama sa mahal sa buhay.",
+                options: [
+                    { text: "nalulungkot", isCorrect: false, rationale: "Ang nalulungkot ay naglalarawan ng lungkot o pighati, ngunit may mas tiyak na salita para sa ligalig o kaba." },
+                    { text: "nagagalit", isCorrect: false, rationale: "Ang pagka-inis o galit ay hindi direktang tugon sa pagkakaroon ng may-sakit na pamilya." },
+                    { text: "nag-aalala", isCorrect: true, rationale: "Ang nababahala ay tumutukoy sa pagkakaroon ng agam-agam, takot, o kaba tungkol sa isang sitwasyon." },
+                    { text: "naiiyak", isCorrect: false, rationale: "Maaaring maging bunga ito ng pagkabahala, subalit hindi ito ang mismong kahulugan ng salita." }
+                ]
+            },
+            {
+                type: "kasingkahulugan",
+                badgeText: "Kasingkahulugan",
+                question: "Hindi na umimik ang ina nang marinig ang paliwanag ng anak.",
+                hint: "Ito ay may kinalaman sa hindi pagsasalita o paggawa ng ingay.",
+                options: [
+                    { text: "nagsalita", isCorrect: true, rationale: "Ang salitang 'umimik' ay nangangahulugang magsagawa ng tunog o magsalita." },
+                    { text: "nagtanong", isCorrect: false, rationale: "Ito ay anyo ng pagsasalita na humihingi ng sagot, hindi ang pangkalahatang kahulugan ng kibo." },
+                    { text: "nagalit", isCorrect: false, rationale: "Ito ay damdamin, samantalang ang 'umimik' ay aksyon ng bibig." },
+                    { text: "kumilos", isCorrect: false, rationale: "Ito ay pangkalahatang galaw ng katawan at hindi nakatuon sa boses o pananalita." }
+                ]
+            },
+            {
+                type: "kasingkahulugan",
+                badgeText: "Kasingkahulugan",
+                question: "Maaga siyang sumapit sa tanggapan dahil walang gaanong trapik.",
+                hint: "Isipin ang nagaganap matapos maglakbay patungo sa isang destinasyon.",
+                options: [
+                    { text: "umalis", isCorrect: false, rationale: "Kabaligtaran ito ng pagdating sa paroroonan." },
+                    { text: "dumating", isCorrect: true, rationale: "Ang sumapit ay may kahulugan ng pag-abot o pagdating sa isang lugar pagkatapos ng biyahe." },
+                    { text: "nakita", isCorrect: false, rationale: "Ito ay tumutukoy sa paningin, hindi sa pisikal na presensya sa lugar." },
+                    { text: "lumibot", isCorrect: false, rationale: "Ito ay ang paggala o pag-ikot, hindi ang mismong pagtapak sa patutunguhan." }
+                ]
+            },
+            {
+                type: "kasingkahulugan",
+                badgeText: "Kasingkahulugan",
+                question: "Masuyong tinulungan ni Carlos ang matandang babae.",
+                hint: "Isipin ang paraan ng pagtulong na may kasamang malambing at magiliw na pakikitungo.",
+                options: [
+                    { text: "may pagkainis", isCorrect: false, rationale: "Ito ay nagpapakita ng negatibong pakiramdam na kabaligtaran ng masuyo." },
+                    { text: "may pagkagalit", isCorrect: false, rationale: "Ang galit ay marahas na emosyon na salungat sa malambing na paggabay." },
+                    { text: "may pagkatakot", isCorrect: false, rationale: "Hindi takot ang nagtutulak sa marubdob at magiliw na pagkalinga." },
+                    { text: "may pagmamahal", isCorrect: true, rationale: "Ang masuyo ay nangangahulugang malambing, mapagmahal, at magiliw ang paraan ng pakikitungo." }
+                ]
+            },
+            {
+                type: "kasingkahulugan",
+                badgeText: "Kasingkahulugan",
+                question: "Inalalayan niyang sumampa sa bus ang pasahero.",
+                hint: "Ito ay ang pagkilos patungo sa loob ng isang sasakyan mula sa lupa.",
+                options: [
+                    { text: "umakyat", isCorrect: true, rationale: "Ang sumampa ay nangangahulugang pumasok sa mas mataas na posisyon tulad ng pagsakay sa bus." },
+                    { text: "bumaba", isCorrect: false, rationale: "Ito ay ang paglisan mula sa sasakyan pababa sa kalsada." },
+                    { text: "umupo", isCorrect: false, rationale: "Maaaring gawin ito pagkatapos sumampa, ngunit hindi ito ang kahulugan ng mismong salita." },
+                    { text: "lumipat", isCorrect: false, rationale: "Ito ay pagpalit lamang ng puwesto, hindi ang mismong pag-akyat sa sasakyan." }
+                ]
+            },
+            {
+                type: "kasalungat",
+                badgeText: "Kasalungat",
+                question: "Hanapin ang dalawang magkasalungat na salita: 'Ang kahon ay painot-inot na ipinasok sa isang silid ng unang katulong. Kinabukasan, mabilis na mabilis naman iyong nailipat sa bodega...'",
+                hint: "Isipin ang pagkakaiba ng mabagal na kilos sa mabilis na galaw.",
+                options: [
+                    { text: "painot-inot at mabilis na mabilis", isCorrect: true, rationale: "Ang 'painot-inot' ay dahan-dahan o paisa-isa, habang ang 'mabilis na mabilis' ay may matinding bilis." },
+                    { text: "ipinasok at nailipat", isCorrect: false, rationale: "Bagaman magkaibang kilos, hindi sila ganap na magkasalungat ng direksyon o paraan." },
+                    { text: "silid at bodega", isCorrect: false, rationale: "Dalawa lamang itong magkaibang bahagi o espasyo sa bahay." },
+                    { text: "unang katulong at ikalawang katulong", isCorrect: false, rationale: "Ito ay mga tao na may bilang lamang na pagkakasunod-sunod, hindi magkasalungat." }
+                ]
+            },
+            {
+                type: "kasalungat",
+                badgeText: "Kasalungat",
+                question: "Hanapin ang dalawang magkasalungat na salita: 'Sinasabi ng marami na mapagkumbaba ang panganay nina G. at Gng. Cruz samantalang pasikat ang bunso ng mga ito.'",
+                hint: "Hanapin ang ugali ng isang taong mababa ang loob laban sa isang nagpapakitang-gilas.",
+                options: [
+                    { text: "marami at bunso", isCorrect: false, rationale: "Walang lohikal na kasalungat na ugnayan ang dami ng tao sa posisyon ng anak." },
+                    { text: "mapagkumbaba at pasikat", isCorrect: true, rationale: "Ang 'mapagkumbaba' ay hindi mayabang, samantalang ang 'pasikat' ay mahilig magmayabang o magpakita." },
+                    { text: "panganay at bunso", isCorrect: false, rationale: "Bagaman antonyms ang panganay/bunso sa pamilya, hindi ito ang pangunahing makabuluhang salungatan sa ugali na tinutukoy." },
+                    { text: "panganay at pasikat", isCorrect: false, rationale: "Magkaiba ang kategorya ng pagkakaayos ng anak sa ugali o karakter." }
+                ]
+            },
+            {
+                type: "kasalungat",
+                badgeText: "Kasalungat",
+                question: "Hanapin ang dalawang magkasalungat na salita: 'Ang dating duwag na mag-aaral ay isa na ngayong matapang na sundalong nakikidigma sa mga kalaban...'",
+                hint: "Tukuyin ang pagkakaiba ng taong walang lakas ng loob sa isang handang lumaban.",
+                options: [
+                    { text: "mag-aaral at sundalo", isCorrect: false, rationale: "Ito ay mga tungkulin o propesyon, hindi magkasalungat na katangian." },
+                    { text: "duwag at nakikidigma", isCorrect: false, rationale: "Ang nakikidigma ay isang aksyon, habang ang duwag ay isang katangian." },
+                    { text: "sundalo at kalaban", isCorrect: false, rationale: "Kahit magkatunggali sila sa laban, hindi ito ang pang-uri ng katangian na pinag-uusapan." },
+                    { text: "duwag at matapang", isCorrect: true, rationale: "Ang 'duwag' ay walang lakas ng loob o takot, samantalang ang 'matapang' ay may buong tapang at lakas ng loob." }
+                ]
+            },
+            {
+                type: "kasalungat",
+                badgeText: "Kasalungat",
+                question: "Hanapin ang dalawang magkasalungat na salita: 'Kanina lamang nakita ko siyang nakatayo sa may bangketa. Bakit nakalugmok na siya ngayon?'",
+                hint: "Tingnan ang pagkakaiba ng tuwid na tindig sa posisyong bagsak o lupaypay.",
+                options: [
+                    { text: "nakatayo at nakalugmok", isCorrect: true, rationale: "Ang 'nakatayo' ay tuwid na tindig sa paa, samantalang ang 'nakalugmok' ay nakahandusay o bagsak ang katawan." },
+                    { text: "bangketa at ngayon", isCorrect: false, rationale: "Ang isa ay lugar at ang isa ay panahon; walang lohikal na salungatan." },
+                    { text: "nakita at nakalugmok", isCorrect: false, rationale: "Ang nakita ay aksyon ng mata, ang nakalugmok ay pisikal na anyo o posisyon." },
+                    { text: "nakatayo at bangketa", isCorrect: false, rationale: "Ang bangketa ay ang lokasyon kung saan maaaring nakatayo ang tao." }
+                ]
+            },
+            {
+                type: "kasalungat",
+                badgeText: "Kasalungat",
+                question: "Hanapin ang dalawang magkasalungat na salita: 'Ganoon na lamang ang pagtanggi ng batang uminom ng gamot. Subalit kay bilis naman ang pagtanggap niya sa isang supot ng tsokolate.'",
+                hint: "Isipin ang hindi pagpayag sa isang bagay kumpara sa buong-pusong pagkuha rito.",
+                options: [
+                    { text: "gamot at tsokolate", isCorrect: false, rationale: "Bagaman magkaibang bagay na kinakain/iniiinom, hindi sila pormal na magkasalungat ng kahulugan." },
+                    { text: "pagtanggi at pagtanggap", isCorrect: true, rationale: "Ang 'pagtanggi' ay hindi pagsang-ayon o pag-ayaw, habang ang 'pagtanggap' ay pagsang-ayon o pagpayag." },
+                    { text: "pagtanggi at mabilis", isCorrect: false, rationale: "Ang isa ay desisyon (pag-ayaw) at ang isa ay bilis ng kilos." },
+                    { text: "bata at tsokolate", isCorrect: false, rationale: "Ito ay tao at bagay; walang relasyong kasalungat sa pagitan nito." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOptionIndex = null;
+        let hasAnswered = false;
+
+        // Start Quiz
+        function startQuiz() {
+            playSound('click');
+            document.getElementById('start-slide').classList.add('hidden');
+            document.getElementById('quiz-slide').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // Load Question
+        function loadQuestion() {
+            hasAnswered = false;
+            selectedOptionIndex = null;
+
+            const q = quizData[currentQuestionIndex];
+            
+            // Header Slide updates
+            document.getElementById('slide-number').innerText = `Slide ${currentQuestionIndex + 2} ng 12`;
+            document.getElementById('question-index-label').innerText = `Tanong ${currentQuestionIndex + 1}`;
+            
+            // Progress Bar
+            const percent = ((currentQuestionIndex) / quizData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            // Question Text & Badge
+            const badge = document.getElementById('question-type-badge');
+            badge.innerText = q.badgeText;
+            if (q.type === 'kasingkahulugan') {
+                badge.className = "bg-canvaPurple text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-4";
+            } else {
+                badge.className = "bg-canvaTeal text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-4";
+            }
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('hint-text').innerText = q.hint;
+
+            // Generate Options with Canva Card style
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const alphabet = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `option-${idx}`;
+                btn.onclick = () => selectOption(idx);
+                btn.className = "w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-canvaPurple/30 bg-gray-50 hover:bg-canvaPurple/5 transition-all flex items-center gap-4 group";
+                
+                btn.innerHTML = `
+                    <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-white shadow-sm border border-gray-200 text-gray-500 font-bold font-heading flex items-center justify-center group-hover:bg-canvaPurple group-hover:text-white group-hover:border-canvaPurple transition-all">
+                        ${alphabet[idx]}
+                    </span>
+                    <span class="text-sm font-semibold text-gray-700 leading-tight">${opt.text}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Disable Next Button initially
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.className = "w-full md:w-auto bg-gray-200 text-gray-400 font-heading font-bold px-6 py-3 rounded-xl cursor-not-allowed transition-all flex items-center justify-center gap-2";
+        }
+
+        // Select Option
+        function selectOption(index) {
+            if (hasAnswered) return;
+            playSound('click');
+            
+            hasAnswered = true;
+            selectedOptionIndex = index;
+            const q = quizData[currentQuestionIndex];
+            const isCorrect = q.options[index].isCorrect;
+
+            // Color Options
+            q.options.forEach((opt, idx) => {
+                const btn = document.getElementById(`option-${idx}`);
+                const badge = btn.querySelector('span:first-child');
+                
+                // Reset styles
+                btn.className = "w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-4";
+                
+                if (opt.isCorrect) {
+                    // Correct answer style (Green)
+                    btn.classList.add("border-emerald-500", "bg-emerald-50");
+                    badge.className = "flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold flex items-center justify-center";
+                    badge.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                } else if (idx === index) {
+                    // Wrong choice style (Red)
+                    btn.classList.add("border-rose-500", "bg-rose-50");
+                    badge.className = "flex-shrink-0 w-8 h-8 rounded-lg bg-rose-500 text-white font-bold flex items-center justify-center";
+                    badge.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+                } else {
+                    // Inactive styles
+                    btn.classList.add("border-gray-100", "bg-gray-50", "opacity-50");
+                    badge.className = "flex-shrink-0 w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-400 flex items-center justify-center";
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                playSound('correct');
+                showModal(true, q.options[index].rationale);
+            } else {
+                playSound('wrong');
+                showModal(false, q.options[index].rationale);
+            }
+
+            // Enable Next Button
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = false;
+            nextBtn.className = "w-full md:w-auto bg-canvaPurple hover:bg-canvaPurple/90 text-white font-heading font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer";
+        }
+
+        // Modal Functionality
+        function showModal(isCorrect, explanation) {
+            const modal = document.getElementById('explanation-modal');
+            const title = document.getElementById('modal-title');
+            const icon = document.getElementById('modal-status-icon');
+            const desc = document.getElementById('modal-explanation');
+
+            if (isCorrect) {
+                title.innerText = "Mahusay! Tama ka.";
+                title.className = "font-heading font-bold text-lg text-emerald-600";
+                icon.innerHTML = "🎉";
+            } else {
+                title.innerText = "Suriing Mabuti!";
+                title.className = "font-heading font-bold text-lg text-rose-600";
+                icon.innerHTML = "💡";
+            }
+
+            desc.innerText = explanation;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('div').classList.remove('scale-95');
+                modal.querySelector('div').classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('explanation-modal');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        // Next Question
+        function nextQuestion() {
+            playSound('click');
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show Results
+        function showResults() {
+            document.getElementById('quiz-slide').classList.add('hidden');
+            document.getElementById('result-slide').classList.remove('hidden');
+            document.getElementById('slide-number').innerText = `Slide 12 ng 12`;
+            document.getElementById('progress-bar').style.width = `100%`;
+
+            const scoreText = document.getElementById('result-score');
+            scoreText.innerText = `${score}/${quizData.length}`;
+
+            const fbTitle = document.getElementById('result-feedback-title');
+            const fbDesc = document.getElementById('result-feedback-desc');
+
+            if (score === 10) {
+                fbTitle.innerText = "Kamangha-manghang Galing!";
+                fbDesc.innerText = "Nakuha mo ang perpektong marka! Kitang-kita ang husay at talas ng iyong isip pagdating sa wikang Filipino.";
+                triggerConfetti();
+            } else if (score >= 7) {
+                fbTitle.innerText = "Napakahusay na Pagsisikap!";
+                fbDesc.innerText = "Napakagandang simula! Malawak na ang iyong talasalitaan. Kaunting pagsasanay pa at makukuha mo rin ang perpektong marka!";
+                triggerConfetti();
+            } else {
+                fbTitle.innerText = "Magpatuloy sa Pag-aaral!";
+                fbDesc.innerText = "Huwag mawalan ng pag-asa. Ang talasalitaan ay patuloy na yumayaman sa pamamagitan ng pagbabasa at madalas na pagsasanay!";
+            }
+        }
+
+        // Restart
+        function restartQuiz() {
+            playSound('click');
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('result-slide').classList.add('hidden');
+            document.getElementById('quiz-slide').classList.add('hidden');
+            document.getElementById('start-slide').classList.remove('hidden');
+            document.getElementById('slide-number').innerText = `Slide 1 ng 12`;
+        }
+
+        // Confetti Celebration
+        function triggerConfetti() {
+            const duration = 3 * 1000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#7d2ae8', '#00c4cc', '#ffde59']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#7d2ae8', '#00c4cc', '#ffde59']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Share Dialog
+        function shareResult() {
+            playSound('click');
+            alert(`Ibahagi ang iyong marka! Nakuha ko ang ${score}/${quizData.length} sa Canva Interactive Talasalitaan Quiz. Subukan mo rin!`);
+        }
+    </script>
+</body>
+</html>

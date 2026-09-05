@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagsusulit: Mga Bumubuo ng Komunidad</title>
+  <title>Pagsusulit: Bansa, Lokasyon, at Direksyon</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .option-btn {
@@ -13,15 +13,27 @@
       border-color: #2563eb;
       background-color: #eff6ff;
     }
+    .map-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.3rem;
+      min-height: 3.6rem;
+      line-height: 1.15;
+    }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between font-sans">
 
   <!-- Header -->
-  <header class="bg-emerald-700 text-white py-6 shadow-md">
+  <header class="bg-blue-700 text-white py-6 shadow-md">
     <div class="max-w-3xl mx-auto px-4 text-center">
-      <h1 class="text-2xl sm:text-3xl font-bold">Pagsusulit: Mga Bumubuo ng Komunidad</h1>
-      <p class="text-emerald-100 text-sm sm:text-base mt-1">Araling Panlipunan &bull; Baitang 2 &bull; Aralin 1.2</p>
+      <h1 class="text-2xl sm:text-3xl font-bold">Pagsusulit sa Bansa, Lokasyon, at Direksyon</h1>
+      <p class="text-blue-100 text-sm sm:text-base mt-1">Subukin ang iyong kaalaman sa konsepto ng bansa, mapa, lokasyon, at direksyon.</p>
     </div>
   </header>
 
@@ -30,24 +42,15 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center border border-slate-200">
-      <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
-        🏘️
+      <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+        🗺️
       </div>
       <h2 class="text-xl font-bold text-slate-800 mb-2">Handa ka na ba?</h2>
-      <p class="text-slate-600 mb-4">
-        Malaman natin kung gaano mo naunawaan ang aralin tungkol sa <strong>Mga Bumubuo ng Komunidad</strong>: ang pamilya, paaralan, relihiyon, pamahalaan, at pangkabuhayan.
+      <p class="text-slate-600 mb-6">
+        Ang pagsusulit na ito ay binubuo ng <strong>10 randomized questions</strong> na may <strong>4 na pagpipilian (A hanggang D)</strong>.
+        Makikita mo agad ang tamang sagot pagkatapos pindutin ang "Ipasa ang Sagot" sa bawat tanong.
       </p>
-      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-left text-sm text-emerald-800 mb-6">
-        <p class="font-bold mb-1">Mga Panuto:</p>
-        <ul class="list-disc list-inside space-y-1">
-          <li>May <strong>20 katanungan</strong> ang pagsusulit na ito.</li>
-          <li>May <strong>4 na pagpipilian (A, B, C, D)</strong> ang bawat tanong.</li>
-          <li>Pumili ng iyong sagot, pagkatapos ay pindutin ang <strong>"Ipasa ang Sagot"</strong>.</li>
-          <li>Makikita mo agad kung tama o mali ang iyong sagot.</li>
-          <li>Iba-iba ang pagkakasunod-sunod ng mga tanong sa bawat pagkuha.</li>
-        </ul>
-      </div>
-      <button onclick="startQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+      <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
         Simulan ang Pagsusulit
       </button>
     </div>
@@ -56,14 +59,17 @@
     <div id="quiz-screen" class="hidden bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-slate-200">
       <!-- Progress & Score Header -->
       <div class="flex justify-between items-center pb-4 mb-6 border-b border-slate-100 text-sm font-semibold text-slate-500">
-        <span id="question-progress">Tanong 1 ng 20</span>
-        <span id="score-tracker" class="text-emerald-600">Iskor: 0</span>
+        <span id="question-progress">Tanong 1 ng 10</span>
+        <span id="score-tracker" class="text-blue-600">Iskor: 0</span>
       </div>
 
       <!-- Question Text -->
-      <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 mb-6">
+      <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 mb-4">
         <!-- Question inserted dynamically -->
       </h3>
+
+      <!-- Optional Diagram -->
+      <div id="diagram-container" class="mb-6"></div>
 
       <!-- Options -->
       <div id="options-container" class="space-y-3 mb-6">
@@ -78,7 +84,7 @@
         <button id="submit-btn" onclick="submitAnswer()" disabled class="bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all">
           Ipasa ang Sagot
         </button>
-        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all">
+        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all">
           Susunod na Tanong ➔
         </button>
       </div>
@@ -90,9 +96,9 @@
         <h2 class="text-2xl font-bold text-slate-800 mb-2">Tapos na ang Pagsusulit!</h2>
         <p class="text-slate-600">Narito ang buod ng iyong naging resulta:</p>
 
-        <div class="my-6 inline-block bg-emerald-50 border border-emerald-200 rounded-2xl p-6 px-10">
-          <span class="block text-4xl font-extrabold text-emerald-700" id="final-score">0 / 20</span>
-          <span class="text-xs uppercase tracking-wider font-bold text-emerald-500 mt-1 block" id="score-percentage">0%</span>
+        <div class="my-6 inline-block bg-blue-50 border border-blue-200 rounded-2xl p-6 px-10">
+          <span class="block text-4xl font-extrabold text-blue-700" id="final-score">0 / 10</span>
+          <span class="text-xs uppercase tracking-wider font-bold text-blue-500 mt-1 block" id="score-percentage">0%</span>
         </div>
       </div>
 
@@ -103,7 +109,7 @@
 
       <!-- Restart Button -->
       <div class="text-center border-t border-slate-100 pt-6">
-        <button onclick="startQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all">
+        <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all">
           Subukang Muli (Bagong Pagkakasunod-sunod)
         </button>
       </div>
@@ -113,131 +119,144 @@
 
   <!-- Footer -->
   <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200">
-    Pagsusulit: Mga Bumubuo ng Komunidad &copy; 2026
+    Pagsusulit sa Bansa, Lokasyon, at Direksyon &copy; 2026
   </footer>
 
   <script>
-    // Question Bank (20 Questions, 4 choices each: A, B, C, D)
+    // Reusable map diagram: what's found around the Philippines in each direction
+    // (same source map as used in GR4-TERITORYO-01)
+    function mapDiagramHTML() {
+      return `
+        <div class="grid grid-cols-3 grid-rows-3 gap-2 bg-sky-50 border border-sky-200 rounded-xl p-3 max-w-md mx-auto">
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Isla ng Paracel</div>
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Taiwan at Bashi Channel</div>
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Dagat Pilipinas</div>
+
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Vietnam at Dagat Kanluran ng Pilipinas</div>
+          <div class="map-cell text-2xl">🇵🇭</div>
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Karagatang Pasipiko</div>
+
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Borneo</div>
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Brunei, Indonesia at Dagat Celebes</div>
+          <div class="map-cell bg-white border border-sky-300 text-sky-800">Isla ng Palau</div>
+        </div>
+      `;
+    }
+
+    // Question Bank (10 Questions, 4 choices each: A, B, C, D)
     const rawQuestions = [
       {
-        text: "Ano ang tawag sa isang tao na bahagi ng isang grupo o komunidad?",
-        options: ["Institusyon", "Indibidwal", "Pamahalaan", "Relihiyon"],
-        correctIndex: 1,
-        explanation: "Ang indibidwal ay isang taong bahagi ng isang grupo. May sariling pangangailangan at katangian ang bawat indibidwal."
+        text: "Ang Pilipinas ay isang bansa dahil ________.",
+        options: [
+          "marami itong likas na yaman.",
+          "mayroon tayong magagaling na lider.",
+          "ito ay may mamamayan, teritoryo, pamahalaan, at soberanya.",
+          "may mga nakatirang tao sa lugar na ito."
+        ],
+        correctIndex: 2,
+        explanation: "Isang bansa dahil taglay nito ang apat na sangkap: mamamayan, teritoryo, pamahalaan, at soberanya."
       },
       {
-        text: "Alin sa mga sumusunod ang isang institusyon sa komunidad?",
-        options: ["Bahay", "Pamilya", "Sasakyan", "Damit"],
-        correctIndex: 1,
-        explanation: "Ang pamilya ay isa sa mga institusyon sa komunidad. Ito ay binubuo ng dalawa o higit pang taong magkakaugnay."
-      },
-      {
-        text: "Ilan ang magulang sa isang nuclear family?",
-        options: ["Isa", "Dalawa", "Tatlo", "Wala"],
-        correctIndex: 1,
-        explanation: "Sa nuclear family, dalawa ang magulang. Maaaring isa o higit pa ang kanilang mga anak."
-      },
-      {
-        text: "Anong uri ng pamilya ang binubuo ng nuclear family kasama pa ang lolo, lola, tiyo, at tiya?",
-        options: ["Extended family", "Pamilyang walang anak", "Nuclear family", "Pamilyang walang magulang"],
+        text: "Alin sa mga sumusunod ang tumutukoy sa patag na modelo o representasyon ng mundo na nagpapakita ng mga hugis, sukat, lokasyon at direksyon ng mga lugar at bansa?",
+        options: [
+          "mapa",
+          "globo",
+          "compass",
+          "grid"
+        ],
         correctIndex: 0,
-        explanation: "Ang extended family ay binubuo ng nuclear family at iba pang kamag-anak tulad ng lolo, lola, tiyo, tiya, at mga pinsan."
+        explanation: "Ang mapa ay isang patag na representasyon ng mundo na nagpapakita ng hugis, sukat, lokasyon, at direksyon ng mga lugar at bansa."
       },
       {
-        text: "Saan natututo ang mga kasapi ng komunidad ng kaalaman, kakayahan, at kabutihang-asal?",
-        options: ["Palengke", "Paaralan", "Barangay Hall", "Pamilihan"],
-        correctIndex: 1,
-        explanation: "Ang paaralan ay isang institusyong bumubuo ng komunidad kung saan natututo ang mga mag-aaral ng kaalaman at kabutihang-asal."
-      },
-      {
-        text: "Sino ang namumuno sa isang paaralan?",
-        options: ["Kapitan ng Barangay", "Punong-guro", "Ministro", "Kagawad"],
-        correctIndex: 1,
-        explanation: "Ang punong-guro ang namumuno sa paaralan, kasama ang mga guro, guidance counselor, librarian, at dyanitor."
-      },
-      {
-        text: "Para sa mga batang edad limang taon pababa, aling antas ng paaralan ang angkop?",
-        options: ["Kolehiyo", "Sekundarya", "Nursery at Kindergarten", "Graduate School"],
+        text: "Alin sa mga sumusunod na pangungusap ang TAMA tungkol sa direksyon?",
+        options: [
+          "Ito ay hilaga, silangan, timog at kanluran lamang.",
+          "Ito ay ginagamitan ng bisinal at insular na pamamaraan.",
+          "Ito ay binubuo ng mga pangunahin at pangalawang direksyon.",
+          "Ito ay ginagamitan ng imahinaryong guhit longhitud at latitud."
+        ],
         correctIndex: 2,
-        explanation: "Ang Nursery at Kindergarten ay para sa mga mag-aaral na edad limang taon pababa."
+        explanation: "Ang direksyon ay binubuo ng mga pangunahing direksyon (hilaga, timog, silangan, kanluran) at pangalawang direksyon (hal. hilagang-silangan)."
       },
       {
-        text: "Para sa mga mag-aaral sa baitang 1 hanggang 6, aling antas ng paaralan ang kanilang pinapasukan?",
-        options: ["Senior High School", "Primarya o Elementarya", "Bokasyonal", "Kolehiyo"],
+        text: "Alin sa mga sumusunod ang paraan ng pagtukoy ng lokasyon ng bansa sa pamamagitan ng bansang katabi o hangganan nito?",
+        options: [
+          "bisinal",
+          "insular",
+          "ekwador",
+          "longhitud"
+        ],
+        correctIndex: 0,
+        explanation: "Ang bisinal na pamamaraan ay pagtukoy ng lokasyon batay sa mga katabing bansa o hangganan."
+      },
+      {
+        text: "Alin sa mga sumusunod ang paraan ng pagtukoy ng lokasyon ng bansa sa pamamagitan ng mga anyong tubig na nakapaligid dito?",
+        options: [
+          "bisinal",
+          "insular",
+          "mapa",
+          "latitud"
+        ],
         correctIndex: 1,
-        explanation: "Ang Primarya o Elementarya ay para sa mga mag-aaral sa baitang 1 hanggang 6."
+        explanation: "Ang insular na pamamaraan ay pagtukoy ng lokasyon batay sa mga anyong tubig na nakapaligid sa isang lugar."
       },
       {
-        text: "Alin ang pinakamataas na antas ng paaralan?",
-        options: ["Kolehiyo", "Sekundarya", "Graduate School", "Bokasyonal"],
+        text: "Alin sa mga sumusunod ang paraan ng pagtukoy ng tiyak na lokasyon na gumagamit ng grid sa tulong ng mga imahinaryong guhit tulad ng latitud at longhitud?",
+        options: [
+          "bisinal na lokasyon",
+          "absolute na lokasyon",
+          "relatibong lokasyon",
+          "insular na lokasyon"
+        ],
+        correctIndex: 1,
+        explanation: "Ang absolute o tiyak na lokasyon ay gumagamit ng grid ng latitud at longhitud upang tumpak na matukoy ang isang lugar."
+      },
+      {
+        text: "Suriin nang mabuti ang mga pangungusap sa ibaba at piliin ang TAMANG SAGOT.<br><br><em>I. Ang Pilipinas ay nasa itaas o hilaga ng ekwador at nasa silangan ng Prime Meridian.</em><br><em>II. Ang Pilipinas ay isang bansa na matatagpuan sa Hilagang-Silangang Asya.</em>",
+        options: [
+          "Parehong tama ang pangungusap.",
+          "Parehong mali ang pangungusap.",
+          "Ang unang pangungusap lamang ang tama.",
+          "Ang ikalawang pangungusap lamang ang tama."
+        ],
         correctIndex: 2,
-        explanation: "Ang Graduate School ang pinakamataas na antas ng paaralan, kung saan nag-aaral ang mga nagnanais maging dalubhasa sa isang larangan."
+        explanation: "Tama ang unang pangungusap. Mali ang ikalawa dahil ang Pilipinas ay matatagpuan sa Timog-Silangang Asya, hindi Hilagang-Silangang Asya."
       },
       {
-        text: "Anong relihiyon ang naniniwala sa tatlong katauhan ng Diyos: Diyos-Ama, Diyos-Anak, at Diyos-Espiritu Santo?",
-        options: ["Islam", "Katoliko", "Iglesia ni Cristo", "Sabadista"],
-        correctIndex: 1,
-        explanation: "Ang mga Katoliko ay naniniwala sa tatlong katauhan ng Diyos: Diyos-Ama, Diyos-Anak na si Hesukristo, at Diyos-Espiritu Santo."
+        text: "Suriin ang mapa sa ibaba. Alin sa mga sumusunod na direksyon matatagpuan ang Isla ng Palau?",
+        diagram: "map",
+        options: [
+          "Hilagang-Kanluran",
+          "Kanluran",
+          "Timog-Silangan",
+          "Silangan"
+        ],
+        correctIndex: 2,
+        explanation: "Ayon sa mapa, ang Isla ng Palau ay matatagpuan sa Timog-Silangan ng Pilipinas."
       },
       {
-        text: "Ano ang tawag sa Panginoon ng mga Muslim?",
-        options: ["Hesukristo", "Allah", "Ama", "Panginoon"],
-        correctIndex: 1,
-        explanation: "Allah ang tawag ng mga Muslim sa kanilang Panginoon. Ang Koran ang batayan ng kanilang paniniwala."
+        text: "Suriin ang mapa sa ibaba. Alin sa mga sumusunod na direksyon matatagpuan ang Bashi Channel?",
+        diagram: "map",
+        options: [
+          "Silangan",
+          "Timog",
+          "Hilaga",
+          "Kanluran"
+        ],
+        correctIndex: 2,
+        explanation: "Ayon sa mapa, ang Bashi Channel (kasama ang Taiwan) ay matatagpuan sa Hilaga ng Pilipinas."
       },
       {
-        text: "Ano ang tawag sa dalanginan o simbahan ng mga Muslim?",
-        options: ["Sambahan", "Moske", "Kapilya", "Templo"],
-        correctIndex: 1,
-        explanation: "Ang moske o mosque ang tawag sa lugar ng pagsamba ng mga Muslim."
-      },
-      {
-        text: "Anong araw sumasamba ang mga Sabadista o Seventh-day Adventist?",
-        options: ["Linggo", "Biyernes", "Huwebes", "Sabado"],
+        text: "Suriin ang mapa sa ibaba. Alin sa mga sumusunod na direksyon matatagpuan ang Brunei?",
+        diagram: "map",
+        options: [
+          "Hilaga",
+          "Silangan",
+          "Kanluran",
+          "Timog"
+        ],
         correctIndex: 3,
-        explanation: "Ang mga Sabadista ay sumasamba tuwing Sabado, mula sa paglubog ng araw ng Biyernes hanggang paglubog ng araw ng Sabado."
-      },
-      {
-        text: "Sino ang namumuno sa pagsamba ng mga Katoliko?",
-        options: ["Pari", "Ministro", "Imam", "Guro"],
-        correctIndex: 0,
-        explanation: "Ang pagsamba ng mga Katoliko ay pinamumunuan ng pari, karaniwang tuwing Linggo."
-      },
-      {
-        text: "Sino ang tinatawag na pinakamataas na pinuno ng barangay?",
-        options: ["Kagawad", "Kapitan ng Barangay", "Punong-guro", "Chairperson ng Sangguniang Kabataan"],
-        correctIndex: 1,
-        explanation: "Ang Kapitan ng Barangay, na tinatawag ding chairperson o captain, ang pinakamataas na pinuno ng barangay."
-      },
-      {
-        text: "Ilang kagawad ang tumutulong sa Kapitan ng Barangay?",
-        options: ["Lima", "Anim", "Pito", "Sampu"],
-        correctIndex: 2,
-        explanation: "Pitong kagawad ang tumutulong sa Kapitan ng Barangay sa pamamahala ng barangay."
-      },
-      {
-        text: "Ano ang tawag sa mga taong tumutulong sa mga pinuno ng barangay sa pagbabantay at kaayusan?",
-        options: ["Tanod", "Kahera", "Kargador", "Guidance Counselor"],
-        correctIndex: 0,
-        explanation: "Ang mga barangay tanod ay tumutulong sa mga pinuno ng barangay sa pamamahala at kaayusan."
-      },
-      {
-        text: "Sino ang bumubuo sa Sangguniang Kabataan?",
-        options: ["Mga taong may edad 60 pataas", "Mga kabataang may edad 18 hanggang 24 taon", "Mga guro sa paaralan", "Mga pari at ministro"],
-        correctIndex: 1,
-        explanation: "Ang Sangguniang Kabataan ay binubuo ng isang chairperson at pitong miyembrong may edad 18 hanggang 24 taon."
-      },
-      {
-        text: "Alin sa mga sumusunod ang halimbawa ng taong nagbibigay ng produkto sa komunidad?",
-        options: ["Guro", "Doktor", "Magsasaka", "Pulis"],
-        correctIndex: 2,
-        explanation: "Ang magsasaka, kasama ang mangingisda at minero, ay nagbibigay ng produkto sa komunidad."
-      },
-      {
-        text: "Alin sa mga sumusunod ang halimbawa ng taong nagbibigay ng serbisyo sa komunidad?",
-        options: ["Magsasaka", "Mangingisda", "Minero", "Doktor"],
-        correctIndex: 3,
-        explanation: "Ang doktor, kasama ang guro, pulis, at barbero, ay nagbibigay ng serbisyo sa komunidad."
+        explanation: "Ayon sa mapa, ang Brunei (kasama ang Indonesia at Dagat Celebes) ay matatagpuan sa Timog ng Pilipinas."
       }
     ];
 
@@ -250,7 +269,6 @@
 
     const optionLetters = ["A", "B", "C", "D"];
 
-    // Helper: Fisher-Yates Shuffle
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -261,12 +279,9 @@
     }
 
     function startQuiz() {
-      // Shuffle the questions list
       const shuffledRaw = shuffleArray(rawQuestions);
 
-      // Format questions with shuffled options & consistent letters A-D
       currentQuestions = shuffledRaw.map((q) => {
-        // Shuffle options for each question
         const indexedOptions = q.options.map((optText, origIndex) => ({
           text: optText,
           isCorrect: origIndex === q.correctIndex
@@ -274,7 +289,6 @@
 
         const shuffledOptions = shuffleArray(indexedOptions);
 
-        // Assign A, B, C, D
         let correctLetter = "";
         const finalOptions = shuffledOptions.map((item, idx) => {
           const letter = optionLetters[idx];
@@ -287,6 +301,7 @@
 
         return {
           text: q.text,
+          diagram: q.diagram || null,
           options: finalOptions,
           correctLetter: correctLetter,
           explanation: q.explanation
@@ -308,20 +323,20 @@
       const q = currentQuestions[currentIndex];
       selectedOptionLetter = null;
 
-      // Update Progress Header
       document.getElementById('question-progress').textContent = `Tanong ${currentIndex + 1} ng ${currentQuestions.length}`;
       document.getElementById('score-tracker').textContent = `Iskor: ${score}`;
 
-      // Set Question Text with CONSISTENT numbering
-      document.getElementById('question-text').textContent = `${currentIndex + 1}. ${q.text}`;
+      document.getElementById('question-text').innerHTML = `${currentIndex + 1}. ${q.text}`;
 
-      // Render 4 Options
+      const diagramContainer = document.getElementById('diagram-container');
+      diagramContainer.innerHTML = q.diagram === 'map' ? mapDiagramHTML() : '';
+
       const container = document.getElementById('options-container');
       container.innerHTML = '';
 
       q.options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = `option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 flex items-start gap-3 bg-white shadow-sm`;
+        btn.className = `option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-blue-400 flex items-start gap-3 bg-white shadow-sm`;
         btn.onclick = () => selectOption(opt.letter, btn);
         btn.innerHTML = `
           <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-sm shrink-0">${opt.letter}</span>
@@ -330,7 +345,6 @@
         container.appendChild(btn);
       });
 
-      // Reset feedback and action buttons
       const feedbackBox = document.getElementById('feedback-box');
       feedbackBox.className = 'hidden p-4 rounded-xl mb-6 text-sm font-medium';
       feedbackBox.innerHTML = '';
@@ -344,24 +358,22 @@
     }
 
     function selectOption(letter, btnElement) {
-      if (document.getElementById('submit-btn').classList.contains('hidden')) return; // Already submitted
+      if (document.getElementById('submit-btn').classList.contains('hidden')) return;
 
       selectedOptionLetter = letter;
 
-      // Highlight selected styling
       const buttons = document.querySelectorAll('.option-btn');
       buttons.forEach(b => {
-        b.classList.remove('selected', 'border-emerald-600', 'bg-emerald-50');
+        b.classList.remove('selected', 'border-blue-600', 'bg-blue-50');
         b.classList.add('border-slate-200', 'bg-white');
       });
 
-      btnElement.classList.add('selected', 'border-emerald-600', 'bg-emerald-50');
+      btnElement.classList.add('selected', 'border-blue-600', 'bg-blue-50');
       btnElement.classList.remove('border-slate-200', 'bg-white');
 
-      // Enable submit button
       const submitBtn = document.getElementById('submit-btn');
       submitBtn.disabled = false;
-      submitBtn.className = 'bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer';
+      submitBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer';
     }
 
     function submitAnswer() {
@@ -372,7 +384,6 @@
 
       if (isCorrect) score++;
 
-      // Save answer details
       userAnswers.push({
         num: currentIndex + 1,
         question: q.text,
@@ -383,7 +394,6 @@
         options: q.options
       });
 
-      // Show Instant Feedback
       const feedbackBox = document.getElementById('feedback-box');
       feedbackBox.classList.remove('hidden');
 
@@ -406,11 +416,10 @@
         `;
       }
 
-      // Disable buttons and show visual indicators for options
       const buttons = document.querySelectorAll('.option-btn');
       buttons.forEach((b, idx) => {
         b.disabled = true;
-        b.classList.remove('hover:border-emerald-400');
+        b.classList.remove('hover:border-blue-400');
         const optLetter = q.options[idx].letter;
 
         if (optLetter === q.correctLetter) {
@@ -420,7 +429,6 @@
         }
       });
 
-      // Toggle Buttons
       document.getElementById('submit-btn').classList.add('hidden');
       document.getElementById('next-btn').classList.remove('hidden');
       document.getElementById('score-tracker').textContent = `Iskor: ${score}`;
@@ -444,7 +452,6 @@
       const percentage = Math.round((score / total) * 100);
       document.getElementById('score-percentage').textContent = `${percentage}% Kabuuang Iskor`;
 
-      // Render Mistakes / Review Section
       const mistakesSection = document.getElementById('mistakes-section');
       const mistakes = userAnswers.filter(a => !a.isCorrect);
 

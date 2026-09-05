@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Quiz: The Digestive System</title>
+<style>
+  :root {
+    --blue: #2E74B5;
+    --blue-dark: #1F4E79;
+    --green: #2e7d32;
+    --green-bg: #e8f5e9;
+    --red: #c62828;
+    --red-bg: #fdecea;
+    --gray-bg: #f4f6f8;
+    --border: #d7dee5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--gray-bg);
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 12px 60px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 640px;
+    padding: 28px 24px 32px;
+  }
+  h1 {
+    color: var(--blue-dark);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--blue);
+    font-weight: 600;
+    margin: 0 0 20px;
+    font-size: 1.05rem;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    background: var(--gray-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+  .meta-grid div span.label {
+    display: block;
+    color: #667;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .meta-grid div span.value {
+    font-weight: 600;
+    color: #222;
+  }
+  ul.instructions {
+    padding-left: 22px;
+    margin: 0 0 22px;
+    line-height: 1.6;
+  }
+  ul.instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 26px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow 0.15s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(46,116,181,0.35);
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary:disabled {
+    background: #a9c3d9;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+  .btn-row { text-align: center; margin-top: 8px; }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 6px;
+    transition: width 0.25s ease;
+  }
+  .progress-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    white-space: nowrap;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eaf2fa;
+    color: var(--blue-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 18px;
+    color: #1a1a1a;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover:not(.locked) { border-color: var(--blue); background: #f5faff; }
+  .option.selected { border-color: var(--blue); background: #eaf2fa; }
+  .option-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gray-bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #556;
+  }
+  .option.selected .option-letter { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .option.correct { border-color: var(--green); background: var(--green-bg); }
+  .option.correct .option-letter { background: var(--green); border-color: var(--green); color: #fff; }
+  .option.incorrect { border-color: var(--red); background: var(--red-bg); }
+  .option.incorrect .option-letter { background: var(--red); border-color: var(--red); color: #fff; }
+  .option.locked { cursor: default; }
+
+  .feedback {
+    display: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-bg); border: 1px solid #b7dfb9; color: #1b4d20; }
+  .feedback.incorrect-fb { background: var(--red-bg); border: 1px solid #f3b8b3; color: #7a1d1d; }
+  .feedback .fb-title { font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+
+  /* Results */
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 8px solid var(--blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .score-circle .num { font-size: 2rem; font-weight: 800; color: var(--blue-dark); line-height: 1; }
+  .score-circle .den { font-size: 0.85rem; color: #667; margin-top: 2px; }
+  .score-msg {
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #333;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item .rtopic {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .review-item .rq { font-weight: 600; margin-bottom: 8px; }
+  .review-item .rline { font-size: 0.9rem; margin-bottom: 3px; }
+  .review-item .rline.wrong { color: var(--red); }
+  .review-item .rline.right { color: var(--green); }
+  .review-item .rexpl { font-size: 0.85rem; color: #556; margin-top: 6px; font-style: italic; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px 26px; border-radius: 12px; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .score-circle { width: 110px; height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="app">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen">
+    <h1>Science Quiz</h1>
+    <p class="subtitle">The Digestive System</p>
+
+    <div class="meta-grid">
+      <div><span class="label">Subject</span><span class="value">Science</span></div>
+      <div><span class="label">Grade Level</span><span class="value">Grade 4</span></div>
+      <div><span class="label">Topic</span><span class="value">The Digestive System</span></div>
+      <div><span class="label">Questions</span><span class="value">15 (of 45 in the question bank)</span></div>
+    </div>
+
+    <ul class="instructions">
+      <li>This quiz has <strong>15 questions</strong>, randomly picked from a bank of 45 — so every attempt can be different!</li>
+      <li>Each question is <strong>multiple choice</strong> with 4 answer choices (A–D).</li>
+      <li>Answer one question at a time, then press <strong>Submit</strong> to check your answer.</li>
+      <li>You'll see right away whether you got it correct, along with a short explanation.</li>
+      <li>At the end, you'll get your final score and a review of any questions you missed.</li>
+      <li>Topics covered: the GI tract and accessory organs, the mouth, esophagus, stomach, small intestine, large intestine, liver, gallbladder, pancreas, anus, and mechanical vs. chemical digestion.</li>
+      <li>Do your best, and have fun learning how your body digests food! 🍎</li>
+    </ul>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="start-btn" style="width:100%;">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Q1 / 15</div>
+    </div>
+    <div class="topic-tag" id="topic-tag">Topic</div>
+    <p class="question-text" id="question-text">Question text</p>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-title" id="fb-title"></div>
+      <div id="fb-explanation"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="action-btn" style="width:100%;" disabled>Submit</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS SCREEN ============ -->
+  <div id="results-screen" class="hidden">
+    <h1>Quiz Complete!</h1>
+    <div class="score-circle">
+      <div class="num" id="score-num">0/15</div>
+      <div class="den">correct</div>
+    </div>
+    <p class="score-msg" id="score-msg"></p>
+    <div id="review-section"></div>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn btn-primary" id="retake-btn" style="width:100%;">Retake Quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ======================================================================
+// QUESTION BANK: 45 questions on the Digestive System
+// Source: "Understanding Life through Science 4", pp. 57-58 (Digestive System,
+// The Digestive Processes, Mechanical Digestion, Chemical Digestion), plus
+// common accessory-organ facts (bile, enzymes) built on that same material.
+// options[0] is ALWAYS the correct answer in source; shuffled at render time.
+// ======================================================================
+const QUESTION_BANK = [
+
+  // ===================== DIGESTIVE SYSTEM OVERVIEW (3) =====================
+  { topic: "Digestive System Overview", q: "What does the digestive system do to the food you eat?",
+    options: ["Breaks it down and absorbs nutrients from it", "Turns it directly into energy with no breakdown at all", "Stores it permanently in the stomach", "Turns it into bone and muscle tissue"],
+    explanation: "The digestive system breaks down the food you eat and absorbs nutrients from it." },
+  { topic: "Digestive System Overview", q: "What two main parts make up the digestive system?",
+    options: ["The GI tract and the accessory organs", "The heart and the lungs", "The brain and the spinal cord", "The skeleton and the muscles"],
+    explanation: "The digestive system includes the alimentary canal, or GI tract, and the accessory organs." },
+  { topic: "Digestive System Overview", q: "Another name for the alimentary canal is the ___.",
+    options: ["gastrointestinal (GI) tract", "respiratory tract", "circulatory tract", "skeletal tract"],
+    explanation: "The alimentary canal is also called the gastrointestinal (GI) tract." },
+
+  // ===================== THE GI TRACT (3) =====================
+  { topic: "The GI Tract", q: "About how long is the GI tract?",
+    options: ["7.5 meters", "1 meter", "75 meters", "0.75 meters"],
+    explanation: "The GI tract is a 7.5-meter-long tube of organs." },
+  { topic: "The GI Tract", q: "What is the job of the GI tract?",
+    options: ["It serves as a pathway for food to enter the body", "It pumps blood throughout the body", "It filters air for breathing", "It sends messages to the brain"],
+    explanation: "The GI tract is a tube of organs that serves as a pathway for food to enter the body." },
+  { topic: "The GI Tract", q: "Which of these lists organs that are all part of the GI tract?",
+    options: ["Mouth, esophagus, stomach, small intestine, large intestine, and anus", "Heart, lungs, and kidneys", "Brain, spinal cord, and nerves", "Skull, ribs, and spine"],
+    explanation: "The GI tract includes the mouth, the esophagus, the stomach, the small intestine, the large intestine, and the anus." },
+
+  // ===================== ACCESSORY ORGANS OVERVIEW (3) =====================
+  { topic: "Accessory Organs", q: "What is the job of the accessory organs of the digestive system?",
+    options: ["They aid in the digestive process", "They pump blood to the lungs", "They protect the brain and spinal cord", "They produce sound for speaking"],
+    explanation: "The accessory organs aid in the digestive process, even though food does not pass directly through them." },
+  { topic: "Accessory Organs", q: "Which of these lists accessory organs of the digestive system?",
+    options: ["Teeth, tongue, salivary glands, liver, gallbladder, and pancreas", "Heart, lungs, and kidneys", "Skull, ribs, and backbone", "Skin, hair, and nails"],
+    explanation: "The accessory organs include the teeth, the tongue, the salivary glands, the liver, the gallbladder, and the pancreas." },
+  { topic: "Accessory Organs", q: "Which of these is an accessory organ, not part of the GI tract itself?",
+    options: ["The pancreas", "The stomach", "The small intestine", "The esophagus"],
+    explanation: "The pancreas is an accessory organ that aids digestion, while the stomach, small intestine, and esophagus are all part of the GI tract." },
+
+  // ===================== MOUTH & TEETH (3) =====================
+  { topic: "Mouth & Teeth", q: "Where does digestion begin?",
+    options: ["In the mouth, when you take a bite of food", "In the stomach, when food is stored", "In the large intestine, when waste forms", "In the liver, when bile is made"],
+    explanation: "Mechanical digestion begins when you take a bite of any food, starting in the mouth." },
+  { topic: "Mouth & Teeth", q: "What do the teeth do during mechanical digestion?",
+    options: ["Physically break down food into smaller pieces", "Absorb nutrients from food", "Produce bile to digest fat", "Store food until it is needed"],
+    explanation: "Mechanical digestion is the physical breakdown of food into smaller pieces by the teeth." },
+  { topic: "Mouth & Teeth", q: "What does saliva start to break down in the mouth?",
+    options: ["Starches and fats", "Bones and teeth", "Water and air", "Blood and oxygen"],
+    explanation: "Chemical digestion starts in the mouth with the help of saliva, which begins breaking down starches and fats." },
+
+  // ===================== ESOPHAGUS (3) =====================
+  { topic: "Esophagus", q: "What is the job of the esophagus?",
+    options: ["It is the tube that carries food from the mouth down to the stomach", "It stores food for several hours", "It absorbs most of the body's nutrients", "It produces the enzymes that digest protein"],
+    explanation: "After the mouth, food travels down the esophagus on its way to the stomach." },
+  { topic: "Esophagus", q: "What helps move food from the mouth into the esophagus?",
+    options: ["The tongue", "The gallbladder", "The pancreas", "The large intestine"],
+    explanation: "The tongue helps move the food down the esophagus after it is chewed by the teeth." },
+  { topic: "Esophagus", q: "What is peristalsis?",
+    options: ["An involuntary muscle movement that pushes food through the digestive system", "A voluntary movement you control on purpose", "A type of enzyme that digests fat", "A disease of the stomach"],
+    explanation: "Peristalsis is an involuntary muscle movement that transports food from the esophagus through the stomach and into the large intestine." },
+
+  // ===================== STOMACH (3) =====================
+  { topic: "Stomach", q: "Which nutrient is broken down mainly in the stomach?",
+    options: ["Proteins", "Carbohydrates", "Vitamins", "Water"],
+    explanation: "In the stomach, proteins are broken down as part of chemical digestion." },
+  { topic: "Stomach", q: "What kind of special juices help the stomach break down food?",
+    options: ["Juices containing enzymes and acids", "Juices containing only water", "Juices containing only sugar", "Juices containing only air"],
+    explanation: "Chemical digestion involves special juices containing enzymes, bile, and acids that speed up the breakdown of food." },
+  { topic: "Stomach", q: "In the digestive system diagram, which organ comes right after the esophagus?",
+    options: ["The stomach", "The large intestine", "The gallbladder", "The anus"],
+    explanation: "Food travels down the esophagus and into the stomach next." },
+
+  // ===================== SMALL INTESTINE (3) =====================
+  { topic: "Small Intestine", q: "Which organ completes the digestion process by breaking down carbohydrates and fats?",
+    options: ["The small intestine", "The mouth", "The esophagus", "The large intestine"],
+    explanation: "The small intestine completes the digestion process by breaking down carbohydrates and fats into nutrients the body can absorb and use." },
+  { topic: "Small Intestine", q: "Where are most nutrients absorbed during digestion?",
+    options: ["In the small intestine", "In the mouth", "In the esophagus", "In the large intestine"],
+    explanation: "Most of the nutrients from food are absorbed in the small intestine during digestion." },
+  { topic: "Small Intestine", q: "What happens to food that is not fully digested in the small intestine?",
+    options: ["It moves on to the large intestine", "It moves back up to the stomach", "It is sent straight to the liver", "It leaves the body immediately"],
+    explanation: "Food that is not digested in the small intestine moves to the large intestine." },
+
+  // ===================== LARGE INTESTINE (4) =====================
+  { topic: "Large Intestine", q: "What is the main job of the large intestine?",
+    options: ["To absorb excess water and form waste from undigested food", "To chew food into smaller pieces", "To produce bile for digesting fat", "To pump blood through the body"],
+    explanation: "The walls of the large intestine absorb excess water and take it back to the tissues; the undigested food forms waste." },
+  { topic: "Large Intestine", q: "What is the waste formed by the large intestine called?",
+    options: ["Feces", "Bile", "Saliva", "Enzymes"],
+    explanation: "The undigested food forms waste called feces." },
+  { topic: "Large Intestine", q: "Where does the large intestine send waste to be eliminated from the body?",
+    options: ["The anus", "The mouth", "The esophagus", "The gallbladder"],
+    explanation: "Feces is eliminated from the body through the anus." },
+  { topic: "Large Intestine", q: "Besides forming waste, what else does the large intestine absorb?",
+    options: ["Excess water", "Extra bone", "Extra muscle", "Extra oxygen"],
+    explanation: "The walls of the large intestine absorb excess water and take it back to the tissues." },
+
+  // ===================== LIVER (3) =====================
+  { topic: "Liver", q: "Which organ in the diagram of the digestive system is located near the stomach and is one of the accessory organs?",
+    options: ["The liver", "The lungs", "The kidneys", "The bladder"],
+    explanation: "The liver is one of the accessory organs shown near the stomach in the digestive system." },
+  { topic: "Liver", q: "What does the liver make to help digest fats?",
+    options: ["Bile", "Saliva", "Mucus", "Blood"],
+    explanation: "The liver produces bile, one of the special juices that helps break down fats during digestion." },
+  { topic: "Liver", q: "The liver is an accessory organ. What does that mean about how it helps digestion?",
+    options: ["Food does not pass through it, but it still helps break down food", "Food only passes through it and nothing else", "It has no role in digestion at all", "It replaces the stomach completely"],
+    explanation: "Accessory organs like the liver aid in the digestive process even though food does not travel directly through them." },
+
+  // ===================== GALLBLADDER (3) =====================
+  { topic: "Gallbladder", q: "What does the gallbladder do with the bile made by the liver?",
+    options: ["It stores the bile until it is needed", "It destroys the bile", "It turns bile into saliva", "It sends bile to the lungs"],
+    explanation: "The gallbladder stores bile made by the liver until it is needed to help digest fats." },
+  { topic: "Gallbladder", q: "In the digestive system diagram, the gallbladder is located near which organ?",
+    options: ["The liver", "The mouth", "The anus", "The esophagus"],
+    explanation: "The gallbladder sits near the liver, as shown in the diagram of the digestive system." },
+  { topic: "Gallbladder", q: "Why is bile important during digestion?",
+    options: ["It helps break down fats", "It helps break down bones", "It helps you breathe", "It helps you see"],
+    explanation: "Bile, made by the liver and stored in the gallbladder, is one of the special juices that speeds up the breakdown of fats." },
+
+  // ===================== PANCREAS (3) =====================
+  { topic: "Pancreas", q: "What does the pancreas add to the digestive system to help break down food?",
+    options: ["Enzymes", "Bones", "Blood cells", "Hair"],
+    explanation: "The pancreas produces enzymes, which are special juices that help speed up the breakdown of food." },
+  { topic: "Pancreas", q: "In the digestive system diagram, the pancreas is located near which two organs?",
+    options: ["The stomach and the small intestine", "The mouth and the esophagus", "The liver and the anus", "The large intestine and the mouth"],
+    explanation: "The pancreas is shown between the stomach and the small intestine in the digestive system diagram." },
+  { topic: "Pancreas", q: "Why is the pancreas considered an accessory organ instead of part of the GI tract?",
+    options: ["Because food does not pass directly through it, but it still helps digestion", "Because it has nothing to do with digestion", "Because it is part of the skeletal system", "Because it only helps with breathing"],
+    explanation: "Like the liver and gallbladder, the pancreas aids digestion without food passing directly through it, which makes it an accessory organ." },
+
+  // ===================== ANUS & WASTE ELIMINATION (3) =====================
+  { topic: "Anus & Waste Elimination", q: "What is the last organ of the GI tract, where waste leaves the body?",
+    options: ["The anus", "The mouth", "The stomach", "The liver"],
+    explanation: "The anus is the final organ of the GI tract, where feces is eliminated from the body." },
+  { topic: "Anus & Waste Elimination", q: "What passes through the anus?",
+    options: ["Feces, or undigested food waste", "Fresh food that was just eaten", "Bile made by the liver", "Air that was just breathed in"],
+    explanation: "The feces formed by the large intestine passes through the anus to leave the body." },
+  { topic: "Anus & Waste Elimination", q: "Peristalsis moves food from the esophagus through the stomach and into the large intestine so the body can do what?",
+    options: ["Eliminate undigested waste through the anus", "Store the food forever", "Send the food back to the mouth", "Turn the food into bone"],
+    explanation: "Peristalsis helps transport food so the body can eventually eliminate undigested waste through the anus." },
+
+  // ===================== MECHANICAL DIGESTION (4) =====================
+  { topic: "Mechanical Digestion", q: "What is mechanical digestion?",
+    options: ["The physical breakdown of food into smaller pieces", "The use of enzymes and acids to change food chemically", "The absorption of nutrients into the blood", "The storage of food in the stomach"],
+    explanation: "Mechanical digestion is the physical breakdown of food into smaller pieces, starting with the teeth." },
+  { topic: "Mechanical Digestion", q: "Which two body parts are described as working together in mechanical digestion right after a bite is taken?",
+    options: ["The teeth and the tongue", "The liver and the pancreas", "The lungs and the heart", "The large intestine and the anus"],
+    explanation: "Mechanical digestion begins with the teeth breaking food into smaller pieces, then the tongue helps move it down the esophagus." },
+  { topic: "Mechanical Digestion", q: "Peristalsis is described as what kind of muscle movement?",
+    options: ["Involuntary", "Voluntary", "Random", "Reversible only in the mouth"],
+    explanation: "Peristalsis is an involuntary muscle movement, meaning you do not control it on purpose." },
+  { topic: "Mechanical Digestion", q: "Which of these is an example of mechanical digestion?",
+    options: ["Teeth breaking food into smaller pieces", "Enzymes changing food's chemical makeup", "Bile breaking down fat", "Acids breaking down protein"],
+    explanation: "Mechanical digestion is the physical breakdown of food, such as by the teeth, rather than a chemical change." },
+
+  // ===================== CHEMICAL DIGESTION (4) =====================
+  { topic: "Chemical Digestion", q: "What is chemical digestion?",
+    options: ["Breaking down food into nutrients using enzymes, bile, and acids", "Breaking food into smaller pieces using the teeth", "Moving food along using muscle contractions only", "Storing food in the stomach without changing it"],
+    explanation: "Chemical digestion breaks down food into nutrients through special juices containing enzymes, bile, and acids." },
+  { topic: "Chemical Digestion", q: "Which organ starts chemical digestion of starches and fats, with help from saliva?",
+    options: ["The mouth", "The large intestine", "The anus", "The gallbladder"],
+    explanation: "Chemical digestion starts in the mouth with the help of saliva, which begins breaking down starches and fats." },
+  { topic: "Chemical Digestion", q: "Which nutrients does the small intestine break down to complete digestion?",
+    options: ["Carbohydrates and fats", "Only water", "Only vitamins", "Only minerals"],
+    explanation: "The small intestine completes the digestion process by breaking down carbohydrates and fats into nutrients the body can use." },
+  { topic: "Chemical Digestion", q: "Where does chemical digestion of proteins mainly happen?",
+    options: ["In the stomach", "In the mouth", "In the esophagus", "In the anus"],
+    explanation: "In the stomach, proteins are broken down as part of chemical digestion." }
+];
+
+const TOTAL_QUESTIONS = 15;
+
+// ---------- State ----------
+let quizQuestions = [];   // 15 chosen questions, each with shuffled options + correctIndex
+let currentIndex = 0;
+let score = 0;
+let missed = [];
+let answeredThisQuestion = false;
+let selectedOptionIndex = null;
+
+// ---------- Helpers ----------
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuiz() {
+  const bankCopy = shuffleArray(QUESTION_BANK);
+  const chosen = bankCopy.slice(0, TOTAL_QUESTIONS);
+  quizQuestions = shuffleArray(chosen).map(item => {
+    const optionOrder = shuffleArray([0, 1, 2, 3]); // indices into original options array
+    const shuffledOptions = optionOrder.map(i => item.options[i]);
+    const correctIndex = optionOrder.indexOf(0);
+    return {
+      topic: item.topic,
+      q: item.q,
+      options: shuffledOptions,
+      correctIndex: correctIndex,
+      explanation: item.explanation
+    };
+  });
+  currentIndex = 0;
+  score = 0;
+  missed = [];
+}
+
+// ---------- DOM refs ----------
+const startScreen = document.getElementById('start-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const resultsScreen = document.getElementById('results-screen');
+
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const topicTag = document.getElementById('topic-tag');
+const questionText = document.getElementById('question-text');
+const optionsList = document.getElementById('options-list');
+const feedback = document.getElementById('feedback');
+const fbTitle = document.getElementById('fb-title');
+const fbExplanation = document.getElementById('fb-explanation');
+const actionBtn = document.getElementById('action-btn');
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  buildQuiz();
+  startScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  resultsScreen.classList.add('hidden');
+  renderQuestion();
+});
+
+document.getElementById('retake-btn').addEventListener('click', () => {
+  buildQuiz();
+  resultsScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  renderQuestion();
+});
+
+function renderQuestion() {
+  answeredThisQuestion = false;
+  selectedOptionIndex = null;
+  const item = quizQuestions[currentIndex];
+
+  progressFill.style.width = ((currentIndex) / TOTAL_QUESTIONS * 100) + '%';
+  progressLabel.textContent = 'Q' + (currentIndex + 1) + ' / ' + TOTAL_QUESTIONS;
+  topicTag.textContent = item.topic;
+  questionText.textContent = item.q;
+
+  optionsList.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.dataset.idx = idx;
+    const letter = String.fromCharCode(65 + idx);
+    div.innerHTML = '<div class="option-letter">' + letter + '</div><div class="option-text">' + opt + '</div>';
+    div.addEventListener('click', () => selectOption(idx));
+    optionsList.appendChild(div);
+  });
+
+  feedback.classList.remove('show', 'correct-fb', 'incorrect-fb');
+  actionBtn.textContent = 'Submit';
+  actionBtn.disabled = true;
+  actionBtn.onclick = handleSubmit;
+}
+
+function selectOption(idx) {
+  if (answeredThisQuestion) return;
+  selectedOptionIndex = idx;
+  [...optionsList.children].forEach(el => el.classList.remove('selected'));
+  optionsList.children[idx].classList.add('selected');
+  actionBtn.disabled = false;
+}
+
+function handleSubmit() {
+  if (selectedOptionIndex === null || answeredThisQuestion) return;
+  answeredThisQuestion = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedOptionIndex === item.correctIndex;
+
+  [...optionsList.children].forEach((el, idx) => {
+    el.classList.add('locked');
+    if (idx === item.correctIndex) el.classList.add('correct');
+    else if (idx === selectedOptionIndex) el.classList.add('incorrect');
+  });
+
+  feedback.classList.add('show');
+  if (isCorrect) {
+    score++;
+    feedback.classList.add('correct-fb');
+    feedback.classList.remove('incorrect-fb');
+    fbTitle.innerHTML = '✅ Correct!';
+  } else {
+    missed.push({
+      topic: item.topic,
+      q: item.q,
+      yourAnswer: item.options[selectedOptionIndex],
+      correctAnswer: item.options[item.correctIndex],
+      explanation: item.explanation
+    });
+    feedback.classList.add('incorrect-fb');
+    feedback.classList.remove('correct-fb');
+    fbTitle.innerHTML = '❌ Not quite — the correct answer is: ' + item.options[item.correctIndex];
+  }
+  fbExplanation.textContent = item.explanation;
+
+  actionBtn.textContent = (currentIndex === TOTAL_QUESTIONS - 1) ? 'See Results' : 'Next Question';
+  actionBtn.disabled = false;
+  actionBtn.onclick = handleNext;
+}
+
+function handleNext() {
+  currentIndex++;
+  if (currentIndex >= TOTAL_QUESTIONS) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  progressFill.style.width = '100%';
+  quizScreen.classList.add('hidden');
+  resultsScreen.classList.remove('hidden');
+
+  document.getElementById('score-num').textContent = score + '/' + TOTAL_QUESTIONS;
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  let msg;
+  if (pct === 100) msg = "Perfect score! You really know your digestive system! 🌟";
+  else if (pct >= 80) msg = "Great job! You have a strong understanding of the digestive system.";
+  else if (pct >= 60) msg = "Good effort! Review the topics below to strengthen your knowledge.";
+  else msg = "Keep practicing! Review the explanations below and try again.";
+  document.getElementById('score-msg').textContent = msg + ' (' + pct + '%)';
+
+  const reviewSection = document.getElementById('review-section');
+  reviewSection.innerHTML = '';
+  if (missed.length === 0) {
+    const p = document.createElement('p');
+    p.style.textAlign = 'center';
+    p.style.color = '#2e7d32';
+    p.style.fontWeight = '600';
+    p.textContent = 'No mistakes — amazing work!';
+    reviewSection.appendChild(p);
+  } else {
+    const heading = document.createElement('h2');
+    heading.style.fontSize = '1.05rem';
+    heading.style.color = '#1F4E79';
+    heading.textContent = 'Review: Questions You Missed (' + missed.length + ')';
+    reviewSection.appendChild(heading);
+
+    missed.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML =
+        '<div class="rtopic">' + m.topic + '</div>' +
+        '<div class="rq">' + m.q + '</div>' +
+        '<div class="rline wrong">Your answer: ' + m.yourAnswer + '</div>' +
+        '<div class="rline right">Correct answer: ' + m.correctAnswer + '</div>' +
+        '<div class="rexpl">' + m.explanation + '</div>';
+      reviewSection.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

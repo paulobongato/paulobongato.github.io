@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz 1 Reviewer - Grade 4 English</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          colors: {
+            canva: {
+              purple: '#7d2ae8', teal: '#00c4cc', pink: '#ff66c4', violet: '#5e17eb',
+              bg: '#f4f5f8', card: '#ffffff', dark: '#1e1b2e'
+            }
+          },
+          boxShadow: {
+            'canva': '0 10px 30px -5px rgba(94, 23, 235, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05)',
+            'canva-lg': '0 20px 40px -10px rgba(125, 42, 232, 0.22)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff4e6 0%, #fef0f7 50%, #eefbfb 100%);
+      min-height: 100vh;
+    }
+    .canva-gradient-text {
+      background: linear-gradient(90deg, #ff7a45 0%, #ff2d95 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .canva-btn-gradient { background: linear-gradient(135deg, #ff7a45 0%, #ff2d95 100%); }
+    .canva-btn-gradient:hover { background: linear-gradient(135deg, #f26332 0%, #e81f85 100%); }
+    .option-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .option-card:hover:not(.disabled) {
+      transform: translateY(-2px); border-color: #ff2d95; background-color: #fff5fa;
+    }
+    .pulse-subtle { animation: pulseSubtle 3s infinite; }
+    @keyframes pulseSubtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    .chip { transition: all 0.15s ease; }
+    .chip:hover { transform: translateY(-1px); }
+    .seq-row { transition: all 0.15s ease; }
+    input[type=text].blank-input:focus, textarea.reflect-input:focus { outline: none; border-color: #ff2d95; box-shadow: 0 0 0 3px rgba(255,45,149,0.12); }
+  </style>
+</head>
+<body class="font-sans text-slate-800 flex flex-col justify-between p-3 sm:p-6">
+
+  <header class="max-w-4xl mx-auto w-full mb-6">
+    <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-canva border border-white/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl canva-btn-gradient flex items-center justify-center text-white shadow-md text-xl font-black">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-orange-500/10 text-orange-600 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Grade 4</span>
+            <span class="bg-pink-500/15 text-pink-700 text-xs font-bold px-2.5 py-0.5 rounded-full">15 Items</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Quiz #1 (T1) <span class="canva-gradient-text">Reviewer</span></h1>
+        </div>
+      </div>
+      <button id="restartHeaderBtn" onclick="initQuiz()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+        <i class="fa-solid fa-shuffle text-pink-500"></i> Reshuffle &amp; Restart
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col justify-center">
+
+    <div id="startScreen" class="bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100 text-center relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-40 h-40 bg-orange-400/10 rounded-full blur-2xl"></div>
+      <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-teal-400/10 rounded-full blur-2xl"></div>
+
+      <div class="relative z-10">
+        <span class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-orange-500 to-pink-500 rounded-3xl text-white text-3xl mb-6 shadow-canva-lg pulse-subtle">
+          <i class="fa-solid fa-book-open"></i>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Quiz 1 Reviewer: Story Elements & Comprehension</h2>
+        <p class="text-slate-600 max-w-lg mx-auto mb-6 text-sm sm:text-base leading-relaxed">
+          Faithfully converted from the actual Quiz #1 (T1) administered June 29, 2026 — covering Story Elements, Plot, Summarizing, SWBST, and Predicting Outcomes & Drawing Conclusions.
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mb-6 text-left">
+          <div class="bg-orange-50 border-orange-100 p-3 rounded-2xl border"><div class="text-orange-600 font-bold text-xs">Source</div><div class="text-slate-800 font-semibold text-sm">Quiz #1 (T1)</div></div>
+          <div class="bg-teal-50 border-teal-100 p-3 rounded-2xl border"><div class="text-teal-600 font-bold text-xs">Date Given</div><div class="text-slate-800 font-semibold text-sm">Jun 29, 2026</div></div>
+          <div class="bg-pink-50 border-pink-100 p-3 rounded-2xl border"><div class="text-pink-600 font-bold text-xs">Format</div><div class="text-slate-800 font-semibold text-sm">Multiple Choice</div></div>
+          <div class="bg-amber-50 border-amber-100 p-3 rounded-2xl border"><div class="text-amber-600 font-bold text-xs">Items</div><div class="text-slate-800 font-semibold text-sm">15 Questions</div></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 max-w-lg mx-auto mb-8 text-left text-sm text-slate-600">
+          <p class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-circle-info text-orange-500 mr-1"></i> How this activity works</p>
+          <p>This has 15 multiple-choice questions, faithfully converted from the original quiz. The order and answer choices reshuffle every time you play. Choose an answer, click Submit, and you'll instantly see if you were right along with a short explanation. At the end you'll get your score and a full review of anything you missed.</p>
+        </div>
+
+        <button onclick="startQuiz()" class="canva-btn-gradient text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-canva-lg transition transform hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto inline-flex items-center justify-center gap-3">
+          <span>Start Now</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="quizCard" class="hidden bg-white rounded-3xl p-5 sm:p-8 shadow-canva border border-slate-100 relative">
+      <div class="mb-6">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+          <span id="questionProgressText">Item 1 of 15</span>
+          <span id="scoreTracker" class="text-pink-600"><i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: 0</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-3 p-0.5 overflow-hidden">
+          <div id="progressBar" class="bg-gradient-to-r from-orange-500 to-pink-500 h-full rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <span id="qBadge" class="bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-lg">Item 1</span>
+        <span id="categoryTag" class="bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1 rounded-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-layer-group text-teal-500"></i> <span id="categoryText">Story Elements</span>
+        </span>
+      </div>
+
+      <div id="questionContainer" class="mb-6">
+        <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-3 leading-snug" id="questionPrompt">
+          Read carefully, then respond:
+        </h3>
+        <div class="bg-gradient-to-r from-orange-50 via-slate-50 to-teal-50 p-4 sm:p-5 rounded-2xl border border-orange-100/80 text-slate-800 text-base sm:text-lg leading-relaxed shadow-sm whitespace-pre-line" id="sentenceBox">
+        </div>
+      </div>
+
+      <div class="mb-6" id="optionsGrid"></div>
+
+      <div id="feedbackBox" class="hidden mb-6 p-4 sm:p-5 rounded-2xl border transition-all">
+        <div class="flex items-start gap-3">
+          <div id="feedbackIcon" class="w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div class="flex-grow">
+            <h4 id="feedbackTitle" class="font-extrabold text-base mb-1">Correct!</h4>
+            <p id="feedbackText" class="text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2 border-t border-slate-100">
+        <button id="submitBtn" onclick="submitAnswer()" class="canva-btn-gradient text-white font-bold px-6 py-3 rounded-xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+          <span id="submitBtnText">Submit Answer</span>
+          <i class="fa-solid fa-paper-plane text-xs"></i>
+        </button>
+        <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+          <span id="nextBtnText">Next Question</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="resultsScreen" class="hidden bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100">
+      <div class="text-center mb-8">
+        <div id="scoreBadge" class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-tr from-orange-500 to-pink-500 text-white text-3xl font-black mb-4 shadow-canva-lg">0%</div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900" id="resultTitle">Activity Completed!</h2>
+        <p class="text-slate-600 mt-1 text-sm sm:text-base" id="scoreSummaryText">You scored 0 out of 15 correctly.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 mb-10">
+        <button onclick="initQuiz()" class="canva-btn-gradient text-white font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Try Again (New Shuffle)</span>
+        </button>
+      </div>
+
+      <div class="border-t border-slate-100 pt-6" id="mistakesSection">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-check text-pink-600"></i> Detailed Answer Review
+          </h3>
+          <span id="mistakesCountTag" class="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-600 rounded-full">0 Mistakes</span>
+        </div>
+        <div id="reviewContainer" class="space-y-4"></div>
+      </div>
+
+      <div class="border-t border-slate-100 pt-6 mt-8 hidden" id="reflectionSection">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-pen-nib text-teal-600"></i> Reflection Highlights
+          </h3>
+          <span class="text-xs font-bold px-3 py-1 bg-teal-50 text-teal-700 rounded-full">Open-ended — not scored</span>
+        </div>
+        <div id="reflectionContainer" class="space-y-4"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="max-w-4xl mx-auto w-full text-center text-xs text-slate-500 py-6 mt-6">
+    <p>English Language Arts • Quiz #1 (T1) Reviewer — converted from the original administered quiz</p>
+  </footer>
+
+  <script>
+    const masterQuestions = [
+  {
+    "type": "mc",
+    "id": 1,
+    "category": "Plot",
+    "sentence": "Which part of the plot introduces the main conflict or the problem?",
+    "options": [
+      "Climax",
+      "Exposition",
+      "Falling Action",
+      "Rising Action"
+    ],
+    "answer": 3,
+    "explanation": "The Rising Action is the part of the plot where the main conflict or problem is introduced and builds tension in the story."
+  },
+  {
+    "type": "mc",
+    "id": 2,
+    "category": "Story Elements",
+    "sentence": "Which statement is TRUE about the antagonist in a story?",
+    "options": [
+      "The main character of the story.",
+      "The character who creates conflict in the story.",
+      "His or her actions move the story to a resolution.",
+      "Readers often relate to his or her feelings and problems."
+    ],
+    "answer": 1,
+    "explanation": "The antagonist is the character who opposes the protagonist and creates the conflict in the story."
+  },
+  {
+    "type": "mc",
+    "id": 3,
+    "category": "Story Elements",
+    "sentence": "Which element of the story tells the central idea or message in a story?",
+    "options": [
+      "Conflict",
+      "Rising Action",
+      "Setting",
+      "Theme"
+    ],
+    "answer": 3,
+    "explanation": "The theme is the central idea or message that the author wants readers to take away from the story."
+  },
+  {
+    "type": "mc",
+    "id": 4,
+    "category": "Plot",
+    "sentence": "Which part of the plot is described in the passage below?\nOne afternoon, Lizzie discovered an old golden key hidden inside a dusty box in her grandmother's attic.",
+    "options": [
+      "Climax",
+      "Exposition",
+      "Falling Action",
+      "Rising Action"
+    ],
+    "answer": 1,
+    "explanation": "The passage introduces the character, setting, and situation at the very start of the story, which is the Exposition."
+  },
+  {
+    "type": "mc",
+    "id": 5,
+    "category": "Story Elements",
+    "sentence": "What is the theme of the short story below?\nOne sunny morning, Mitch found a tiny seed on the ground while walking to school. He decided to plant it in her garden. Every day, he watered the seed and took care of it. Soon, a small sprout appeared. As the plant grew, Mitch noticed that his neighbors started smiling more and helping each other. The garden became a place where people gathered to share stories and kindness.",
+    "options": [
+      "Small acts of kindness can grow into something special.",
+      "Working together helps everyone achieve more than working alone.",
+      "True friends support and help each other through good times and bad.",
+      "Never giving up helps you overcome challenges and reach your goals."
+    ],
+    "answer": 0,
+    "explanation": "The story shows how one small caring act, planting and tending a seed, grew into a garden that brought neighbors together, showing that small acts of kindness can grow into something special."
+  },
+  {
+    "type": "mc",
+    "id": 6,
+    "category": "Sequencing Events",
+    "sentence": "Which statement in the events below should happen last?",
+    "options": [
+      "Sofia chose a design for her artwork.",
+      "Sofia gathered materials for her art project.",
+      "Sofia painted and decorated her project.",
+      "Sofia presented her finished artwork to the class."
+    ],
+    "answer": 3,
+    "explanation": "Presenting the finished artwork is the final step, coming only after choosing a design, gathering materials, and painting and decorating the project."
+  },
+  {
+    "type": "mc",
+    "id": 7,
+    "category": "Sequencing Events",
+    "sentence": "Which transition statement is NOT used for sequencing events?",
+    "options": [
+      "Before",
+      "In my opinion",
+      "Lastly",
+      "To begin with"
+    ],
+    "answer": 1,
+    "explanation": "\"In my opinion\" signals a personal viewpoint, not the order of events, unlike Before, Lastly, and To begin with."
+  },
+  {
+    "type": "mc",
+    "id": 8,
+    "category": "Sequencing Events",
+    "sentence": "Which event should take place first if you write a story about the Magic Pencil?",
+    "options": [
+      "One rainy afternoon, Leo found an old pencil in his grandmother's attic.",
+      "Leo accidentally drew a storm cloud, thunder roared, and lightning flashed.",
+      "The pencil looked ordinary, but when he started to draw something, it came to life!",
+      "Leo quickly erased the cloud and decided to use the magic pencil only for good things."
+    ],
+    "answer": 0,
+    "explanation": "Finding the pencil is the introductory event that must happen before Leo can discover its magic or use it, so it comes first."
+  },
+  {
+    "type": "mc",
+    "id": 9,
+    "category": "SWBST",
+    "sentence": "What does SWBST technique in summarizing mean?",
+    "options": [
+      "Some Wishes to But So Then",
+      "Somewhere Wanted To But So Then",
+      "Somebody Wanted To But So Then",
+      "Somebody Wanted to But Someone Then"
+    ],
+    "answer": 2,
+    "explanation": "SWBST stands for Somebody Wanted To But So Then, a framework used to summarize a story's main character, goal, conflict, and resolution."
+  },
+  {
+    "type": "mc",
+    "id": 10,
+    "category": "Summarizing",
+    "sentence": "Which idea/s should be included in summarizing?",
+    "options": [
+      "Your opinion",
+      "The important events",
+      "The name of the author",
+      "Feelings of the readers after reading the story"
+    ],
+    "answer": 1,
+    "explanation": "A good summary focuses only on the important events of the story, not personal opinions or unrelated details."
+  },
+  {
+    "type": "mc",
+    "id": 11,
+    "category": "Summarizing",
+    "sentence": "Which statement gives the BEST summary of the passage below?\nAbby noticed that her neighbor, Mr. Lim, was having trouble carrying his groceries. Without hesitation, she ran over to help. Together, they brought the bags inside his house. Mr. Lim thanked Abby and said how kind she was. From then on, Abby made sure to check on her neighbors whenever she could.",
+    "options": [
+      "Abby must be rewarded by Mr. Lim for helping him carry his groceries without hesitation.",
+      "Other children should follow Abby's example on how to help others by always checking your neighbors.",
+      "Abby wanted to have more friends in her neighborhood, so she ran to help Mr. Lim with his groceries.",
+      "Abby wanted to help her neighbor who had trouble with his groceries, so she ran to help, then Mr. Lim thanked her."
+    ],
+    "answer": 3,
+    "explanation": "This option captures the key events of the passage in order (the neighbor's trouble, Abby's help, and Mr. Lim's thanks) without adding opinions or unstated details."
+  },
+  {
+    "type": "mc",
+    "id": 12,
+    "category": "Summarizing",
+    "sentence": "What is the best way to summarize a story?",
+    "options": [
+      "List every word the characters said.",
+      "Write down all the places in the story.",
+      "Describe only what happened at the end.",
+      "Retell the story in your own words, using the beginning, middle, and end."
+    ],
+    "answer": 3,
+    "explanation": "A summary should retell the story briefly in your own words, covering the beginning, middle, and end, not copy dialogue or list minor details."
+  },
+  {
+    "type": "mc",
+    "id": 13,
+    "category": "Predicting Outcomes",
+    "sentence": "Which statement shows the similarities of predicting outcomes and drawing conclusions?",
+    "options": [
+      "Both give judgment and final decision.",
+      "Both use clues and relate it to what the readers already know.",
+      "Both use the sentence starters: What if, I think, and I wonder.",
+      "Both foresee what will likely happen next in the given situation."
+    ],
+    "answer": 1,
+    "explanation": "Both predicting outcomes and drawing conclusions rely on using clues from the text combined with the reader's prior knowledge."
+  },
+  {
+    "type": "mc",
+    "id": 14,
+    "category": "Predicting Outcomes",
+    "sentence": "What will likely happen next in the situation below?\nCarla went on vacation for two weeks and forgot to ask anyone to water her favorite potted plant. When she returned home, she noticed that the soil was dry and the leaves were turning yellow.",
+    "options": [
+      "The plant may start producing colorful flowers.",
+      "The plant will likely begin to wilt because it lacks water.",
+      "The plant may attract more butterflies to the garden.",
+      "The plant may continue growing taller without any problems."
+    ],
+    "answer": 1,
+    "explanation": "Dry soil and yellowing leaves are clues that the plant lacks water, so it will likely begin to wilt."
+  },
+  {
+    "type": "mc",
+    "id": 15,
+    "category": "Drawing Conclusions",
+    "sentence": "What school activity is being described in the scenario?\nAn alarm sounded during class. Students immediately ducked, covered, and held on under their desks. After the alarm stopped, they calmly evacuated to the covered court while carrying their emergency kits. Teachers checked attendance and gave safety instructions at the designated assembly area.",
+    "options": [
+      "Earthquake drill",
+      "Fire Drill",
+      "Flag ceremony",
+      "Sports Fest"
+    ],
+    "answer": 0,
+    "explanation": "The clues \"duck, cover, and hold\" are the standard actions taken during an earthquake drill, leading to the conclusion that this is an earthquake drill."
+  }
+];
+    const optionLabels = ["A", "B", "C", "D", "E", "F"];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = [];
+    let score = 0;
+    let scorableTotal = 0;
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function shuffleDistinct(array) {
+      // shuffle but guarantee the result order differs from the input order (when length > 1)
+      if (array.length <= 1) return [...array];
+      let arr = shuffleArray(array);
+      let tries = 0;
+      while (arr.every((v, i) => v === array[i]) && tries < 10) {
+        arr = shuffleArray(array);
+        tries++;
+      }
+      return arr;
+    }
+
+    function buildAttemptQuestions() {
+      const shuffledBank = shuffleArray(masterQuestions);
+      return shuffledBank.map(orig => {
+        if (orig.type === "mc") {
+          const optionIndices = orig.options.map((opt, idx) => ({ opt, idx }));
+          const shuffledOptions = shuffleArray(optionIndices);
+          const newAnswerIndex = shuffledOptions.findIndex(o => o.idx === orig.answer);
+          return { ...orig, options: shuffledOptions.map(o => o.opt), answer: newAnswerIndex };
+        }
+        if (orig.type === "sequence") {
+          const displayItems = shuffleDistinct(orig.items);
+          return { ...orig, displayItems: displayItems };
+        }
+        return { ...orig };
+      });
+    }
+
+    function initQuiz() {
+      currentQuestions = buildAttemptQuestions();
+      currentIndex = 0;
+      score = 0;
+      scorableTotal = currentQuestions.filter(q => q.type !== "reflect").length;
+      userAnswers = [];
+      document.getElementById("startScreen").classList.remove("hidden");
+      document.getElementById("quizCard").classList.add("hidden");
+      document.getElementById("resultsScreen").classList.add("hidden");
+    }
+
+    function startQuiz() {
+      document.getElementById("startScreen").classList.add("hidden");
+      document.getElementById("quizCard").classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function updateSubmitEnabled() {
+      const q = currentQuestions[currentIndex];
+      const submitBtn = document.getElementById("submitBtn");
+      if (q.type === "mc") {
+        submitBtn.disabled = (window.__selectedOptionIndex === undefined || window.__selectedOptionIndex === null);
+      } else if (q.type === "fillblank") {
+        const el = document.getElementById("blankInput");
+        submitBtn.disabled = !el || el.value.trim().length === 0;
+      } else if (q.type === "sequence") {
+        const selects = document.querySelectorAll(".seq-select");
+        const vals = Array.from(selects).map(s => s.value);
+        const allFilled = vals.every(v => v !== "");
+        const allUnique = new Set(vals).size === vals.length;
+        submitBtn.disabled = !(allFilled && allUnique);
+      } else if (q.type === "reflect") {
+        submitBtn.disabled = false;
+      }
+    }
+
+    function renderMC(q) {
+      document.getElementById("submitBtnText").innerText = "Submit Answer";
+      const grid = document.getElementById("optionsGrid");
+      grid.className = "grid grid-cols-1 gap-3 mb-6";
+      grid.innerHTML = "";
+      window.__selectedOptionIndex = null;
+      q.options.forEach((opt, idx) => {
+        const optCard = document.createElement("button");
+        optCard.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-pink-400 flex items-center gap-3.5 cursor-pointer transition";
+        optCard.onclick = () => selectOption(idx);
+        optCard.id = `optBtn_${idx}`;
+        optCard.innerHTML = `
+          <span class="opt-label w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center shrink-0 text-sm">${optionLabels[idx]}</span>
+          <span class="opt-text text-slate-800 font-medium text-sm sm:text-base flex-grow">${opt}</span>
+          <i class="opt-icon fa-regular fa-circle text-slate-300 text-lg"></i>
+        `;
+        grid.appendChild(optCard);
+      });
+    }
+
+    function selectOption(index) {
+      const q = currentQuestions[currentIndex];
+      if (userAnswers[currentIndex] && userAnswers[currentIndex].submitted) return;
+      window.__selectedOptionIndex = index;
+      q.options.forEach((_, i) => {
+        const btn = document.getElementById(`optBtn_${i}`);
+        const icon = btn.querySelector(".opt-icon");
+        const label = btn.querySelector(".opt-label");
+        if (i === index) {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-pink-500 bg-pink-50/50 flex items-center gap-3.5 cursor-pointer shadow-sm";
+          icon.className = "opt-icon fa-solid fa-circle-dot text-pink-500 text-lg";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-pink-500 text-white font-bold flex items-center justify-center shrink-0 text-sm shadow-sm";
+        } else {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white flex items-center gap-3.5 cursor-pointer";
+          icon.className = "opt-icon fa-regular fa-circle text-slate-300 text-lg";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center shrink-0 text-sm";
+        }
+      });
+      updateSubmitEnabled();
+    }
+
+    function renderFillblank(q) {
+      document.getElementById("submitBtnText").innerText = "Check Answer";
+      const grid = document.getElementById("optionsGrid");
+      grid.className = "mb-6";
+      let bankHtml = "";
+      if (q.wordBank && q.wordBank.length) {
+        bankHtml = `
+          <div class="mb-3">
+            <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Word Bank (for reference — type the complete answer word below)</p>
+            <div class="flex flex-wrap gap-2" id="wordBankChips"></div>
+          </div>`;
+      }
+      grid.innerHTML = `
+        ${bankHtml}
+        <div class="relative">
+          <input type="text" id="blankInput" autocomplete="off" placeholder="Type the complete word here..."
+            class="blank-input w-full p-4 rounded-2xl border-2 border-slate-200 focus:border-pink-400 text-slate-800 font-medium text-base sm:text-lg" />
+        </div>
+      `;
+      if (q.wordBank && q.wordBank.length) {
+        const chipWrap = document.getElementById("wordBankChips");
+        q.wordBank.forEach(word => {
+          const chip = document.createElement("span");
+          chip.className = "chip bg-teal-50 border border-teal-200 text-teal-700 font-semibold text-sm px-3 py-1.5 rounded-full";
+          chip.innerText = word;
+          chipWrap.appendChild(chip);
+        });
+      }
+      const input = document.getElementById("blankInput");
+      input.addEventListener("input", updateSubmitEnabled);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); if (!document.getElementById("submitBtn").disabled) submitAnswer(); }
+      });
+    }
+
+    function renderSequence(q) {
+      document.getElementById("submitBtnText").innerText = "Check Order";
+      const grid = document.getElementById("optionsGrid");
+      grid.className = "space-y-2 mb-6";
+      grid.innerHTML = "";
+      const n = q.displayItems.length;
+      q.displayItems.forEach((text, idx) => {
+        const row = document.createElement("div");
+        row.className = "seq-row flex items-center gap-3 p-3 rounded-2xl border-2 border-slate-200 bg-white";
+        let optionsHtml = `<option value="">#</option>`;
+        for (let i = 1; i <= n; i++) optionsHtml += `<option value="${i}">${i}</option>`;
+        row.innerHTML = `
+          <select class="seq-select w-16 p-2 rounded-lg border-2 border-slate-200 font-bold text-slate-700 text-center" data-idx="${idx}">${optionsHtml}</select>
+          <span class="text-slate-800 font-medium text-sm sm:text-base flex-grow">${text}</span>
+        `;
+        grid.appendChild(row);
+      });
+      grid.querySelectorAll(".seq-select").forEach(sel => sel.addEventListener("change", updateSubmitEnabled));
+    }
+
+    function renderReflect(q) {
+      document.getElementById("submitBtnText").innerText = "Show Model Answer";
+      const grid = document.getElementById("optionsGrid");
+      grid.className = "mb-6";
+      grid.innerHTML = `
+        <textarea id="reflectInput" rows="4" placeholder="Write your own answer here (optional), then click below to see a model answer."
+          class="reflect-input w-full p-4 rounded-2xl border-2 border-slate-200 focus:border-teal-400 text-slate-800 font-medium text-sm sm:text-base"></textarea>
+      `;
+    }
+
+    function loadQuestion() {
+      const q = currentQuestions[currentIndex];
+      const total = currentQuestions.length;
+
+      document.getElementById("questionProgressText").innerText = `Item ${currentIndex + 1} of ${total}`;
+      document.getElementById("scoreTracker").innerHTML = `<i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: ${score}/${scorableTotal}`;
+      document.getElementById("progressBar").style.width = `${((currentIndex + 1) / total) * 100}%`;
+
+      document.getElementById("qBadge").innerText = `Item ${currentIndex + 1}`;
+      document.getElementById("categoryText").innerText = q.category || "Story Elements";
+
+      if (q.type === "mc") {
+        document.getElementById("questionPrompt").innerText = "Read the question carefully and select the correct answer:";
+        document.getElementById("sentenceBox").innerHTML = q.sentence;
+        renderMC(q);
+      } else if (q.type === "fillblank") {
+        document.getElementById("questionPrompt").innerText = q.prompt || "Fill in the blank:";
+        document.getElementById("sentenceBox").innerHTML = q.context ? q.context : (q.prompt || "");
+        renderFillblank(q);
+      } else if (q.type === "sequence") {
+        document.getElementById("questionPrompt").innerText = q.instruction || "Put these in the correct order:";
+        document.getElementById("sentenceBox").innerHTML = "Assign a number to each item below to show the correct order.";
+        renderSequence(q);
+      } else if (q.type === "reflect") {
+        document.getElementById("questionPrompt").innerText = "Think it through, then compare with a model answer:";
+        document.getElementById("sentenceBox").innerHTML = q.prompt;
+        renderReflect(q);
+      }
+
+      const feedbackBox = document.getElementById("feedbackBox");
+      feedbackBox.classList.add("hidden");
+      feedbackBox.className = "hidden mb-6 p-4 sm:p-5 rounded-2xl border transition-all";
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.classList.remove("hidden");
+      updateSubmitEnabled();
+
+      const nextBtn = document.getElementById("nextBtn");
+      nextBtn.classList.add("hidden");
+
+      document.getElementById("nextBtnText").innerText = (currentIndex === total - 1) ? "Finish & See Results" : "Next Question";
+    }
+
+    function submitAnswer() {
+      const q = currentQuestions[currentIndex];
+      let isCorrect = false;
+      let record = { questionObj: q, submitted: true };
+
+      if (q.type === "mc") {
+        const idx = window.__selectedOptionIndex;
+        if (idx === null || idx === undefined) return;
+        isCorrect = idx === q.answer;
+        record.selectedIndex = idx;
+        q.options.forEach((_, i) => {
+          const btn = document.getElementById(`optBtn_${i}`);
+          btn.onclick = null;
+          btn.classList.add("disabled");
+          btn.classList.remove("hover:border-pink-400");
+          const icon = btn.querySelector(".opt-icon");
+          const label = btn.querySelector(".opt-label");
+          if (i === q.answer) {
+            btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex items-center gap-3.5";
+            label.className = "opt-label w-8 h-8 rounded-xl bg-emerald-500 text-white font-bold flex items-center justify-center shrink-0 text-sm";
+            icon.className = "opt-icon fa-solid fa-circle-check text-emerald-600 text-lg";
+          } else if (i === idx && !isCorrect) {
+            btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-rose-400 bg-rose-50 flex items-center gap-3.5";
+            label.className = "opt-label w-8 h-8 rounded-xl bg-rose-500 text-white font-bold flex items-center justify-center shrink-0 text-sm";
+            icon.className = "opt-icon fa-solid fa-circle-xmark text-rose-500 text-lg";
+          }
+        });
+      } else if (q.type === "fillblank") {
+        const raw = document.getElementById("blankInput").value.trim().toLowerCase();
+        record.userText = document.getElementById("blankInput").value.trim();
+        const accepted = q.accepted.map(a => a.toLowerCase().trim());
+        isCorrect = accepted.includes(raw);
+        const input = document.getElementById("blankInput");
+        input.disabled = true;
+        input.className = isCorrect
+          ? "blank-input w-full p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-medium text-base sm:text-lg"
+          : "blank-input w-full p-4 rounded-2xl border-2 border-rose-400 bg-rose-50 text-rose-900 font-medium text-base sm:text-lg";
+        document.querySelectorAll(".chip").forEach(c => c.onclick = null);
+      } else if (q.type === "sequence") {
+        const selects = Array.from(document.querySelectorAll(".seq-select"));
+        const positions = selects.map(s => parseInt(s.value, 10));
+        const userOrder = new Array(positions.length);
+        selects.forEach((s, displayIdx) => {
+          const pos = parseInt(s.value, 10) - 1;
+          userOrder[pos] = q.displayItems[displayIdx];
+        });
+        isCorrect = JSON.stringify(userOrder) === JSON.stringify(q.items);
+        record.userOrder = userOrder;
+        selects.forEach(s => s.disabled = true);
+        document.querySelectorAll(".seq-row").forEach((row, i) => {
+          row.className = isCorrect
+            ? "seq-row flex items-center gap-3 p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50"
+            : "seq-row flex items-center gap-3 p-3 rounded-2xl border-2 border-rose-300 bg-rose-50";
+        });
+      } else if (q.type === "reflect") {
+        record.userText = document.getElementById("reflectInput").value.trim();
+        document.getElementById("reflectInput").disabled = true;
+        isCorrect = true; // not scored, always "completed"
+      }
+
+      if (isCorrect && q.type !== "reflect") score++;
+      record.isCorrect = isCorrect;
+      userAnswers[currentIndex] = record;
+
+      const feedbackBox = document.getElementById("feedbackBox");
+      const feedbackIcon = document.getElementById("feedbackIcon");
+      const feedbackTitle = document.getElementById("feedbackTitle");
+      const feedbackText = document.getElementById("feedbackText");
+      feedbackBox.classList.remove("hidden");
+
+      if (q.type === "reflect") {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-teal-200 bg-teal-50/80 text-teal-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-teal-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-lightbulb"></i>`;
+        feedbackTitle.innerText = "Model Answer";
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-teal-800";
+        feedbackText.innerText = q.modelAnswer;
+      } else if (isCorrect) {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-emerald-200 bg-emerald-50/80 text-emerald-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        feedbackTitle.innerText = "Correct!";
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-emerald-800";
+        feedbackText.innerText = q.explanation || "";
+      } else {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-rose-200 bg-rose-50/80 text-rose-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        if (q.type === "mc") {
+          feedbackTitle.innerText = `Incorrect. Correct choice was (${optionLabels[q.answer]}) ${q.options[q.answer]}`;
+        } else if (q.type === "fillblank") {
+          feedbackTitle.innerText = `Not quite. Correct answer: ${q.accepted[0]}`;
+        } else if (q.type === "sequence") {
+          feedbackTitle.innerText = `Not quite. Correct order: ${q.items.join(" → ")}`;
+        }
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-rose-800";
+        feedbackText.innerText = q.explanation || "";
+      }
+
+      document.getElementById("scoreTracker").innerHTML = `<i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: ${score}/${scorableTotal}`;
+      document.getElementById("submitBtn").classList.add("hidden");
+      document.getElementById("nextBtn").classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById("quizCard").classList.add("hidden");
+      document.getElementById("resultsScreen").classList.remove("hidden");
+
+      const percentage = scorableTotal > 0 ? Math.round((score / scorableTotal) * 100) : 100;
+      document.getElementById("scoreBadge").innerText = scorableTotal > 0 ? `${percentage}%` : `✓`;
+      document.getElementById("scoreSummaryText").innerText = scorableTotal > 0
+        ? `You answered ${score} out of ${scorableTotal} scored questions correctly.`
+        : `You completed all the reflection activities.`;
+
+      const titleElem = document.getElementById("resultTitle");
+      if (scorableTotal === 0) titleElem.innerText = "✅ Activity Completed!";
+      else if (percentage === 100) titleElem.innerText = "🌟 Perfect Score! Amazing Work!";
+      else if (percentage >= 80) titleElem.innerText = "🎉 Great Job! Excellent Understanding!";
+      else if (percentage >= 60) titleElem.innerText = "👍 Good Effort! Practice Makes Perfect!";
+      else titleElem.innerText = "📚 Keep Studying — You'll Get There!";
+
+      const reviewContainer = document.getElementById("reviewContainer");
+      reviewContainer.innerHTML = "";
+      const scoredAnswers = userAnswers.map((a, i) => ({ a, i })).filter(x => x.a && x.a.questionObj.type !== "reflect");
+      const mistakes = scoredAnswers.filter(x => !x.a.isCorrect);
+      document.getElementById("mistakesCountTag").innerText = `${mistakes.length} ${mistakes.length === 1 ? 'Mistake' : 'Mistakes'}`;
+
+      if (scorableTotal === 0) {
+        document.getElementById("mistakesSection").classList.add("hidden");
+      } else if (mistakes.length === 0) {
+        reviewContainer.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
+            <i class="fa-solid fa-award text-emerald-500 text-4xl mb-2"></i>
+            <h4 class="font-bold text-emerald-900 text-lg">No Mistakes Made!</h4>
+            <p class="text-emerald-700 text-sm mt-1">You answered all ${scorableTotal} scored questions correctly!</p>
+          </div>
+        `;
+      } else {
+        mistakes.forEach(({ a: ans, i: qSeqIndex }) => {
+          const q = ans.questionObj;
+          const card = document.createElement("div");
+          card.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 text-left";
+          let bodyHtml = "";
+          if (q.type === "mc") {
+            bodyHtml = `
+              <p class="text-slate-800 text-sm sm:text-base mb-3 leading-relaxed">${q.sentence}</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm mb-3">
+                <div class="bg-rose-100/70 border border-rose-200 p-2.5 rounded-xl text-rose-900">
+                  <span class="font-bold">Your Choice:</span> (${optionLabels[ans.selectedIndex]}) ${q.options[ans.selectedIndex]}
+                </div>
+                <div class="bg-emerald-100/70 border border-emerald-200 p-2.5 rounded-xl text-emerald-900">
+                  <span class="font-bold">Correct Choice:</span> (${optionLabels[q.answer]}) ${q.options[q.answer]}
+                </div>
+              </div>`;
+          } else if (q.type === "fillblank") {
+            bodyHtml = `
+              <p class="text-slate-800 text-sm sm:text-base mb-3 leading-relaxed">${q.context ? q.context : q.prompt}</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm mb-3">
+                <div class="bg-rose-100/70 border border-rose-200 p-2.5 rounded-xl text-rose-900">
+                  <span class="font-bold">Your Answer:</span> ${ans.userText || "(blank)"}
+                </div>
+                <div class="bg-emerald-100/70 border border-emerald-200 p-2.5 rounded-xl text-emerald-900">
+                  <span class="font-bold">Correct Answer:</span> ${q.accepted[0]}
+                </div>
+              </div>`;
+          } else if (q.type === "sequence") {
+            bodyHtml = `
+              <p class="text-slate-800 text-sm sm:text-base mb-3 leading-relaxed">${q.instruction}</p>
+              <div class="grid grid-cols-1 gap-2 text-xs sm:text-sm mb-3">
+                <div class="bg-rose-100/70 border border-rose-200 p-2.5 rounded-xl text-rose-900">
+                  <span class="font-bold">Your Order:</span> ${ans.userOrder.join(" → ")}
+                </div>
+                <div class="bg-emerald-100/70 border border-emerald-200 p-2.5 rounded-xl text-emerald-900">
+                  <span class="font-bold">Correct Order:</span> ${q.items.join(" → ")}
+                </div>
+              </div>`;
+          }
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="bg-rose-100 text-rose-700 font-bold text-xs px-2.5 py-0.5 rounded-md">Item ${qSeqIndex + 1} • Incorrect</span>
+              <span class="text-xs font-semibold text-slate-500">${q.category || "Story Elements"}</span>
+            </div>
+            ${bodyHtml}
+            <div class="bg-white border border-slate-200 p-3 rounded-xl text-xs sm:text-sm text-slate-600">
+              <span class="font-bold text-slate-800"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Explanation:</span> ${q.explanation || ""}
+            </div>
+          `;
+          reviewContainer.appendChild(card);
+        });
+      }
+
+      const reflections = userAnswers.map((a, i) => ({ a, i })).filter(x => x.a && x.a.questionObj.type === "reflect");
+      const reflectionSection = document.getElementById("reflectionSection");
+      const reflectionContainer = document.getElementById("reflectionContainer");
+      reflectionContainer.innerHTML = "";
+      if (reflections.length > 0) {
+        reflectionSection.classList.remove("hidden");
+        reflections.forEach(({ a: ans, i: qSeqIndex }) => {
+          const q = ans.questionObj;
+          const card = document.createElement("div");
+          card.className = "bg-teal-50/50 border border-teal-100 rounded-2xl p-4 sm:p-5 text-left";
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="bg-teal-100 text-teal-700 font-bold text-xs px-2.5 py-0.5 rounded-md">Item ${qSeqIndex + 1}</span>
+              <span class="text-xs font-semibold text-slate-500">${q.category || "Story Elements"}</span>
+            </div>
+            <p class="text-slate-800 text-sm sm:text-base mb-3 leading-relaxed font-semibold">${q.prompt}</p>
+            ${ans.userText ? `<div class="bg-white border border-slate-200 p-2.5 rounded-xl text-xs sm:text-sm text-slate-700 mb-2"><span class="font-bold">Your Answer:</span> ${ans.userText}</div>` : ""}
+            <div class="bg-white border border-teal-200 p-3 rounded-xl text-xs sm:text-sm text-slate-700">
+              <span class="font-bold text-teal-800"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Model Answer:</span> ${q.modelAnswer}
+            </div>
+          `;
+          reflectionContainer.appendChild(card);
+        });
+      } else {
+        reflectionSection.classList.add("hidden");
+      }
+    }
+
+    window.onload = function() { initQuiz(); };
+  </script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsasanay: Pangngalan at Hugnayang Pangungusap - Grade 4</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 16px;
+    color: #2c3e50;
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.5rem;
+    color: #2b579a;
+    margin-bottom: 4px;
+  }
+  header p {
+    color: #607d8b;
+    margin: 0;
+  }
+  #progress {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #2b579a;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #eef3fb;
+    border: 2px solid #dbe6f5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .choice:hover:not(:disabled) {
+    background: #dde9fa;
+  }
+  .choice.selected {
+    border-color: #2b579a;
+    background: #d7e6fb;
+  }
+  .choice:disabled {
+    cursor: default;
+  }
+  .choice.correct {
+    background: #d5f5df;
+    border-color: #34a853;
+    color: #1b6b33;
+    font-weight: bold;
+  }
+  .choice.incorrect {
+    background: #fbdede;
+    border-color: #e74c3c;
+    color: #a02c1f;
+    font-weight: bold;
+  }
+  .submit-btn, .next-btn, .restart-btn {
+    display: inline-block;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .submit-btn:disabled {
+    background: #a9bcd6;
+    cursor: not-allowed;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #d5f5df;
+    color: #1b6b33;
+  }
+  .feedback.incorrect-fb {
+    background: #fbdede;
+    color: #a02c1f;
+  }
+  .explain {
+    margin-top: 8px;
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: #45525e;
+  }
+  .nav-row {
+    text-align: right;
+  }
+  #resultsScreen, #quizScreen, #startScreen {
+    display: none;
+  }
+  #startScreen { display: block; }
+  .score-big {
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-align: center;
+    color: #2b579a;
+    margin: 6px 0 4px;
+  }
+  .score-sub {
+    text-align: center;
+    color: #607d8b;
+    margin-bottom: 18px;
+  }
+  .review-item {
+    border-left: 5px solid #e74c3c;
+    background: #fff6f6;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .review-item.correctone {
+    border-left-color: #34a853;
+    background: #f5fdf7;
+  }
+  .review-item p { margin: 4px 0; }
+  .review-q { font-weight: 700; }
+  .review-your { color: #a02c1f; }
+  .review-correct { color: #1b6b33; }
+  .review-explain { color: #45525e; font-size: 0.92rem; }
+  .start-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: #2b579a;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .center { text-align: center; }
+  ul.info-list { line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Pagsasanay: Pangngalan at Hugnayang Pangungusap</h1>
+    <p>Aralin 4 at 5 &mdash; Ikaapat na Baitang (Grade 4) &mdash; Filipino</p>
+  </header>
+
+  <div id="startScreen" class="card">
+    <p style="font-size:1.05rem; line-height:1.6;">
+      Sasagutan mo ang <strong>30 katanungan</strong> (mula sa 45 na bangko ng tanong) tungkol sa:
+    </p>
+    <ul class="info-list">
+      <li><strong>Uri ng Pangngalang Pambalana</strong> &mdash; Kongkreto/Tahas, Di-kongkreto/Basal, at Lansakan,</li>
+      <li><strong>Kayarian ng Pangngalan</strong> &mdash; Payak at Maylapi (kasama ang Unlapi, Gitlapi, at Hulapi), at</li>
+      <li><strong>Hugnayang Pangungusap</strong> &mdash; sugnay na makapag-iisa, sugnay na hindi makapag-iisa, at ang mga pangatnig.</li>
+    </ul>
+    <p style="font-size:1rem;">Multiple choice ito (A-D). Random ang pagkakasunod-sunod ng mga tanong sa bawat pagsusulit. May submit button bawat tanong at makikita ang tamang sagot at paliwanag pagkatapos isumite.</p>
+    <button class="start-btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <div id="quizScreen">
+    <div id="progress"></div>
+    <div class="card">
+      <div class="question-text" id="questionText"></div>
+      <div id="choicesArea"></div>
+      <div class="feedback" id="feedbackBox"></div>
+      <div class="nav-row">
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()" disabled>Isumite</button>
+        <button class="next-btn" id="nextBtn" style="display:none;" onclick="nextQuestion()">Susunod</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" class="card">
+    <h2 class="center" style="color:#2b579a;">Resulta ng Pagsusulit</h2>
+    <div class="score-big" id="scoreBig"></div>
+    <div class="score-sub" id="scoreSub"></div>
+    <div id="reviewList"></div>
+    <div class="center">
+      <button class="restart-btn" onclick="location.reload()">Ulitin ang Pagsusulit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOTAL_TO_SHOW = 30;
+
+const allQuestions = [
+  // ===== I. Uri ng Pangngalang Pambalana =====
+  {
+    q: "Ilan ang uri ng pangngalang pambalana ayon sa aralin?",
+    choices: ["Dalawa", "Tatlo", "Apat", "Lima"],
+    answer: 1,
+    explain: "May tatlong uri ang pangngalang pambalana: Kongkreto o Tahas, Di-kongkreto o Basal, at Lansakan."
+  },
+  {
+    q: "Ano ang tawag sa pangngalang tumutukoy sa mga bagay na nakikita o nahahawakan?",
+    choices: ["Di-kongkreto o Basal", "Lansakan", "Kongkreto o Tahas", "Pantangi"],
+    answer: 2,
+    explain: "Ang pangngalang Kongkreto o Tahas (pangngalang materyal) ay tumutukoy sa mga bagay na nakikita o nahahawakan."
+  },
+  {
+    q: "Ano ang tawag sa pangngalang nagpapakita ng kaisipan, diwa, ideya, o damdamin na hindi nahahawakan?",
+    choices: ["Kongkreto o Tahas", "Di-kongkreto o Basal", "Lansakan", "Pambalana lamang"],
+    answer: 1,
+    explain: "Ang Di-kongkreto o Basal (pangngalang di materyal) ay hindi nahahawakan sapagkat ipinapakita lamang nito ang kaisipan, diwa, ideya, o damdamin."
+  },
+  {
+    q: "Ano ang tawag sa pangngalang tumutukoy sa pangkat o grupo ng tao, hayop, o bagay?",
+    choices: ["Kongkreto", "Lansakan", "Basal", "Tahas"],
+    answer: 1,
+    explain: "Ang Lansakan ay tumutukoy sa pangkat o grupo ng tao, hayop, o bagay, gaya ng pamilya at kawan ng isda."
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng pangngalang Kongkreto o Tahas?",
+    choices: ["lungkot", "papel", "pamilya", "kalayaan"],
+    answer: 1,
+    explain: "Nahahawakan at nakikita ang papel kaya ito ay Kongkreto o Tahas."
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng pangngalang Di-kongkreto o Basal?",
+    choices: ["bintana", "banda", "pag-asa", "silya"],
+    answer: 2,
+    explain: "Ang pag-asa ay damdamin o kaisipan na hindi nahahawakan kaya ito ay Di-kongkreto o Basal."
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng pangngalang Lansakan?",
+    choices: ["aklat", "saya", "kawan ng isda", "lapis"],
+    answer: 2,
+    explain: "Ang kawan ng isda ay tumutukoy sa grupo ng mga isda kaya ito ay Lansakan."
+  },
+  {
+    q: "Anong uri ng pangngalang pambalana ang 'adobo'?",
+    choices: ["Kongkreto o Tahas", "Di-kongkreto o Basal", "Lansakan", "Pantangi"],
+    answer: 0,
+    explain: "Nakikita at nahahawakan ang adobo kaya ito ay Kongkreto o Tahas."
+  },
+  {
+    q: "Anong uri ng pangngalang pambalana ang 'kalayaan'?",
+    choices: ["Kongkreto o Tahas", "Lansakan", "Di-kongkreto o Basal", "Pantangi"],
+    answer: 2,
+    explain: "Ang kalayaan ay isang kaisipan o ideya na hindi nahahawakan kaya ito ay Di-kongkreto o Basal."
+  },
+  {
+    q: "Anong uri ng pangngalang pambalana ang 'bungkos ng bulaklak'?",
+    choices: ["Kongkreto", "Lansakan", "Di-kongkreto", "Basal"],
+    answer: 1,
+    explain: "Tumutukoy ito sa isang pangkat ng bulaklak na magkakasama kaya ito ay Lansakan."
+  },
+  {
+    q: "Anong uri ng pangngalang pambalana ang 'mag-anak'?",
+    choices: ["Lansakan", "Kongkreto", "Basal", "Tahas"],
+    answer: 0,
+    explain: "Ang mag-anak ay tumutukoy sa grupo ng magkakapamilya kaya ito ay Lansakan."
+  },
+  {
+    q: "Alin ang pangkaraniwang senyales na ang isang salita ay pangngalang Lansakan?",
+    choices: [
+      "Madalas itong may kasamang 'ng' na nag-uugnay sa isang grupo, gaya ng 'kawan ng isda'",
+      "Nagsisimula ito sa malaking titik",
+      "Hindi ito maaaring bilangin",
+      "Isa itong pangngalang pantangi"
+    ],
+    answer: 0,
+    explain: "Ang mga pangngalang Lansakan ay kadalasang may kasamang salitang 'ng' na nag-uugnay sa pangkat o grupo, gaya ng 'bungkos ng bulaklak' at 'kawan ng isda'."
+  },
+  {
+    q: "Bakit itinuturing na Kongkreto o Tahas ang 'puno'?",
+    choices: [
+      "Dahil ito ay damdamin",
+      "Dahil ito ay nakikita at nahahawakan",
+      "Dahil tumutukoy ito sa isang grupo",
+      "Dahil hindi ito maaaring makita"
+    ],
+    answer: 1,
+    explain: "Ang puno ay nakikita at nahahawakan kaya ito ay itinuturing na pangngalang Kongkreto o Tahas."
+  },
+  {
+    q: "Alin sa mga sumusunod ang Di-kongkretong pangngalan?",
+    choices: ["pag-ibig", "banda", "aklat", "kawan"],
+    answer: 0,
+    explain: "Ang pag-ibig ay isang damdamin na hindi nahahawakan kaya ito ay Di-kongkreto o Basal."
+  },
+  {
+    q: "Paano nagkakaiba ang Kongkreto sa Di-kongkretong pangngalan?",
+    choices: [
+      "Ang Kongkreto ay nakikita o nahahawakan; ang Di-kongkreto ay naiisip o nadarama lamang",
+      "Ang Kongkreto ay grupo; ang Di-kongkreto ay iisa lamang",
+      "Walang pagkakaiba ang dalawa",
+      "Ang Di-kongkreto ay laging pangngalang pantangi"
+    ],
+    answer: 0,
+    explain: "Ang Kongkreto ay tumutukoy sa mga bagay na nakikita o nahahawakan, samantalang ang Di-kongkreto ay naiisip o nadarama lamang."
+  },
+
+  // ===== II. Kayarian ng Pangngalan: Payak at Maylapi =====
+  {
+    q: "Ilan ang kayarian ng pangngalan?",
+    choices: ["Isa", "Dalawa", "Tatlo", "Apat"],
+    answer: 1,
+    explain: "May dalawang kayarian ang pangngalan: Payak at Maylapi."
+  },
+  {
+    q: "Ano ang tawag sa pangngalang binubuo lamang ng salitang-ugat, walang kasamang panlapi?",
+    choices: ["Maylapi", "Payak", "Lansakan", "Basal"],
+    answer: 1,
+    explain: "Ang Payak na pangngalan ay binubuo lamang ng salitang-ugat, walang kasamang panlapi at hindi inuulit."
+  },
+  {
+    q: "Ano ang tawag sa pangngalang binubuo ng salitang-ugat na may kasamang panlapi?",
+    choices: ["Payak", "Kongkreto", "Maylapi", "Tahas"],
+    answer: 2,
+    explain: "Ang Maylapi na pangngalan ay binubuo ng salitang-ugat at may kasamang panlapi tulad ng ka-, pag-, -in-, -an, o ma-."
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng Payak na pangngalan?",
+    choices: ["kaklase", "sinaing", "bahay", "sakahan"],
+    answer: 2,
+    explain: "Ang bahay ay salitang-ugat lamang na walang panlapi kaya ito ay Payak."
+  },
+  {
+    q: "Alin sa mga sumusunod ang HALIMBAWA ng Maylapi na pangngalan?",
+    choices: ["tao", "palay", "pagbasa", "isip"],
+    answer: 2,
+    explain: "Ang pagbasa ay binubuo ng salitang-ugat na 'basa' at unlapi na 'pag-' kaya ito ay Maylapi."
+  },
+  {
+    q: "Ano ang tawag sa panlaping inilalagay sa UNAHAN ng salitang-ugat?",
+    choices: ["Hulapi", "Gitlapi", "Unlapi", "Kabilaan"],
+    answer: 2,
+    explain: "Ang Unlapi ay panlaping idinadagdag sa unahan ng payak na salita, gaya ng 'ka-' sa kaklase."
+  },
+  {
+    q: "Ano ang tawag sa panlaping inilalagay sa GITNA ng salitang-ugat?",
+    choices: ["Unlapi", "Gitlapi", "Hulapi", "Basal"],
+    answer: 1,
+    explain: "Ang Gitlapi ay panlaping idinadagdag sa gitna ng payak na salita, gaya ng '-in-' sa sinaing."
+  },
+  {
+    q: "Ano ang tawag sa panlaping inilalagay sa HULI ng salitang-ugat?",
+    choices: ["Unlapi", "Hulapi", "Gitlapi", "Lansakan"],
+    answer: 1,
+    explain: "Ang Hulapi ay panlaping idinadagdag sa huling bahagi ng payak na salita, gaya ng '-an' sa sakahan."
+  },
+  {
+    q: "Sa salitang 'kaklase,' anong uri ng panlapi ang 'ka-'?",
+    choices: ["Hulapi", "Gitlapi", "Unlapi", "Walang panlapi"],
+    answer: 2,
+    explain: "Nasa unahan ng salitang-ugat na 'klase' ang 'ka-' kaya ito ay Unlapi."
+  },
+  {
+    q: "Sa salitang 'sinaing,' anong uri ng panlapi ang ginamit?",
+    choices: ["Unlapi", "Hulapi", "Gitlapi", "Wala"],
+    answer: 2,
+    explain: "Ang '-in-' ay ipinasok sa gitna ng salitang-ugat na 'saing' kaya ito ay Gitlapi."
+  },
+  {
+    q: "Sa salitang 'sakahan,' anong uri ng panlapi ang '-an'?",
+    choices: ["Unlapi", "Gitlapi", "Hulapi", "Walang panlapi"],
+    answer: 2,
+    explain: "Nasa huling bahagi ng salitang-ugat na 'saka' ang '-an' kaya ito ay Hulapi."
+  },
+  {
+    q: "Ano ang salitang-ugat ng 'kasamahan'?",
+    choices: ["kasama", "samahan", "sama", "kasamaha"],
+    answer: 2,
+    explain: "Ang 'sama' ang salitang-ugat; nadagdagan ito ng unlapi na 'ka-' at hulapi na '-han'."
+  },
+  {
+    q: "Anong mga panlapi ang ginamit sa salitang 'kasamahan' (ugat: sama)?",
+    choices: [
+      "Unlapi na 'ka-' at hulapi na '-han'",
+      "Gitlapi na '-in-' lamang",
+      "Hulapi na '-an' lamang",
+      "Walang ginamit na panlapi"
+    ],
+    answer: 0,
+    explain: "Ang 'kasamahan' ay binubuo ng ugat na 'sama' na may unlapi na 'ka-' at hulapi na '-han'."
+  },
+  {
+    q: "Paano malalaman kung ang isang salita ay PAYAK?",
+    choices: [
+      "Kung may naidagdag na pantig sa salitang-ugat",
+      "Kung wala nang naidagdag na pantig sa salitang-ugat",
+      "Kung ito ay tumutukoy sa isang grupo",
+      "Kung ito ay pangngalang pantangi"
+    ],
+    answer: 1,
+    explain: "PAYAK ang isang salita kung wala nang naidagdag na pantig sa salitang-ugat nito, tulad ng 'tao'."
+  },
+  {
+    q: "Ano ang salitang-ugat ng 'palayan'?",
+    choices: ["pala", "laya", "palay", "layan"],
+    answer: 2,
+    explain: "Ang 'palay' ang salitang-ugat; nadagdagan ito ng hulapi na '-an' upang maging 'palayan'."
+  },
+
+  // ===== III. Hugnayang Pangungusap =====
+  {
+    q: "Ano ang sugnay?",
+    choices: [
+      "Isang salitang tumutukoy sa ngalan ng tao o bagay",
+      "Bahagi ng pangungusap na may simuno at panaguri",
+      "Panlaping idinadagdag sa salitang-ugat",
+      "Salitang naglalarawan ng pangngalan"
+    ],
+    answer: 1,
+    explain: "Ang sugnay ay bahagi ng pangungusap na may sariling simuno at panaguri."
+  },
+  {
+    q: "Ilan ang uri ng sugnay?",
+    choices: ["Isa", "Dalawa", "Tatlo", "Apat"],
+    answer: 1,
+    explain: "May dalawang uri ang sugnay: sugnay na makapag-iisa at sugnay na hindi makapag-iisa."
+  },
+  {
+    q: "Alin ang tamang kahulugan ng Hugnayang Pangungusap?",
+    choices: [
+      "Pangungusap na may isang sugnay lamang",
+      "Pangungusap na binubuo ng pinagsamang sugnay na makapag-iisa at sugnay na hindi makapag-iisa",
+      "Pangungusap na walang panaguri",
+      "Pangungusap na binubuo lamang ng mga pangngalan"
+    ],
+    answer: 1,
+    explain: "Ang hugnayang pangungusap ay binubuo ng pinagsamang sugnay na makapag-iisa at sugnay na hindi makapag-iisa."
+  },
+  {
+    q: "Ano ang katangian ng sugnay na MAKAPAG-IISA?",
+    choices: [
+      "May simuno at panaguri, at buo ang kaisipan kahit ihiwalay",
+      "Wala itong simuno",
+      "Parirala na lamang kapag ihiwalay",
+      "Laging nasa hulihan ng pangungusap"
+    ],
+    answer: 0,
+    explain: "May simuno at panaguri ang sugnay na makapag-iisa, at buo ang kaisipan nito kahit ihiwalay sa pangungusap."
+  },
+  {
+    q: "Ano ang katangian ng sugnay na HINDI MAKAPAG-IISA?",
+    choices: [
+      "Buo ang kaisipan kahit mag-isa",
+      "May simuno at panaguri ngunit hindi buo ang kaisipan kapag ihiwalay",
+      "Wala itong panaguri",
+      "Ito lamang ang bumubuo ng payak na pangungusap"
+    ],
+    answer: 1,
+    explain: "May simuno at panaguri ang sugnay na hindi makapag-iisa, ngunit parirala na lamang ito at kulang ang kaisipan kapag inihiwalay."
+  },
+  {
+    q: 'Sa pangungusap na "Aalis na tayo ngayon dahil parating na ang ulan," alin ang sugnay na HINDI MAKAPAG-IISA?',
+    choices: ["Aalis na tayo ngayon", "dahil parating na ang ulan", "parating na ang ulan", "tayo ngayon"],
+    answer: 1,
+    explain: "Kulang ang ibig sabihin ng 'dahil parating na ang ulan' kapag ito ay inihiwalay sa unang sugnay."
+  },
+  {
+    q: 'Sa pangungusap na "Aalis na tayo ngayon dahil parating na ang ulan," ano ang pangatnig na ginamit?',
+    choices: ["tayo", "dahil", "ngayon", "ulan"],
+    answer: 1,
+    explain: "'Dahil' ang pangatnig na nag-uugnay sa dalawang sugnay sa pangungusap na ito."
+  },
+  {
+    q: 'Sa pangungusap na "Kung boboto lamang nang tama ang mga Pilipino, magiging maayos ang pamamahala sa ating bansa," alin ang sugnay na MAKAPAG-IISA?',
+    choices: [
+      "Kung boboto lamang nang tama ang mga Pilipino",
+      "magiging maayos ang pamamahala sa ating bansa",
+      "boboto lamang nang tama",
+      "ang mga Pilipino"
+    ],
+    answer: 1,
+    explain: "Buo ang ibig sabihin ng 'magiging maayos ang pamamahala sa ating bansa' kahit hiwalayin ito sa pangungusap."
+  },
+  {
+    q: "Sa pangungusap tungkol sa pagboto ng mga Pilipino, ano ang pangatnig na ginamit?",
+    choices: ["dahil", "kung", "upang", "para"],
+    answer: 1,
+    explain: "'Kung' ang pangatnig na nag-uugnay sa sugnay na hindi makapag-iisa at sugnay na makapag-iisa sa pangungusap na ito."
+  },
+  {
+    q: 'Sa pangungusap na "Nag-aral siyang mabuti upang maipasa ang pagsusulit," alin ang sugnay na HINDI MAKAPAG-IISA?',
+    choices: [
+      "Nag-aral siyang mabuti",
+      "upang maipasa ang pagsusulit",
+      "maipasa ang pagsusulit",
+      "siyang mabuti"
+    ],
+    answer: 1,
+    explain: "Kulang ang ibig sabihin ng 'upang maipasa ang pagsusulit' kapag ito ay inihiwalay sa unang sugnay."
+  },
+  {
+    q: 'Ano ang pangatnig sa pangungusap na "Nag-aral siyang mabuti upang maipasa ang pagsusulit"?',
+    choices: ["Nag-aral", "mabuti", "upang", "pagsusulit"],
+    answer: 2,
+    explain: "'Upang' ang ginamit na pangatnig upang iugnay ang dalawang sugnay sa pangungusap."
+  },
+  {
+    q: 'Sa pangungusap na "Maraming paaralan ang nagkansela ng klase dahil sa masamang panahon dulot ng habagat," alin ang sugnay na MAKAPAG-IISA?',
+    choices: [
+      "dahil sa masamang panahon dulot ng habagat",
+      "Maraming paaralan ang nagkansela ng klase",
+      "masamang panahon dulot ng habagat",
+      "nagkansela ng klase"
+    ],
+    answer: 1,
+    explain: "Buo ang diwa ng 'Maraming paaralan ang nagkansela ng klase' kahit hiwalayin ito sa buong pangungusap."
+  },
+  {
+    q: "Alin sa mga sumusunod ang HINDI kabilang sa mga pangatnig na binanggit sa aralin (kung, kapag, dahil, sapagkat, upang, para, nang)?",
+    choices: ["sapagkat", "saka", "kapag", "nang"],
+    answer: 1,
+    explain: "Ang mga pangatnig na binanggit sa aralin ay: kung, kapag, dahil, sapagkat, upang, para, at nang. Hindi kasama rito ang 'saka'."
+  },
+  {
+    q: "Piliin ang HUGNAYANG PANGUNGUSAP sa mga sumusunod:",
+    choices: [
+      "Maganda ang bulaklak.",
+      "Kumain kami ng hapunan.",
+      "Umuwi agad si Ana dahil umuulan.",
+      "Masipag ang mag-aaral."
+    ],
+    answer: 2,
+    explain: 'Binubuo ito ng dalawang sugnay: "Umuwi agad si Ana" (makapag-iisa) at "dahil umuulan" (hindi makapag-iisa), pinag-ugnay ng pangatnig na "dahil".'
+  },
+  {
+    q: "Bakit itinuturing na 'parirala na lamang' ang sugnay na hindi makapag-iisa kapag inihiwalay sa pangungusap?",
+    choices: [
+      "Dahil wala itong simuno at panaguri",
+      "Dahil kulang o hindi buo ang ibig sabihin nito kapag mag-isa",
+      "Dahil masyado itong mahaba",
+      "Dahil ito ay laging nasa unahan ng pangungusap"
+    ],
+    answer: 1,
+    explain: "Kahit may simuno at panaguri ang sugnay na hindi makapag-iisa, hindi ito buo ang diwa kapag inihiwalay, kaya parirala na lamang ito."
+  }
+];
+
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let selectedChoice = null;
+let answered = false;
+let results = []; // {q, choices, correctIdx, userIdx, isCorrect, explain}
+
+function shuffle(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function shuffleQuestionChoices(question) {
+  const choiceObjs = question.choices.map((text, idx) => ({ text, isCorrect: idx === question.answer }));
+  const shuffled = shuffle(choiceObjs);
+  return {
+    q: question.q,
+    choices: shuffled.map(c => c.text),
+    answer: shuffled.findIndex(c => c.isCorrect),
+    explain: question.explain
+  };
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(allQuestions).slice(0, TOTAL_TO_SHOW).map(shuffleQuestionChoices);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('resultsScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  selectedChoice = null;
+  answered = false;
+  const question = quizQuestions[currentIndex];
+  document.getElementById('progress').textContent = `Tanong ${currentIndex + 1} sa ${quizQuestions.length}`;
+  document.getElementById('questionText').textContent = question.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const choicesArea = document.getElementById('choicesArea');
+  choicesArea.innerHTML = '';
+  question.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.textContent = `${letters[idx]}. ${choice}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = `choice-${idx}`;
+    choicesArea.appendChild(btn);
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.className = 'feedback';
+  feedbackBox.innerHTML = '';
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectChoice(idx) {
+  if (answered) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answered) return;
+  answered = true;
+  const question = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === question.answer;
+  if (isCorrect) score++;
+
+  results.push({
+    q: question.q,
+    choices: question.choices,
+    correctIdx: question.answer,
+    userIdx: selectedChoice,
+    isCorrect,
+    explain: question.explain
+  });
+
+  const letters = ['A', 'B', 'C', 'D'];
+  document.querySelectorAll('.choice').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === question.answer) btn.classList.add('correct');
+    if (i === selectedChoice && !isCorrect) btn.classList.add('incorrect');
+  });
+
+  const feedbackBox = document.getElementById('feedbackBox');
+  feedbackBox.classList.add('show');
+  if (isCorrect) {
+    feedbackBox.classList.add('correct-fb');
+    feedbackBox.innerHTML = `Tama! Mahusay! <div class="explain">${question.explain}</div>`;
+  } else {
+    feedbackBox.classList.add('incorrect-fb');
+    feedbackBox.innerHTML = `Mali. Ang tamang sagot ay ${letters[question.answer]}. ${question.choices[question.answer]}.<div class="explain">${question.explain}</div>`;
+  }
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < quizQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+
+  document.getElementById('scoreBig').textContent = `${score} / ${quizQuestions.length}`;
+  const pct = Math.round((score / quizQuestions.length) * 100);
+  document.getElementById('scoreSub').textContent = `Iskor: ${pct}%`;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+
+  const wrongOnes = results.filter(r => !r.isCorrect);
+  const letters = ['A', 'B', 'C', 'D'];
+
+  if (wrongOnes.length === 0) {
+    const div = document.createElement('div');
+    div.className = 'review-item correctone';
+    div.innerHTML = `<p style="text-align:center; font-size:1.05rem;">Perpekto! Nasagot mo nang tama ang lahat ng tanong.</p>`;
+    reviewList.appendChild(div);
+  } else {
+    const heading = document.createElement('h3');
+    heading.style.color = '#2b579a';
+    heading.textContent = 'Mga Tanong na Mali ang Sagot:';
+    reviewList.appendChild(heading);
+
+    wrongOnes.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <p class="review-q">${r.q}</p>
+        <p class="review-your">Ang sagot mo: ${letters[r.userIdx]}. ${r.choices[r.userIdx]}</p>
+        <p class="review-correct">Tamang sagot: ${letters[r.correctIdx]}. ${r.choices[r.correctIdx]}</p>
+        <p class="review-explain">${r.explain}</p>
+      `;
+      reviewList.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -5,306 +5,482 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz Library</title>
 <style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f7f5f2;
-    color: #2b2b2b;
+  :root{
+    --green-900:#0a3622;
+    --green-800:#0f4a2e;
+    --green-700:#166534;
+    --green-600:#1d7a41;
+    --green-500:#2e9959;
+    --green-100:#e6f4ea;
+    --green-50:#f2f9f4;
+    --ink:#1a1f1c;
+    --ink-soft:#5b6660;
+    --line:#e2e8e4;
+    --bg:#f7f8f6;
+    --card:#ffffff;
+    --radius:10px;
   }
-  header {
-    background: linear-gradient(135deg, #2a2a72, #1e3c72);
-    color: white;
-    padding: 40px 20px 30px;
-    text-align: center;
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
   }
-  header h1 {
-    margin: 0 0 6px;
-    font-size: 2rem;
+  a{color:inherit;}
+
+  /* Top bar */
+  .topbar{
+    background:linear-gradient(135deg,var(--green-900),var(--green-700));
+    color:#fff;
+    padding:22px 24px 18px;
   }
-  header p {
-    margin: 0;
-    opacity: 0.85;
-    font-size: 1rem;
+  .topbar-inner{
+    max-width:1200px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
   }
-  .nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    padding: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:40px;height:40px;border-radius:9px;
+    background:rgba(255,255,255,0.14);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.3rem;
   }
-  .nav-chip {
-    text-decoration: none;
-    border: 2px solid #999;
-    border-radius: 999px;
-    padding: 6px 14px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    background: white;
-    transition: transform 0.15s ease;
+  .brand-text h1{margin:0;font-size:1.25rem;font-weight:700;letter-spacing:0.01em;}
+  .brand-text p{margin:2px 0 0;font-size:0.8rem;opacity:0.8;}
+  .search-wrap{position:relative;flex:0 1 300px;min-width:200px;}
+  .search-wrap input{
+    width:100%;
+    padding:9px 14px 9px 34px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    font-size:0.88rem;
+    outline:none;
   }
-  .nav-chip:hover {
-    transform: translateY(-2px);
+  .search-wrap input::placeholder{color:rgba(255,255,255,0.65);}
+  .search-wrap input:focus{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.5);}
+  .search-wrap .icon{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    opacity:0.75;font-size:0.85rem;
   }
-  main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 10px 20px 60px;
+
+  /* Subject nav (top navigation on subjects) */
+  .subject-nav{
+    background:var(--green-800);
+    border-top:1px solid rgba(255,255,255,0.08);
   }
-  .subject {
-    margin-top: 40px;
+  .subject-nav-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;gap:2px;overflow-x:auto;
+    padding:0 12px;
+    scrollbar-width:thin;
   }
-  .subject h2 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.4rem;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
+  .subject-tab{
+    flex:0 0 auto;
+    display:flex;align-items:center;gap:7px;
+    padding:12px 16px;
+    color:rgba(255,255,255,0.75);
+    text-decoration:none;
+    font-size:0.88rem;
+    font-weight:600;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+    cursor:pointer;
+    background:none;border:none;border-bottom:3px solid transparent;
+    font-family:inherit;
   }
-  .subject h2 .count {
-    margin-left: auto;
-    font-size: 0.85rem;
-    color: #888;
-    font-weight: 400;
+  .subject-tab .count{
+    font-weight:400;font-size:0.75rem;opacity:0.7;
   }
-  .cards {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 16px;
+  .subject-tab:hover{color:#fff;}
+  .subject-tab.active{
+    color:#fff;
+    border-bottom-color:var(--green-500);
+    background:rgba(255,255,255,0.06);
   }
-  @media (min-width: 640px) {
-    .cards { grid-template-columns: 1fr 1fr; }
+
+  /* Layout: sidebar + content */
+  .layout{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:flex-start;gap:0;
   }
-  .card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: white;
-    border-radius: 10px;
-    padding: 16px 18px;
-    text-decoration: none;
-    color: #2b2b2b;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  .sidebar{
+    width:260px;flex:0 0 260px;
+    padding:22px 14px 40px 20px;
+    position:sticky;top:0;
+    align-self:flex-start;
   }
-  .card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    transform: translateY(-1px);
+  .sidebar-label{
+    font-size:0.72rem;font-weight:700;letter-spacing:0.06em;
+    color:var(--ink-soft);text-transform:uppercase;
+    margin:0 10px 8px;
   }
-  .card-title {
-    font-size: 0.95rem;
-    font-weight: 500;
+  .topic-item{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:9px 10px;border-radius:8px;
+    color:var(--ink);text-decoration:none;
+    font-size:0.9rem;
+    cursor:pointer;border:none;background:none;width:100%;text-align:left;
+    font-family:inherit;
   }
-  .card-arrow {
-    color: #bbb;
-    font-size: 1.2rem;
-    margin-left: 12px;
-    flex-shrink: 0;
+  .topic-item:hover{background:var(--green-100);}
+  .topic-item.active{
+    background:var(--green-700);color:#fff;font-weight:600;
   }
-  footer {
-    text-align: center;
-    padding: 20px;
-    color: #999;
-    font-size: 0.85rem;
+  .topic-item .t-count{font-size:0.75rem;color:var(--ink-soft);}
+  .topic-item.active .t-count{color:rgba(255,255,255,0.75);}
+
+  /* Content */
+  .content{
+    flex:1 1 auto;min-width:0;
+    padding:22px 24px 60px 18px;
+    border-left:1px solid var(--line);
+  }
+  .breadcrumb{
+    font-size:0.82rem;color:var(--ink-soft);margin:0 0 4px;
+  }
+  .breadcrumb .sep{margin:0 6px;opacity:0.6;}
+  .content h2{
+    margin:2px 0 18px;font-size:1.5rem;display:flex;align-items:center;gap:10px;
+  }
+  .topic-section{margin-bottom:34px;}
+  .topic-section h3{
+    font-size:1.05rem;margin:0 0 12px;color:var(--green-800);
+    padding-bottom:8px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:8px;
+  }
+  .topic-section h3 .t-count{font-weight:400;font-size:0.8rem;color:var(--ink-soft);margin-left:auto;}
+  .cards{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  }
+  .card{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;text-decoration:none;color:var(--ink);
+    transition:box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .card:hover{
+    box-shadow:0 4px 14px rgba(10,54,34,0.12);
+    border-color:var(--green-500);
+    transform:translateY(-1px);
+  }
+  .card-text{display:flex;flex-direction:column;gap:5px;min-width:0;}
+  .card-grade{
+    align-self:flex-start;font-size:0.66rem;font-weight:700;letter-spacing:0.03em;
+    color:var(--green-700);background:var(--green-100);border-radius:999px;padding:2px 8px;
+  }
+  .card-title{font-size:0.92rem;font-weight:500;line-height:1.3;}
+  .card-arrow{color:var(--green-600);font-size:1.15rem;flex-shrink:0;}
+  .empty-state{
+    padding:40px 10px;text-align:center;color:var(--ink-soft);font-size:0.95rem;
+  }
+  footer{
+    text-align:center;padding:22px;color:var(--ink-soft);font-size:0.82rem;
+    border-top:1px solid var(--line);
+  }
+
+  @media (max-width:800px){
+    .layout{flex-direction:column;}
+    .sidebar{
+      width:100%;flex:none;position:static;
+      padding:14px 16px 4px;
+    }
+    .sidebar-label{margin:0 0 8px;}
+    .topic-list{
+      display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;
+    }
+    .topic-item{white-space:nowrap;flex:0 0 auto;}
+    .content{border-left:none;padding:14px 16px 50px;}
+    .cards{grid-template-columns:1fr;}
+  }
+
+  /* Quiz overlay */
+  body.overlay-open{overflow:hidden;}
+  .quiz-overlay{
+    position:fixed;inset:0;z-index:1000;
+    background:rgba(10,20,15,0.72);
+    display:flex;align-items:center;justify-content:center;
+    padding:18px;
+  }
+  .quiz-overlay[hidden]{display:none;}
+  .quiz-overlay-panel{
+    background:#fff;width:100%;max-width:1100px;height:100%;max-height:900px;
+    border-radius:12px;overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  }
+  .quiz-overlay-header{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 16px;
+    background:linear-gradient(135deg,var(--green-900),var(--green-700));
+    color:#fff;flex:0 0 auto;
+  }
+  .quiz-overlay-title{
+    font-size:0.95rem;font-weight:600;flex:1 1 auto;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .quiz-overlay-newtab{
+    color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.8rem;
+    border:1px solid rgba(255,255,255,0.35);border-radius:999px;padding:5px 12px;
+    white-space:nowrap;flex:0 0 auto;
+  }
+  .quiz-overlay-newtab:hover{background:rgba(255,255,255,0.14);color:#fff;}
+  .quiz-overlay-close{
+    background:rgba(255,255,255,0.14);border:none;color:#fff;
+    width:32px;height:32px;border-radius:8px;font-size:1.1rem;line-height:1;
+    cursor:pointer;flex:0 0 auto;
+  }
+  .quiz-overlay-close:hover{background:rgba(255,255,255,0.26);}
+  .quiz-overlay-frame{flex:1 1 auto;border:none;width:100%;height:100%;background:#fff;}
+
+  @media (max-width:800px){
+    .quiz-overlay{padding:0;}
+    .quiz-overlay-panel{max-width:none;max-height:none;border-radius:0;}
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>📚 Quiz Library</h1>
-  <p>33 quizzes across 7 subjects</p>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">📚</div>
+      <div class="brand-text">
+        <h1>Quiz Library</h1>
+        <p id="brandSubtitle">Loading…</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span class="icon">🔎</span>
+      <input id="searchBox" type="text" placeholder="Search quizzes in this subject…" autocomplete="off">
+    </div>
+  </div>
 </header>
-<nav class="nav">
-<a href="#araling-panlipunan" class="nav-chip" style="border-color:#e07a5f;color:#e07a5f">🌏 Araling Panlipunan (6)</a>
-<a href="#christian-living" class="nav-chip" style="border-color:#8e7cc3;color:#8e7cc3">✝️ Christian Living (2)</a>
-<a href="#english" class="nav-chip" style="border-color:#3d84a8;color:#3d84a8">📖 English (5)</a>
-<a href="#filipino" class="nav-chip" style="border-color:#d4a017;color:#d4a017">🇵🇭 Filipino (4)</a>
-<a href="#math" class="nav-chip" style="border-color:#2a9d8f;color:#2a9d8f">🔢 Math (5)</a>
-<a href="#music" class="nav-chip" style="border-color:#e63946;color:#e63946">🎵 Music (3)</a>
-<a href="#science" class="nav-chip" style="border-color:#4361ee;color:#4361ee">🔬 Science (8)</a>
+
+<nav class="subject-nav">
+  <div class="subject-nav-inner" id="subjectNav"></div>
 </nav>
-<main>
 
-    <section class="subject" id="araling-panlipunan">
-      <h2 style="color:#e07a5f"><span class="emoji">🌏</span> Araling Panlipunan <span class="count">6 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="Araling%20Panlipunan/AP_Aralin4_Quiz.html">
-        <span class="card-title">Pagsusulit: Ang Heograpiyang Pisikal ng Pilipinas</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Araling%20Panlipunan/AP_KLIMA_VIDOES.html">
-        <span class="card-title">Pagsusulit: Heograpiya at Klima ng Pilipinas</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Araling%20Panlipunan/AP_Mga_Bumubuo_ng_Komunidad_Quiz.html">
-        <span class="card-title">Pagsusulit: Mga Bumubuo ng Komunidad</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Araling%20Panlipunan/AP_Komunidad_Master_Quiz.html">
-        <span class="card-title">Pagsusulit: Mga Bumubuo ng Komunidad (Malawakang Pagsusulit)</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Araling%20Panlipunan/AP_Tungkulin_at_Gawain_Quiz.html">
-        <span class="card-title">Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Araling%20Panlipunan/AP_Aralin4_Reviewer.html">
-        <span class="card-title">Reviewer: Ang Heograpiyang Pisikal ng Pilipinas</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+<div class="layout">
+  <aside class="sidebar">
+    <p class="sidebar-label">Topics</p>
+    <div class="topic-list" id="topicList"></div>
+  </aside>
+  <main class="content" id="content"></main>
+</div>
 
-    <section class="subject" id="christian-living">
-      <h2 style="color:#8e7cc3"><span class="emoji">✝️</span> Christian Living <span class="count">2 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="Christian%20Living/CL_Baptism_of_Jesus_Quiz.html">
-        <span class="card-title">The Baptism of Jesus Quiz - Christian Living, Unit 1</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Christian%20Living/CL_GMRC4_Holy_Rosary_Quiz.html">
-        <span class="card-title">Holy Rosary Quiz - Christian Living/GMRC 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+<footer>Generated quiz index &middot; click any quiz to start &middot; <span id="totalCount">0</span> quizzes total</footer>
 
-    <section class="subject" id="english">
-      <h2 style="color:#3d84a8"><span class="emoji">📖</span> English <span class="count">5 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="English/ENGLISH-Lesson6.html">
-        <span class="card-title">Canva Quiz - English Context Clues</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="English/ENGLISH-Lesson7.html">
-        <span class="card-title">Canva Quiz - English Prefixes &amp; Suffixes</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="English/context-clues-quiz.html">
-        <span class="card-title">Context Clues Quiz - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="English/friendly-letters-quiz.html">
-        <span class="card-title">Friendly Letters Quiz - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="English/prefixes-suffixes-quiz.html">
-        <span class="card-title">Prefixes and Suffixes Quiz - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+<div class="quiz-overlay" id="quizOverlay" hidden>
+  <div class="quiz-overlay-panel">
+    <div class="quiz-overlay-header">
+      <span class="quiz-overlay-title" id="quizOverlayTitle">Quiz</span>
+      <a class="quiz-overlay-newtab" id="quizOverlayNewTab" href="#" target="_blank" rel="noopener">Open in new tab</a>
+      <button class="quiz-overlay-close" id="quizOverlayClose" type="button" aria-label="Close quiz">&times;</button>
+    </div>
+    <iframe class="quiz-overlay-frame" id="quizOverlayFrame" src="about:blank" title="Quiz"></iframe>
+  </div>
+</div>
 
-    <section class="subject" id="filipino">
-      <h2 style="color:#d4a017"><span class="emoji">🇵🇭</span> Filipino <span class="count">4 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="Filipino/FILIPINO_Quiz%20-%20Hugnayang%20Pangungusap%20%28Grade%204%29.html">
-        <span class="card-title">Pagsasanay sa Hugnayang Pangungusap - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Filipino/FILIPINO_Quiz%20-%20Pangatnig%20%28Grade%204%29.html">
-        <span class="card-title">Pagsasanay sa Pangatnig - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Filipino/FILIPINO_Pangngalan%20%28Kategorya%2C%20Uri%2C%20at%20Kayarian%29.html">
-        <span class="card-title">Pagsasanay sa Pangngalan - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Filipino/FILIPINO_Pangatnig.html">
-        <span class="card-title">Pangatnig Quiz - Canva Style</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+<script src="quizzes-data.js"></script>
+<script>
+(function(){
+  var state = { subjectId: null, topic: 'all', query: '' };
 
-    <section class="subject" id="math">
-      <h2 style="color:#2a9d8f"><span class="emoji">🔢</span> Math <span class="count">5 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="Math/MATH-Quiz1.3.html">
-        <span class="card-title">Canva Quiz - Elementary Math Multiplication</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Math/grade2-addition-subtraction-quiz-timed.html">
-        <span class="card-title">Grade 2 Math Quiz: Addition &amp; Subtraction (Timed)</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Math/grade4-multiplication-quiz.html">
-        <span class="card-title">Grade 4 Math Quiz: Multiplication</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Math/grade4-multiplication-quiz-set2.html">
-        <span class="card-title">Grade 4 Math Quiz: Multiplication (Set 2)</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Math/grade4-multiplication-quiz-timed.html">
-        <span class="card-title">Grade 4 Math Quiz: Multiplication (Timed, Input Answer)</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+  function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
-    <section class="subject" id="music">
-      <h2 style="color:#e63946"><span class="emoji">🎵</span> Music <span class="count">3 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="Music/MUSIC_Filipino_Composers_Quiz.html">
-        <span class="card-title">Grade 4 Music Quiz - Filipino Composers</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Music/music-texture-filipinocomp.html">
-        <span class="card-title">Grade 4 Music Quiz - Texture &amp; Filipino Composers</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Music/Music_Texture_Quiz.html">
-        <span class="card-title">Music Quiz: Texture</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+  function totalQuizCount(subject){
+    return subject.topics.reduce(function(n,t){ return n + t.quizzes.length; }, 0);
+  }
+  function grandTotal(){
+    return QUIZ_DATA.reduce(function(n,s){ return n + totalQuizCount(s); }, 0);
+  }
 
-    <section class="subject" id="science">
-      <h2 style="color:#4361ee"><span class="emoji">🔬</span> Science <span class="count">8 quizzes</span></h2>
-      <div class="cards">
-      <a class="card" href="Science/LONGTEST-quiz_physical-chemical-change.html">
-        <span class="card-title">Physical and Chemical Changes Interactive Quiz</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/Science_Quiz_Muscular_Respiratory_Digestive.html">
-        <span class="card-title">Science Quiz: Muscular, Respiratory &amp; Digestive Systems</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/Science_Quiz_Muscular_System.html">
-        <span class="card-title">Science Quiz: The Muscular System</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/SCIENCE_Gemini_Lesson1.6-2.html">
-        <span class="card-title">Skeletal System Challenge - Bone Edition</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/SCIENCE-GEMINI-Lesson1.6.html">
-        <span class="card-title">Skeletal System Interactive Canva Quiz</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/Skeletal_System_Quiz.html">
-        <span class="card-title">Skeletal System Quiz - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/Skeletal_and_Muscular_System_Quiz.html">
-        <span class="card-title">Skeletal and Muscular System Quiz - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a class="card" href="Science/Ultimate_Skeletal_Muscular_Review_Quiz.html">
-        <span class="card-title">Ultimate Skeletal and Muscular System Quiz - Grade 4</span>
-        <span class="card-arrow">→</span>
-      </a>
-      </div>
-    </section>
+  function renderSubjectNav(){
+    var nav = document.getElementById('subjectNav');
+    nav.innerHTML = QUIZ_DATA.map(function(s){
+      var active = s.id === state.subjectId ? ' active' : '';
+      return '<button class="subject-tab' + active + '" data-subject="' + s.id + '">' +
+        s.icon + ' ' + esc(s.name) +
+        ' <span class="count">(' + totalQuizCount(s) + ')</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(nav.querySelectorAll('.subject-tab'), function(btn){
+      btn.addEventListener('click', function(){
+        state.subjectId = btn.getAttribute('data-subject');
+        state.topic = 'all';
+        state.query = '';
+        document.getElementById('searchBox').value = '';
+        syncHash();
+        render();
+      });
+    });
+  }
 
-</main>
-<footer>Generated index — click any quiz to start.</footer>
+  function renderSidebar(subject){
+    var list = document.getElementById('topicList');
+    var items = [{ name: 'All Topics', count: totalQuizCount(subject), key: 'all' }]
+      .concat(subject.topics.map(function(t){ return { name: t.name, count: t.quizzes.length, key: t.name }; }));
+    list.innerHTML = items.map(function(it){
+      var active = it.key === state.topic ? ' active' : '';
+      return '<button class="topic-item' + active + '" data-topic="' + esc(it.key) + '">' +
+        '<span>' + esc(it.name) + '</span><span class="t-count">' + it.count + '</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(list.querySelectorAll('.topic-item'), function(btn){
+      btn.addEventListener('click', function(){
+        state.topic = btn.getAttribute('data-topic');
+        syncHash();
+        render();
+      });
+    });
+  }
+
+  function cardHtml(q){
+    var href = encodeURI(q.file);
+    return '<a class="card" href="' + href + '" target="_blank" rel="noopener" ' +
+      'data-quiz-file="' + href + '" data-quiz-title="' + esc(q.title) + '">' +
+      '<span class="card-text">' +
+        '<span class="card-grade">' + esc(q.grade || 'GRADE 4').toUpperCase() + '</span>' +
+        '<span class="card-title">' + esc(q.title) + '</span>' +
+      '</span>' +
+      '<span class="card-arrow">&rarr;</span>' +
+    '</a>';
+  }
+
+  function matches(q, query){
+    if(!query) return true;
+    return q.title.toLowerCase().indexOf(query) !== -1;
+  }
+
+  function renderContent(subject){
+    var content = document.getElementById('content');
+    var query = state.query.trim().toLowerCase();
+    var topicsToShow = state.topic === 'all' ? subject.topics : subject.topics.filter(function(t){ return t.name === state.topic; });
+
+    var breadcrumb = 'Quiz Library <span class="sep">/</span> ' + esc(subject.name) +
+      (state.topic !== 'all' ? ' <span class="sep">/</span> ' + esc(state.topic) : '');
+
+    var sections = topicsToShow.map(function(t){
+      var qs = t.quizzes.filter(function(q){ return matches(q, query); });
+      if(qs.length === 0) return '';
+      return '<section class="topic-section">' +
+        '<h3>' + esc(t.name) + ' <span class="t-count">' + qs.length + ' ' + (qs.length===1?'quiz':'quizzes') + '</span></h3>' +
+        '<div class="cards">' + qs.map(cardHtml).join('') + '</div>' +
+      '</section>';
+    }).join('');
+
+    if(!sections){
+      sections = '<div class="empty-state">No quizzes match your search.</div>';
+    }
+
+    content.innerHTML =
+      '<p class="breadcrumb">' + breadcrumb + '</p>' +
+      '<h2>' + subject.icon + ' ' + esc(subject.name) + '</h2>' +
+      sections;
+  }
+
+  function syncHash(){
+    var h = '#' + state.subjectId + (state.topic !== 'all' ? '/' + slug(state.topic) : '');
+    try{
+      history.replaceState(null, '', h);
+    }catch(e){
+      // history.replaceState can throw (e.g. SecurityError) when this page is opened
+      // as a local file:// document. Fall back to setting the hash directly, and if
+      // even that fails, just skip hash-syncing — never let it block a re-render.
+      try{ location.hash = h; }catch(e2){}
+    }
+  }
+
+  function findSubject(id){
+    return QUIZ_DATA.find(function(s){ return s.id === id; }) || QUIZ_DATA[0];
+  }
+
+  function applyHash(){
+    var h = location.hash.replace('#','');
+    if(!h) return;
+    var parts = h.split('/');
+    var subj = findSubject(parts[0]);
+    state.subjectId = subj.id;
+    if(parts[1]){
+      var t = subj.topics.find(function(t){ return slug(t.name) === parts[1]; });
+      state.topic = t ? t.name : 'all';
+    }
+  }
+
+  function render(){
+    var subject = findSubject(state.subjectId);
+    document.getElementById('brandSubtitle').textContent = grandTotal() + ' quizzes across ' + QUIZ_DATA.length + ' subjects';
+    document.getElementById('totalCount').textContent = grandTotal();
+    renderSubjectNav();
+    renderSidebar(subject);
+    renderContent(subject);
+  }
+
+  document.getElementById('searchBox').addEventListener('input', function(e){
+    state.query = e.target.value;
+    renderContent(findSubject(state.subjectId));
+  });
+
+  window.addEventListener('hashchange', function(){
+    applyHash();
+    render();
+  });
+
+  // Quiz overlay: open a quiz "in place" over the library instead of a new tab,
+  // so a student can go from quiz to quiz without losing the library window.
+  var overlay = document.getElementById('quizOverlay');
+  var overlayFrame = document.getElementById('quizOverlayFrame');
+  var overlayTitle = document.getElementById('quizOverlayTitle');
+  var overlayNewTab = document.getElementById('quizOverlayNewTab');
+  var overlayClose = document.getElementById('quizOverlayClose');
+
+  function openQuiz(file, title){
+    overlayTitle.textContent = title || 'Quiz';
+    overlayNewTab.setAttribute('href', file);
+    overlayFrame.setAttribute('src', file);
+    overlay.hidden = false;
+    document.body.classList.add('overlay-open');
+    overlayClose.focus();
+  }
+
+  function closeQuiz(){
+    overlay.hidden = true;
+    document.body.classList.remove('overlay-open');
+    // Reset the iframe so a re-opened quiz starts fresh (new random shuffle,
+    // any audio/timers stopped) rather than resuming mid-quiz in the background.
+    overlayFrame.setAttribute('src', 'about:blank');
+  }
+
+  // Delegated click: content is re-rendered often, so listen once on a stable
+  // ancestor rather than re-binding per card. Plain left-click opens the overlay;
+  // a modifier key (ctrl/cmd/shift) or middle-click is left alone so "open in a
+  // new tab" still works the normal browser way.
+  document.getElementById('content').addEventListener('click', function(e){
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if(!card) return;
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    openQuiz(card.getAttribute('data-quiz-file'), card.getAttribute('data-quiz-title'));
+  });
+
+  overlayClose.addEventListener('click', closeQuiz);
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) closeQuiz();
+  });
+  window.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !overlay.hidden) closeQuiz();
+  });
+
+  state.subjectId = QUIZ_DATA[0].id;
+  applyHash();
+  render();
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Clues Quiz - Grade 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          colors: {
+            canva: {
+              purple: '#7d2ae8', teal: '#00c4cc', pink: '#ff66c4', violet: '#5e17eb',
+              bg: '#f4f5f8', card: '#ffffff', dark: '#1e1b2e'
+            }
+          },
+          boxShadow: {
+            'canva': '0 10px 30px -5px rgba(94, 23, 235, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05)',
+            'canva-lg': '0 20px 40px -10px rgba(125, 42, 232, 0.22)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff4e6 0%, #fef0f7 50%, #eefbfb 100%);
+      min-height: 100vh;
+    }
+    .canva-gradient-text {
+      background: linear-gradient(90deg, #ff7a45 0%, #ff2d95 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .canva-btn-gradient { background: linear-gradient(135deg, #ff7a45 0%, #ff2d95 100%); }
+    .canva-btn-gradient:hover { background: linear-gradient(135deg, #f26332 0%, #e81f85 100%); }
+    .option-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .option-card:hover:not(.disabled) {
+      transform: translateY(-2px); border-color: #ff2d95; background-color: #fff5fa;
+    }
+    .pulse-subtle { animation: pulseSubtle 3s infinite; }
+    @keyframes pulseSubtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+  </style>
+</head>
+<body class="font-sans text-slate-800 flex flex-col justify-between p-3 sm:p-6">
+
+  <header class="max-w-4xl mx-auto w-full mb-6">
+    <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-canva border border-white/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl canva-btn-gradient flex items-center justify-center text-white shadow-md text-xl font-black">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-orange-500/10 text-orange-600 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Grade 4</span>
+            <span class="bg-pink-500/15 text-pink-700 text-xs font-bold px-2.5 py-0.5 rounded-full">10 Questions</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Context Clues <span class="canva-gradient-text">Quiz</span></h1>
+        </div>
+      </div>
+      <button id="restartHeaderBtn" onclick="initQuiz()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+        <i class="fa-solid fa-shuffle text-pink-500"></i> Reshuffle &amp; Restart
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col justify-center">
+
+    <div id="startScreen" class="bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100 text-center relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-40 h-40 bg-orange-400/10 rounded-full blur-2xl"></div>
+      <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-teal-400/10 rounded-full blur-2xl"></div>
+
+      <div class="relative z-10">
+        <span class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-orange-500 to-pink-500 rounded-3xl text-white text-3xl mb-6 shadow-canva-lg pulse-subtle">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Lesson 6: Context Clues</h2>
+        <p class="text-slate-600 max-w-lg mx-auto mb-6 text-sm sm:text-base leading-relaxed">
+          Test what you know about context clues! You'll be asked about the four types — synonym, antonym, exemplification, and definition clues — their signal words, and how to use them to figure out unfamiliar words.
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mb-6 text-left">
+          <div class="bg-orange-50 border-orange-100 p-3 rounded-2xl border"><div class="text-orange-600 font-bold text-xs">TYPE</div><div class="text-slate-800 font-semibold text-sm">Synonym Clues</div></div>
+          <div class="bg-teal-50 border-teal-100 p-3 rounded-2xl border"><div class="text-teal-600 font-bold text-xs">TYPE</div><div class="text-slate-800 font-semibold text-sm">Antonym Clues</div></div>
+          <div class="bg-pink-50 border-pink-100 p-3 rounded-2xl border"><div class="text-pink-600 font-bold text-xs">TYPE</div><div class="text-slate-800 font-semibold text-sm">Exemplification Clues</div></div>
+          <div class="bg-amber-50 border-amber-100 p-3 rounded-2xl border"><div class="text-amber-600 font-bold text-xs">TYPE</div><div class="text-slate-800 font-semibold text-sm">Definition Clues</div></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 max-w-lg mx-auto mb-8 text-left text-sm text-slate-600">
+          <p class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-circle-info text-orange-500 mr-1"></i> How this quiz works</p>
+          <p>This quiz always has 10 questions, but the order is reshuffled and the answer choices are rearranged every time you play. Choose your answer, click <strong>Submit Answer</strong>, and you'll immediately see if you were right along with an explanation. At the end, you'll get your score and a full review of anything you missed.</p>
+        </div>
+
+        <button onclick="startQuiz()" class="canva-btn-gradient text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-canva-lg transition transform hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto inline-flex items-center justify-center gap-3">
+          <span>Start Quiz Now</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="quizCard" class="hidden bg-white rounded-3xl p-5 sm:p-8 shadow-canva border border-slate-100 relative">
+      <div class="mb-6">
+        <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+          <span id="questionProgressText">Question 1 of 10</span>
+          <span id="scoreTracker" class="text-pink-600"><i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: 0</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-3 p-0.5 overflow-hidden">
+          <div id="progressBar" class="bg-gradient-to-r from-orange-500 to-pink-500 h-full rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <span id="qBadge" class="bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-lg">Question 1</span>
+        <span id="categoryTag" class="bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1 rounded-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-layer-group text-teal-500"></i> <span id="categoryText">Context Clues</span>
+        </span>
+      </div>
+
+      <div id="questionContainer" class="mb-6">
+        <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-3 leading-snug" id="questionPrompt">
+          Read the question carefully and select the correct answer:
+        </h3>
+        <div class="bg-gradient-to-r from-orange-50 via-slate-50 to-teal-50 p-4 sm:p-5 rounded-2xl border border-orange-100/80 text-slate-800 text-base sm:text-lg leading-relaxed shadow-sm" id="sentenceBox">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 mb-6" id="optionsGrid"></div>
+
+      <div id="feedbackBox" class="hidden mb-6 p-4 sm:p-5 rounded-2xl border transition-all">
+        <div class="flex items-start gap-3">
+          <div id="feedbackIcon" class="w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <h4 id="feedbackTitle" class="font-extrabold text-base mb-1">Correct!</h4>
+            <p id="feedbackText" class="text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-2 border-t border-slate-100">
+        <button id="submitBtn" onclick="submitAnswer()" class="canva-btn-gradient text-white font-bold px-6 py-3 rounded-xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+          <span>Submit Answer</span>
+          <i class="fa-solid fa-paper-plane text-xs"></i>
+        </button>
+        <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+          <span id="nextBtnText">Next Question</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="resultsScreen" class="hidden bg-white rounded-3xl p-6 sm:p-10 shadow-canva border border-slate-100">
+      <div class="text-center mb-8">
+        <div id="scoreBadge" class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-tr from-orange-500 to-pink-500 text-white text-3xl font-black mb-4 shadow-canva-lg">0%</div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900" id="resultTitle">Quiz Completed!</h2>
+        <p class="text-slate-600 mt-1 text-sm sm:text-base" id="scoreSummaryText">You scored 0 out of 10 questions correctly.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 mb-10">
+        <button onclick="initQuiz()" class="canva-btn-gradient text-white font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Try Again (New Shuffle)</span>
+        </button>
+      </div>
+
+      <div class="border-t border-slate-100 pt-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-check text-pink-600"></i> Detailed Answer Review
+          </h3>
+          <span id="mistakesCountTag" class="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-600 rounded-full">0 Mistakes</span>
+        </div>
+        <div id="reviewContainer" class="space-y-4"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="max-w-4xl mx-auto w-full text-center text-xs text-slate-500 py-6 mt-6">
+    <p>English Language Arts (Lesson 6) • Context Clues Interactive Quiz</p>
+  </footer>
+
+  <script>
+    const masterQuestions = [
+  {
+    "id": 1,
+    "sentence": "What are context clues?",
+    "options": [
+      "Words or sentences around an unfamiliar word that help us understand its meaning",
+      "A list of every word in a dictionary",
+      "The title and headings of a book only",
+      "Punctuation marks used at the end of a sentence"
+    ],
+    "answer": 0,
+    "category": "Context Clues Basics",
+    "explanation": "Context clues are words or sentences around an unfamiliar word that help us understand its meaning without always needing a dictionary."
+  },
+  {
+    "id": 2,
+    "sentence": "Which type of context clue gives another word with a similar meaning to explain an unfamiliar word?",
+    "options": [
+      "Antonym clue",
+      "Synonym clue",
+      "Definition clue",
+      "Exemplification clue"
+    ],
+    "answer": 1,
+    "category": "Types of Clues",
+    "explanation": "A synonym clue gives another word with a similar meaning to help explain the unfamiliar word."
+  },
+  {
+    "id": 3,
+    "sentence": "Which type of context clue uses an opposite idea to help explain an unfamiliar word?",
+    "options": [
+      "Synonym clue",
+      "Antonym clue",
+      "Exemplification clue",
+      "Definition clue"
+    ],
+    "answer": 1,
+    "category": "Types of Clues",
+    "explanation": "An antonym clue uses an opposite idea to help explain the meaning of an unfamiliar word."
+  },
+  {
+    "id": 4,
+    "sentence": "Which type of context clue tells the meaning of the word directly within the sentence?",
+    "options": [
+      "Synonym clue",
+      "Antonym clue",
+      "Exemplification clue",
+      "Definition clue"
+    ],
+    "answer": 3,
+    "category": "Types of Clues",
+    "explanation": "A definition clue tells the meaning of the unfamiliar word directly in the sentence, often using signal words like “is” or “means.”"
+  },
+  {
+    "id": 5,
+    "sentence": "Which signal word most often points to an exemplification (example) clue?",
+    "options": [
+      "or",
+      "unlike",
+      "such as",
+      "means"
+    ],
+    "answer": 2,
+    "category": "Signal Words",
+    "explanation": "“Such as” is a signal word that usually introduces examples, pointing to an exemplification clue."
+  },
+  {
+    "id": 6,
+    "sentence": "“The dessert was scrumptious, or extremely delicious, according to everyone at the party.” What does “scrumptious” mean?",
+    "options": [
+      "Extremely delicious",
+      "Very cold",
+      "Difficult to make",
+      "Too expensive"
+    ],
+    "answer": 0,
+    "category": "Applying the Skill",
+    "explanation": "The word “or” signals a synonym clue — “extremely delicious” tells us what “scrumptious” means."
+  },
+  {
+    "id": 7,
+    "sentence": "“Unlike her timid younger brother, Ana was bold and never afraid to try new things.” What does “bold” mean?",
+    "options": [
+      "Shy and afraid",
+      "Not afraid to try new things",
+      "Quiet and calm",
+      "Very tired"
+    ],
+    "answer": 1,
+    "category": "Applying the Skill",
+    "explanation": "“Unlike” signals an antonym clue — since her brother is timid (shy), Ana must be the opposite: not afraid."
+  },
+  {
+    "id": 8,
+    "sentence": "“Many marine animals, such as dolphins, whales, and sea turtles, need to come up for air.” What does “marine animals” mean?",
+    "options": [
+      "Animals that live in trees",
+      "Animals that live in or near the sea",
+      "Animals that can fly",
+      "Animals found only in zoos"
+    ],
+    "answer": 1,
+    "category": "Applying the Skill",
+    "explanation": "“Such as” signals an exemplification clue — dolphins, whales, and sea turtles are all examples of marine (sea) animals."
+  },
+  {
+    "id": 9,
+    "sentence": "“A biography is a book that tells the true story of a real person's life.” What does “biography” mean?",
+    "options": [
+      "A made-up story about animals",
+      "A true story about a real person's life",
+      "A list of vocabulary words",
+      "A poem about nature"
+    ],
+    "answer": 1,
+    "category": "Applying the Skill",
+    "explanation": "The sentence directly defines “biography” using the signal word “is,” making this a definition clue."
+  },
+  {
+    "id": 10,
+    "sentence": "What is the FIRST step you should take when you see an unfamiliar word while reading?",
+    "options": [
+      "Look it up in a dictionary right away",
+      "Skip the sentence completely",
+      "Read the whole sentence",
+      "Ask a friend for the answer"
+    ],
+    "answer": 2,
+    "category": "Steps & Strategy",
+    "explanation": "The first step is to read the whole sentence before looking for clue words around the unfamiliar word."
+  }
+];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let selectedOptionIndex = null;
+    let userAnswers = [];
+    let score = 0;
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildAttemptQuestions() {
+      const shuffledBank = shuffleArray(masterQuestions);
+      return shuffledBank.map(orig => {
+        const optionIndices = orig.options.map((opt, idx) => ({ opt, idx }));
+        const shuffledOptions = shuffleArray(optionIndices);
+        const newAnswerIndex = shuffledOptions.findIndex(o => o.idx === orig.answer);
+        return {
+          id: orig.id,
+          sentence: orig.sentence,
+          options: shuffledOptions.map(o => o.opt),
+          answer: newAnswerIndex,
+          category: orig.category,
+          explanation: orig.explanation
+        };
+      });
+    }
+
+    function initQuiz() {
+      currentQuestions = buildAttemptQuestions();
+      currentIndex = 0;
+      score = 0;
+      userAnswers = [];
+      selectedOptionIndex = null;
+      document.getElementById("startScreen").classList.remove("hidden");
+      document.getElementById("quizCard").classList.add("hidden");
+      document.getElementById("resultsScreen").classList.add("hidden");
+    }
+
+    function startQuiz() {
+      document.getElementById("startScreen").classList.add("hidden");
+      document.getElementById("quizCard").classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      selectedOptionIndex = null;
+      const q = currentQuestions[currentIndex];
+      const total = currentQuestions.length;
+
+      document.getElementById("questionProgressText").innerText = `Question ${currentIndex + 1} of ${total}`;
+      document.getElementById("scoreTracker").innerHTML = `<i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: ${score}`;
+      document.getElementById("progressBar").style.width = `${((currentIndex + 1) / total) * 100}%`;
+
+      document.getElementById("qBadge").innerText = `Question ${currentIndex + 1}`;
+      document.getElementById("categoryText").innerText = q.category || "Context Clues";
+
+      document.getElementById("sentenceBox").innerHTML = q.sentence;
+
+      const optionsGrid = document.getElementById("optionsGrid");
+      optionsGrid.innerHTML = "";
+      const optionLabels = ["A", "B", "C", "D"];
+
+      q.options.forEach((opt, idx) => {
+        const optCard = document.createElement("button");
+        optCard.className = `option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-pink-400 flex items-center gap-3.5 cursor-pointer transition`;
+        optCard.onclick = () => selectOption(idx);
+        optCard.id = `optBtn_${idx}`;
+        optCard.innerHTML = `
+          <span class="opt-label w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center shrink-0 text-sm">${optionLabels[idx]}</span>
+          <span class="opt-text text-slate-800 font-medium text-sm sm:text-base flex-grow">${opt}</span>
+          <i class="opt-icon fa-regular fa-circle text-slate-300 text-lg"></i>
+        `;
+        optionsGrid.appendChild(optCard);
+      });
+
+      const feedbackBox = document.getElementById("feedbackBox");
+      feedbackBox.classList.add("hidden");
+      feedbackBox.className = "hidden mb-6 p-4 sm:p-5 rounded-2xl border transition-all";
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.classList.remove("hidden");
+      submitBtn.disabled = true;
+
+      const nextBtn = document.getElementById("nextBtn");
+      nextBtn.classList.add("hidden");
+
+      document.getElementById("nextBtnText").innerText = (currentIndex === total - 1) ? "Finish & See Results" : "Next Question";
+    }
+
+    function selectOption(index) {
+      if (userAnswers[currentIndex] && userAnswers[currentIndex].submitted) return;
+      selectedOptionIndex = index;
+      const totalOpts = currentQuestions[currentIndex].options.length;
+      for (let i = 0; i < totalOpts; i++) {
+        const btn = document.getElementById(`optBtn_${i}`);
+        const icon = btn.querySelector(".opt-icon");
+        const label = btn.querySelector(".opt-label");
+        if (i === index) {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-pink-500 bg-pink-50/50 flex items-center gap-3.5 cursor-pointer shadow-sm";
+          icon.className = "opt-icon fa-solid fa-circle-dot text-pink-500 text-lg";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-pink-500 text-white font-bold flex items-center justify-center shrink-0 text-sm shadow-sm";
+        } else {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white flex items-center gap-3.5 cursor-pointer";
+          icon.className = "opt-icon fa-regular fa-circle text-slate-300 text-lg";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center shrink-0 text-sm";
+        }
+      }
+      document.getElementById("submitBtn").disabled = false;
+    }
+
+    function submitAnswer() {
+      if (selectedOptionIndex === null) return;
+      const q = currentQuestions[currentIndex];
+      const isCorrect = selectedOptionIndex === q.answer;
+      if (isCorrect) score++;
+
+      userAnswers[currentIndex] = {
+        questionId: q.id, questionObj: q, selectedIndex: selectedOptionIndex, isCorrect: isCorrect, submitted: true
+      };
+
+      q.options.forEach((_, idx) => {
+        const btn = document.getElementById(`optBtn_${idx}`);
+        btn.onclick = null;
+        btn.classList.add("disabled");
+        btn.classList.remove("hover:border-pink-400");
+        const icon = btn.querySelector(".opt-icon");
+        const label = btn.querySelector(".opt-label");
+        if (idx === q.answer) {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex items-center gap-3.5";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-emerald-500 text-white font-bold flex items-center justify-center shrink-0 text-sm";
+          icon.className = "opt-icon fa-solid fa-circle-check text-emerald-600 text-lg";
+        } else if (idx === selectedOptionIndex && !isCorrect) {
+          btn.className = "option-card w-full text-left p-4 rounded-2xl border-2 border-rose-400 bg-rose-50 flex items-center gap-3.5";
+          label.className = "opt-label w-8 h-8 rounded-xl bg-rose-500 text-white font-bold flex items-center justify-center shrink-0 text-sm";
+          icon.className = "opt-icon fa-solid fa-circle-xmark text-rose-500 text-lg";
+        }
+      });
+
+      const feedbackBox = document.getElementById("feedbackBox");
+      const feedbackIcon = document.getElementById("feedbackIcon");
+      const feedbackTitle = document.getElementById("feedbackTitle");
+      const feedbackText = document.getElementById("feedbackText");
+      feedbackBox.classList.remove("hidden");
+
+      if (isCorrect) {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-emerald-200 bg-emerald-50/80 text-emerald-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        feedbackTitle.innerText = "Correct Answer!";
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-emerald-800";
+      } else {
+        feedbackBox.className = "mb-6 p-4 sm:p-5 rounded-2xl border border-rose-200 bg-rose-50/80 text-rose-950";
+        feedbackIcon.className = "w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm";
+        feedbackIcon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        feedbackTitle.innerText = `Incorrect. Correct choice was (${["A","B","C","D"][q.answer]})`;
+        feedbackTitle.className = "font-extrabold text-base mb-1 text-rose-800";
+      }
+      feedbackText.innerText = q.explanation;
+
+      document.getElementById("scoreTracker").innerHTML = `<i class="fa-solid fa-star text-amber-400 mr-1"></i>Score: ${score}`;
+      document.getElementById("submitBtn").classList.add("hidden");
+      document.getElementById("nextBtn").classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      if (currentIndex < currentQuestions.length - 1) {
+        currentIndex++;
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById("quizCard").classList.add("hidden");
+      document.getElementById("resultsScreen").classList.remove("hidden");
+
+      const total = currentQuestions.length;
+      const percentage = Math.round((score / total) * 100);
+      document.getElementById("scoreBadge").innerText = `${percentage}%`;
+      document.getElementById("scoreSummaryText").innerText = `You answered ${score} out of ${total} questions correctly.`;
+
+      const titleElem = document.getElementById("resultTitle");
+      if (percentage === 100) titleElem.innerText = "🌟 Perfect Score! Amazing Work!";
+      else if (percentage >= 80) titleElem.innerText = "🎉 Great Job! Excellent Understanding!";
+      else if (percentage >= 60) titleElem.innerText = "👍 Good Effort! Practice Makes Perfect!";
+      else titleElem.innerText = "📚 Keep Studying — You'll Get There!";
+
+      const reviewContainer = document.getElementById("reviewContainer");
+      reviewContainer.innerHTML = "";
+      const mistakes = userAnswers.filter(a => !a.isCorrect);
+      document.getElementById("mistakesCountTag").innerText = `${mistakes.length} ${mistakes.length === 1 ? 'Mistake' : 'Mistakes'}`;
+
+      if (mistakes.length === 0) {
+        reviewContainer.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
+            <i class="fa-solid fa-award text-emerald-500 text-4xl mb-2"></i>
+            <h4 class="font-bold text-emerald-900 text-lg">No Mistakes Made!</h4>
+            <p class="text-emerald-700 text-sm mt-1">You answered all ${total} questions correctly!</p>
+          </div>
+        `;
+      } else {
+        userAnswers.forEach((ans, qSeqIndex) => {
+          if (!ans.isCorrect) {
+            const q = ans.questionObj;
+            const labels = ["A", "B", "C", "D"];
+            const card = document.createElement("div");
+            card.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 text-left";
+            card.innerHTML = `
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="bg-rose-100 text-rose-700 font-bold text-xs px-2.5 py-0.5 rounded-md">Question ${qSeqIndex + 1} • Incorrect</span>
+                <span class="text-xs font-semibold text-slate-500">${q.category || 'Context Clues'}</span>
+              </div>
+              <p class="text-slate-800 text-sm sm:text-base mb-3 leading-relaxed">${q.sentence}</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm mb-3">
+                <div class="bg-rose-100/70 border border-rose-200 p-2.5 rounded-xl text-rose-900">
+                  <span class="font-bold">Your Choice:</span> (${labels[ans.selectedIndex]}) ${q.options[ans.selectedIndex]}
+                </div>
+                <div class="bg-emerald-100/70 border border-emerald-200 p-2.5 rounded-xl text-emerald-900">
+                  <span class="font-bold">Correct Choice:</span> (${labels[q.answer]}) ${q.options[q.answer]}
+                </div>
+              </div>
+              <div class="bg-white border border-slate-200 p-3 rounded-xl text-xs sm:text-sm text-slate-600">
+                <span class="font-bold text-slate-800"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Explanation:</span> ${q.explanation}
+              </div>
+            `;
+            reviewContainer.appendChild(card);
+          }
+        });
+      }
+    }
+
+    window.onload = function() { initQuiz(); };
+  </script>
+</body>
+</html>

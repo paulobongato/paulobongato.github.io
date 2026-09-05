@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagsasanay sa Gramatikang Filipino</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-brand-500/20">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 leading-tight text-base sm:text-lg">Gramatikang Filipino</h1>
+                    <p class="text-xs text-slate-500 font-medium">Interactive Quiz &amp; Subok-Kaalaman</p>
+                </div>
+            </div>
+            <div id="quiz-badge" class="hidden">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200">
+                    <i class="fa-solid fa-list-check"></i> 25 Mga Tanong
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-3xl w-full mx-auto px-4 py-6 sm:py-10 flex-grow">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="bg-white rounded-2xl p-6 sm:p-10 border border-slate-200/80 shadow-xl shadow-slate-200/50 text-center fade-in">
+            <div class="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-600 text-3xl ring-8 ring-brand-50/50">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Pagsasanay sa Gramatikang Filipino</h2>
+            <p class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto mb-8 leading-relaxed">
+                Pagsusulit batay sa mga aralin tungkol sa <span class="font-semibold text-slate-800">Pangngalan</span> (Pambalana, Pantangi, Tahas, Basal, Lansakan), <span class="font-semibold text-slate-800">Sugnay</span>, at <span class="font-semibold text-slate-800">Hugnayang Pangungusap</span>.
+            </p>
+
+            <!-- Quiz Highlights -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8 text-left">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-150 flex items-start gap-3">
+                    <i class="fa-solid fa-shuffle text-brand-500 mt-1"></i>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">Randomized Order</div>
+                        <div class="text-xs text-slate-500">Iba't ibang pagkakasunod-sunod sa bawat subok.</div>
+                    </div>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-150 flex items-start gap-3">
+                    <i class="fa-solid fa-[#0284c7] fa-circle-check text-emerald-500 mt-1"></i>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">Instant Feedback</div>
+                        <div class="text-xs text-slate-500">Makikita agad ang tamang sagot pagkatapos mag-submit.</div>
+                    </div>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-150 flex items-start gap-3">
+                    <i class="fa-solid fa-chart-pie text-purple-500 mt-1"></i>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">Mistake Review</div>
+                        <div class="text-xs text-slate-500">Ipakikita ang lahat ng mali at tamang sagot sa huli.</div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full sm:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white font-bold rounded-xl shadow-lg shadow-brand-600/30 transition-all text-base inline-flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i> Simulan ang Pagsusulit
+            </button>
+        </div>
+
+        <!-- QUIZ QUESTION SCREEN -->
+        <div id="quiz-screen" class="hidden fade-in">
+            <!-- Progress Bar -->
+            <div class="mb-6 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-2">
+                    <span id="question-number-label">Tanong 1 ng 25</span>
+                    <span id="topic-tag" class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold">Paksa</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-brand-600 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-lg shadow-slate-200/40 mb-6">
+                <!-- Question Text -->
+                <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug mb-6">
+                    Kargadong Tanong...
+                </h3>
+
+                <!-- Options -->
+                <div id="options-container" class="space-y-3 mb-6">
+                    <!-- Option items injected via JS -->
+                </div>
+
+                <!-- Submit Button / Next Button Container -->
+                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div id="submit-warning" class="text-xs text-amber-600 font-medium hidden">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> Pumili muna ng sagot bago mag-submit.
+                    </div>
+                    <button id="action-btn" onclick="handleSubmitOrNext()" class="w-full sm:w-auto ml-auto px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md shadow-brand-600/20 transition-all inline-flex items-center justify-center gap-2">
+                        <span>I-submit ang Sagot</span> <i class="fa-solid fa-paper-plane text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Immediate Feedback Card -->
+            <div id="feedback-card" class="hidden rounded-2xl p-5 border fade-in mb-6">
+                <div class="flex items-start gap-3">
+                    <div id="feedback-icon" class="text-2xl mt-0.5"></div>
+                    <div>
+                        <h4 id="feedback-title" class="font-bold text-base mb-1">Resulta</h4>
+                        <p id="feedback-text" class="text-sm leading-relaxed mb-2"></p>
+                        <div id="explanation-box" class="text-xs p-3 rounded-lg bg-white/70 border border-slate-200/60 font-medium"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS & MISTAKES SCREEN -->
+        <div id="results-screen" class="hidden fade-in">
+            <!-- Score Summary Card -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xl shadow-slate-200/50 text-center mb-8">
+                <div id="score-badge-icon" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"></div>
+                <h2 class="text-2xl font-extrabold text-slate-900 mb-1">Tapos na ang Pagsusulit!</h2>
+                <p id="result-message" class="text-slate-600 text-sm mb-6">Narito ang iyong nakuhang marka.</p>
+
+                <!-- Big Score Counter -->
+                <div class="inline-flex items-baseline justify-center px-6 py-3 rounded-2xl bg-slate-50 border border-slate-200 mb-6">
+                    <span id="final-score" class="text-4xl sm:text-5xl font-black text-brand-600">0</span>
+                    <span class="text-2xl font-bold text-slate-400 mx-1">/</span>
+                    <span class="text-2xl font-bold text-slate-600">25</span>
+                    <span id="percentage-label" class="ml-4 text-sm font-semibold px-2.5 py-1 rounded-full bg-brand-100 text-brand-800">0%</span>
+                </div>
+
+                <div>
+                    <button onclick="startQuiz()" class="px-7 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-rotate-right"></i> Muling Subukan (Randomized)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mistakes & Full Review Section -->
+            <div class="mb-4 flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-brand-600"></i> Pagwawasto sa mga Mali at Tanong
+                </h3>
+                <span id="mistake-count-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-700">0 Mali</span>
+            </div>
+
+            <div id="mistakes-container" class="space-y-4 mb-8">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="text-center">
+                <button onclick="startQuiz()" class="px-8 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Muling Subukan ang Quiz
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <p>Inihanda para sa Pag-aaral ng Gramatikang Filipino | 25-Question Randomized Quiz</p>
+    </footer>
+
+    <!-- Quiz Logic JavaScript -->
+    <script>
+        // Master Question Bank (25 Questions based on YouTube topics)
+        const rawQuestions = [
+            // Pangngalan: Kahulugan at Kategorya
+            {
+                category: "Pangngalan: Kahulugan",
+                question: "Ano ang kahulugan ng pangngalan?",
+                options: [
+                    "A) Bahagi ng pananalita na tumutukoy sa kilos o galaw.",
+                    "B) Bahagi ng pananalita na tumutukoy sa ngalan ng tao, bagay, hayop, lugar, o pangyayari.",
+                    "C) Salitang naglalarawan sa pang-uri at pandiwa.",
+                    "D) Salitang nag-uugnay sa dalawang sugnay."
+                ],
+                correctIndex: 1,
+                explanation: "Ang pangngalan ay bahagi ng pananalita na ginagamit sa pagpapangalan sa tao, bagay, hayop, lugar, o pangyayari."
+            },
+            {
+                category: "Kategorya ng Pangngalan",
+                question: "Sa anong kategorya ng pangngalan nabibilang ang 'Kaarawan' at 'Binyag'?",
+                options: [
+                    "A) Tao",
+                    "B) Lugar",
+                    "C) Pangyayari",
+                    "D) Bagay"
+                ],
+                correctIndex: 2,
+                explanation: "Ang kaarawan at binyag ay mga halimbawa ng pangyayari o kaganapan."
+            },
+            {
+                category: "Kategorya ng Pangngalan",
+                question: "Alin sa mga sumusunod ang halimbawa ng pangngalang tumutukoy sa LUGAR?",
+                options: [
+                    "A) Bb. Santos",
+                    "B) Ospital",
+                    "C) Telepono",
+                    "D) Pusa"
+                ],
+                correctIndex: 1,
+                explanation: "Ang 'Ospital' ay tumutukoy sa isang pook o lugar."
+            },
+            {
+                category: "Kategorya ng Pangngalan",
+                question: "Alin sa mga sumusunod na pangkat ang pawang tumutukoy sa kategoryang HAYOP?",
+                options: [
+                    "A) Aso, pusa, kalabaw",
+                    "B) Guro, doktor, pulis",
+                    "C) Lapis, papel, kwaderno",
+                    "D) Simbahan, palengke, parke"
+                ],
+                correctIndex: 0,
+                explanation: "Ang aso, pusa, at kalabaw ay mga ngalan ng hayop."
+            },
+
+            // Pangngalang Pambalana at Pantangi
+            {
+                category: "Pambalana at Pantangi",
+                question: "Ano ang katangian ng Pangngalang Pambalana?",
+                options: [
+                    "A) Tumutukoy sa tiyak na ngalan at nagsisimula sa malaking titik.",
+                    "B) Tumutukoy sa pangkalahatang ngalan at karaniwang nagsisimula sa maliit na titik.",
+                    "C) Tumutukoy lamang sa mga kilalang tao.",
+                    "D) Tumutukoy sa mga damdamin at diwa."
+                ],
+                correctIndex: 1,
+                explanation: "Ang pambalana ay karaniwan o pangkalahatang ngalan at isinusulat sa maliit na titik (maliban kung nasa simula ng pangungusap)."
+            },
+            {
+                category: "Pambalana at Pantangi",
+                question: "Alin sa mga sumusunod ang halimbawa ng Pangngalang Pantangi?",
+                options: [
+                    "A) bansa",
+                    "B) paaralan",
+                    "C) Pilipinas",
+                    "D) mag-aaral"
+                ],
+                correctIndex: 2,
+                explanation: "Ang 'Pilipinas' ay tiyak na ngalan ng bansa kaya ito ay pantangi at nagsisimula sa malaking titik."
+            },
+            {
+                category: "Pambalana at Pantangi",
+                question: "Ano ang pambalana ng pantanging 'Monggol'?",
+                options: [
+                    "A) sapatos",
+                    "B) lapis",
+                    "C) papel",
+                    "D) aklat"
+                ],
+                correctIndex: 1,
+                explanation: "Ang 'Monggol' ay tiyak na brand o ngalan ng lapis."
+            },
+            {
+                category: "Pambalana at Pantangi",
+                question: "Aling pares ng pangngalan ang nagpapakita ng [Pambalana - Pantangi]?",
+                options: [
+                    "A) Jollibee - Restaurant",
+                    "B) guro - G. Reyes",
+                    "C) Manila - Lungsod",
+                    "D) Nike - Sapatos"
+                ],
+                correctIndex: 1,
+                explanation: "Ang 'guro' ay pambalana at ang 'G. Reyes' ay ang katumbas nitong pantangi."
+            },
+            {
+                category: "Pambalana at Pantangi",
+                question: "Bakit itinuturing na pantangi ang salitang 'Baguio'?",
+                options: [
+                    "A) Dahil ito ay pangalan ng isang prutas.",
+                    "B) Dahil ito ay tumutukoy sa tiyak na lugar at nagsisimula sa malaking titik.",
+                    "C) Dahil ito ay tumutukoy sa pangkalahatang lungsod.",
+                    "D) Dahil ito ay hindi nahahawakan."
+                ],
+                correctIndex: 1,
+                explanation: "Ang Baguio ay tiyak na ngalan ng lungsod kaya ito ay pangngalang pantangi."
+            },
+
+            // Tahas, Basal, at Lansakan
+            {
+                category: "Tahas, Basal, Lansakan",
+                question: "Ano ang Pangngalang Tahas (Kongkreto)?",
+                options: [
+                    "A) Pangngalang nakikita, nahahawakan, o may pisikal na anyo.",
+                    "B) Pangngalang tumutukoy sa kaisipan o damdamin na hindi nahahawakan.",
+                    "C) Pangngalang tumutukoy sa pangkat o grupo.",
+                    "D) Pangngalang tumutukoy sa tiyak na ngalan ng tao."
+                ],
+                correctIndex: 0,
+                explanation: "Ang tahas o kongkreto ay mga bagay na nadarama ng ating limang pandama (nakikita, nahahawakan, atbp)."
+            },
+            {
+                category: "Tahas, Basal, Lansakan",
+                question: "Ano ang Pangngalang Basal (Di-Kongkreto)?",
+                options: [
+                    "A) Pangngalang tumutukoy sa mga bagay na nahahawakan tulad ng mesa.",
+                    "B) Pangngalang tumutukoy sa ideya, kaisipan, o damdamin na hindi nahahawakan.",
+                    "C) Pangngalang tumutukoy sa kumpol ng mga bagay.",
+                    "D) Pangngalang pangkalahatan."
+                ],
+                correctIndex: 1,
+                explanation: "Ang basal o di-kongkreto ay tumutukoy sa mga konseptong di-materyal tulad ng pag-ibig, kaligayahan, at pag-asa."
+            },
+            {
+                category: "Tahas, Basal, Lansakan",
+                question: "Ano ang Pangngalang Lansakan?",
+                options: [
+                    "A) Pangngalang tumutukoy sa isang solong bagay lamang.",
+                    "B) Pangngalang tumutukoy sa pangkat, grupo, o kumpol ng mga tao, hayop, o bagay.",
+                    "C) Pangngalang may malaking titik.",
+                    "D) Pangngalang tumutukoy sa damdamin."
+                ],
+                correctIndex: 1,
+                explanation: "Ang lansakan ay tumutukoy sa marami o pangkat kahit na ito ay nasa anyong isahan (hal. kawan, hukbo, buwig)."
+            },
+            {
+                category: "Tahas, Basal, Lansakan",
+                question: "Alin sa mga sumusunod ang halimbawa ng Pangngalang Basal?",
+                options: [
+                    "A) Lamesa",
+                    "B) Katapatan",
+                    "C) Bundok",
+                    "D) Kotse"
+                ],
+                correctIndex: 1,
+                explanation: "Ang 'Katapatan' ay isang magandang asal/kaisipan at hindi nahahawakan, kaya ito ay basal."
+            },
+            {
+                category: "Tahas, Basal, Lansakan",
+                question: "Alin sa mga sumusunod ang halimbawa ng Pangngalang Lansakan?",
+                options: [
+                    "A) Buwig (ng saging)",
+                    "B) Saging",
+                    "C) Masarap",
+                    "D) Tiyenda"
+                ],
+                correctIndex: 0,
+                explanation: "Ang 'Buwig' ay tumutukoy sa kumpol o pangkat ng mga saging."
+            },
+            {
+                category: "Tahas, Basal, Lansakan",
+                question: "Kung ang 'sundalo' ay Tahas, ano naman ang 'hukbo'?",
+                options: [
+                    "A) Basal",
+                    "B) Lansakan",
+                    "C) Pantangi",
+                    "D) Pambalana"
+                ],
+                correctIndex: 1,
+                explanation: "Ang 'hukbo' ay pangkat ng mga sundalo, kaya ito ay lansakan."
+            },
+
+            // Sugnay (Makapag-iisa at Di-makapag-iisa)
+            {
+                category: "Sugnay",
+                question: "Ano ang kahulugan ng Sugnay?",
+                options: [
+                    "A) Isang solong salita na walang kahulugan.",
+                    "B) Lipon ng mga salitang may simuno at panaguri.",
+                    "C) Isang uri ng pang-uri.",
+                    "D) Pangkat ng mga pangngalan lamang."
+                ],
+                correctIndex: 1,
+                explanation: "Ang sugnay ay lipon ng mga salita na nagtataglay ng simuno (paksa) at panaguri."
+            },
+            {
+                category: "Sugnay",
+                question: "Ano ang Sugnay na Makapag-iisa (Independent Clause)?",
+                options: [
+                    "A) Sugnay na may buong diwa at kayang tumayo bilang payak na pangungusap.",
+                    "B) Sugnay na kulang ang diwa at nangangailangan ng iba pang sugnay.",
+                    "C) Lipon ng mga salitang walang pandiwa.",
+                    "D) Sugnay na laging nagsisimula sa 'kasi'."
+                ],
+                correctIndex: 0,
+                explanation: "Ang sugnay na makapag-iisa ay nagpapahayag ng kumpletong kaisipan o buong diwa."
+            },
+            {
+                category: "Sugnay",
+                question: "Ano ang Sugnay na Di-makapag-iisa (Dependent Clause)?",
+                options: [
+                    "A) Sugnay na may buong diwa sa sarili nito.",
+                    "B) Sugnay na hindi nagpapahayag ng buong diwa at pinangungunahan ng pangatnig.",
+                    "C) Pangungusap na nagtatapos sa tandang pananong.",
+                    "D) Sugnay na binubuo ng dalawang pangngalan."
+                ],
+                correctIndex: 1,
+                explanation: "Ang sugnay na di-makapag-iisa ay hindi buo ang diwa at umaasa sa sugnay na makapag-iisa."
+            },
+            {
+                category: "Sugnay",
+                question: "Sa pangungusap na: 'Naglaba si Aling Maria habang natutulog ang mga bata', alin ang sugnay na makapag-iisa?",
+                options: [
+                    "A) habang natutulog ang mga bata",
+                    "B) Naglaba si Aling Maria",
+                    "C) habang natutulog",
+                    "D) ang mga bata"
+                ],
+                correctIndex: 1,
+                explanation: "'Naglaba si Aling Maria' ay may buong diwa at kayang tumayo nang mag-isa."
+            },
+            {
+                category: "Sugnay",
+                question: "Sa pangungusap na: 'Dahil umulan nang malakas, nabasa ang mga damit', alin ang sugnay na di-makapag-iisa?",
+                options: [
+                    "A) nabasa ang mga damit",
+                    "B) Dahil umulan nang malakas",
+                    "C) ang mga damit",
+                    "D) nabasa"
+                ],
+                correctIndex: 1,
+                explanation: "'Dahil umulan nang malakas' ay pinangungunahan ng pangatnig na 'Dahil' at hindi buo ang diwa kung mag-isa."
+            },
+
+            // Hugnayang Pangungusap
+            {
+                category: "Hugnayang Pangungusap",
+                question: "Ano ang Hugnayang Pangungusap?",
+                options: [
+                    "A) Pangungusap na binubuo ng isang sugnay na makapag-iisa at isa o higit pang sugnay na di-makapag-iisa.",
+                    "B) Pangungusap na binubuo ng dalawang sugnay na parehong makapag-iisa.",
+                    "C) Pangungusap na may isang simuno at isang panaguri lamang.",
+                    "D) Pangungusap na gilid lamang ang kahulugan."
+                ],
+                correctIndex: 0,
+                explanation: "Ang hugnayang pangungusap ay binubuo ng isang sugnay na makapag-iisa (main clause) at kahit isang sugnay na di-makapag-iisa (dependent clause)."
+            },
+            {
+                category: "Hugnayang Pangungusap",
+                question: "Alin sa mga sumusunod na pang-ugnay/pangatnig ang karaniwang ginagamit sa Hugnayang Pangungusap?",
+                options: [
+                    "A) at, pati, saka",
+                    "B) dahil, kapag, kung, sapagkat, upang",
+                    "C) o, ni, maging",
+                    "D) ngunit, subalit, datapwat"
+                ],
+                correctIndex: 1,
+                explanation: "Ang mga pangatnig na pantulong tulad ng dahil, kapag, kung, sapagkat, at upang ay nagpapakilala ng sugnay na di-makapag-iisa."
+            },
+            {
+                category: "Hugnayang Pangungusap",
+                question: "Alin sa mga sumusunod ang halimbawa ng Hugnayang Pangungusap?",
+                options: [
+                    "A) Si Ana ay kumakanta habang si Ben ay tumutugtog ng gitara.",
+                    "B) Mataas ang nakuha niyang marka dahil nag-aral siya nang mabuti.",
+                    "C) Mabait at matulungin si Juan.",
+                    "D) Naglinis ng bahay si Ina at nagluto si Ama."
+                ],
+                correctIndex: 1,
+                explanation: "'Mataas ang nakuha niyang marka (Makapag-iisa) + dahil nag-aral siya nang mabuti (Di-makapag-iisa)' ay hugnayan."
+            },
+            {
+                category: "Hugnayang Pangungusap",
+                question: "Sa pangungusap na: 'Kakain tayo sa labas kung matatapos mo ang iyong proyekto', ano ang ginamit na pang-ugnay?",
+                options: [
+                    "A) tayo",
+                    "B) sa labas",
+                    "C) kung",
+                    "D) matatapos"
+                ],
+                correctIndex: 2,
+                explanation: "Ang salitang 'kung' ang pangatnig na nag-uugnay sa dalawang sugnay."
+            },
+            {
+                category: "Hugnayang Pangungusap",
+                question: "Bakit itinuturing na hugnayan ang pangungusap na: 'Pumasa siya sa pagsusulit sapagkat nag-review siya'?",
+                options: [
+                    "A) Dahil ito ay binubuo ng dalawang sugnay na parehong di-makapag-iisa.",
+                    "B) Dahil pinag-ugnay ng 'sapagkat' ang isang sugnay na makapag-iisa at isang sugnay na di-makapag-iisa.",
+                    "C) Dahil walang simuno ang pangungusap.",
+                    "D) Dahil payak lamang ang ideya nito."
+                ],
+                correctIndex: 1,
+                explanation: "Mayroong isang sugnay na nakakatayo mag-isa ('Pumasa siya sa pagsusulit') at isang sugnay na pantulong ('sapagkat nag-review siya')."
+            }
+        ];
+
+        // App State
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = []; // stores { questionObj, selectedOption, isCorrect, originalNumber }
+        let score = 0;
+        let isSubmittedCurrent = false;
+
+        // Shuffle Function (Fisher-Yates)
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Start / Reset Quiz
+        function startQuiz() {
+            // Shuffle questions fresh for every attempt
+            currentQuestions = shuffleArray(rawQuestions);
+            currentIndex = 0;
+            userAnswers = [];
+            score = 0;
+            isSubmittedCurrent = false;
+
+            // DOM Updates
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('quiz-badge').classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        // Load Current Question
+        function loadQuestion() {
+            isSubmittedCurrent = false;
+            const q = currentQuestions[currentIndex];
+
+            // Reset UI components
+            document.getElementById('submit-warning').classList.add('hidden');
+            document.getElementById('feedback-card').classList.add('hidden');
+
+            // Progress & Tags
+            const questionNum = currentIndex + 1;
+            document.getElementById('question-number-label').textContent = `Tanong ${questionNum} ng 25`;
+            document.getElementById('topic-tag').textContent = q.category;
+
+            const progressPercent = (questionNum / 25) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            // Question text
+            document.getElementById('question-text').textContent = `${questionNum}. ${q.question}`;
+
+            // Options rendering
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((optionText, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = `option-btn w-full text-left p-4 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition-all font-medium text-slate-700 flex items-center justify-between group`;
+                optBtn.setAttribute('onclick', `selectOption(${idx})`);
+                optBtn.id = `option-${idx}`;
+
+                optBtn.innerHTML = `
+                    <span class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-slate-100 group-hover:bg-brand-500 group-hover:text-white flex items-center justify-center font-bold text-xs text-slate-600 transition-colors">
+                            ${String.fromCharCode(65 + idx)}
+                        </span>
+                        <span class="text-sm sm:text-base">${optionText.substring(3)}</span>
+                    </span>
+                    <i class="fa-regular fa-circle text-slate-300 check-icon group-hover:text-brand-500"></i>
+                `;
+                container.appendChild(optBtn);
+            });
+
+            // Update action button
+            const actionBtn = document.getElementById('action-btn');
+            actionBtn.innerHTML = `<span>I-submit ang Sagot</span> <i class="fa-solid fa-paper-plane text-sm"></i>`;
+            actionBtn.disabled = false;
+            actionBtn.className = "w-full sm:w-auto ml-auto px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md shadow-brand-600/20 transition-all inline-flex items-center justify-center gap-2 cursor-pointer";
+        }
+
+        let selectedOptionIndex = null;
+
+        function selectOption(index) {
+            if (isSubmittedCurrent) return; // Locked if submitted
+
+            selectedOptionIndex = index;
+            document.getElementById('submit-warning').classList.add('hidden');
+
+            // Update styling for all option buttons
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach((btn, idx) => {
+                const checkIcon = btn.querySelector('.check-icon');
+                if (idx === index) {
+                    btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-brand-600 bg-brand-50/70 font-semibold text-brand-900 flex items-center justify-between transition-all shadow-sm";
+                    checkIcon.className = "fa-solid fa-circle-check text-brand-600 text-lg";
+                } else {
+                    btn.className = "option-btn w-full text-left p-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-white font-medium text-slate-700 flex items-center justify-between transition-all opacity-80";
+                    checkIcon.className = "fa-regular fa-circle text-slate-300";
+                }
+            });
+        }
+
+        // Handle Click on Action Button (Submit or Next)
+        function handleSubmitOrNext() {
+            if (!isSubmittedCurrent) {
+                // Submit phase
+                if (selectedOptionIndex === null) {
+                    document.getElementById('submit-warning').classList.remove('hidden');
+                    return;
+                }
+
+                isSubmittedCurrent = true;
+                const q = currentQuestions[currentIndex];
+                const isCorrect = selectedOptionIndex === q.correctIndex;
+
+                if (isCorrect) score++;
+
+                // Save user response
+                userAnswers.push({
+                    questionNum: currentIndex + 1,
+                    questionObj: q,
+                    selectedIndex: selectedOptionIndex,
+                    isCorrect: isCorrect
+                });
+
+                // Display Feedback
+                showImmediateFeedback(isCorrect, q);
+
+                // Highlight buttons with correct / wrong colors
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons.forEach((btn, idx) => {
+                    btn.onclick = null; // Disable clicks
+                    btn.classList.remove('hover:border-brand-500', 'hover:bg-brand-50/50');
+
+                    if (idx === q.correctIndex) {
+                        btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold flex items-center justify-between shadow-sm";
+                        btn.querySelector('.check-icon').className = "fa-solid fa-circle-check text-emerald-600 text-lg";
+                    } else if (idx === selectedOptionIndex && !isCorrect) {
+                        btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-900 font-medium flex items-center justify-between";
+                        btn.querySelector('.check-icon').className = "fa-solid fa-circle-xmark text-rose-500 text-lg";
+                    } else {
+                        btn.classList.add('opacity-40');
+                    }
+                });
+
+                // Transform Action Button to "Susunod" or "Tingnan ang Resulta"
+                const actionBtn = document.getElementById('action-btn');
+                if (currentIndex < 24) {
+                    actionBtn.innerHTML = `<span>Susunod na Tanong</span> <i class="fa-solid fa-arrow-right text-sm"></i>`;
+                    actionBtn.className = "w-full sm:w-auto ml-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all inline-flex items-center justify-center gap-2 cursor-pointer";
+                } else {
+                    actionBtn.innerHTML = `<span>Tingnan ang Resulta</span> <i class="fa-solid fa-trophy text-sm"></i>`;
+                    actionBtn.className = "w-full sm:w-auto ml-auto px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-md transition-all inline-flex items-center justify-center gap-2 cursor-pointer";
+                }
+
+            } else {
+                // Next phase
+                selectedOptionIndex = null;
+                if (currentIndex < 24) {
+                    currentIndex++;
+                    loadQuestion();
+                } else {
+                    showFinalResults();
+                }
+            }
+        }
+
+        // Show Feedback Box
+        function showImmediateFeedback(isCorrect, q) {
+            const card = document.getElementById('feedback-card');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+            const expl = document.getElementById('explanation-box');
+
+            card.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-950', 'bg-rose-50', 'border-rose-200', 'text-rose-950');
+
+            if (isCorrect) {
+                card.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-950');
+                icon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+                title.textContent = "TAMA ANG IYONG SAGOT!";
+                title.className = "font-bold text-base mb-1 text-emerald-800";
+                text.textContent = "Magaling! Nakuha mo ang tamang kasagutan.";
+            } else {
+                card.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-950');
+                icon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i>`;
+                title.textContent = "MALI ANG IYONG SAGOT";
+                title.className = "font-bold text-base mb-1 text-rose-800";
+                text.textContent = `Ang tamang sagot ay: ${q.options[q.correctIndex]}`;
+            }
+
+            expl.innerHTML = `<span class="font-bold">Paliwanag:</span> ${q.explanation}`;
+        }
+
+        // Show Final Results Screen
+        function showFinalResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            const percentage = Math.round((score / 25) * 100);
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('percentage-label').textContent = `${percentage}%`;
+
+            const badgeIcon = document.getElementById('score-badge-icon');
+            const resultMsg = document.getElementById('result-message');
+
+            if (percentage >= 90) {
+                badgeIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl bg-emerald-100 text-emerald-600 ring-8 ring-emerald-50";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-award"></i>`;
+                resultMsg.textContent = "Napakahusay! Malawak at malalim ang iyong kaalaman sa Gramatikang Filipino!";
+            } else if (percentage >= 75) {
+                badgeIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl bg-brand-100 text-brand-600 ring-8 ring-brand-50";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-thumbs-up"></i>`;
+                resultMsg.textContent = "Magaling! Maganda ang iyong ipinakitang kabatiran sa aralin.";
+            } else if (percentage >= 50) {
+                badgeIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl bg-amber-100 text-amber-600 ring-8 ring-amber-50";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-book-open-reader"></i>`;
+                resultMsg.textContent = "Mabuti! Maaari pa ring magbalik-aral upang mas lalong mapahusay.";
+            } else {
+                badgeIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl bg-rose-100 text-rose-600 ring-8 ring-rose-50";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-rotate-right"></i>`;
+                resultMsg.textContent = "Huwag mag-alala! Subukan ulit ang pagsusulit upang mag-review.";
+            }
+
+            // Mistakes and full breakdown rendering
+            const mistakesContainer = document.getElementById('mistakes-container');
+            mistakesContainer.innerHTML = '';
+
+            const mistakes = userAnswers.filter(a => !a.isCorrect);
+            document.getElementById('mistake-count-badge').textContent = `${mistakes.length} Mali`;
+
+            userAnswers.forEach((ans) => {
+                const q = ans.questionObj;
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border ${ans.isCorrect ? 'bg-white border-slate-200' : 'bg-rose-50/40 border-rose-200'} shadow-sm`;
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-3 mb-2">
+                        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${ans.isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                            ${ans.isCorrect ? '<i class="fa-solid fa-check mr-1"></i> Tama' : '<i class="fa-solid fa-xmark mr-1"></i> Mali'}
+                        </span>
+                        <span class="text-xs text-slate-400 font-semibold">${q.category}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-3">${ans.questionNum}. ${q.question}</h4>
+
+                    <div class="space-y-1.5 text-xs sm:text-sm mb-3">
+                        <div class="p-2.5 rounded-lg ${ans.isCorrect ? 'bg-emerald-50 text-emerald-900 border border-emerald-200 font-medium' : 'bg-rose-100 text-rose-900 border border-rose-200 font-medium'} flex items-center justify-between">
+                            <span><strong class="font-bold">Iyong Sagot:</strong> ${q.options[ans.selectedIndex]}</span>
+                            <i class="${ans.isCorrect ? 'fa-solid fa-circle-check text-emerald-600' : 'fa-solid fa-circle-xmark text-rose-600'}"></i>
+                        </div>
+                        ${!ans.isCorrect ? `
+                            <div class="p-2.5 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200 font-medium flex items-center justify-between">
+                                <span><strong class="font-bold">Tamang Sagot:</strong> ${q.options[q.correctIndex]}</span>
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="text-xs text-slate-600 p-3 bg-slate-50 rounded-lg border border-slate-200/80">
+                        <strong class="text-slate-700">Paliwanag:</strong> ${q.explanation}
+                    </div>
+                `;
+
+                mistakesContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

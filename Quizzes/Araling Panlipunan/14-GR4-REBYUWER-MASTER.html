@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pangwakas na Pagsusulit: Rebyuwer sa Araling Panlipunan (Aralin 1–4)</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --green: #15803d;
+    --green-bg: #dcfce7;
+    --green-border: #22c55e;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --red-border: #ef4444;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 720px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+    padding: 28px 24px;
+    margin-top: 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: var(--blue-dark);
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+  h2.subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    background: #dbeafe;
+    color: var(--blue-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .instructions {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .instructions ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+  .instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #e2e8f0;
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .center { text-align: center; }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--blue);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .choice:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: #eff6ff;
+  }
+  .choice.selected {
+    border-color: var(--blue);
+    background: #dbeafe;
+  }
+  .choice.correct {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .choice.incorrect {
+    border-color: var(--red-border);
+    background: var(--red-bg);
+    color: var(--red);
+    font-weight: 600;
+  }
+  .choice.disabled { cursor: default; }
+  .choice-letter {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+  }
+  .feedback-box {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct-box {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+  }
+  .feedback-box.incorrect-box {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+  }
+  .feedback-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .feedback-title.correct-text { color: var(--green); }
+  .feedback-title.incorrect-text { color: var(--red); }
+  .feedback-exp {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #334155;
+  }
+  .nav-row {
+    margin-top: 18px;
+  }
+  .score-hero {
+    text-align: center;
+    padding: 20px 0 8px 0;
+  }
+  .score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid var(--blue);
+    background: #eff6ff;
+  }
+  .score-circle .num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    line-height: 1;
+  }
+  .score-circle .den {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .score-msg {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .score-sub {
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item.wrong {
+    border-color: var(--red-border);
+    background: #fff5f5;
+  }
+  .review-item.right {
+    border-color: var(--green-border);
+    background: #f5fff7;
+  }
+  .review-q {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .review-line {
+    font-size: 0.92rem;
+    margin: 3px 0;
+  }
+  .review-line.wrong-answer { color: var(--red); }
+  .review-line.right-answer { color: var(--green); }
+  .review-exp {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: #475569;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 6px;
+  }
+  .section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 24px 0 12px 0;
+  }
+  .hidden { display: none !important; }
+  footer.tag {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; border-radius: 14px; }
+    h1 { font-size: 1.25rem; }
+    .score-circle { width: 120px; height: 120px; }
+    .score-circle .num { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Pangwakas na Pagsusulit — Aralin 1–4</h1>
+    <h2 class="subtitle">Rebyuwer sa Araling Panlipunan — Kinalalagyan, Teritoryo, Klima, at Heograpiyang Pisikal</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Araling Panlipunan</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">30 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>30 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Buod ng apat na aralin — (1) Ang Kinalalagyan ng Pilipinas, (2) Ang Pambansang Teritoryo ng Pilipinas, (3) Ang Klima at Panahon ng Pilipinas, at (4) Ang Heograpiyang Pisikal ng Pilipinas. May maliit na tatak sa itaas ng bawat tanong na nagsasabi kung saang aralin ito galing.</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 30</div>
+    </div>
+    <div id="topic-tag-container"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/30</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Pangwakas na Pagsusulit · Aralin 1–4 · Rebyuwer sa Araling Panlipunan</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang tawag sa pag-aaral sa mundo, mga katangian ng daigdig, at ang relasyon ng tao sa kanyang kapaligiran?", "choices": ["Heograpiya", "Heolohiya", "Kartograpiya", "Astronomiya"], "correct": 0, "exp": "Ang heograpiya ay ang pag-aaral sa mundo, mga katangian ng daigdig, iba't ibang bansa o lugar, at ang relasyon ng tao sa kanyang kapaligiran.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ano ang literal na kahulugan ng salitang heograpiya batay sa pinagmulan nitong Griyego?", "choices": ["Pagguhit ng bansa", "Pagsulat tungkol sa mundo", "Pag-aaral ng panahon", "Pagsukat ng distansya"], "correct": 1, "exp": "Ang geo ay nangangahulugang mundo at ang graphein ay isulat o ilarawan, kaya't literal itong \"pagsulat tungkol sa mundo.\"", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ano ang tawag sa hugis ng mundo na kinamumukhaan ng globo?", "choices": ["Perpektong bilog", "Oblate spheroid", "Parisukat", "Tatsulok"], "correct": 1, "exp": "Ang hugis ng mundo ay oblate spheroid, kaya't ang globo ang tunay na modelo nito.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Aling elemento ng mapa ang nagsasabi kung anong uri ng mapa ang tinitingnan, hal. politikal o pisikal?", "choices": ["Legend", "Eskala", "Titulo", "Direksiyon"], "correct": 2, "exp": "Ang titulo ay nagsasabi kung anong uri ng mapa ang tinitingnan (hal. politikal o pisikal na mapa).", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Sa legend ng isang mapa, ano ang karaniwang ipinapahiwatig ng isang bituin?", "choices": ["Bundok", "Kabesera ng bansa", "Dagat", "Ilog"], "correct": 1, "exp": "Sa legend, ang bituin ay karaniwang sumisimbolo sa kabesera ng bansa.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Aling elemento ng mapa ang tumutukoy sa ratio ng distansya sa mapa kumpara sa aktwal na distansya sa totoong mundo?", "choices": ["Eskala", "Legend", "Titulo", "Longhitud"], "correct": 0, "exp": "Ang eskala ay tumutukoy sa ratio ng distansya sa mapa kumpara sa aktwal na distansya sa totoong mundo.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ilan ang pangunahing direksiyon (cardinal directions)?", "choices": ["2", "4", "6", "8"], "correct": 1, "exp": "May apat na pangunahing direksiyon: Hilaga, Timog, Silangan, at Kanluran.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ilan ang pangalawang direksiyon (intercardinal directions)?", "choices": ["2", "4", "6", "8"], "correct": 1, "exp": "May apat na pangalawang direksiyon: Hilagang-Silangan (HS), Hilagang-Kanluran (HK), Timog-Silangan (TS), at Timog-Kanluran (TK).", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ang GPS ay bahagi ng anong mas malaking sistema?", "choices": ["Global Navigation Satellite System (GNSS)", "Global Network Security System", "General Navigation Space System", "Geographic National Survey System"], "correct": 0, "exp": "Ang GPS ay bahagi ng Global Navigation Satellite System (GNSS) na malawakang ginagamit sa mundo ngayon.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Sinong ahensiya ang lumikha ng GPS?", "choices": ["Kagawaran ng Depensa ng Estados Unidos", "United Nations", "NASA Philippines", "Kagawaran ng Agrikultura ng Estados Unidos"], "correct": 0, "exp": "Nilikha ang GPS ng Kagawaran ng Depensa ng Estados Unidos noong 1973.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang mga kilalang navigation app na gumagamit ng GPS?", "choices": ["Waze at Google Maps", "Facebook at Instagram", "YouTube at Netflix", "Excel at Word"], "correct": 0, "exp": "Dalawang kilalang navigation app na gumagamit ng GPS ay ang Waze at Google Maps.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ano ang tawag sa mga guhit na patayo mula hilaga patungong timog na nagsasaad ng distansya mula sa Prime Meridian?", "choices": ["Latitud (Parallel)", "Longhitud (Meridian)", "Ekwador", "Tropiko"], "correct": 1, "exp": "Ang longhitud (meridian) ay mga guhit na patayo mula hilaga patungong timog; isinasaad nito ang distansya mula sa Prime Meridian.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ilan ang kabuoang sukat ng Prime Meridian bilang guhit longhitud?", "choices": ["90°", "180°", "270°", "360°"], "correct": 1, "exp": "Ang Prime Meridian ay may kabuoang sukat na 180°.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ano ang sukat ng latitud sa ekwador?", "choices": ["0°", "23.5°", "66.5°", "90°"], "correct": 0, "exp": "Ang ekwador ay isang malaking guhit parallel na may zero digring (0°) latitud.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ang Tropiko ng Kanser ay nasaan kaugnay sa ekwador?", "choices": ["23.5° Hilaga ng ekwador", "23.5° Timog ng ekwador", "66.5° Hilaga ng ekwador", "0° sa ekwador mismo"], "correct": 0, "exp": "Ang Tropiko ng Kanser ay isang parallel na nasa 23.5° Hilaga ng ekwador; pinakahilagang hanggahan na naaabot ng patayong sinag ng araw.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ang Kabilugang Antartiko ay nasaan kaugnay sa ekwador?", "choices": ["23.5° Timog", "66.5° Hilaga", "66.5° Timog", "90° Timog"], "correct": 2, "exp": "Ang Kabilugang Antartiko ay parallel na nasa 66.5° Timog ng ekwador.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ano ang tawag sa eksaktong lokasyon ng isang lugar na tinutukoy sa pamamagitan ng longhitud at latitud?", "choices": ["Relatibong lokasyon", "Absolute o tiyak na lokasyon", "Rehiyonal na lokasyon", "Kontinental na lokasyon"], "correct": 1, "exp": "Ang tiyak o absolute location ng isang lugar ay ang eksaktong lokasyon nito sa ibabaw ng Mundo, na tinutukoy sa pamamagitan ng longhitud at latitud.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Sa pagitan ng anong mga latitud matatagpuan ang Pilipinas?", "choices": ["4°23' at 21°25' Hilaga", "0° at 23.5° Hilaga", "4°23' at 21°25' Timog", "10° at 30° Hilaga"], "correct": 0, "exp": "Ang Pilipinas ay nasa pagitan ng mga latitud 4°23' at 21°25' Hilaga.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ang relatibong lokasyon ng isang lugar batay sa mga katubigang nakapaligid dito ay tinatawag na anong uri?", "choices": ["Relatibong lokasyong kontinental", "Relatibong lokasyong maritime (insular)", "Absolute na lokasyon", "Geograpikal na lawak"], "correct": 1, "exp": "Ang relatibong lokasyong maritime (o insular/bisinal) ay ibinabatay sa katawan ng tubig na nakapaligid sa lugar.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Batay sa relatibong lokasyong insular (bisinal), aling katubigan ang nasa timog ng Pilipinas?", "choices": ["Bashi Channel", "Dagat Timog Tsina", "Dagat Celebes", "Karagatang Pasipiko"], "correct": 2, "exp": "Batay sa relatibong lokasyong insular: Timog – Dagat Celebes.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Batay sa relatibong lokasyong kontinental, aling mga bansa ang matatagpuan sa hilaga ng Pilipinas?", "choices": ["Taiwan at Japan", "Laos, Cambodia, Vietnam", "Borneo, Brunei, Indonesia", "Guam"], "correct": 0, "exp": "Batay sa relatibong lokasyong kontinental: Hilaga – Taiwan, Japan.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Batay sa relatibong lokasyong kontinental, aling mga bansa ang matatagpuan sa timog ng Pilipinas?", "choices": ["Taiwan, Japan", "Laos, Cambodia, Vietnam", "Borneo, Brunei, Indonesia", "Guam"], "correct": 2, "exp": "Batay sa relatibong lokasyong kontinental: Timog – Borneo, Brunei, Indonesia.", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Suriin ang mga pahayag. I. Ang ekwador ay 0° longhitud. II. Ang Prime Meridian ay 0° latitud. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 1, "exp": "Parehong mali — ang ekwador ay 0° latitud (hindi longhitud), at ang Prime Meridian ay 0° longhitud (hindi latitud).", "topic": "Aralin 1: Ang Kinalalagyan ng Pilipinas"}, {"q": "Ano ang tumutukoy sa sukat ng lupaing saklaw ng hurisdiksiyon ng isang bansa?", "choices": ["Rehiyon", "Teritoryo", "Distrito", "Lalawigan"], "correct": 1, "exp": "Ang teritoryo ay tumutukoy sa sukat ng lupaing saklaw ng hurisdiksiyon ng isang bansa.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ano ang tawag sa lupang bahagi ng teritoryo ng isang bansa?", "choices": ["Kalupaan (terrestrial)", "Katubigan (fluvial)", "Karagatan (maritime)", "Kalawakang itaas (aerial)"], "correct": 0, "exp": "Ang kalupaan (terrestrial) ang lupang bahagi ng teritoryo.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ano ang tawag sa mga dagat na bahagi ng teritoryo ng isang bansa?", "choices": ["Katubigan", "Kalupaan", "Karagatan (maritime)", "Himpapawid"], "correct": 2, "exp": "Ang karagatan (maritime) ay ang mga dagat na bahagi ng teritoryo.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ano ang tawag sa isang bansang binubuo ng malalaki at maliliit na pulo tulad ng Pilipinas?", "choices": ["Peninsula", "Kapuluan o arkipelago", "Kontinente", "Isla-estado"], "correct": 1, "exp": "Ang Pilipinas ay isang kapuluan o arkipelago na binubuo ng malalaki at maliliit na pulo.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ilang kilometro kuwadrado ang lawak ng teritoryal na karagatan ng Pilipinas?", "choices": ["300,000 km²", "538,564 km²", "700,000 km²", "1,000,000 km²"], "correct": 1, "exp": "Ang lawak ng teritoryal na karagatan ng Pilipinas ay 538,564 kilometro kuwadrado.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ang Pilipinas ay isa sa ilang bansa na bumubuo sa Timog-Silangang Asya?", "choices": ["9", "10", "11", "12"], "correct": 2, "exp": "Ang Pilipinas ay isa sa labing-isang (11) bansa na bumubuo sa Timog-Silangang Asya.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Anong kasunduan noong Disyembre 10, 1898 ang nagbigay sa Estados Unidos ng Pilipinas sa halagang $20 milyon?", "choices": ["Kasunduan sa Washington", "Kasunduan sa Paris", "Kasunduan 1930", "Saligang Batas 1935"], "correct": 1, "exp": "Sa Kasunduan sa Paris (Espanya–Estados Unidos), Disyembre 10, 1898, ipinagkaloob ng Espanya sa Estados Unidos ang Pilipinas sa halagang $20 milyon.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Anong kasunduan noong Enero 2, 1930 ang naglahad ng hanggahan ng Hilagang Borneo kaugnay ng Pilipinas at nagturing sa Turtle at Mangsee Islands bilang sakop ng kapuluan?", "choices": ["Kasunduan sa Paris", "Kasunduan sa Washington", "Kasunduan (Estados Unidos–Great Britain)", "Saligang Batas 1935"], "correct": 2, "exp": "Ang Kasunduan noong Enero 2, 1930 sa pagitan ng Estados Unidos at Great Britain ay naglahad ng hanggahan ng Hilagang Borneo at itinuring ang Turtle at Mangsee Islands na sakop ng kapuluan.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Anong atas noong Hunyo 11, 1978 ang inangkin ang mga pulo ng Kalayaan o Spratly Islands bilang sakop ng teritoryo ng Pilipinas?", "choices": ["Atas ng Pangulo Blg. 1596", "Kasunduan sa Paris", "Saligang Batas 1935", "Kasunduan sa Washington"], "correct": 0, "exp": "Sa Atas ng Pangulo Blg. 1596 ni Pangulong Ferdinand Marcos, Hunyo 11, 1978, inangkin ang mga pulo ng Kalayaan o Spratly Islands bilang sakop ng teritoryo ng Pilipinas.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Isaayos ang pangyayaring pangkasaysayan ayon sa taon, alin ang PINAKAUNA?", "choices": ["Kasunduan sa Washington (1900)", "Kasunduan sa Paris (1898)", "Saligang Batas 1935", "Atas Blg. 1596 (1978)"], "correct": 1, "exp": "Ang Kasunduan sa Paris (1898) ang unang naganap sa hanay ng mga kasunduan tungkol sa teritoryo ng Pilipinas.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ayon sa Saligang Batas ng 1987, ang mga karagatang nakapaligid, nakapagitan, at nag-uugnay sa mga pulo ng kapuluan ay itinuturing na anong bahagi ng Pilipinas?", "choices": ["Panlabas na karagatan", "Panloob na karagatan", "Internasyonal na tubig", "Neutral na teritoryo"], "correct": 1, "exp": "Ang mga karagatang nakapaligid, nakapagitan, at nag-uugnay sa mga pulo ng kapuluan, maging ano man ang lawak at dimensiyon nito, ay bahagi ng panloob na karagatan ng Pilipinas.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ayon sa Saligang Batas ng 1987, ilang nautical miles palabas papuntang dagat ang saklaw ng Dagat Teritoryal bilang hanggahan ng bansa?", "choices": ["3 nautical miles", "12 nautical miles", "50 nautical miles", "200 nautical miles"], "correct": 0, "exp": "Ayon sa Saligang Batas ng 1987, ang Dagat Teritoryal ay bahagi ng dagat na sumasaklaw ng 3 nautical miles palabas papuntang dagat; ito ang hanggahan ng bansa.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ano ang tawag sa lupang nasa ilalim ng kalupaan?", "choices": ["Ilalim ng Dagat", "Kailaliman ng Lupa", "Kalapagang Insular", "Kalawakang Panghimpapawid"], "correct": 1, "exp": "Ang kailaliman ng lupa ay tumutukoy sa lupang nasa ilalim ng kalupaan.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Saang bansa naganap ang mahalagang pulong ng UNCLOS noong Disyembre 10, 1982?", "choices": ["Pilipinas", "Jamaica", "Estados Unidos", "Great Britain"], "correct": 1, "exp": "Noong Disyembre 10, 1982, sa Jamaica, naganap ang mahalagang pulong ng mga kaanib ng UNCLOS.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Humigit-kumulang ilang bansa ang pumagtibay sa kasunduan ng UNCLOS noong 1982?", "choices": ["50 bansa", "100 bansa", "mahigit sa 150 bansa", "10 bansa"], "correct": 2, "exp": "Pinagtibay sa pulong ng UNCLOS ng mahigit sa 150 bansa ang kasunduan hinggil sa mga batas na may kinalaman sa teritoryong pantubig.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Anong taon sinimulan ni Senador Arturo M. Tolentino ang pagpapaliwanag sa Doktrinang Pangkapuluan?", "choices": ["1935", "1956", "1978", "1982"], "correct": 1, "exp": "Sinimulan ni Senador Tolentino ang paglalahad ng Doktrinang Pangkapuluan noong 1956, subalit napagtibay lamang ito noong ipinagtibay ang UNCLOS noong 1982.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ilang nautical miles ang pinahaba ng UNCLOS bilang bagong hanggahan ng teritoryo sa palibot ng kapuluan, mula sa dating 3 nautical miles?", "choices": ["6 nautical miles", "12 nautical miles", "50 nautical miles", "100 nautical miles"], "correct": 1, "exp": "Pinahaba ng UNCLOS ang 12 nautical miles ang dating 3 nautical miles bilang hanggahan ng teritoryo sa palibot ng kapuluan.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Sa loob ng Exclusive Economic Zone, ano ang karapatan ng isang bansa gaya ng Pilipinas?", "choices": ["Pangasiwaan, pangalagaan, at paunlarin ang likas-yaman sa ilalim ng lupa, dagat, at kailaliman nito", "Ibenta ang teritoryo sa ibang bansa", "Bawalan ang pangingisda sa lahat ng dako", "Walang partikular na karapatan"], "correct": 0, "exp": "Sa loob ng EEZ, may karapatan ang bansa na pangasiwaan, pangalagaan, at paunlarin ang likas-yamang matatagpuan sa ilalim ng lupa, dagat, at kailaliman nito.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ang Spratly Islands ay tinatawag ding ano sa Pilipinas?", "choices": ["Kalayaan Group of Islands", "Malaya Group of Islands", "Sarilinan Group of Islands", "Bayanihan Group of Islands"], "correct": 0, "exp": "Ang Spratly Islands ay tinatawag ding Kalayaan Group of Islands, na matatagpuan sa gitna ng Dagat Timog Tsina.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang isyu tungkol sa lehitimong pagmamay-ari ng teritoryo na binanggit sa aralin bukod sa Spratly Islands?", "choices": ["Sabah", "Batanes", "Palawan", "Cebu"], "correct": 0, "exp": "Bukod sa Spratly Islands, umuusbong din ang usapin sa Sabah bilang isyu ng lehitimong pagmamay-ari ng teritoryo.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ang Pilipinas ay naging daungan ng mga gawaing pangkalakalan ng mga bansang ang ruta ay dumaraan sa aling karagatan?", "choices": ["Karagatang Atlantiko", "Karagatang Pasipiko", "Karagatang India", "Dagat Mediteraneo"], "correct": 1, "exp": "Naging daungan ang Pilipinas ng mga gawaing pangkalakalan ng mga bansang ang ruta ay dumaraan sa Karagatang Pasipiko.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Bakit patuloy na nagnanais ang Amerika na manatili ang kanilang base-militar sa Pilipinas ayon sa aralin?", "choices": ["Dahil mainam na lugar ang Pilipinas na pagtayuan ng base-militar na panghimpapawid at pandagat", "Dahil pinakamalaking bansa ang Pilipinas sa Asya", "Dahil wala nang ibang bansang tatanggap sa kanila", "Dahil libre ang lupa sa Pilipinas"], "correct": 0, "exp": "Ang Pilipinas ay isa ring mainam na lugar na pagtayuan ng mga kampo o base-militar na panghimpapawid at pandagat ng malalaking bansa.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Suriin ang mga pahayag. I. Ang teritoryo ng Pilipinas ay binubuo lamang ng kalupaan. II. Ang Saligang Batas 1987 Artikulo 1 ang tumutukoy sa pambansang teritoryo. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 3, "exp": "Mali ang una dahil kasama rin sa teritoryo ang katubigan, karagatan, at kalawakang itaas, hindi lamang kalupaan. Tama ang ikalawa.", "topic": "Aralin 2: Ang Pambansang Teritoryo ng Pilipinas"}, {"q": "Ano ang tawag sa pansamantalang kalagayan ng atmospera na nagbabago anumang oras?", "choices": ["Klima", "Panahon (weather)", "Habagat", "Halumigmig"], "correct": 1, "exp": "Ang panahon (weather) ay ang pansamantalang kalagayan ng atmospera na nagbabago anumang oras.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Kung biglang dumilim at umulan habang papasok ang araw, ito ay halimbawa ng ano?", "choices": ["Klima", "Panahon", "Habagat", "Amihan"], "correct": 1, "exp": "Ang biglaang pagbabago tulad nito ay halimbawa ng panahon (weather), hindi klima.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ang mga bansang nasa pagitan ng Tropiko ng Kanser at Tropiko ng Kaprikornyo ay nakararanas ng anong klima?", "choices": ["Klimang polar", "Klimang tagsibol at taglamig", "Klimang mainit o tropikal", "Klimang temperate lamang"], "correct": 2, "exp": "Ang mga bansang nasa pagitan ng Tropiko ng Kanser (23.5° Hilaga) at Tropiko ng Kaprikornyo (23.5° Timog) ay nakararanas ng klimang mainit o tropikal.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ano ang tawag sa rehiyong nasa Kabilugang Arktiko o Antartiko na halos hindi umaabot ang sikat ng araw?", "choices": ["Tropical Zone", "Temperate Zone", "Frigid Zone", "Equatorial Zone"], "correct": 2, "exp": "Ang mga bansang nasa Kabilugang Arktiko o Antartiko (Frigid Zone) ay nananatiling malamig sapagkat halos hindi umaabot dito ang sikat ng araw.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang dalawang uri ng panahon na mararanasan sa Pilipinas bilang bansang tropikal?", "choices": ["Tagsibol at taglagas", "Tag-init at tag-ulan", "Taglamig at tagsibol", "Habagat at Amihan lamang"], "correct": 1, "exp": "Dalawang uri ng panahon lamang ang mararanasan sa mga bansang tropikal: tag-init at tag-ulan.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Kailan karaniwang tag-ulan sa Pilipinas?", "choices": ["Disyembre hanggang Mayo", "Hunyo hanggang Nobyembre", "Enero hanggang Marso", "Agosto hanggang Oktubre"], "correct": 1, "exp": "Sa Pilipinas, karaniwang tag-ulan mula Hunyo hanggang Nobyembre.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Karaniwang nakararanas ng anong temperatura ang mga mababang lugar gaya ng kapatagan?", "choices": ["Malamig na temperatura", "Mainit na temperatura", "Palaging nagyeyelo", "Walang temperatura"], "correct": 1, "exp": "Ang mga mababang lugar, gaya ng kapatagan, ay karaniwang nakararanas ng mainit na temperatura.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Anong lungsod ang tinaguriang \"Summer Capital\" ng Pilipinas dahil sa malamig na klima nito?", "choices": ["Maynila", "Baguio", "Cebu", "Davao"], "correct": 1, "exp": "Ang Baguio ay tinaguriang \"Summer Capital\" ng Pilipinas.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ayon sa halimbawa sa aralin, humigit-kumulang ilang degrees Celsius ang average na temperatura sa Baguio?", "choices": ["10.3°C", "18.3°C", "26.6°C", "32.0°C"], "correct": 1, "exp": "Ang average na temperatura sa Baguio ay maaaring nasa 18.3° Celsius.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Anong ahensiya ang responsable sa pagsubaybay sa temperatura at panahon sa Pilipinas?", "choices": ["DOST", "PAGASA", "DENR", "NDRRMC"], "correct": 1, "exp": "Ang PAGASA (Philippine Atmospheric, Geophysical and Astronomical Services Administration) ang ahensiyang responsable sa pagsubaybay sa temperatura at panahon sa bansa.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ano ang tumutukoy sa dami ng singaw ng tubig na nasa ating atmospera?", "choices": ["Temperatura", "Halumigmig (humidity)", "Habagat", "Windward"], "correct": 1, "exp": "Ang halumigmig ay tumutukoy sa dami ng singaw ng tubig na nasa ating atmospera.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Anong hangin ang nararanasan mula Nobyembre hanggang Pebrero, nanggagaling sa Siberia, at tuyo ngunit malamig?", "choices": ["Habagat", "Amihan", "Trade winds", "Ulan monsoon"], "correct": 1, "exp": "Ang Amihan ay nararanasan mula Nobyembre hanggang Pebrero; nanggagaling ito sa Siberia at dumadaloy patungong hilagang-silangan, tuyo ngunit malamig.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Kailan nararanasan ang Habagat sa Pilipinas?", "choices": ["Hunyo hanggang Setyembre", "Nobyembre hanggang Pebrero", "Marso hanggang Mayo", "Buong taon"], "correct": 0, "exp": "Ang Habagat ay nararanasan ng bansa mula Hunyo hanggang Setyembre.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Anong taon inilabas ng PAGASA ang color-coded rainfall flood warning system?", "choices": ["Hunyo 2010", "Hunyo 2012", "Hunyo 2015", "Hunyo 2018"], "correct": 1, "exp": "Noong Hunyo 2012, inilabas ng PAGASA ang color-coded rainfall flood warning system upang mabigyang-babala ang mga tao hinggil sa posibleng pagbaha.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Sa color-coded rainfall warning system ng PAGASA, ilang milimetro bawat oras ang sukat ng ulan para sa antas na Kahel (Orange)?", "choices": ["Mahigit 30mm", "15–30mm", "7.5–15mm", "Wala pang 5mm"], "correct": 1, "exp": "Ang antas na Kahel (Orange) ay sumasaklaw ng 15–30mm bawat oras na ulan, nagbabantang pagbaha, alerto.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ano ang tawag sa bahagi ng bundok kung saan bumabagsak ang ulan?", "choices": ["Leeward", "Windward", "Kailaliman", "Talampas"], "correct": 1, "exp": "Ang windward ay ang bahagi ng bundok kung saan bumabagsak ang ulan.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang mga bulubundukin na nakapaligid sa mga lalawigang hilagang Luzon at nagdudulot ng pagkakaiba sa windward/leeward?", "choices": ["Cordillera, Sierra Madre, at Caraballo", "Diwata Range at Zambales Mountains", "Kitanglad at Apo Range", "Banahaw at Makiling"], "correct": 0, "exp": "Makikita ang windward/leeward na sitwasyon sa mga lalawigang hilagang Luzon na napaliligiran ng mga bulubundukin ng Cordillera, Sierra Madre, at Caraballo.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Paano binibigyan ng pangalan ang mga bagyong dumaraan sa Pilipinas taon-taon?", "choices": ["Nang paalpabeto", "Ayon sa buwan", "Ayon sa lakas ng hangin", "Batay sa pangalan ng lalawigan"], "correct": 0, "exp": "Ang mga bagyo ay binibigyan ng pangalan nang paalpabeto upang maging palatandaan kung ilang bagyo na ang pumapasok sa bansa.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Sa sistema ng Babala ng PAGASA, anong bilis ng hangin ang saklaw ng Babala Bilang 3?", "choices": ["30–60 kph", "61–120 kph", "121–170 kph", "Mahigit 220 kph"], "correct": 2, "exp": "Ang Babala Bilang 3 ay sumasaklaw ng 121–170 kph na bilis ng hangin, inaasahang tama sa lupa sa loob ng 18 oras.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ilang oras bago inaasahang tumama sa lupa ang bagyo sa ilalim ng Babala Bilang 1?", "choices": ["12 oras", "18 oras", "24 oras", "36 oras"], "correct": 3, "exp": "Sa ilalim ng Babala Bilang 1, inaasahang tatama ito sa lupa sa loob ng 36 na oras.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang nakaaapekto sa uri ng klimang nararanasan ng bawat lalawigan sa Pilipinas?", "choices": ["Lokasyon, distansya mula sa dagat, at katangiang pisikal", "Bilang lamang ng populasyon", "Uri ng pamahalaang lokal", "Pangalan ng lalawigan"], "correct": 0, "exp": "Nag-iiba-iba ang uri ng klimang nararanasan ng bawat lalawigan depende sa kanilang lokasyon, distansya mula sa dagat, at katangiang pisikal na nakapaligid dito.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Suriin ang mga pahayag. I. Ang Habagat ay nagmumula sa Siberia. II. Ang Amihan ay tuyo at malamig na hangin mula Nobyembre hanggang Pebrero. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 3, "exp": "Mali ang una dahil ang Amihan (hindi Habagat) ang nagmumula sa Siberia. Tama ang ikalawa.", "topic": "Aralin 3: Ang Klima at Panahon ng Pilipinas"}, {"q": "Ano ang tawag sa agham na may kinalaman sa pag-aaral ng mga katangiang pisikal o pang-ibabaw na anyo ng isang lugar o bansa?", "choices": ["Heolohiya", "Topograpiya", "Klimatolohiya", "Kartograpiya"], "correct": 1, "exp": "Ang topograpiya ay isang agham na may kinalaman sa pag-aaral ng mga katangiang pisikal o pang-ibabaw na anyo ng isang lugar o bansa.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Anong hugis ang taglay ng Pilipinas?", "choices": ["Bilog", "Parisukat", "Tatsulok", "Hugis-puso"], "correct": 2, "exp": "Ang bansa ay may tila tatsulok na hugis.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Aling katawang-tubig ang nakapaligid sa Pilipinas sa bahaging kanluran?", "choices": ["Karagatang Pasipiko", "Dagat Timog Tsina", "Dagat ng Sulu", "Dagat ng Celebes"], "correct": 1, "exp": "Napaliligiran ang Pilipinas ng Dagat Timog Tsina sa kanluran.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ilang rehiyon ang binubuo ng Pilipinas ayon sa araling ito?", "choices": ["15", "16", "17", "18"], "correct": 3, "exp": "Ang bansa ay nahahati sa labimpitong (18) rehiyon.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ilang rehiyon ang bumubuo sa Mindanao?", "choices": ["4", "5", "6", "7"], "correct": 2, "exp": "Ang Mindanao ay binubuo ng 6 rehiyon.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ang Mindanao ay binubuo ng mismong pulo ng Mindanao at anong kapuluan?", "choices": ["Kapuluan ng Sulu", "Kapuluan ng Batanes", "Kapuluan ng Babuyan", "Kapuluan ng Camotes"], "correct": 0, "exp": "Ang Mindanao ay binubuo ng mismong pulo ng Mindanao at kapuluan ng Sulu.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ano ang tawag sa pangkat o hilera ng mga bundok?", "choices": ["Bulubundukin", "Kapatagan", "Talampas", "Lambak"], "correct": 0, "exp": "Ang bulubundukin ay tawag sa pangkat o hilera ng mga bundok.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Aling bulkan sa Batangas ang itinuturing na pinakamaliit na aktibong bulkan?", "choices": ["Bulkang Mayon", "Bulkang Pinatubo", "Bulkang Taal", "Bulkang Kanlaon"], "correct": 2, "exp": "Ang Bulkang Taal (Batangas) ang pinakamaliit na aktibong bulkan sa mga nabanggit.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Aling bulkan matatagpuan sa Zambales?", "choices": ["Bulkang Mayon", "Bulkang Pinatubo", "Bulkang Taal", "Bulkang Kanlaon"], "correct": 1, "exp": "Ang Bulkang Pinatubo ay matatagpuan sa Zambales.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ano ang tawag sa mataas na anyong-lupa pero mas mababa sa bundok?", "choices": ["Talampas", "Burol", "Kapatagan", "Lambak"], "correct": 1, "exp": "Ang burol ay mataas na anyong-lupa pero mas mababa sa bundok.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Aling lambak ang tinatawag na \"Salad Bowl ng Pilipinas\"?", "choices": ["Lambak ng Cagayan", "Lambak ng La Trinidad (Benguet)", "Lambak ng Marikina", "Lambak ng Cotabato"], "correct": 1, "exp": "Ang Lambak ng La Trinidad sa Benguet ay tinatawag na \"Salad Bowl ng Pilipinas.\"", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang isang halimbawa ng talampas ayon sa aralin?", "choices": ["Talampas ng Tagaytay (Cavite)", "Chocolate Hills", "Bundok Apo", "Golpo ng Lingayen"], "correct": 0, "exp": "Ang Talampas ng Tagaytay sa Cavite ay isang halimbawa ng talampas.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ano ang tawag sa malawak na patag na lupa, gaya ng pinakamalaki nito na nasa Gitnang Luzon?", "choices": ["Talampas", "Kapatagan", "Lambak", "Burol"], "correct": 1, "exp": "Ang kapatagan ay malawak na patag na lupa; ang pinakamalaking kapatagan ay nasa Gitnang Luzon, tinatawag na \"Kamalig ng Bigas\" ng Pilipinas.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ang Ilog Cagayan ay itinuturing na anong uri ng ilog sa Pilipinas?", "choices": ["Pinakamaikling ilog", "Pinakamahabang ilog", "Pinakamalawak na ilog", "Pinakamababaw na ilog"], "correct": 1, "exp": "Ang Ilog Cagayan ang pinakamahabang ilog sa Pilipinas.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ano ang pinakamalaking lawa sa Pilipinas, matatagpuan sa Laguna?", "choices": ["Lawa ng Taal", "Lawa ng Lanao", "Laguna de Bay", "Lawa ng Bulusan"], "correct": 2, "exp": "Ang Laguna de Bay, matatagpuan sa Laguna, ang pinakamalaking lawa sa Pilipinas.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Aling talon sa Iligan, Mindanao ang binanggit sa aralin bilang halimbawa ng talon?", "choices": ["Talon ng Pagsanjan", "Talon ng Maria Cristina", "Talon ng Loboc", "Talon ng Tinago"], "correct": 1, "exp": "Ang Talon ng Maria Cristina sa Iligan, Mindanao ay isang halimbawang talon.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Aling golpo ay matatagpuan sa Pangasinan?", "choices": ["Golpo ng Leyte", "Golpo ng Albay", "Golpo ng Lingayen", "Golpo ng Moro"], "correct": 2, "exp": "Ang Golpo ng Lingayen ay matatagpuan sa Pangasinan.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ano ang tawag sa makitid na anyong-tubig na nag-uugnay sa dalawang malalaking anyong-tubig?", "choices": ["Golpo", "Look", "Kipot (Strait)", "Talon"], "correct": 2, "exp": "Ang kipot (strait) ay makitid na anyong-tubig na nag-uugnay sa dalawang malalaking anyong-tubig.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Saan matatagpuan ang mga kilalang mainit na bukal (hot spring) ayon sa aralin?", "choices": ["Los Baños, Laguna at Aklan", "Tiwi at Calamba, Laguna", "Baguio at Benguet", "Iligan, Mindanao"], "correct": 1, "exp": "Ang mga kilalang mainit na bukal ay matatagpuan sa Tiwi at Calamba, Laguna.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Alin sa mga sumusunod ang isang positibong epekto na dulot ng mahabang baybayin ng Pilipinas?", "choices": ["Magagandang pangisdaan", "Mabagal na transportasyon", "Rehiyonalismo", "Madalas na bagyo"], "correct": 0, "exp": "Ang mahabang baybayin ng Pilipinas ay nagbibigay ng magagandang pangisdaan mula hilaga hanggang timog ng bansa.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Ano ang Pacific Ring of Fire?", "choices": ["Rehiyong may maraming aktibong bulkan at lindol sa palibot ng Karagatang Pasipiko", "Isang uri ng bagyo", "Pangalan ng isang lawa sa Mindanao", "Isang pandagat na ruta ng kalakalan"], "correct": 0, "exp": "Ang Pacific Ring of Fire ay rehiyong may maraming aktibong bulkan at lindol sa palibot ng Karagatang Pasipiko.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}, {"q": "Suriin ang mga pahayag. I. Ang Bundok Apo ang pinakamataas na bundok sa Pilipinas. II. Ang Laguna de Bay ang pinakamalaking lawa sa Pilipinas. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 0, "exp": "Parehong tama ang dalawang pahayag — Bundok Apo ang pinakamataas na bundok, at Laguna de Bay ang pinakamalaking lawa sa Pilipinas.", "topic": "Aralin 4: Ang Heograpiyang Pisikal ng Pilipinas"}];
+
+const QUIZ_LENGTH = 30;
+const SHOW_TOPIC_TAGS = true;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = [];
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp,
+      topic: item.topic || null
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  const topicContainer = document.getElementById('topic-tag-container');
+  if (SHOW_TOPIC_TAGS && item.topic) {
+    topicContainer.innerHTML = `<span class="topic-tag">${escapeHtml(item.topic)}</span>`;
+  } else {
+    topicContainer.innerHTML = '';
+  }
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    topic: item.topic,
+    isCorrect: isCorrect
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa buong rebyuwer!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  const sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  if (SHOW_TOPIC_TAGS && a.topic) {
+    html += `<span class="topic-tag">${escapeHtml(a.topic)}</span>`;
+  }
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

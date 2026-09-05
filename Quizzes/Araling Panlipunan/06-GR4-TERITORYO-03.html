@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Ang Pambansang Teritoryo ng Pilipinas</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --green: #15803d;
+    --green-bg: #dcfce7;
+    --green-border: #22c55e;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --red-border: #ef4444;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 720px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+    padding: 28px 24px;
+    margin-top: 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: var(--blue-dark);
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+  h2.subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    background: #dbeafe;
+    color: var(--blue-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .instructions {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .instructions ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+  .instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #e2e8f0;
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .center { text-align: center; }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--blue);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .choice:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: #eff6ff;
+  }
+  .choice.selected {
+    border-color: var(--blue);
+    background: #dbeafe;
+  }
+  .choice.correct {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .choice.incorrect {
+    border-color: var(--red-border);
+    background: var(--red-bg);
+    color: var(--red);
+    font-weight: 600;
+  }
+  .choice.disabled { cursor: default; }
+  .choice-letter {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+  }
+  .feedback-box {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct-box {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+  }
+  .feedback-box.incorrect-box {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+  }
+  .feedback-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .feedback-title.correct-text { color: var(--green); }
+  .feedback-title.incorrect-text { color: var(--red); }
+  .feedback-exp {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #334155;
+  }
+  .nav-row {
+    margin-top: 18px;
+  }
+  .score-hero {
+    text-align: center;
+    padding: 20px 0 8px 0;
+  }
+  .score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid var(--blue);
+    background: #eff6ff;
+  }
+  .score-circle .num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    line-height: 1;
+  }
+  .score-circle .den {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .score-msg {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .score-sub {
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item.wrong {
+    border-color: var(--red-border);
+    background: #fff5f5;
+  }
+  .review-item.right {
+    border-color: var(--green-border);
+    background: #f5fff7;
+  }
+  .review-q {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .review-line {
+    font-size: 0.92rem;
+    margin: 3px 0;
+  }
+  .review-line.wrong-answer { color: var(--red); }
+  .review-line.right-answer { color: var(--green); }
+  .review-exp {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: #475569;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 6px;
+  }
+  .section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 24px 0 12px 0;
+  }
+  .hidden { display: none !important; }
+  footer.tag {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; border-radius: 14px; }
+    h1 { font-size: 1.25rem; }
+    .score-circle { width: 120px; height: 120px; }
+    .score-circle .num { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Ang Pambansang Teritoryo ng Pilipinas</h1>
+    <h2 class="subtitle">Aralin 2 — Pagsusulit sa Araling Panlipunan</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Araling Panlipunan</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Saligan ng Lawak at Hanggahan ng Teritoryo, Kasaysayan ng Teritoryo, Saligang Batas 1987, Doktrinang Pangkapuluan (UNCLOS), at Kahalagahan ng Lokasyon ng Pilipinas (Pahina 19–27).</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div id="topic-tag-container"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Aralin 2: Ang Pambansang Teritoryo ng Pilipinas · Rebyuwer sa Araling Panlipunan</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang tumutukoy sa sukat ng lupaing saklaw ng hurisdiksiyon ng isang bansa?", "choices": ["Rehiyon", "Teritoryo", "Distrito", "Lalawigan"], "correct": 1, "exp": "Ang teritoryo ay tumutukoy sa sukat ng lupaing saklaw ng hurisdiksiyon ng isang bansa."}, {"q": "Alin sa mga sumusunod ang HINDI kasama sa teritoryo ng isang bansa?", "choices": ["Kalupaan", "Katubigan", "Karagatan", "Kultura ng mamamayan"], "correct": 3, "exp": "Ang teritoryo ay binubuo ng kalupaan, katubigan, karagatan, at kalawakang itaas — hindi kultura ng mamamayan."}, {"q": "Ano ang tawag sa lupang bahagi ng teritoryo ng isang bansa?", "choices": ["Kalupaan (terrestrial)", "Katubigan (fluvial)", "Karagatan (maritime)", "Kalawakang itaas (aerial)"], "correct": 0, "exp": "Ang kalupaan (terrestrial) ang lupang bahagi ng teritoryo."}, {"q": "Ano ang tawag sa mga ilog at lawa bilang bahagi ng teritoryo?", "choices": ["Kalupaan", "Katubigan (fluvial)", "Karagatan", "Kalawakang itaas"], "correct": 1, "exp": "Ang katubigan (fluvial) ay halimbawa'y mga ilog at lawa."}, {"q": "Ano ang tawag sa mga dagat na bahagi ng teritoryo ng isang bansa?", "choices": ["Katubigan", "Kalupaan", "Karagatan (maritime)", "Himpapawid"], "correct": 2, "exp": "Ang karagatan (maritime) ay ang mga dagat na bahagi ng teritoryo."}, {"q": "Ano ang tawag sa himpapawid sa itaas ng teritoryo ng isang bansa?", "choices": ["Kalawakang itaas (aerial)", "Karagatan", "Kalupaan", "Kailaliman ng lupa"], "correct": 0, "exp": "Ang kalawakang itaas (aerial) ay ang himpapawid sa itaas ng teritoryo."}, {"q": "Ano ang tawag sa isang bansang binubuo ng malalaki at maliliit na pulo tulad ng Pilipinas?", "choices": ["Peninsula", "Kapuluan o arkipelago", "Kontinente", "Isla-estado"], "correct": 1, "exp": "Ang Pilipinas ay isang kapuluan o arkipelago na binubuo ng malalaki at maliliit na pulo."}, {"q": "Humigit-kumulang ilang kilometro kuwadrado ang lawak ng lupain ng Pilipinas?", "choices": ["200,000 km²", "300,000 km²", "538,564 km²", "1,208,986 km²"], "correct": 1, "exp": "May lawak ang Pilipinas na humigit-kumulang 300,000 kilometro kuwadrado na lupain."}, {"q": "Ilang kilometro kuwadrado ang lawak ng teritoryal na karagatan ng Pilipinas?", "choices": ["300,000 km²", "538,564 km²", "700,000 km²", "1,000,000 km²"], "correct": 1, "exp": "Ang lawak ng teritoryal na karagatan ng Pilipinas ay 538,564 kilometro kuwadrado."}, {"q": "Ano ang kabuoang lawak ng lupa at Exclusive Economic Zone (EEZ) ng Pilipinas?", "choices": ["300,000 km²", "538,564 km²", "1,208,986 km²", "2,000,000 km²"], "correct": 2, "exp": "Ang kabuoang lawak ng lupa at EEZ ng Pilipinas ay 1,208,986 kilometro kuwadrado."}, {"q": "Ang Pilipinas ay isa sa ilang bansa na bumubuo sa Timog-Silangang Asya?", "choices": ["9", "10", "11", "12"], "correct": 2, "exp": "Ang Pilipinas ay isa sa labing-isang (11) bansa na bumubuo sa Timog-Silangang Asya."}, {"q": "Alin sa mga sumusunod ang HINDI kasapi ng Timog-Silangang Asya?", "choices": ["Malaysia", "Vietnam", "China", "Cambodia"], "correct": 2, "exp": "Ang China ay hindi kabilang sa 11 bansa ng Timog-Silangang Asya; kabilang dito ang Malaysia, Thailand, Indonesia, Singapore, Cambodia, Brunei, Vietnam, Laos, Myanmar, at East Timor."}, {"q": "Anong kasunduan noong Disyembre 10, 1898 ang nagbigay sa Estados Unidos ng Pilipinas sa halagang $20 milyon?", "choices": ["Kasunduan sa Washington", "Kasunduan sa Paris", "Kasunduan 1930", "Saligang Batas 1935"], "correct": 1, "exp": "Sa Kasunduan sa Paris (Espanya–Estados Unidos), Disyembre 10, 1898, ipinagkaloob ng Espanya sa Estados Unidos ang Pilipinas sa halagang $20 milyon."}, {"q": "Anong kasunduan noong Nobyembre 7, 1900 ang nagdagdag ng Cagayan, Sulu, at Sibutu sa teritoryo ng Pilipinas?", "choices": ["Kasunduan sa Paris", "Kasunduan sa Washington", "Atas Blg. 1596", "Saligang Batas 1987"], "correct": 1, "exp": "Sa Kasunduan sa Washington (Espanya–Estados Unidos), Nobyembre 7, 1900, nadagdag ang Cagayan, Sulu, at Sibutu sa teritoryo ng bansa."}, {"q": "Anong kasunduan noong Enero 2, 1930 ang naglahad ng hanggahan ng Hilagang Borneo kaugnay ng Pilipinas at nagturing sa Turtle at Mangsee Islands bilang sakop ng kapuluan?", "choices": ["Kasunduan sa Paris", "Kasunduan sa Washington", "Kasunduan (Estados Unidos–Great Britain)", "Saligang Batas 1935"], "correct": 2, "exp": "Ang Kasunduan noong Enero 2, 1930 sa pagitan ng Estados Unidos at Great Britain ay naglahad ng hanggahan ng Hilagang Borneo at itinuring ang Turtle at Mangsee Islands na sakop ng kapuluan."}, {"q": "Anong batas noong 1935 ang tumukoy na ang Batanes ay bahagi ng Pilipinas dahil ito ay paninirahan ng maraming Pilipino?", "choices": ["Saligang Batas ng 1935", "Kasunduan sa Washington", "Atas Blg. 1596", "Saligang Batas ng 1987"], "correct": 0, "exp": "Sa Saligang Batas ng 1935, tinutukoy na ang Batanes ay bahagi ng Pilipinas dahil ito ay paninirahan ng maraming Pilipino."}, {"q": "Anong atas noong Hunyo 11, 1978 ang inangkin ang mga pulo ng Kalayaan o Spratly Islands bilang sakop ng teritoryo ng Pilipinas?", "choices": ["Atas ng Pangulo Blg. 1596", "Kasunduan sa Paris", "Saligang Batas 1935", "Kasunduan sa Washington"], "correct": 0, "exp": "Sa Atas ng Pangulo Blg. 1596 ni Pangulong Ferdinand Marcos, Hunyo 11, 1978, inangkin ang mga pulo ng Kalayaan o Spratly Islands bilang sakop ng teritoryo ng Pilipinas."}, {"q": "Sinong pangulo ang naglabas ng Atas Blg. 1596 noong 1978 na umangkin sa Kalayaan/Spratly Islands?", "choices": ["Ferdinand Marcos", "Corazon Aquino", "Fidel Ramos", "Manuel Quezon"], "correct": 0, "exp": "Si Pangulong Ferdinand Marcos ang naglabas ng Atas ng Pangulo Blg. 1596 noong Hunyo 11, 1978."}, {"q": "Isaayos ang pangyayaring pangkasaysayan ayon sa taon, alin ang PINAKAUNA?", "choices": ["Kasunduan sa Washington (1900)", "Kasunduan sa Paris (1898)", "Saligang Batas 1935", "Atas Blg. 1596 (1978)"], "correct": 1, "exp": "Ang Kasunduan sa Paris (1898) ang unang naganap sa hanay ng mga kasunduan tungkol sa teritoryo ng Pilipinas."}, {"q": "Aling artikulo ng Saligang Batas ng 1987 ang tumutukoy sa Pambansang Teritoryo?", "choices": ["Artikulo 1", "Artikulo 2", "Artikulo 3", "Artikulo 5"], "correct": 0, "exp": "Sa Artikulo 1 (Pambansang Teritoryo) ng Saligang Batas ng 1987, tinutukoy ang sakop ng pambansang teritoryo ng Pilipinas."}, {"q": "Ayon sa Saligang Batas ng 1987, ang mga karagatang nakapaligid, nakapagitan, at nag-uugnay sa mga pulo ng kapuluan ay itinuturing na anong bahagi ng Pilipinas?", "choices": ["Panlabas na karagatan", "Panloob na karagatan", "Internasyonal na tubig", "Neutral na teritoryo"], "correct": 1, "exp": "Ang mga karagatang nakapaligid, nakapagitan, at nag-uugnay sa mga pulo ng kapuluan, maging ano man ang lawak at dimensiyon nito, ay bahagi ng panloob na karagatan ng Pilipinas."}, {"q": "Ano ang tawag sa bahagi ng kalawakang sumasakop sa teritoryong lupain at karagatan ng Pilipinas?", "choices": ["Kalawakang Panghimpapawid", "Dagat Teritoryal", "Kalapagang Insular", "Ilalim ng Dagat"], "correct": 0, "exp": "Ang kalawakang panghimpapawid ay tumutukoy sa bahagi ng kalawakang sumasakop sa teritoryong lupain at karagatan ng Pilipinas."}, {"q": "Ayon sa Saligang Batas ng 1987, ilang nautical miles palabas papuntang dagat ang saklaw ng Dagat Teritoryal bilang hanggahan ng bansa?", "choices": ["3 nautical miles", "12 nautical miles", "50 nautical miles", "200 nautical miles"], "correct": 0, "exp": "Ayon sa Saligang Batas ng 1987, ang Dagat Teritoryal ay bahagi ng dagat na sumasaklaw ng 3 nautical miles palabas papuntang dagat; ito ang hanggahan ng bansa."}, {"q": "Ano ang tawag sa lupang nasa ilalim ng dagat?", "choices": ["Ilalim ng Dagat", "Kailaliman ng Lupa", "Kalapagang Insular", "Dagat Teritoryal"], "correct": 0, "exp": "Ang ilalim ng dagat ay tumutukoy sa lupang nasa ilalim ng dagat."}, {"q": "Ano ang tawag sa lupang nasa ilalim ng kalupaan?", "choices": ["Ilalim ng Dagat", "Kailaliman ng Lupa", "Kalapagang Insular", "Kalawakang Panghimpapawid"], "correct": 1, "exp": "Ang kailaliman ng lupa ay tumutukoy sa lupang nasa ilalim ng kalupaan."}, {"q": "Ano ang tawag sa mga talampas na nasa ilalim ng tubig na bahagi ng kalatagan ng dagat na nakadugtong sa baybayin ng isang pulo o kontinente?", "choices": ["Kalapagang Insular", "Ilalim ng Dagat", "Kailaliman ng Lupa", "Dagat Teritoryal"], "correct": 0, "exp": "Ang kalapagang insular ay sumasakop sa mga talampas na nasa ilalim ng tubig na bahagi ng kalatagan ng dagat na nakadugtong sa baybayin ng isang pulo o kontinente."}, {"q": "Saang bansa naganap ang mahalagang pulong ng UNCLOS noong Disyembre 10, 1982?", "choices": ["Pilipinas", "Jamaica", "Estados Unidos", "Great Britain"], "correct": 1, "exp": "Noong Disyembre 10, 1982, sa Jamaica, naganap ang mahalagang pulong ng mga kaanib ng UNCLOS."}, {"q": "Ano ang ibig sabihin ng UNCLOS?", "choices": ["United Nations Convention on the Law of the Sea", "United Nations Council on Land and Sea", "United Nations Committee on Local Seas", "United Nations Charter on Legal Oceans"], "correct": 0, "exp": "UNCLOS ay ang United Nations Convention on the Law of the Sea."}, {"q": "Humigit-kumulang ilang bansa ang pumagtibay sa kasunduan ng UNCLOS noong 1982?", "choices": ["50 bansa", "100 bansa", "mahigit sa 150 bansa", "10 bansa"], "correct": 2, "exp": "Pinagtibay sa pulong ng UNCLOS ng mahigit sa 150 bansa ang kasunduan hinggil sa mga batas na may kinalaman sa teritoryong pantubig."}, {"q": "Sino ang unang naglahad at nagpaliwanag ng batas hinggil sa Doktrinang Pangkapuluan (Archipelagic Doctrine)?", "choices": ["Dating Senador Arturo M. Tolentino", "Pangulong Ferdinand Marcos", "Pangulong Manuel Quezon", "Emilio Aguinaldo"], "correct": 0, "exp": "Ang unang paglalahad at pagpapaliwanag ng Doktrinang Pangkapuluan ay ginawa ni dating Senador Arturo M. Tolentino."}, {"q": "Anong taon sinimulan ni Senador Arturo M. Tolentino ang pagpapaliwanag sa Doktrinang Pangkapuluan?", "choices": ["1935", "1956", "1978", "1982"], "correct": 1, "exp": "Sinimulan ni Senador Tolentino ang paglalahad ng Doktrinang Pangkapuluan noong 1956, subalit napagtibay lamang ito noong ipinagtibay ang UNCLOS noong 1982."}, {"q": "Anong taon opisyal na napagtibay ang Doktrinang Pangkapuluan sa pagpapatibay ng UNCLOS?", "choices": ["1956", "1978", "1982", "1987"], "correct": 2, "exp": "Napagtibay lamang ang Doktrinang Pangkapuluan noong ipinagtibay ang UNCLOS noong Disyembre 10, 1982."}, {"q": "Ilang nautical miles ang pinahaba ng UNCLOS bilang bagong hanggahan ng teritoryo sa palibot ng kapuluan, mula sa dating 3 nautical miles?", "choices": ["6 nautical miles", "12 nautical miles", "50 nautical miles", "100 nautical miles"], "correct": 1, "exp": "Pinahaba ng UNCLOS ang 12 nautical miles ang dating 3 nautical miles bilang hanggahan ng teritoryo sa palibot ng kapuluan."}, {"q": "Ilang nautical miles mula sa batayang guhit ang hurisdiksiyon ng isang kapuluang estado sa ilalim ng Exclusive Economic Zone (EEZ)?", "choices": ["12 nautical miles", "50 nautical miles", "100 nautical miles", "200 nautical miles"], "correct": 3, "exp": "Ang EEZ ay nagsasaad na ang isang kapuluang estado ay may hurisdiksiyon hanggang sa 200 nautical miles mula sa batayang guhit kung saan sinusukat ang territorial sea."}, {"q": "Sa loob ng Exclusive Economic Zone, ano ang karapatan ng isang bansa gaya ng Pilipinas?", "choices": ["Pangasiwaan, pangalagaan, at paunlarin ang likas-yaman sa ilalim ng lupa, dagat, at kailaliman nito", "Ibenta ang teritoryo sa ibang bansa", "Bawalan ang pangingisda sa lahat ng dako", "Walang partikular na karapatan"], "correct": 0, "exp": "Sa loob ng EEZ, may karapatan ang bansa na pangasiwaan, pangalagaan, at paunlarin ang likas-yamang matatagpuan sa ilalim ng lupa, dagat, at kailaliman nito."}, {"q": "Paano nasusukat ang lawak ng isang bansa batay sa Doktrinang Pangkapuluan?", "choices": ["Sa pamamagitan ng kunwa-kunwaring guhit na magdurugtong sa mga pulong pinakamalayo sa kukulong sa katubigan at pinakamalapit sa kapuluan", "Sa pamamagitan ng bilang ng populasyon", "Sa pamamagitan ng laki ng ekonomiya", "Sa pamamagitan ng dami ng base militar"], "correct": 0, "exp": "Batay sa Doktrinang Pangkapuluan, ang lawak ng isang bansa ay nasusukat sa pamamagitan ng kunwa-kunwaring guhit na magdurugtong sa mga pulong pinakamalayo sa kukulong sa katubigan at pinakamalapit sa kapuluan."}, {"q": "Ang Spratly Islands ay tinatawag ding ano sa Pilipinas?", "choices": ["Kalayaan Group of Islands", "Malaya Group of Islands", "Sarilinan Group of Islands", "Bayanihan Group of Islands"], "correct": 0, "exp": "Ang Spratly Islands ay tinatawag ding Kalayaan Group of Islands, na matatagpuan sa gitna ng Dagat Timog Tsina."}, {"q": "Saang dagat matatagpuan ang Spratly Islands / Kalayaan Group of Islands?", "choices": ["Dagat Celebes", "Dagat Timog Tsina", "Karagatang Pasipiko", "Golpo ng Moro"], "correct": 1, "exp": "Ang Spratly Islands ay matatagpuan sa gitna ng Dagat Timog Tsina."}, {"q": "Alin sa mga sumusunod ang isyu tungkol sa lehitimong pagmamay-ari ng teritoryo na binanggit sa aralin bukod sa Spratly Islands?", "choices": ["Sabah", "Batanes", "Palawan", "Cebu"], "correct": 0, "exp": "Bukod sa Spratly Islands, umuusbong din ang usapin sa Sabah bilang isyu ng lehitimong pagmamay-ari ng teritoryo."}, {"q": "Bakit sinasabing nasa estratehikong lokasyon ang Pilipinas ayon sa aralin?", "choices": ["Itinuturing itong isa sa pinakamahahalagang rutang pangkalakalan", "Wala itong kalapit na bansa", "Napakaliit ng populasyon nito", "Malayo ito sa lahat ng ruta sa dagat"], "correct": 0, "exp": "Sinasabing ang Pilipinas ay nasa estratehikong lokasyon sapagkat itinuturing itong isa sa pinakamahahalagang rutang pangkalakalan."}, {"q": "Ang Pilipinas ay naging daungan ng mga gawaing pangkalakalan ng mga bansang ang ruta ay dumaraan sa aling karagatan?", "choices": ["Karagatang Atlantiko", "Karagatang Pasipiko", "Karagatang India", "Dagat Mediteraneo"], "correct": 1, "exp": "Naging daungan ang Pilipinas ng mga gawaing pangkalakalan ng mga bansang ang ruta ay dumaraan sa Karagatang Pasipiko."}, {"q": "Bukod sa daungan, ano pang papel ang ginagampanan ng pandaigdigang paliparan ng Pilipinas?", "choices": ["Terminal ng mga sasakyang panghimpapawid mula sa iba't ibang bansa", "Tanggapan ng UN", "Pangunahing base militar ng lahat ng bansa sa mundo", "Sentro ng agrikultura"], "correct": 0, "exp": "Nagsisilbi ring terminal ang bansa, partikular ang pandaigdigang paliparan nito, ng mga sasakyang panghimpapawid na nagmumula sa US, Japan, Australia, mga bansa sa Europa, at iba pa."}, {"q": "Bakit patuloy na nagnanais ang Amerika na manatili ang kanilang base-militar sa Pilipinas ayon sa aralin?", "choices": ["Dahil mainam na lugar ang Pilipinas na pagtayuan ng base-militar na panghimpapawid at pandagat", "Dahil pinakamalaking bansa ang Pilipinas sa Asya", "Dahil wala nang ibang bansang tatanggap sa kanila", "Dahil libre ang lupa sa Pilipinas"], "correct": 0, "exp": "Ang Pilipinas ay isa ring mainam na lugar na pagtayuan ng mga kampo o base-militar na panghimpapawid at pandagat ng malalaking bansa."}, {"q": "Suriin ang mga pahayag. I. Ang Doktrinang Pangkapuluan ay ipinanukala ni Sen. Arturo Tolentino. II. Ang EEZ ay 12 nautical miles mula sa batayang guhit. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 2, "exp": "Tama ang una. Mali ang ikalawa dahil ang EEZ ay 200 nautical miles (hindi 12) mula sa batayang guhit; ang 12 nautical miles ay ang dagat teritoryal sa ilalim ng UNCLOS."}, {"q": "Suriin ang mga pahayag. I. Ang teritoryo ng Pilipinas ay binubuo lamang ng kalupaan. II. Ang Saligang Batas 1987 Artikulo 1 ang tumutukoy sa pambansang teritoryo. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 3, "exp": "Mali ang una dahil kasama rin sa teritoryo ang katubigan, karagatan, at kalawakang itaas, hindi lamang kalupaan. Tama ang ikalawa."}];
+
+const QUIZ_LENGTH = 15;
+const SHOW_TOPIC_TAGS = false;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = [];
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp,
+      topic: item.topic || null
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  const topicContainer = document.getElementById('topic-tag-container');
+  if (SHOW_TOPIC_TAGS && item.topic) {
+    topicContainer.innerHTML = `<span class="topic-tag">${escapeHtml(item.topic)}</span>`;
+  } else {
+    topicContainer.innerHTML = '';
+  }
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    topic: item.topic,
+    isCorrect: isCorrect
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa Aralin 2!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  const sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  if (SHOW_TOPIC_TAGS && a.topic) {
+    html += `<span class="topic-tag">${escapeHtml(a.topic)}</span>`;
+  }
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

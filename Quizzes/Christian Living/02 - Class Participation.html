@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Participation</title>
+<style>
+  :root {
+    --green-dark: #1f5c3f;
+    --green: #2f7a52;
+    --green-light: #eaf5ee;
+    --ink: #26332c;
+    --muted: #5b6a61;
+    --border: #d7e6dc;
+    --correct: #1f7a3d;
+    --correct-bg: #e6f6ea;
+    --wrong: #b3261e;
+    --wrong-bg: #fdeceb;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f8f5;
+    color: var(--ink);
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    color: #fff;
+    padding: 22px 20px 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  header .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 14px 40px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 26px;
+    box-shadow: 0 4px 16px rgba(31,92,63,0.08);
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* ---- Start / End screens ---- */
+  .center-card { text-align: center; }
+  .center-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 22px;
+  }
+  .center-card p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .info-list {
+    text-align: left;
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  .info-list div { margin-bottom: 4px; }
+  .info-list div:last-child { margin-bottom: 0; }
+
+  button {
+    font-size: 15.5px;
+    font-weight: 600;
+    padding: 13px 30px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-primary:disabled {
+    background: #b7cabf;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--green-dark);
+    border: 1px solid var(--green);
+  }
+  .btn-secondary:hover { background: var(--green-light); }
+
+  /* ---- Progress ---- */
+  .progress-wrap {
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 14px 14px 0;
+    flex-shrink: 0;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+
+  /* ---- Question screen ---- */
+  .q-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green-dark);
+    background: var(--green-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .q-instruction {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+  .q-text {
+    font-size: 17px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .options label {
+    display: block;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .options label:hover { background: var(--green-light); border-color: var(--green); }
+  .options input[type="radio"] { margin-right: 10px; }
+  select.match-select {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    background: #fff;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  label.opt-correct { background: var(--correct-bg) !important; border-color: var(--correct) !important; }
+  label.opt-wrong { background: var(--wrong-bg) !important; border-color: var(--wrong) !important; }
+  select.sel-correct { border-color: var(--correct) !important; background: var(--correct-bg); }
+  select.sel-wrong { border-color: var(--wrong) !important; background: var(--wrong-bg); }
+
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+  .feedback.correct { display: block; background: var(--correct-bg); color: var(--correct); }
+  .feedback.wrong { display: block; background: var(--wrong-bg); color: var(--wrong); }
+
+  .q-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ---- End screen ---- */
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 8px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 6px auto 16px;
+  }
+  .score-circle .num { font-size: 30px; font-weight: 800; color: var(--green-dark); }
+  .score-circle .den { font-size: 13px; color: var(--muted); }
+
+  .review {
+    text-align: left;
+    margin-top: 22px;
+  }
+  .review h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green-dark);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .review-item.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .review-item .rq { font-weight: 600; margin-bottom: 6px; }
+  .review-item .ra { color: var(--wrong); }
+  .review-item .rc { color: var(--correct); }
+  .no-mistakes {
+    text-align: center;
+    color: var(--correct);
+    font-weight: 600;
+    margin-top: 18px;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 10px 0 18px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Christian Living</div>
+  <h1 id="headerTitle">Class Participation</h1>
+</header>
+
+<div class="progress-wrap" id="progressWrap" style="display:none;">
+  <div class="progress-label">
+    <span id="progressText">Question 1 of 20</span>
+    <span id="progressScore"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+</div>
+
+<main>
+  <div class="card" id="cardArea"></div>
+</main>
+
+<footer>Christian Living &middot; Activity Sheet #1 &mdash; Living the Forms of Prayer (ACTSO)</footer>
+
+<script>
+const RAW_QUESTIONS = [
+  { id:'a1', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"Prayer helps us grow closer to God because it is our way of talking and listening to Him.",
+    choices:[{label:'True', isCorrect:true},{label:'False', isCorrect:false}] },
+  { id:'a2', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"We should pray only when we have problems because that is when God listens to us.",
+    choices:[{label:'True', isCorrect:false},{label:'False', isCorrect:true}] },
+  { id:'a3', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"A prayer of thanksgiving is used only when we receive expensive gifts or special rewards.",
+    choices:[{label:'True', isCorrect:false},{label:'False', isCorrect:true}] },
+  { id:'a4', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"The prayer \"The Lord's Prayer\" teaches us to ask God for our daily needs, making it an example of a prayer that includes supplication.",
+    choices:[{label:'True', isCorrect:true},{label:'False', isCorrect:false}] },
+  { id:'a5', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"Asking God to forgive us after we hurt someone's feelings is an example of a prayer of contrition.",
+    choices:[{label:'True', isCorrect:true},{label:'False', isCorrect:false}] },
+
+  { id:'b1', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Lord, I am sorry for speaking unkind words to my classmate today.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:true},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:false}] },
+  { id:'b2', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Lord, I offer You all my hard work in school today. May everything I do bring honor and joy to You.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:true}] },
+  { id:'b3', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Dear God, You are holy, loving, and powerful. I praise You because You are always faithful and worthy of my love.",
+    choices:[{label:'Adoration',isCorrect:true},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:false}] },
+  { id:'b4', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Lord, my heart is filled with gratitude for the gift of another day and for the people who care for me.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:true},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:false}] },
+  { id:'b5', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Lord, please guide me as I prepare for tomorrow's test and help me remain calm and confident.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:true},{label:'Offering',isCorrect:false}] },
+  { id:'b6', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Dear Lord, forgive me for judging others without trying to understand them first.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:true},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:false}] },
+  { id:'b7', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Dear God, I honor and glorify You because You are our Creator, and Your love never ends.",
+    choices:[{label:'Adoration',isCorrect:true},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:false}] },
+  { id:'b8', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Lord, please guide me to be honest, kind, and brave whenever I face difficult situations.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:true},{label:'Offering',isCorrect:false}] },
+  { id:'b9', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Lord Jesus, I offer You my prayers, my studies, and the good choices I will make today as a sign of my love for You.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:false},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:true}] },
+  { id:'b10', section:'Identify the Prayer', instruction:'Choose the type of prayer being expressed from the drop-down list.', type:'select',
+    prompt:"Thank You, God, for giving me a loving family, good friends, and teachers who guide me every day.",
+    choices:[{label:'Adoration',isCorrect:false},{label:'Contrition',isCorrect:false},{label:'Thanksgiving',isCorrect:true},{label:'Supplication',isCorrect:false},{label:'Offering',isCorrect:false}] },
+
+  { id:'c1', section:'Multiple Choice', instruction:'Read the question carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What is the best prayer to say after receiving help from your parents with a difficult project?",
+    choices:[
+      {label:"Lord, my project better than everyone else's.",isCorrect:false},
+      {label:"Lord, please let my classmates do all the work next time.",isCorrect:false},
+      {label:"Lord, I wish I didn't have to do projects anymore.",isCorrect:false},
+      {label:"Thank you, Lord, for giving me parents who support and guide me.",isCorrect:true}
+    ] },
+  { id:'c2', section:'Multiple Choice', instruction:'Read the question carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What prayer would show true gratitude to God after recovering from an illness?",
+    choices:[
+      {label:"Lord, make sure I never get sick again no matter what I do.",isCorrect:false},
+      {label:"Lord, thank You because now I can skip all my responsibilities.",isCorrect:false},
+      {label:"Lord, thank You for helping me get better and for taking care of me through my family and doctors.",isCorrect:true},
+      {label:"Lord, I deserve to be healthy because I am a good person.",isCorrect:false}
+    ] },
+  { id:'c3', section:'Multiple Choice', instruction:'Read the question carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What prayer would show faith when your prayer is not answered the way you expected?",
+    choices:[
+      {label:"Lord, I know You are not listening to me.",isCorrect:false},
+      {label:"Lord, I trust that You know what is best for me, even if I do not understand it now.",isCorrect:true},
+      {label:"Lord, You must answer my prayer exactly as I asked.",isCorrect:false},
+      {label:"Lord, if I do not get what I want, I will stop praying.",isCorrect:false}
+    ] },
+  { id:'c4', section:'Multiple Choice', instruction:'Read the question carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"When a student asks God to help and protect the victims of a storm, which type of prayer is being shown?",
+    choices:[
+      {label:"Adoration",isCorrect:false},
+      {label:"Supplication",isCorrect:true},
+      {label:"Thanksgiving",isCorrect:false},
+      {label:"Contrition",isCorrect:false}
+    ] },
+  { id:'c5', section:'Multiple Choice', instruction:'Read the question carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"After praying for a new bicycle, Ella did not receive one. Instead of becoming angry, she continued praying and trusted that God knew what was best for her. What lesson about prayer is Ella showing?",
+    choices:[
+      {label:"Prayer is useful only when we get what we want.",isCorrect:false},
+      {label:'God only answers prayers with "yes."',isCorrect:false},
+      {label:"God answers prayers in the way that is best for us.",isCorrect:true},
+      {label:"We should stop praying when our requests are not granted.",isCorrect:false}
+    ] }
+];
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let quiz = [];       // shuffled questions with shuffled choices, for this attempt
+let currentIndex = 0;
+let answers = [];    // { given, correct, isCorrect } per question, aligned with quiz[]
+let answeredCurrent = false;
+
+const cardArea = document.getElementById('cardArea');
+const progressWrap = document.getElementById('progressWrap');
+const progressText = document.getElementById('progressText');
+const progressScore = document.getElementById('progressScore');
+const progressFill = document.getElementById('progressFill');
+
+function buildQuiz() {
+  quiz = shuffle(RAW_QUESTIONS).map(q => ({
+    ...q,
+    choices: shuffle(q.choices)
+  }));
+  answers = new Array(quiz.length).fill(null);
+  currentIndex = 0;
+}
+
+function renderStart() {
+  progressWrap.style.display = 'none';
+  cardArea.innerHTML = `
+    <div class="center-card">
+      <h2>Living the Forms of Prayer (ACTSO)</h2>
+      <p>Class Participation &middot; Christian Living &middot; Grade 4</p>
+      <div class="info-list">
+        <div>&#10003; 20 questions total: True/False, Identify-the-Prayer, and Multiple Choice.</div>
+        <div>&#10003; Questions appear one at a time, in a new random order each time you take the quiz.</div>
+        <div>&#10003; Answer, then press <strong>Submit</strong> to see if you got it right before moving on.</div>
+        <div>&#10003; Your final score and a review of any mistakes will be shown at the end.</div>
+      </div>
+      <button class="btn-primary" id="startBtn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById('startBtn').addEventListener('click', () => {
+    buildQuiz();
+    renderQuestion();
+  });
+}
+
+function renderQuestion() {
+  progressWrap.style.display = 'block';
+  answeredCurrent = false;
+  const q = quiz[currentIndex];
+  const total = quiz.length;
+  progressText.textContent = `Question ${currentIndex + 1} of ${total}`;
+  const scored = answers.filter(a => a).length;
+  const correctSoFar = answers.filter(a => a && a.isCorrect).length;
+  progressScore.textContent = scored ? `Score: ${correctSoFar}/${scored}` : '';
+  progressFill.style.width = `${(currentIndex / total) * 100}%`;
+
+  let inputHtml = '';
+  if (q.type === 'select') {
+    inputHtml = `<select class="match-select" id="selectInput">
+      <option value="">-- Select the type of prayer --</option>
+      ${q.choices.map((c, i) => `<option value="${i}">${c.label}</option>`).join('')}
+    </select>`;
+  } else {
+    const letters = ['A','B','C','D'];
+    inputHtml = `<div class="options">${q.choices.map((c, i) => `
+      <label data-idx="${i}">
+        <input type="radio" name="opt" value="${i}">
+        ${q.type === 'mc' ? letters[i] + '. ' : ''}${c.label}
+      </label>`).join('')}</div>`;
+  }
+
+  cardArea.innerHTML = `
+    <div class="q-tag">${q.section}</div>
+    <div class="q-instruction">${q.instruction}</div>
+    <div class="q-text">${q.prompt}</div>
+    ${inputHtml}
+    <div class="feedback" id="feedbackBox"></div>
+    <div class="q-actions">
+      <button class="btn-primary" id="actionBtn">Submit</button>
+    </div>
+  `;
+
+  const actionBtn = document.getElementById('actionBtn');
+  actionBtn.addEventListener('click', () => {
+    if (!answeredCurrent) {
+      submitAnswer();
+    } else {
+      currentIndex++;
+      if (currentIndex >= quiz.length) {
+        renderEnd();
+      } else {
+        renderQuestion();
+      }
+    }
+  });
+}
+
+function getSelectedIndex(q) {
+  if (q.type === 'select') {
+    const sel = document.getElementById('selectInput');
+    return sel.value === '' ? null : parseInt(sel.value, 10);
+  }
+  const checked = document.querySelector('input[name="opt"]:checked');
+  return checked ? parseInt(checked.value, 10) : null;
+}
+
+function submitAnswer() {
+  const q = quiz[currentIndex];
+  const idx = getSelectedIndex(q);
+  if (idx === null) {
+    const fb = document.getElementById('feedbackBox');
+    fb.className = 'feedback wrong';
+    fb.style.display = 'block';
+    fb.textContent = 'Please choose an answer before submitting.';
+    return;
+  }
+
+  const isCorrect = q.choices[idx].isCorrect;
+  const correctIdx = q.choices.findIndex(c => c.isCorrect);
+  answers[currentIndex] = {
+    given: q.choices[idx].label,
+    correct: q.choices[correctIdx].label,
+    isCorrect
+  };
+  answeredCurrent = true;
+
+  if (q.type === 'select') {
+    const sel = document.getElementById('selectInput');
+    sel.disabled = true;
+    sel.classList.add(isCorrect ? 'sel-correct' : 'sel-wrong');
+  } else {
+    document.querySelectorAll('.options label').forEach(label => {
+      const i = parseInt(label.dataset.idx, 10);
+      label.querySelector('input').disabled = true;
+      if (q.choices[i].isCorrect) label.classList.add('opt-correct');
+      else if (i === idx) label.classList.add('opt-wrong');
+    });
+  }
+
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+  fb.style.display = 'block';
+  fb.textContent = isCorrect ? 'Correct! Well done.' : `Incorrect. The correct answer is: ${q.choices[correctIdx].label}`;
+
+  const actionBtn = document.getElementById('actionBtn');
+  actionBtn.textContent = currentIndex === quiz.length - 1 ? 'See Results' : 'Next Question';
+
+  progressFill.style.width = `${((currentIndex + 1) / quiz.length) * 100}%`;
+  const scored = answers.filter(a => a).length;
+  const correctSoFar = answers.filter(a => a && a.isCorrect).length;
+  progressScore.textContent = `Score: ${correctSoFar}/${scored}`;
+}
+
+function renderEnd() {
+  progressWrap.style.display = 'none';
+  const total = quiz.length;
+  const score = answers.filter(a => a && a.isCorrect).length;
+  const pct = Math.round((score / total) * 100);
+  let msg = '';
+  if (pct === 100) msg = 'Perfect score! Excellent work.';
+  else if (pct >= 80) msg = 'Great job!';
+  else if (pct >= 60) msg = 'Good effort — review the mistakes below.';
+  else msg = 'Keep practicing — review the mistakes below.';
+
+  const mistakes = quiz
+    .map((q, i) => ({ q, a: answers[i] }))
+    .filter(x => x.a && !x.a.isCorrect);
+
+  let reviewHtml = '';
+  if (mistakes.length === 0) {
+    reviewHtml = `<div class="no-mistakes">You answered every question correctly!</div>`;
+  } else {
+    reviewHtml = `
+      <div class="review">
+        <h3>Review Your Mistakes (${mistakes.length})</h3>
+        ${mistakes.map(x => `
+          <div class="review-item wrong">
+            <div class="rq">${x.q.prompt}</div>
+            <div class="ra">Your answer: ${x.a.given}</div>
+            <div class="rc">Correct answer: ${x.a.correct}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  cardArea.innerHTML = `
+    <div class="center-card">
+      <h2>Quiz Complete</h2>
+      <div class="score-circle">
+        <div class="num">${score}/${total}</div>
+        <div class="den">${pct}%</div>
+      </div>
+      <p>${msg}</p>
+      ${reviewHtml}
+      <button class="btn-secondary" id="retryBtn" style="margin-top:20px;">Take Quiz Again</button>
+    </div>
+  `;
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    renderStart();
+  });
+}
+
+renderStart();
+</script>
+
+</body>
+</html>

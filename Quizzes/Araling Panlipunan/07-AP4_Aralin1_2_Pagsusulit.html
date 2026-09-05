@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit — Araling Panlipunan 4 (Aralin 1–2)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper: #EDE6D2;
+    --panel: #F6F1E3;
+    --ink: #1E2C3D;
+    --ink-soft: #4C5C6E;
+    --ink-faint: rgba(30,44,61,0.22);
+    --ocean: #2C6072;
+    --ocean-deep: #17414F;
+    --ocean-tint: rgba(44,96,114,0.12);
+    --brass: #A8752E;
+    --brass-light: #C99A4E;
+    --rust: #8F3327;
+    --green: #3F6B3A;
+    --green-tint: rgba(63,107,58,0.14);
+    --red-tint: rgba(143,51,39,0.12);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; min-height:100%; }
+  body{
+    font-family: var(--font-body);
+    color: var(--ink);
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 47px, var(--ink-faint) 48px),
+      repeating-linear-gradient(90deg, transparent, transparent 47px, var(--ink-faint) 48px),
+      var(--paper);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  .chip{
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 30;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ocean-deep);
+    background: var(--panel);
+    border: 1px solid var(--brass);
+    border-radius: 3px;
+    padding: 6px 12px;
+    box-shadow: 2px 2px 0 var(--ink-faint);
+  }
+
+  header.hero{
+    max-width: 760px;
+    margin: 56px auto 8px;
+    padding: 0 24px;
+    text-align: center;
+  }
+  header.hero .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 8px;
+  }
+  header.hero h1{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 4vw, 38px);
+    margin: 0 0 8px;
+  }
+  header.hero p{ color: var(--ink-soft); font-size: 14.5px; margin:0; }
+
+  .progress-wrap{
+    max-width: 760px;
+    margin: 22px auto 0;
+    padding: 0 24px;
+  }
+  .progress-track{
+    display:flex; gap:4px; flex-wrap:wrap;
+    background: var(--panel);
+    border: 1px solid var(--ink-faint);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .p-tick{
+    width: 18px; height: 8px;
+    border-radius: 3px;
+    background: var(--ink-faint);
+  }
+  .p-tick.current{ background: var(--brass); }
+  .p-tick.correct{ background: var(--green); }
+  .p-tick.wrong{ background: var(--rust); }
+
+  .quiz-shell{
+    max-width: 760px;
+    margin: 20px auto 0;
+    padding: 0 24px;
+  }
+
+  .q-card{
+    background: var(--panel);
+    border: 1px solid var(--ink-faint);
+    border-radius: 8px;
+    padding: 28px 30px;
+  }
+  .q-meta{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ocean-deep);
+    margin-bottom: 10px;
+  }
+  .q-text{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(18px, 2.4vw, 22px);
+    line-height: 1.4;
+    margin: 0 0 20px;
+  }
+
+  .options{ display:flex; flex-direction:column; gap:10px; }
+  .opt-btn{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    text-align:left;
+    width: 100%;
+    background: var(--paper);
+    border: 1.5px solid var(--ink-faint);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+  .opt-btn:hover:not(:disabled){ border-color: var(--brass); transform: translateX(2px); }
+  .opt-btn:focus-visible{ outline:2px solid var(--brass); outline-offset:2px; }
+  .opt-btn .letter{
+    font-family: var(--font-mono);
+    font-weight:600;
+    font-size: 12px;
+    color: var(--ocean-deep);
+    background: var(--ocean-tint);
+    border-radius: 50%;
+    width: 26px; height:26px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .opt-btn:disabled{ cursor: default; }
+  .opt-btn.correct{ background: var(--green-tint); border-color: var(--green); }
+  .opt-btn.correct .letter{ background: var(--green); color: var(--paper); }
+  .opt-btn.wrong{ background: var(--red-tint); border-color: var(--rust); }
+  .opt-btn.wrong .letter{ background: var(--rust); color: var(--paper); }
+  .opt-btn.muted{ opacity: 0.55; }
+
+  .feedback{
+    margin-top: 18px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    display: none;
+  }
+  .feedback.show{ display:block; }
+  .feedback.ok{ background: var(--green-tint); color: var(--green); border-left: 3px solid var(--green); }
+  .feedback.no{ background: var(--red-tint); color: var(--rust); border-left: 3px solid var(--rust); }
+
+  .q-nav{
+    display:flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  .next-btn{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, background 0.2s ease;
+  }
+  .next-btn.show{ opacity: 1; pointer-events: auto; }
+  .next-btn:hover{ background: var(--ocean-deep); }
+
+  /* Results screen */
+  .results-shell{ display:none; }
+  .results-shell.show{ display:block; }
+  .quiz-shell.hide{ display:none; }
+
+  .score-ring-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 6px;
+    margin: 10px 0 20px;
+  }
+  .score-num{
+    font-family: var(--font-display);
+    font-weight:700;
+    font-size: 20px;
+    fill: var(--ink);
+  }
+  .score-lbl{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+  }
+  .verdict{
+    text-align:center;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight:600;
+    color: var(--ocean-deep);
+    margin-bottom: 22px;
+  }
+
+  .review-item{
+    background: var(--panel);
+    border: 1px solid var(--ink-faint);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .review-item .rq{
+    font-size: 14px;
+    font-weight:600;
+    margin-bottom: 6px;
+  }
+  .review-item .ra{
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 2px 0;
+  }
+  .review-item .ra.wrong-ans{ color: var(--rust); }
+  .review-item .ra.right-ans{ color: var(--green); }
+  .review-tag{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing:0.05em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+  .review-tag.ok{ background: var(--green-tint); color: var(--green); }
+  .review-tag.no{ background: var(--red-tint); color: var(--rust); }
+
+  .retry-btn{
+    display:block;
+    margin: 24px auto 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--brass);
+    color: var(--paper);
+    border: none;
+    border-radius: 4px;
+    padding: 12px 26px;
+    cursor: pointer;
+  }
+  .retry-btn:hover{ background: var(--brass-light); }
+
+  @media (max-width: 640px){
+    .q-card{ padding: 20px 18px; }
+    header.hero{ margin-top: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chip" id="chip">PAGSUSULIT · ARALIN 1–2</div>
+
+<header class="hero">
+  <div class="eyebrow">Araling Panlipunan 4</div>
+  <h1>Pagsusulit: Mapa, Globo, at Teritoryo</h1>
+  <p>30 tanong na multiple choice, batay sa Aralin 1 (Mga Mapa at Globo) at Aralin 2 (Ang Pambansang Teritoryo ng Pilipinas). Piliin ang titik ng tamang sagot.</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track" id="progressTrack"></div>
+</div>
+
+<div class="quiz-shell" id="quizShell">
+  <div class="q-card">
+    <div class="q-meta" id="qMeta">TANONG 1 / 30</div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="qOptions"></div>
+    <div class="feedback" id="qFeedback"></div>
+    <div class="q-nav">
+      <button class="next-btn" id="nextBtn">Susunod →</button>
+    </div>
+  </div>
+</div>
+
+<div class="results-shell" id="resultsShell">
+  <div class="quiz-shell" style="margin-top:0;">
+    <div class="q-card">
+      <div class="score-ring-wrap">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(30,44,61,0.15)" stroke-width="12"/>
+          <circle id="scoreArc" cx="70" cy="70" r="60" fill="none" stroke="#A8752E" stroke-width="12" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+          <text x="70" y="76" text-anchor="middle" class="score-num" id="scoreText" font-family="Fraunces">0/30</text>
+        </svg>
+        <div class="score-lbl" id="scorePct">0%</div>
+      </div>
+      <div class="verdict" id="verdictText"></div>
+      <div id="reviewList"></div>
+      <button class="retry-btn" id="retryBtn">Ulitin ang Pagsusulit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+// ARALIN 1
+{ q:"Ano ang tawag sa patag na representasyon (flat surface) ng buong mundo o bahagi nito?", opts:["Globo","Mapa","Grid","Legend"], correct:1, note:"Ang mapa ay patag na representasyon; ang globo ang siyang modelo ng mundo." },
+{ q:"Ang tunay na hugis ng mundo ay tinatawag na:", opts:["Perpektong bilog","Oblate spheroid","Patag na parisukat","Cube"], correct:1, note:"Bahagyang pantay ang mundo sa magkabilang polo, kaya ito ay oblate spheroid." },
+{ q:"Ang salitang 'heograpiya' ay hango sa salitang Griyego na 'geo' at 'graphein.' Ano ang kahulugan ng 'graphein'?", opts:["Mundo","Isulat o ilarawan","Sukatin","Maglakbay"], correct:1, note:"Geo = mundo; graphein = isulat o ilarawan." },
+{ q:"Ano ang tawag sa sining ng paggawa ng mapa at globo?", opts:["Heograpiya","Kartograpiya","Geolohiya","Astronomiya"], correct:1, note:"Kartograpiya ang sining ng paggawa ng mapa/globo; kartograpo ang gumagawa nito." },
+{ q:"Alin sa mga sumusunod ang HINDI kabilang sa mahahalagang elemento ng isang mapa?", opts:["Titulo","Legend","Eskala","Populasyon ng bansa"], correct:3, note:"Ang mahahalagang elemento ng mapa ay titulo, legend, eskala, direksiyon, at longhitud/latitud." },
+{ q:"Ang bahagi ng mapa na nagpapaliwanag sa mga simbolong ginamit dito ay tinatawag na:", opts:["Titulo","Legend","Grid","Eskala"], correct:1, note:"Ang legend ang nagpapaliwanag sa mga simbolo o palatandaan sa mapa." },
+{ q:"Ilan ang pangunahing direksiyon (cardinal directions)?", opts:["2","4","6","8"], correct:1, note:"Apat ang pangunahing direksiyon: Hilaga, Timog, Silangan, Kanluran." },
+{ q:"Ano ang tawag sa direksiyon na nasa pagitan ng Hilaga at Silangan?", opts:["Hilagang-Kanluran","Hilagang-Silangan","Timog-Silangan","Timog-Kanluran"], correct:1, note:"Ang pagitan ng Hilaga at Silangan ay Hilagang-Silangan (HS)." },
+{ q:"Saan karaniwang sumisikat ang araw?", opts:["Kanluran","Silangan","Hilaga","Timog"], correct:1, note:"Sa Silangan sumisikat ang araw; sa Kanluran ito lumulubog." },
+{ q:"Noong anong taon unang nilikha at ginamit ang GPS?", opts:["1960","1973","1980","1990"], correct:1, note:"Nilikha ang GPS noong 1973 ng Kagawaran ng Depensa ng Estados Unidos." },
+{ q:"Alin ang tumutukoy sa distansiya ng isang lugar mula sa ekwador?", opts:["Longhitud","Latitud","Prime Meridian","Grid"], correct:1, note:"Ang latitud (parallel) ang tumutukoy ng distansiya mula sa ekwador." },
+{ q:"Ilang digri ang longhitud ng Prime Meridian?", opts:["90°","0°","180°","360°"], correct:1, note:"Ang Prime Meridian ay nasa 0° longhitud — simula ng pagbilang ng longhitud." },
+{ q:"Aling parallel ang matatagpuan sa 23.5° Hilaga ng ekwador?", opts:["Tropiko ng Kaprikornyo","Tropiko ng Kanser","Kabilugang Arktiko","Ekwador"], correct:1, note:"Ang Tropiko ng Kanser ay nasa 23.5° Hilaga ng ekwador." },
+{ q:"Ilang digri ang kabuoang sukat ng Ekwador bilang isang guhit?", opts:["180°","360°","90°","45°"], correct:1, note:"Ang Ekwador ay isang malaking guhit parallel na may sukat na 360°." },
+{ q:"Ayon sa absolute location, sa pagitan ng aling mga longhitud matatagpuan ang Pilipinas?", opts:["100°00'–110°00' Silangan","116°00'–127°00' Silangan","130°00'–140°00' Silangan","90°00'–100°00' Silangan"], correct:1, note:"Ang Pilipinas ay nasa pagitan ng longhitud 116°00' at 127°00' Silangan." },
+// ARALIN 2
+{ q:"Ano ang tawag sa sukat ng lupaing saklaw ng hurisdiksiyon ng isang bansa?", opts:["Populasyon","Teritoryo","Kapuluan","Ekonomiya"], correct:1, note:"Ang teritoryo ang tumutukoy sa sukat ng lupaing saklaw ng hurisdiksiyon ng isang bansa." },
+{ q:"Aling uri ng teritoryo ang tumutukoy sa mga ilog at lawa?", opts:["Terrestrial","Fluvial","Maritime","Aerial"], correct:1, note:"Fluvial ang tawag sa katubigan gaya ng ilog at lawa." },
+{ q:"Ilang kilometro kuwadrado ang lawak ng lupa ng Pilipinas (hindi pa kasama ang karagatan)?", opts:["200,000 km²","300,000 km²","500,000 km²","1,000,000 km²"], correct:1, note:"Ang lawak ng lupa ng Pilipinas ay 300,000 kilometro kuwadrado." },
+{ q:"Aling kasunduan noong 1898 ang naglipat sa Pilipinas mula sa Espanya patungo sa United States?", opts:["Kasunduan sa Washington","Kasunduan sa Paris","Saligang Batas ng 1935","Atas ng Pangulo Blg. 1596"], correct:1, note:"Ipinagkaloob ng Espanya sa US ang Pilipinas sa Kasunduan sa Paris (1898) sa halagang $20 milyon." },
+{ q:"Aling mga lugar ang naidagdag sa teritoryo ng Pilipinas sa Kasunduan sa Washington (1900)?", opts:["Batanes","Cagayan, Sulu, at Sibutu","Kalayaan Islands","Mangsee at Turtle Islands"], correct:1, note:"Naidagdag ang Cagayan, Sulu, at Sibutu sa Kasunduan sa Washington noong 1900." },
+{ q:"Sino ang Pangulong nagpirma ng Atas ng Pangulo Blg. 1596 na inangkin ang Kalayaan (Spratly) Islands?", opts:["Ferdinand Marcos","Manuel Quezon","Corazon Aquino","Emilio Aguinaldo"], correct:0, note:"Nilagdaan ni Pang. Ferdinand Marcos ang Atas ng Pangulo Blg. 1596 noong 1978." },
+{ q:"Ilang nautical miles ang orihinal na sukat ng dagat teritoryal bago ito napalawak ng UNCLOS?", opts:["3","12","50","200"], correct:0, note:"3 nautical miles ang orihinal na hanggahan ng dagat teritoryal." },
+{ q:"Ilang nautical miles na ang dagat teritoryal matapos mapagtibay ang UNCLOS noong 1982?", opts:["3","12","50","200"], correct:1, note:"Pinahaba ng UNCLOS ang dagat teritoryal mula 3 patungong 12 nautical miles." },
+{ q:"Ano ang tawag sa doktrinang nagsasaad na ang mga katubigang nakapaligid at nag-uugnay sa mga pulo ng kapuluan ay iisang kabuuan?", opts:["Doktrinang Pangkapuluan","Doktrinang Insular","Batas Militar","Kasunduan sa Paris"], correct:0, note:"Ang Doktrinang Pangkapuluan (Archipelagic Doctrine) ang nagsasaad nito." },
+{ q:"Sino ang unang nagpaliwanag ng Doktrinang Pangkapuluan noong 1956?", opts:["Ferdinand Marcos","Arturo M. Tolentino","Manuel Roxas","Carlos P. Garcia"], correct:1, note:"Si dating Senador Arturo M. Tolentino ang unang nagpaliwanag nito noong 1956." },
+{ q:"Saan ginanap ang mahalagang pulong ng UNCLOS noong Disyembre 10, 1982?", opts:["New York","Jamaica","Geneva","Maynila"], correct:1, note:"Ang UNCLOS ay pinagtibay sa Jamaica noong Disyembre 10, 1982." },
+{ q:"Ilang nautical miles ang saklaw ng Exclusive Economic Zone (EEZ)?", opts:["12","50","200","500"], correct:2, note:"Ang EEZ ay umaabot ng 200 nautical miles mula sa batayang guhit." },
+{ q:"Ang Spratly Islands ay mas kilala rin sa tawag na:", opts:["Kalayaan Group of Islands","Batanes Group","Turtle Islands","Mangsee Islands"], correct:0, note:"Ang Spratly Islands ay kilala rin bilang Kalayaan Group of Islands." },
+{ q:"Ang lokasyon ng isang bansa batay sa mga kalapit na bansa ay tinatawag na:", opts:["Absolute location","Relatibong lokasyong bisinal","Relatibong lokasyong insular","Geographical extent"], correct:1, note:"Relatibong lokasyong bisinal ang tawag dito, gamit ang mga kalapit na bansa bilang batayan." },
+{ q:"Bakit itinuturing na estratehiko ang lokasyon ng Pilipinas?", opts:["Dahil ito ang pinakamalaking bansa sa Asya","Dahil ito ay mahalagang ruta ng kalakalan patungo sa Karagatang Pasipiko","Dahil ito ay walang katubigan","Dahil ito ay hindi kapuluan"], correct:1, note:"Ang Pilipinas ay daungan ng mga gawaing pangkalakalan patungo sa Karagatang Pasipiko." }
+];
+
+const letters = ["A","B","C","D"];
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+const progressTrack = document.getElementById('progressTrack');
+const qMeta = document.getElementById('qMeta');
+const qText = document.getElementById('qText');
+const qOptions = document.getElementById('qOptions');
+const qFeedback = document.getElementById('qFeedback');
+const nextBtn = document.getElementById('nextBtn');
+const quizShell = document.getElementById('quizShell');
+const resultsShell = document.getElementById('resultsShell');
+const chip = document.getElementById('chip');
+
+progressTrack.innerHTML = questions.map((q,i)=>`<div class="p-tick" id="ptick-${i}"></div>`).join('');
+
+function renderQuestion(){
+  const item = questions[current];
+  qMeta.textContent = "TANONG " + (current+1) + " / " + questions.length;
+  qText.textContent = item.q;
+  qOptions.innerHTML = item.opts.map((opt,i)=>`
+    <button class="opt-btn" data-i="${i}">
+      <span class="letter">${letters[i]}</span><span>${opt}</span>
+    </button>`).join('');
+  qFeedback.className = "feedback";
+  qFeedback.textContent = "";
+  nextBtn.classList.remove('show');
+  nextBtn.textContent = current === questions.length-1 ? "Tingnan ang Resulta →" : "Susunod →";
+
+  document.querySelectorAll('.opt-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> selectAnswer(parseInt(btn.dataset.i,10)));
+  });
+
+  document.getElementById('ptick-'+current).classList.add('current');
+}
+
+function selectAnswer(i){
+  const item = questions[current];
+  answers[current] = i;
+  const isCorrect = i === item.correct;
+
+  document.querySelectorAll('.opt-btn').forEach((btn,idx)=>{
+    btn.disabled = true;
+    if(idx === item.correct){ btn.classList.add('correct'); }
+    if(idx === i && !isCorrect){ btn.classList.add('wrong'); }
+    if(idx !== item.correct && idx !== i){ btn.classList.add('muted'); }
+  });
+
+  qFeedback.className = "feedback show " + (isCorrect ? "ok" : "no");
+  qFeedback.textContent = (isCorrect ? "✓ Tama! " : "✗ Mali. ") + item.note;
+
+  const tick = document.getElementById('ptick-'+current);
+  tick.classList.remove('current');
+  tick.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  nextBtn.classList.add('show');
+}
+
+nextBtn.addEventListener('click', ()=>{
+  if(current < questions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+});
+
+function showResults(){
+  quizShell.classList.add('hide');
+  resultsShell.classList.add('show');
+  chip.textContent = "RESULTA · ARALIN 1–2";
+
+  const score = answers.reduce((sum,a,i)=> sum + (a === questions[i].correct ? 1 : 0), 0);
+  const pct = Math.round((score/questions.length)*100);
+
+  const circumference = 2 * Math.PI * 60;
+  const arc = document.getElementById('scoreArc');
+  arc.setAttribute('stroke-dasharray', circumference);
+  arc.setAttribute('stroke-dashoffset', circumference - (pct/100)*circumference);
+
+  document.getElementById('scoreText').textContent = score + "/" + questions.length;
+  document.getElementById('scorePct').textContent = pct + "%";
+
+  let verdict = "";
+  if(pct >= 90) verdict = "Napakahusay! Bihasa ka na sa Aralin 1 at 2.";
+  else if(pct >= 75) verdict = "Mahusay! Malapit ka nang maging eksperto.";
+  else if(pct >= 50) verdict = "Magaling ang simula — balikan ang mga paksang namali.";
+  else verdict = "Balikan muna ang buod bago muling sumubok.";
+  document.getElementById('verdictText').textContent = verdict;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = questions.map((item,i)=>{
+    const userAns = answers[i];
+    const isCorrect = userAns === item.correct;
+    return `<div class="review-item">
+      <div class="rq"><span class="review-tag ${isCorrect ? 'ok' : 'no'}">${isCorrect ? 'TAMA' : 'MALI'}</span>${(i+1)+". "+item.q}</div>
+      ${!isCorrect ? `<div class="ra wrong-ans">Sagot mo: ${letters[userAns]}. ${item.opts[userAns]}</div>` : ""}
+      <div class="ra right-ans">Tamang sagot: ${letters[item.correct]}. ${item.opts[item.correct]}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('retryBtn').addEventListener('click', ()=>{
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.querySelectorAll('.p-tick').forEach(t=> t.className = 'p-tick');
+  resultsShell.classList.remove('show');
+  quizShell.classList.remove('hide');
+  chip.textContent = "PAGSUSULIT · ARALIN 1–2";
+  renderQuestion();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuestion();
+</script>
+</body>
+</html>

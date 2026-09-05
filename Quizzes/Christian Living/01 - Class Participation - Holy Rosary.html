@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Participation</title>
+<style>
+  :root {
+    --green-dark: #1f5c3f;
+    --green: #2f7a52;
+    --green-light: #eaf5ee;
+    --ink: #26332c;
+    --muted: #5b6a61;
+    --border: #d7e6dc;
+    --correct: #1f7a3d;
+    --correct-bg: #e6f6ea;
+    --wrong: #b3261e;
+    --wrong-bg: #fdeceb;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f8f5;
+    color: var(--ink);
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    color: #fff;
+    padding: 22px 20px 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  header .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 14px 40px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 26px;
+    box-shadow: 0 4px 16px rgba(31,92,63,0.08);
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* ---- Start / End screens ---- */
+  .center-card { text-align: center; }
+  .center-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 22px;
+  }
+  .center-card p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .info-list {
+    text-align: left;
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  .info-list div { margin-bottom: 4px; }
+  .info-list div:last-child { margin-bottom: 0; }
+
+  button {
+    font-size: 15.5px;
+    font-weight: 600;
+    padding: 13px 30px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-primary:disabled {
+    background: #b7cabf;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--green-dark);
+    border: 1px solid var(--green);
+  }
+  .btn-secondary:hover { background: var(--green-light); }
+
+  /* ---- Progress ---- */
+  .progress-wrap {
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 14px 14px 0;
+    flex-shrink: 0;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+
+  /* ---- Question screen ---- */
+  .q-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green-dark);
+    background: var(--green-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .q-instruction {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+  .q-text {
+    font-size: 17px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .options label {
+    display: block;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .options label:hover { background: var(--green-light); border-color: var(--green); }
+  .options input[type="radio"] { margin-right: 10px; }
+  select.match-select {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    background: #fff;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  label.opt-correct { background: var(--correct-bg) !important; border-color: var(--correct) !important; }
+  label.opt-wrong { background: var(--wrong-bg) !important; border-color: var(--wrong) !important; }
+  select.sel-correct { border-color: var(--correct) !important; background: var(--correct-bg); }
+  select.sel-wrong { border-color: var(--wrong) !important; background: var(--wrong-bg); }
+
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+  .feedback.correct { display: block; background: var(--correct-bg); color: var(--correct); }
+  .feedback.wrong { display: block; background: var(--wrong-bg); color: var(--wrong); }
+
+  .q-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ---- End screen ---- */
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 8px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 6px auto 16px;
+  }
+  .score-circle .num { font-size: 30px; font-weight: 800; color: var(--green-dark); }
+  .score-circle .den { font-size: 13px; color: var(--muted); }
+
+  .review {
+    text-align: left;
+    margin-top: 22px;
+  }
+  .review h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green-dark);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .review-item.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .review-item .rq { font-weight: 600; margin-bottom: 6px; }
+  .review-item .ra { color: var(--wrong); }
+  .review-item .rc { color: var(--correct); }
+  .no-mistakes {
+    text-align: center;
+    color: var(--correct);
+    font-weight: 600;
+    margin-top: 18px;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 10px 0 18px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Christian Living / GMRC</div>
+  <h1 id="headerTitle">Class Participation</h1>
+</header>
+
+<div class="progress-wrap" id="progressWrap" style="display:none;">
+  <div class="progress-label">
+    <span id="progressText">Question 1 of 20</span>
+    <span id="progressScore"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+</div>
+
+<main>
+  <div class="card" id="cardArea"></div>
+</main>
+
+<footer>Christian Living / GMRC &middot; Activity Sheet #3 &mdash; Holy Rosary: Life, Ministry and Paschal Mystery of Christ</footer>
+
+<script>
+const RAW_QUESTIONS = [
+  { id:'a1', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"Which prayer helps us remember the important events in the life of Jesus and brings us closer to Jesus and Mary?",
+    choices:[
+      {label:"The Lord's Prayer",isCorrect:false},
+      {label:"The Holy Rosary",isCorrect:true},
+      {label:"The Apostles' Creed",isCorrect:false},
+      {label:"The Prayer before Meals",isCorrect:false}
+    ] },
+  { id:'a2', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What prayer is recited at the very beginning of the Holy Rosary?",
+    choices:[
+      {label:"Sign of the Cross",isCorrect:true},
+      {label:"Apostles' Creed",isCorrect:false},
+      {label:"Hail Mary",isCorrect:false},
+      {label:"Lord's Prayer",isCorrect:false}
+    ] },
+  { id:'a3', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What is the correct sequence of the mysteries and prayers when praying the Rosary?",
+    choices:[
+      {label:"Announce the Mystery, The Lord's Prayer, 10 Hail Marys, the Fatima Prayer",isCorrect:true},
+      {label:"The Lord's Prayer, Announce the Mystery, 10 Hail Marys, the Fatima Prayer",isCorrect:false},
+      {label:"The Lord's Prayer, 10 Hail Marys, Name the Mystery, and the Glory Be",isCorrect:false},
+      {label:"Sign of the Cross, Apostles' Creed, The Lord's Prayer, Hail Mary",isCorrect:false}
+    ] },
+  { id:'a4', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"Which Mystery reminds us of the joy of Mary when Jesus came into the world?",
+    choices:[
+      {label:"Joyful Mysteries",isCorrect:true},
+      {label:"Glorious Mysteries",isCorrect:false},
+      {label:"Luminous Mysteries",isCorrect:false},
+      {label:"Sorrowful Mysteries",isCorrect:false}
+    ] },
+  { id:'a5', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"On which day do we meditate on the Luminous Mysteries?",
+    choices:[
+      {label:"Tuesdays and Fridays",isCorrect:false},
+      {label:"Mondays and Saturdays",isCorrect:false},
+      {label:"Thursday",isCorrect:true},
+      {label:"Wednesdays and Sundays",isCorrect:false}
+    ] },
+  { id:'a6', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"Which Mystery tells us about Jesus' call to people to come and serve in the Kingdom of God?",
+    choices:[
+      {label:"The Wedding Feast at Cana",isCorrect:false},
+      {label:"The Baptism of Jesus",isCorrect:false},
+      {label:"The Proclamation of the Kingdom of God",isCorrect:true},
+      {label:"The Transfiguration",isCorrect:false}
+    ] },
+  { id:'a7', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What is the Fourth Sorrowful Mystery?",
+    choices:[
+      {label:"The Scourging at the Pillar",isCorrect:false},
+      {label:"The Crucifixion",isCorrect:false},
+      {label:"The Agony in the Garden of Olives",isCorrect:false},
+      {label:"The Carrying of the Cross",isCorrect:true}
+    ] },
+  { id:'a8', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"Which Glorious Mystery tells us about when Mary is taken up body and soul into heaven at the end of her life on earth?",
+    choices:[
+      {label:"The Assumption of Mary",isCorrect:true},
+      {label:"The Ascension of Jesus to Heaven",isCorrect:false},
+      {label:"The Descent of the Holy Spirit",isCorrect:false},
+      {label:"The Coronation of Mary as Queen of Heaven and Earth",isCorrect:false}
+    ] },
+  { id:'a9', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"Which group of Mysteries reminds us of the joy of Jesus's resurrection and Mary's assumption?",
+    choices:[
+      {label:"Joyful Mysteries",isCorrect:false},
+      {label:"Sorrowful Mysteries",isCorrect:false},
+      {label:"Luminous Mysteries",isCorrect:false},
+      {label:"Glorious Mysteries",isCorrect:true}
+    ] },
+  { id:'a10', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"What happened at the Fourth Sorrowful Mystery?",
+    choices:[
+      {label:"Jesus was flogged at the pillar.",isCorrect:false},
+      {label:"Jesus carries the cross.",isCorrect:true},
+      {label:"Jesus offered his life on the Cross.",isCorrect:false},
+      {label:"Jesus fell three times on his way to Calvary.",isCorrect:false}
+    ] },
+  { id:'a11', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"How is the Rosary an act of love and faith?",
+    choices:[
+      {label:"It reminds us to think only about ourselves.",isCorrect:false},
+      {label:"It builds our relationship with Jesus and Mary.",isCorrect:true},
+      {label:"It removes all difficult situations from happening.",isCorrect:false},
+      {label:"It can make us perfect without any effort.",isCorrect:false}
+    ] },
+  { id:'a12', section:'Multiple Choice', instruction:'Read the questions carefully. Choose the letter of the correct answer.', type:'mc',
+    prompt:"As a sacrifice, how can you apply what you learn from praying the Rosary in your daily life?",
+    choices:[
+      {label:"By keeping the Rosary only when not facing problems.",isCorrect:false},
+      {label:"By showing our sincere love for the Lord even after trials.",isCorrect:false},
+      {label:"By reflecting on the life of Jesus and praying it more through our actions.",isCorrect:true},
+      {label:"By reflecting on the mysteries only during the Lenten season.",isCorrect:false}
+    ] },
+
+  { id:'b1', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"When we pray the Rosary, we should stay fully focused and always be aware of what we are saying and thinking.",
+    choices:[{label:'True', isCorrect:true},{label:'False', isCorrect:false}] },
+  { id:'b2', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"Praying the Rosary can help us become closer to Jesus by meditating on His life and following His example.",
+    choices:[{label:'True', isCorrect:true},{label:'False', isCorrect:false}] },
+  { id:'b3', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"Each bead of the Rosary that we hold represents a Hail Mary we pray with love and devotion.",
+    choices:[{label:'True', isCorrect:true},{label:'False', isCorrect:false}] },
+  { id:'b4', section:'True or False', instruction:'Choose TRUE if the statement is correct and FALSE if it is incorrect.', type:'tf',
+    prompt:"The First Joyful Mystery is the Visitation of Mary.",
+    choices:[{label:'True', isCorrect:false},{label:'False', isCorrect:true}] },
+
+  { id:'c1', section:'Identify the Mystery', instruction:'Identify the Mystery of the Holy Rosary indicated in each item. Choose the correct answer from the drop-down list.', type:'select',
+    prompt:"The Proclamation of the Kingdom of God",
+    choices:[{label:'Joyful Mystery',isCorrect:false},{label:'Luminous Mystery',isCorrect:true},{label:'Sorrowful Mystery',isCorrect:false},{label:'Glorious Mystery',isCorrect:false}] },
+  { id:'c2', section:'Identify the Mystery', instruction:'Identify the Mystery of the Holy Rosary indicated in each item. Choose the correct answer from the drop-down list.', type:'select',
+    prompt:"The Presentation of Jesus in the Temple",
+    choices:[{label:'Joyful Mystery',isCorrect:true},{label:'Luminous Mystery',isCorrect:false},{label:'Sorrowful Mystery',isCorrect:false},{label:'Glorious Mystery',isCorrect:false}] },
+  { id:'c3', section:'Identify the Mystery', instruction:'Identify the Mystery of the Holy Rosary indicated in each item. Choose the correct answer from the drop-down list.', type:'select',
+    prompt:"The Crowning of Jesus with Thorns",
+    choices:[{label:'Joyful Mystery',isCorrect:false},{label:'Luminous Mystery',isCorrect:false},{label:'Sorrowful Mystery',isCorrect:true},{label:'Glorious Mystery',isCorrect:false}] },
+  { id:'c4', section:'Identify the Mystery', instruction:'Identify the Mystery of the Holy Rosary indicated in each item. Choose the correct answer from the drop-down list.', type:'select',
+    prompt:"The Agony of Jesus in the Garden",
+    choices:[{label:'Joyful Mystery',isCorrect:false},{label:'Luminous Mystery',isCorrect:false},{label:'Sorrowful Mystery',isCorrect:true},{label:'Glorious Mystery',isCorrect:false}] }
+];
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let quiz = [];
+let currentIndex = 0;
+let answers = [];
+let answeredCurrent = false;
+
+const cardArea = document.getElementById('cardArea');
+const progressWrap = document.getElementById('progressWrap');
+const progressText = document.getElementById('progressText');
+const progressScore = document.getElementById('progressScore');
+const progressFill = document.getElementById('progressFill');
+
+function buildQuiz() {
+  quiz = shuffle(RAW_QUESTIONS).map(q => ({
+    ...q,
+    choices: shuffle(q.choices)
+  }));
+  answers = new Array(quiz.length).fill(null);
+  currentIndex = 0;
+}
+
+function renderStart() {
+  progressWrap.style.display = 'none';
+  cardArea.innerHTML = `
+    <div class="center-card">
+      <h2>Holy Rosary: Life, Ministry and Paschal Mystery of Christ</h2>
+      <p>Class Participation &middot; Christian Living / GMRC &middot; Grade 4</p>
+      <div class="info-list">
+        <div>&#10003; 20 questions total: Multiple Choice, True/False, and Identify-the-Mystery.</div>
+        <div>&#10003; Questions appear one at a time, in a new random order each time you take the quiz.</div>
+        <div>&#10003; Answer, then press <strong>Submit</strong> to see if you got it right before moving on.</div>
+        <div>&#10003; Your final score and a review of any mistakes will be shown at the end.</div>
+      </div>
+      <button class="btn-primary" id="startBtn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById('startBtn').addEventListener('click', () => {
+    buildQuiz();
+    renderQuestion();
+  });
+}
+
+function renderQuestion() {
+  progressWrap.style.display = 'block';
+  answeredCurrent = false;
+  const q = quiz[currentIndex];
+  const total = quiz.length;
+  progressText.textContent = `Question ${currentIndex + 1} of ${total}`;
+  const scored = answers.filter(a => a).length;
+  const correctSoFar = answers.filter(a => a && a.isCorrect).length;
+  progressScore.textContent = scored ? `Score: ${correctSoFar}/${scored}` : '';
+  progressFill.style.width = `${(currentIndex / total) * 100}%`;
+
+  let inputHtml = '';
+  if (q.type === 'select') {
+    inputHtml = `<select class="match-select" id="selectInput">
+      <option value="">-- Select the type of Mystery --</option>
+      ${q.choices.map((c, i) => `<option value="${i}">${c.label}</option>`).join('')}
+    </select>`;
+  } else {
+    const letters = ['A','B','C','D'];
+    inputHtml = `<div class="options">${q.choices.map((c, i) => `
+      <label data-idx="${i}">
+        <input type="radio" name="opt" value="${i}">
+        ${q.type === 'mc' ? letters[i] + '. ' : ''}${c.label}
+      </label>`).join('')}</div>`;
+  }
+
+  cardArea.innerHTML = `
+    <div class="q-tag">${q.section}</div>
+    <div class="q-instruction">${q.instruction}</div>
+    <div class="q-text">${q.prompt}</div>
+    ${inputHtml}
+    <div class="feedback" id="feedbackBox"></div>
+    <div class="q-actions">
+      <button class="btn-primary" id="actionBtn">Submit</button>
+    </div>
+  `;
+
+  const actionBtn = document.getElementById('actionBtn');
+  actionBtn.addEventListener('click', () => {
+    if (!answeredCurrent) {
+      submitAnswer();
+    } else {
+      currentIndex++;
+      if (currentIndex >= quiz.length) {
+        renderEnd();
+      } else {
+        renderQuestion();
+      }
+    }
+  });
+}
+
+function getSelectedIndex(q) {
+  if (q.type === 'select') {
+    const sel = document.getElementById('selectInput');
+    return sel.value === '' ? null : parseInt(sel.value, 10);
+  }
+  const checked = document.querySelector('input[name="opt"]:checked');
+  return checked ? parseInt(checked.value, 10) : null;
+}
+
+function submitAnswer() {
+  const q = quiz[currentIndex];
+  const idx = getSelectedIndex(q);
+  if (idx === null) {
+    const fb = document.getElementById('feedbackBox');
+    fb.className = 'feedback wrong';
+    fb.style.display = 'block';
+    fb.textContent = 'Please choose an answer before submitting.';
+    return;
+  }
+
+  const isCorrect = q.choices[idx].isCorrect;
+  const correctIdx = q.choices.findIndex(c => c.isCorrect);
+  answers[currentIndex] = {
+    given: q.choices[idx].label,
+    correct: q.choices[correctIdx].label,
+    isCorrect
+  };
+  answeredCurrent = true;
+
+  if (q.type === 'select') {
+    const sel = document.getElementById('selectInput');
+    sel.disabled = true;
+    sel.classList.add(isCorrect ? 'sel-correct' : 'sel-wrong');
+  } else {
+    document.querySelectorAll('.options label').forEach(label => {
+      const i = parseInt(label.dataset.idx, 10);
+      label.querySelector('input').disabled = true;
+      if (q.choices[i].isCorrect) label.classList.add('opt-correct');
+      else if (i === idx) label.classList.add('opt-wrong');
+    });
+  }
+
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+  fb.style.display = 'block';
+  fb.textContent = isCorrect ? 'Correct! Well done.' : `Incorrect. The correct answer is: ${q.choices[correctIdx].label}`;
+
+  const actionBtn = document.getElementById('actionBtn');
+  actionBtn.textContent = currentIndex === quiz.length - 1 ? 'See Results' : 'Next Question';
+
+  progressFill.style.width = `${((currentIndex + 1) / quiz.length) * 100}%`;
+  const scored = answers.filter(a => a).length;
+  const correctSoFar = answers.filter(a => a && a.isCorrect).length;
+  progressScore.textContent = `Score: ${correctSoFar}/${scored}`;
+}
+
+function renderEnd() {
+  progressWrap.style.display = 'none';
+  const total = quiz.length;
+  const score = answers.filter(a => a && a.isCorrect).length;
+  const pct = Math.round((score / total) * 100);
+  let msg = '';
+  if (pct === 100) msg = 'Perfect score! Excellent work.';
+  else if (pct >= 80) msg = 'Great job!';
+  else if (pct >= 60) msg = 'Good effort — review the mistakes below.';
+  else msg = 'Keep practicing — review the mistakes below.';
+
+  const mistakes = quiz
+    .map((q, i) => ({ q, a: answers[i] }))
+    .filter(x => x.a && !x.a.isCorrect);
+
+  let reviewHtml = '';
+  if (mistakes.length === 0) {
+    reviewHtml = `<div class="no-mistakes">You answered every question correctly!</div>`;
+  } else {
+    reviewHtml = `
+      <div class="review">
+        <h3>Review Your Mistakes (${mistakes.length})</h3>
+        ${mistakes.map(x => `
+          <div class="review-item wrong">
+            <div class="rq">${x.q.prompt}</div>
+            <div class="ra">Your answer: ${x.a.given}</div>
+            <div class="rc">Correct answer: ${x.a.correct}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  cardArea.innerHTML = `
+    <div class="center-card">
+      <h2>Quiz Complete</h2>
+      <div class="score-circle">
+        <div class="num">${score}/${total}</div>
+        <div class="den">${pct}%</div>
+      </div>
+      <p>${msg}</p>
+      ${reviewHtml}
+      <button class="btn-secondary" id="retryBtn" style="margin-top:20px;">Take Quiz Again</button>
+    </div>
+  `;
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    renderStart();
+  });
+}
+
+renderStart();
+</script>
+
+</body>
+</html>

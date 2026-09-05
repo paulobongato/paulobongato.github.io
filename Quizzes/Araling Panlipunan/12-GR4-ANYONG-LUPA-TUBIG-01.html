@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad</title>
+  <title>Pagsusulit: Anyong Lupa at Anyong Tubig</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .option-btn {
@@ -18,10 +18,10 @@
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between font-sans">
 
   <!-- Header -->
-  <header class="bg-orange-600 text-white py-6 shadow-md">
+  <header class="bg-blue-700 text-white py-6 shadow-md">
     <div class="max-w-3xl mx-auto px-4 text-center">
-      <h1 class="text-2xl sm:text-3xl font-bold">Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad</h1>
-      <p class="text-orange-100 text-sm sm:text-base mt-1">Araling Panlipunan &bull; Baitang 2</p>
+      <h1 class="text-2xl sm:text-3xl font-bold">Pagsusulit sa Anyong Lupa at Anyong Tubig</h1>
+      <p class="text-blue-100 text-sm sm:text-base mt-1">Subukin ang iyong kaalaman sa mga uri ng anyong lupa at anyong tubig ng Pilipinas.</p>
     </div>
   </header>
 
@@ -30,24 +30,15 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 text-center border border-slate-200">
-      <div class="w-20 h-20 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
-        🏡
+      <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+        🏞️
       </div>
       <h2 class="text-xl font-bold text-slate-800 mb-2">Handa ka na ba?</h2>
-      <p class="text-slate-600 mb-4">
-        Suriin natin kung gaano mo naunawaan ang <strong>tungkulin at gawain</strong> ng pamilya, paaralan, ospital, pook-libangan, pamilihan, simbahan, at pamahalaan sa ating komunidad.
+      <p class="text-slate-600 mb-6">
+        Ang pagsusulit na ito ay binubuo ng <strong>15 randomized questions</strong> na may <strong>4 na pagpipilian (A hanggang D)</strong>.
+        Makikita mo agad ang tamang sagot pagkatapos pindutin ang "Ipasa ang Sagot" sa bawat tanong.
       </p>
-      <div class="bg-orange-50 border border-orange-200 rounded-xl p-4 text-left text-sm text-orange-800 mb-6">
-        <p class="font-bold mb-1">Mga Panuto:</p>
-        <ul class="list-disc list-inside space-y-1">
-          <li>May <strong>10 katanungan</strong> ang pagsusulit na ito.</li>
-          <li>May <strong>4 na pagpipilian (A, B, C, D)</strong> ang bawat tanong.</li>
-          <li>Pumili ng iyong sagot, pagkatapos ay pindutin ang <strong>"Ipasa ang Sagot"</strong>.</li>
-          <li>Makikita mo agad kung tama o mali ang iyong sagot.</li>
-          <li>Iba-iba ang pagkakasunod-sunod ng mga tanong sa bawat pagkuha.</li>
-        </ul>
-      </div>
-      <button onclick="startQuiz()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
+      <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5">
         Simulan ang Pagsusulit
       </button>
     </div>
@@ -56,8 +47,8 @@
     <div id="quiz-screen" class="hidden bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-slate-200">
       <!-- Progress & Score Header -->
       <div class="flex justify-between items-center pb-4 mb-6 border-b border-slate-100 text-sm font-semibold text-slate-500">
-        <span id="question-progress">Tanong 1 ng 10</span>
-        <span id="score-tracker" class="text-orange-600">Iskor: 0</span>
+        <span id="question-progress">Tanong 1 ng 15</span>
+        <span id="score-tracker" class="text-blue-600">Iskor: 0</span>
       </div>
 
       <!-- Question Text -->
@@ -78,7 +69,7 @@
         <button id="submit-btn" onclick="submitAnswer()" disabled class="bg-slate-300 text-slate-500 font-semibold px-6 py-2.5 rounded-xl cursor-not-allowed transition-all">
           Ipasa ang Sagot
         </button>
-        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all">
+        <button id="next-btn" onclick="nextQuestion()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all">
           Susunod na Tanong ➔
         </button>
       </div>
@@ -90,9 +81,9 @@
         <h2 class="text-2xl font-bold text-slate-800 mb-2">Tapos na ang Pagsusulit!</h2>
         <p class="text-slate-600">Narito ang buod ng iyong naging resulta:</p>
 
-        <div class="my-6 inline-block bg-orange-50 border border-orange-200 rounded-2xl p-6 px-10">
-          <span class="block text-4xl font-extrabold text-orange-700" id="final-score">0 / 10</span>
-          <span class="text-xs uppercase tracking-wider font-bold text-orange-500 mt-1 block" id="score-percentage">0%</span>
+        <div class="my-6 inline-block bg-blue-50 border border-blue-200 rounded-2xl p-6 px-10">
+          <span class="block text-4xl font-extrabold text-blue-700" id="final-score">0 / 15</span>
+          <span class="text-xs uppercase tracking-wider font-bold text-blue-500 mt-1 block" id="score-percentage">0%</span>
         </div>
       </div>
 
@@ -103,7 +94,7 @@
 
       <!-- Restart Button -->
       <div class="text-center border-t border-slate-100 pt-6">
-        <button onclick="startQuiz()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all">
+        <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all">
           Subukang Muli (Bagong Pagkakasunod-sunod)
         </button>
       </div>
@@ -113,106 +104,176 @@
 
   <!-- Footer -->
   <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200">
-    Pagsusulit: Tungkulin at Gawain ng Mga Bumubuo sa Aking Komunidad &copy; 2026
+    Pagsusulit sa Anyong Lupa at Anyong Tubig &copy; 2026
   </footer>
 
   <script>
-    // Question Bank (10 Questions, 4 choices each: A, B, C, D)
+    // Question Bank (15 Questions, 4 choices each: A, B, C, D)
     const rawQuestions = [
       {
-        text: "Ano ang tungkulin ng pamilya sa komunidad?",
+        text: "Alin sa mga sumusunod ang nagpapakita ng tamang pangangalaga sa anyong lupa?",
         options: [
-          "Itaguyod ang pangangailangan ng mga kasapi",
-          "Magbigay ng edukasyon sa lahat",
-          "Magpapanatili ng kaayusan at kapayapaan",
-          "Magpahayag ng mga paniniwala tungkol sa Panginoon"
+          "Ibaon sa lupa ang mga nakikitang plastik",
+          "Pulutin lamang ang mga basura na maaari pang i-recycle",
+          "Ilagay ang lahat ng mga basura sa isang lalagyan",
+          "Magtanim ng mga puno at halaman sa mga bakanteng lote"
+        ],
+        correctIndex: 3,
+        explanation: "Ang pagtatanim ng mga puno at halaman sa mga bakanteng lote ay tumutulong upang mapanatiling malusog at maganda ang anyong lupa."
+      },
+      {
+        text: "Alin sa mga sumusunod ang naglalarawan sa anyong lupa ng Pilipinas?",
+        options: [
+          "Limitado ang mga likas na yaman na nabubuhay dito.",
+          "Higit na mas marami ang anyong tubig na nakapaligid sa bansa.",
+          "Ginagamit ang kapatagan sa pagtatayo ng mga gusali.",
+          "May malawak na mga kapatagan na maaaring pagtaniman ng prutas at gulay."
+        ],
+        correctIndex: 3,
+        explanation: "Ang anyong lupa ng Pilipinas ay may malawak na mga kapatagan na mainam pagtaniman ng iba't ibang prutas at gulay."
+      },
+      {
+        text: "Anong uri ng anyong lupa ang may patag na lupa na nasa itaas ng bundok at makikita sa Baguio?",
+        options: [
+          "Talampas",
+          "Bundok",
+          "Bulkan",
+          "Kapatagan"
         ],
         correctIndex: 0,
-        explanation: "Ang tungkulin ng pamilya ay itaguyod ang pangangailangan ng mga kasapi. Nagbibigay ito ng mga pangangailangan natin at inaalagaan tayo upang tayo ay mabuhay."
+        explanation: "Ang talampas ay isang patag na lupa na nasa itaas ng bundok, tulad ng makikita sa Baguio."
       },
       {
-        text: "Ano ang tungkulin ng paaralan?",
+        text: "Ilang rehiyon ang bumubuo sa Pilipinas?",
         options: [
-          "Magbigay ng edukasyon sa lahat",
-          "Pagtataguyod ng serbisyong pangkalusugan",
-          "Ibigay ang pangangailangan ng mga tao",
-          "Pagpapanatili ng kaayusan sa lugar"
+          "17 rehiyon",
+          "19 rehiyon",
+          "18 rehiyon",
+          "16 rehiyon"
         ],
-        correctIndex: 0,
-        explanation: "Ang tungkulin ng paaralan ay magbigay ng edukasyon sa lahat. Nagtuturo ito ng mga kaalaman, kasanayan, at wastong pag-uugali at asal."
-      },
-      {
-        text: "Sino ang tinatawag na pinuno ng paaralan?",
-        options: ["Guro", "Punong-guro", "Librarian", "Dyanitor"],
-        correctIndex: 1,
-        explanation: "Ang punong-guro ang pinuno ng paaralan. Katulong niya ang mga guro, librarian, at dyanitor sa pagbibigay ng edukasyon sa lahat."
-      },
-      {
-        text: "Ano ang tungkulin ng ospital?",
-        options: [
-          "Pagtataguyod ng serbisyong pangkalusugan",
-          "Magbigay ng edukasyon sa lahat",
-          "Nagbibigay ng pagkakataong makapaglibang",
-          "Ibigay ang pangangailangan ng mga tao"
-        ],
-        correctIndex: 0,
-        explanation: "Ang tungkulin ng ospital ay pagtataguyod ng serbisyong pangkalusugan. Nagbibigay ito ng serbisyong pangkalusugan, libreng gamot, at bakuna."
-      },
-      {
-        text: "Sino sa ospital ang nagbibigay ng serbisyong pangkalusugan sa mga pasyente?",
-        options: [
-          "Doktor at Nars",
-          "Bumbero at Pulis",
-          "Tindero at Tindera",
-          "Punong-guro at Guro"
-        ],
-        correctIndex: 0,
-        explanation: "Ang Doktor at Nars ang mga nagbibigay ng serbisyong pangkalusugan sa ospital."
-      },
-      {
-        text: "Ano ang tungkulin ng pook-libangan sa komunidad?",
-        options: [
-          "Nagbibigay ng pagkakataong makapaglibang ang mga kasapi ng komunidad",
-          "Pagpapanatili ng kaayusan at kapayapaan",
-          "Magbigay ng edukasyon sa lahat",
-          "Ibigay ang pangangailangan ng mga tao tulad ng pagkain"
-        ],
-        correctIndex: 0,
-        explanation: "Ang tungkulin ng pook-libangan ay nagbibigay ng pagkakataong makapaglibang ang mga kasapi ng komunidad. Dito pinagdarausan ang mga palaro, pagtitipon, pagdiriwang, at programa."
-      },
-      {
-        text: "Ano ang tungkulin ng pamilihan?",
-        options: [
-          "Ibigay ang pangangailangan ng mga tao tulad ng pagkain at damit",
-          "Magpahayag ng paniniwala tungkol sa Panginoon",
-          "Pagtataguyod ng serbisyong pangkalusugan",
-          "Nagbibigay ng pagkakataong makapaglibang"
-        ],
-        correctIndex: 0,
-        explanation: "Ang tungkulin ng pamilihan ay ibigay ang pangangailangan ng mga tao tulad ng pagkain, damit, at iba pa. Dito nabibili ang mga bagay na kailangan ng mga tao."
-      },
-      {
-        text: "Sino sa pamilihan ang tumutulong magbuhat ng mga bagay na binili?",
-        options: ["Tagapamahala", "Tindero/Tindera", "Kargador", "Hardinero"],
         correctIndex: 2,
-        explanation: "Ang kargador ang tumutulong magbuhat ng mga bagay na binili sa pamilihan, kasama ang tagapamahala at tindero/tindera."
+        explanation: "Ang Pilipinas ay binubuo ng 18 rehiyon."
       },
       {
-        text: "Ano ang tungkulin ng simbahan?",
+        text: "Anong uri ng anyong tubig ang mas maliit sa karagatan?",
         options: [
-          "Magpahayag ng mga paniniwala tungkol sa Panginoon",
-          "Magbigay ng edukasyon sa lahat",
-          "Pagpapanatili ng kaayusan at kapayapaan",
-          "Ibigay ang pangangailangan ng mga tao"
+          "Golpo",
+          "Dagat",
+          "Talon",
+          "Ilog"
+        ],
+        correctIndex: 1,
+        explanation: "Ang dagat ay mas maliit kaysa sa karagatan, bagama't parehong malawak na katubigan."
+      },
+      {
+        text: "Alin sa mga sumusunod na konsepto ang tumutukoy sa paglalarawan ng pisikal na anyo ng isang lugar?",
+        options: [
+          "Anyong Lupa",
+          "Anyong Tubig",
+          "Temperatura",
+          "Topograpiya"
+        ],
+        correctIndex: 3,
+        explanation: "Ang topograpiya ang tumutukoy sa paglalarawan ng pisikal na anyo o hugis ng lupain sa isang lugar."
+      },
+      {
+        text: "Anong uri ng anyong lupa ang patag, mababa at may malawak at pwedeng taniman ng mga prutas at gulay?",
+        options: [
+          "Bundok",
+          "Talampas",
+          "Lambak",
+          "Kapatagan"
+        ],
+        correctIndex: 3,
+        explanation: "Ang kapatagan ay patag, mababa, at may malawak na lupa na mainam pagtaniman ng mga prutas at gulay."
+      },
+      {
+        text: "Anong uri anyong lupa ang makikita sa Bohol at ito ay mas mababa sa bundok?",
+        options: [
+          "Bulkan",
+          "Burol",
+          "Bundok",
+          "Talampas"
+        ],
+        correctIndex: 1,
+        explanation: "Ang burol ay mas mababa kaysa sa bundok, tulad ng mga sikat na Chocolate Hills sa Bohol."
+      },
+      {
+        text: "Saang rehiyon matatagpuan ang lalawigan ng Palawan?",
+        options: [
+          "Rehiyon III - Gitnang Luzon",
+          "Rehiyon IV - B - MIMAROPA",
+          "Rehiyon IV - A - CALABARZON",
+          "Rehiyon I - Ilocos"
+        ],
+        correctIndex: 1,
+        explanation: "Ang Palawan ay nasa Rehiyon IV-B, na kilala rin bilang MIMAROPA."
+      },
+      {
+        text: "Nakatutulong ba ang anyong tubig sa pamumuhay ng tao?",
+        options: [
+          "Oo, dahil dito makukuha ang mga likas na yaman na ating nakakain at nagagamit.",
+          "Hindi, dahil wala naman tayong makukuha rito.",
+          "Hindi, dahil sinisira naman ito ng mga tao.",
+          "Oo, dahil magaganda ang mga ito at pwedeng puntahan."
         ],
         correctIndex: 0,
-        explanation: "Ang tungkulin ng simbahan ay magpahayag ng mga paniniwala tungkol sa Panginoon. Nangangaral at nagtuturo ito ng mabuting asal ayon sa relihiyon."
+        explanation: "Ang anyong tubig ay nakatutulong sa pamumuhay ng tao dahil dito nakukuha ang mga likas na yamang nakakain at nagagamit."
       },
       {
-        text: "Sino sa pamahalaan ang may tungkulin na patayin ang sunog?",
-        options: ["Pulis", "Bumbero", "Sundalo", "Basurero"],
+        text: "Anong uri ng anyong tubig ang makikita sa silangang bahagi ng Pilipinas at kilala bilang pinakamalaki sa lahat ng anyong tubig?",
+        options: [
+          "Dagat Celebes",
+          "Dagat Pilipinas",
+          "Karagatang Pasipiko",
+          "Indian Ocean"
+        ],
+        correctIndex: 2,
+        explanation: "Ang Karagatang Pasipiko, na matatagpuan sa silangang bahagi ng Pilipinas, ang pinakamalaking anyong tubig sa buong mundo."
+      },
+      {
+        text: "Anong uri ng anyong tubig ang matatagpuan sa Laguna at itinuturing na pinakamalaking lawa sa bansa?",
+        options: [
+          "Lawa",
+          "Talon",
+          "Karagatan",
+          "Ilog"
+        ],
+        correctIndex: 0,
+        explanation: "Ang Laguna de Bay, na matatagpuan sa Laguna, ay isang lawa at itinuturing na pinakamalaking lawa sa Pilipinas."
+      },
+      {
+        text: "Bakit mahalaga ang mga anyong tubig sa bawat mamamayan ng bansang Pilipinas?",
+        options: [
+          "Nakapagbibigay ito ng pagkain at hanapbuhay sa bawat mamamayang Pilipino",
+          "Nakakakuha tayo ng mga yamang mineral",
+          "Nagiging tirahan ito ng iba't ibang uri ng hayop",
+          "Pinipigil nito ang pagdami ng turista"
+        ],
+        correctIndex: 0,
+        explanation: "Ang mga anyong tubig ay mahalaga dahil nagbibigay ito ng pagkain at hanapbuhay sa mga mamamayang Pilipino."
+      },
+      {
+        text: "Bakit mahalagang pangalagaan ang mga anyong lupa at anyong tubig?",
+        options: [
+          "Dahil nakatutulong lamang ito sa pagpapaganda ng tanawin sa isang lugar.",
+          "Dahil maaari itong gawing lugar para sa pagtatayo ng mas maraming gusali at imprastraktura.",
+          "Dahil pinagkukunan ito ng tubig, pagkain, at kabuhayan ng mga tao.",
+          "Dahil nagsisilbi lamang itong lugar para sa pamamasyal at iba't ibang gawaing panlibangan."
+        ],
+        correctIndex: 2,
+        explanation: "Mahalagang pangalagaan ang anyong lupa at anyong tubig dahil pinagkukunan ito ng tubig, pagkain, at kabuhayan ng mga tao."
+      },
+      {
+        text: "Suriin ang mga pangungusap sa ibaba at piliin ang TAMANG SAGOT.<br><br><em>I. Makakalbo ang kabundukan kung patuloy ang pagmimina at pagputol ng mga puno.</em><br><em>II. Ang mga anyong tubig at lupa ang tumutulong upang magkaroon ng hanapbuhay ang mga Pilipino.</em>",
+        options: [
+          "Parehong mali ang pangungusap.",
+          "Parehong tama ang pangungusap.",
+          "Ang unang pangungusap lamang ang tama.",
+          "Ang ikalawang pangungusap lamang ang tama."
+        ],
         correctIndex: 1,
-        explanation: "Ang bumbero ang may tungkulin na patayin ang sunog. Katulong niya ang pulis, sundalo, kawani, at basurero sa pagpapanatili ng kaayusan at kapayapaan sa lugar."
+        explanation: "Parehong tama ang dalawang pangungusap: nagiging kalbo ang kabundukan dahil sa patuloy na pagmimina at pagputol ng puno, at ang mga anyong lupa at tubig ay pinagkukunan ng hanapbuhay ng mga Pilipino."
       }
     ];
 
@@ -225,7 +286,6 @@
 
     const optionLetters = ["A", "B", "C", "D"];
 
-    // Helper: Fisher-Yates Shuffle
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -236,12 +296,9 @@
     }
 
     function startQuiz() {
-      // Shuffle the questions list
       const shuffledRaw = shuffleArray(rawQuestions);
 
-      // Format questions with shuffled options & consistent letters A-D
       currentQuestions = shuffledRaw.map((q) => {
-        // Shuffle options for each question
         const indexedOptions = q.options.map((optText, origIndex) => ({
           text: optText,
           isCorrect: origIndex === q.correctIndex
@@ -249,7 +306,6 @@
 
         const shuffledOptions = shuffleArray(indexedOptions);
 
-        // Assign A, B, C, D
         let correctLetter = "";
         const finalOptions = shuffledOptions.map((item, idx) => {
           const letter = optionLetters[idx];
@@ -283,20 +339,17 @@
       const q = currentQuestions[currentIndex];
       selectedOptionLetter = null;
 
-      // Update Progress Header
       document.getElementById('question-progress').textContent = `Tanong ${currentIndex + 1} ng ${currentQuestions.length}`;
       document.getElementById('score-tracker').textContent = `Iskor: ${score}`;
 
-      // Set Question Text with CONSISTENT numbering
-      document.getElementById('question-text').textContent = `${currentIndex + 1}. ${q.text}`;
+      document.getElementById('question-text').innerHTML = `${currentIndex + 1}. ${q.text}`;
 
-      // Render 4 Options
       const container = document.getElementById('options-container');
       container.innerHTML = '';
 
       q.options.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = `option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-400 flex items-start gap-3 bg-white shadow-sm`;
+        btn.className = `option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-blue-400 flex items-start gap-3 bg-white shadow-sm`;
         btn.onclick = () => selectOption(opt.letter, btn);
         btn.innerHTML = `
           <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-sm shrink-0">${opt.letter}</span>
@@ -305,7 +358,6 @@
         container.appendChild(btn);
       });
 
-      // Reset feedback and action buttons
       const feedbackBox = document.getElementById('feedback-box');
       feedbackBox.className = 'hidden p-4 rounded-xl mb-6 text-sm font-medium';
       feedbackBox.innerHTML = '';
@@ -319,24 +371,22 @@
     }
 
     function selectOption(letter, btnElement) {
-      if (document.getElementById('submit-btn').classList.contains('hidden')) return; // Already submitted
+      if (document.getElementById('submit-btn').classList.contains('hidden')) return;
 
       selectedOptionLetter = letter;
 
-      // Highlight selected styling
       const buttons = document.querySelectorAll('.option-btn');
       buttons.forEach(b => {
-        b.classList.remove('selected', 'border-orange-600', 'bg-orange-50');
+        b.classList.remove('selected', 'border-blue-600', 'bg-blue-50');
         b.classList.add('border-slate-200', 'bg-white');
       });
 
-      btnElement.classList.add('selected', 'border-orange-600', 'bg-orange-50');
+      btnElement.classList.add('selected', 'border-blue-600', 'bg-blue-50');
       btnElement.classList.remove('border-slate-200', 'bg-white');
 
-      // Enable submit button
       const submitBtn = document.getElementById('submit-btn');
       submitBtn.disabled = false;
-      submitBtn.className = 'bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer';
+      submitBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer';
     }
 
     function submitAnswer() {
@@ -347,7 +397,6 @@
 
       if (isCorrect) score++;
 
-      // Save answer details
       userAnswers.push({
         num: currentIndex + 1,
         question: q.text,
@@ -358,7 +407,6 @@
         options: q.options
       });
 
-      // Show Instant Feedback
       const feedbackBox = document.getElementById('feedback-box');
       feedbackBox.classList.remove('hidden');
 
@@ -381,11 +429,10 @@
         `;
       }
 
-      // Disable buttons and show visual indicators for options
       const buttons = document.querySelectorAll('.option-btn');
       buttons.forEach((b, idx) => {
         b.disabled = true;
-        b.classList.remove('hover:border-orange-400');
+        b.classList.remove('hover:border-blue-400');
         const optLetter = q.options[idx].letter;
 
         if (optLetter === q.correctLetter) {
@@ -395,7 +442,6 @@
         }
       });
 
-      // Toggle Buttons
       document.getElementById('submit-btn').classList.add('hidden');
       document.getElementById('next-btn').classList.remove('hidden');
       document.getElementById('score-tracker').textContent = `Iskor: ${score}`;
@@ -419,7 +465,6 @@
       const percentage = Math.round((score / total) * 100);
       document.getElementById('score-percentage').textContent = `${percentage}% Kabuuang Iskor`;
 
-      // Render Mistakes / Review Section
       const mistakesSection = document.getElementById('mistakes-section');
       const mistakes = userAnswers.filter(a => !a.isCorrect);
 

@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Adventure Quiz — Grade 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16324F;
+    --ink-soft:#3E5C76;
+    --paper:#F4FAF6;
+    --paper-card:#FFFFFF;
+    --sky:#4C9FE8;
+    --sky-deep:#2F7FCB;
+    --gold:#FFB627;
+    --leaf:#3DAA6D;
+    --leaf-deep:#2C8956;
+    --coral:#FF6B5D;
+    --coral-deep:#E14F42;
+    --lilac:#8C7AE6;
+    --border:#DCEAE3;
+    --shadow: 0 10px 30px rgba(22,50,79,0.10);
+    --font-display: 'Baloo 2', system-ui, sans-serif;
+    --font-body: 'Nunito', system-ui, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: var(--font-body);
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 12% 8%, rgba(76,159,232,0.14), transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(255,182,39,0.14), transparent 45%),
+      var(--paper);
+    display:flex;
+    justify-content:center;
+    padding: 28px 16px 60px;
+  }
+
+  .app-shell{
+    width:100%;
+    max-width: 760px;
+  }
+
+  /* ---------- Trail header ---------- */
+  .trail-header{
+    background: var(--paper-card);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 20px 24px 18px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+
+  .brand-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .brand{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+  }
+  .brand span{ color: var(--sky-deep); }
+
+  .star-counter{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    background: #FFF6E2;
+    border: 1px solid #FFE1A3;
+    color:#8A5D00;
+    padding: 6px 14px;
+    border-radius: 999px;
+    white-space:nowrap;
+  }
+
+  .trail{
+    display:flex;
+    gap: 8px;
+  }
+
+  .trail-chapter{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .trail-label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size: 0.72rem;
+    font-weight:700;
+    color: var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+
+  .trail-dots{
+    display:flex;
+    gap:3px;
+  }
+
+  .trail-dot{
+    flex:1;
+    height:8px;
+    border-radius:5px;
+    background: #E4EFEA;
+    transition: background 0.25s ease;
+  }
+  .trail-dot.filled{ background: var(--leaf); }
+  .trail-dot.current{ background: var(--gold); }
+
+  /* ---------- Cards (start / quiz / end) ---------- */
+  .card{
+    background: var(--paper-card);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+  }
+
+  .hidden{ display:none !important; }
+
+  /* Start screen */
+  #start-screen h1{
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  #start-screen p{
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    line-height:1.55;
+    margin: 0 0 20px;
+  }
+
+  .chapter-preview{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .chapter-chip{
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align:center;
+  }
+  .chapter-chip .icon{ font-size: 1.7rem; display:block; margin-bottom:6px; }
+  .chapter-chip .name{ font-family: var(--font-display); font-weight:700; font-size:0.85rem; color: var(--ink); }
+  .chapter-chip .count{ font-size:0.72rem; color: var(--ink-soft); margin-top:2px; }
+
+  .btn{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    border: none;
+    border-radius: 16px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  }
+  .btn:active{ transform: scale(0.97); }
+  .btn:focus-visible{ outline: 3px solid var(--sky-deep); outline-offset: 2px; }
+
+  .btn-primary{
+    background: linear-gradient(180deg, var(--sky) 0%, var(--sky-deep) 100%);
+    color: #fff;
+    width:100%;
+    box-shadow: 0 8px 0 #1E5F9C;
+  }
+  .btn-primary:hover{ filter: brightness(1.03); }
+  .btn-primary:active{ box-shadow: 0 4px 0 #1E5F9C; transform: translateY(4px) scale(0.99); }
+
+  /* Quiz screen */
+  .q-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom: 6px;
+  }
+  .q-chapter-tag{
+    font-family: var(--font-display);
+    font-weight:700;
+    font-size: 0.82rem;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .tag-1{ background: var(--leaf); }
+  .tag-2{ background: var(--lilac); }
+  .tag-3{ background: var(--coral); }
+
+  .q-counter{
+    font-size: 0.85rem;
+    font-weight:700;
+    color: var(--ink-soft);
+  }
+
+  .q-text{
+    font-family: var(--font-display);
+    font-size: 1.28rem;
+    line-height:1.4;
+    color: var(--ink);
+    margin: 14px 0 22px;
+  }
+
+  .options{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  @media (max-width: 520px){
+    .options{ grid-template-columns: 1fr; }
+  }
+
+  .option-btn{
+    text-align:left;
+    background: var(--paper);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--ink);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+  .option-btn .letter{
+    flex-shrink:0;
+    width: 26px; height:26px;
+    border-radius:50%;
+    background:#fff;
+    border: 2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.82rem;
+    font-family: var(--font-display);
+    color: var(--ink-soft);
+  }
+  .option-btn:hover:not(:disabled){ border-color: var(--sky); transform: translateY(-1px); }
+  .option-btn:focus-visible{ outline: 3px solid var(--sky-deep); outline-offset:2px; }
+  .option-btn:disabled{ cursor: default; }
+
+  .option-btn.correct{
+    background: #E9F8EF;
+    border-color: var(--leaf);
+    color: var(--leaf-deep);
+  }
+  .option-btn.correct .letter{ background: var(--leaf); border-color: var(--leaf); color:#fff; }
+
+  .option-btn.wrong{
+    background: #FFEDEA;
+    border-color: var(--coral);
+    color: var(--coral-deep);
+  }
+  .option-btn.wrong .letter{ background: var(--coral); border-color: var(--coral); color:#fff; }
+
+  .feedback{
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    font-size: 0.96rem;
+    line-height:1.5;
+    display:flex;
+    gap: 10px;
+    align-items:flex-start;
+  }
+  .feedback.correct{ background:#E9F8EF; color: var(--leaf-deep); border:1px solid #BFE7CE; }
+  .feedback.wrong{ background:#FFEDEA; color: var(--coral-deep); border:1px solid #FFD1CB; }
+  .feedback .fb-icon{ font-size:1.3rem; line-height:1; }
+  .feedback b{ font-family: var(--font-display); }
+
+  .next-row{ margin-top: 20px; }
+
+  /* End screen */
+  #end-screen{ text-align:center; }
+  .badge-circle{
+    width: 120px; height:120px;
+    border-radius:50%;
+    margin: 0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 3.1rem;
+    background: radial-gradient(circle at 35% 30%, #FFF3D6, var(--gold));
+    box-shadow: 0 10px 24px rgba(255,182,39,0.4);
+  }
+  #end-title{
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    margin: 0 0 4px;
+  }
+  #end-score{
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    margin: 0 0 22px;
+  }
+
+  .breakdown{
+    display:flex;
+    flex-direction:column;
+    gap: 12px;
+    text-align:left;
+    margin-bottom: 26px;
+  }
+  .breakdown-row{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+  }
+  .breakdown-row .b-label{
+    width: 150px;
+    flex-shrink:0;
+    font-weight:700;
+    font-size: 0.86rem;
+    color: var(--ink);
+  }
+  .breakdown-bar{
+    flex:1;
+    height:12px;
+    background: #E4EFEA;
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .breakdown-fill{
+    height:100%;
+    border-radius:8px;
+  }
+  .fill-1{ background: var(--leaf); }
+  .fill-2{ background: var(--lilac); }
+  .fill-3{ background: var(--coral); }
+  .breakdown-row .b-score{
+    width: 44px;
+    text-align:right;
+    font-size:0.86rem;
+    font-weight:700;
+    color: var(--ink-soft);
+  }
+
+  .footer-note{
+    text-align:center;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 18px;
+    opacity: 0.8;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="trail-header">
+    <div class="brand-row">
+      <div class="brand">Grammar <span>Adventure</span> Quiz</div>
+      <div class="star-counter" id="star-counter">⭐ 0 / 30</div>
+    </div>
+    <div class="trail">
+      <div class="trail-chapter">
+        <div class="trail-label">🍎 Nouns</div>
+        <div class="trail-dots" id="dots-1"></div>
+      </div>
+      <div class="trail-chapter">
+        <div class="trail-label">🔄 Pronouns</div>
+        <div class="trail-dots" id="dots-2"></div>
+      </div>
+      <div class="trail-chapter">
+        <div class="trail-label">👀 Author's POV</div>
+        <div class="trail-dots" id="dots-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- START SCREEN -->
+  <div class="card" id="start-screen">
+    <h1>Ready for a Grammar Adventure?</h1>
+    <p>Test what you know about <b>Kinds of Nouns</b>, <b>Kinds of Pronouns</b>, and <b>Author's Point of View</b>. There are 30 questions in all — answer each one and collect a star for every correct answer!</p>
+    <div class="chapter-preview">
+      <div class="chapter-chip">
+        <span class="icon">🍎</span>
+        <span class="name">Kinds of Nouns</span>
+        <span class="count">10 questions</span>
+      </div>
+      <div class="chapter-chip">
+        <span class="icon">🔄</span>
+        <span class="name">Kinds of Pronouns</span>
+        <span class="count">10 questions</span>
+      </div>
+      <div class="chapter-chip">
+        <span class="icon">👀</span>
+        <span class="name">Author's POV</span>
+        <span class="count">10 questions</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="start-btn">Start the Quiz 🚀</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="card hidden" id="quiz-screen">
+    <div class="q-meta">
+      <span class="q-chapter-tag" id="q-chapter-tag">Chapter</span>
+      <span class="q-counter" id="q-counter">Question 1 of 30</span>
+    </div>
+    <div class="q-text" id="q-text">Question text here</div>
+    <div class="options" id="options-container"></div>
+    <div class="feedback hidden" id="feedback-box"></div>
+    <div class="next-row">
+      <button class="btn btn-primary hidden" id="next-btn">Next Question →</button>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="card hidden" id="end-screen">
+    <div class="badge-circle" id="badge-circle">🏆</div>
+    <h2 id="end-title">Great Job!</h2>
+    <p id="end-score">You scored 0 out of 30</p>
+    <div class="breakdown">
+      <div class="breakdown-row">
+        <span class="b-label">🍎 Nouns</span>
+        <div class="breakdown-bar"><div class="breakdown-fill fill-1" id="bar-1" style="width:0%"></div></div>
+        <span class="b-score" id="score-1">0/10</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="b-label">🔄 Pronouns</span>
+        <div class="breakdown-bar"><div class="breakdown-fill fill-2" id="bar-2" style="width:0%"></div></div>
+        <span class="b-score" id="score-2">0/10</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="b-label">👀 Author's POV</span>
+        <div class="breakdown-bar"><div class="breakdown-fill fill-3" id="bar-3" style="width:0%"></div></div>
+        <span class="b-score" id="score-3">0/10</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="restart-btn">Play Again 🔁</button>
+  </div>
+
+  <div class="footer-note">Based on: Kinds of Nouns · Kinds of Pronouns · Author's Point of View — Grade 4 English</div>
+
+</div>
+
+<script>
+(function(){
+
+  const questions = [
+    // ---------------- CHAPTER 1: KINDS OF NOUNS ----------------
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Which kind of noun names something you CANNOT count individually, like milk or sand?",
+      options:["Count noun","Mass noun","Collective noun","Abstract noun"], correct:1,
+      explain:"Mass nouns name continuous substances like milk, sugar, and sand — you can't count them one by one!" },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Which word below is a MASS noun?",
+      options:["Apple","Dog","Rice","Team"], correct:2,
+      explain:"Rice is a mass noun — you say \"some rice,\" not \"one rice, two rices.\"" },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Count nouns can be singular or plural. What is the plural of \"apple\"?",
+      options:["Apples","Appels","Apple's","Applees"], correct:0,
+      explain:"Just add -s: apple → apples!" },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"A single word that names a WHOLE GROUP of people, animals, or things is called a:",
+      options:["Mass noun","Concrete noun","Collective noun","Abstract noun"], correct:2,
+      explain:"Collective nouns treat a whole group as one single unit, like a team or a flock." },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"What is the correct collective noun for a group of wolves?",
+      options:["Flock","Herd","Pack","Choir"], correct:2,
+      explain:"A group of wolves is called a pack!" },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"What is the correct collective noun for a group of singers?",
+      options:["Choir","Crew","Fleet","Deck"], correct:0,
+      explain:"Singers perform together in a choir." },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Concrete nouns can be experienced using your:",
+      options:["Imagination","Five senses","Feelings","Memory"], correct:1,
+      explain:"If you can see, hear, touch, smell, or taste it, it's a concrete noun!" },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Which of these is a CONCRETE noun?",
+      options:["Freedom","Guitar","Honesty","Bravery"], correct:1,
+      explain:"A guitar is something you can see and touch — that makes it concrete!" },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Abstract nouns name ideas, feelings, and qualities that you:",
+      options:["Can only see","Can taste and smell","Cannot see or touch","Can count one by one"], correct:2,
+      explain:"Abstract nouns like love and honesty are invisible, but you feel them deeply." },
+    { chapter:1, chapterName:"Kinds of Nouns", tagClass:"tag-1",
+      q:"Read: \"I value our friendship more than any toy in the world.\" What kind of noun is \"friendship\"?",
+      options:["Concrete noun","Collective noun","Abstract noun","Mass noun"], correct:2,
+      explain:"Friendship is a feeling you can't touch or see — it's an abstract noun." },
+
+    // ---------------- CHAPTER 2: KINDS OF PRONOUNS ----------------
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"What does a pronoun do?",
+      options:["It describes a verb","It takes the place of a noun","It joins two sentences","It only names a place"], correct:1,
+      explain:"A pronoun replaces a noun so we don't have to repeat it over and over!" },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"\"John works for a big company. He is a manager.\" — \"He\" is a ___ pronoun.",
+      options:["Object","Subject","Possessive","Demonstrative"], correct:1,
+      explain:"\"He\" is the doer being talked about, so it's a subject (nominative) pronoun." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"Complete: \"My dog loves going to the park with ___.\"",
+      options:["I","me","he","she"], correct:1,
+      explain:"\"Me\" comes right after the preposition \"with,\" so it's an object pronoun." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"\"The teacher reminded them of the activities next week.\" — \"them\" is a(n) ___ pronoun.",
+      options:["Subject","Object","Possessive","Indefinite"], correct:1,
+      explain:"\"Them\" receives the action of the verb \"reminded,\" making it an object pronoun." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"Indefinite pronouns talk about people or things in a ___ way.",
+      options:["Specific","General","Possessive","Plural-only"], correct:1,
+      explain:"Indefinite pronouns like someone or everything don't point to one exact person or thing." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"Which indefinite pronoun takes a SINGULAR verb?",
+      options:["Nobody","Several","Many","Few"], correct:0,
+      explain:"\"Nobody\" is singular — several, many, and few are all plural indefinite pronouns." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"Which indefinite pronoun takes a PLURAL verb?",
+      options:["Several","Somebody","Anything","Everyone"], correct:0,
+      explain:"\"Several\" is plural — the others are all singular indefinite pronouns." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"Possessive pronouns are used to show:",
+      options:["Location","Ownership","Action","A question"], correct:1,
+      explain:"Words like mine, yours, and theirs show that something belongs to someone." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"\"The happy dog is ___.\" (the dog belongs to a family)",
+      options:["They","Them","Theirs","Their's"], correct:2,
+      explain:"\"Theirs\" is the possessive pronoun showing the dog belongs to them." },
+    { chapter:2, chapterName:"Kinds of Pronouns", tagClass:"tag-2",
+      q:"\"That was a very funny movie.\" — \"That\" is what kind of pronoun?",
+      options:["Personal","Possessive","Indefinite","Demonstrative"], correct:3,
+      explain:"\"That\" points to something specific (the movie) and replaces it completely — a demonstrative pronoun." },
+
+    // ---------------- CHAPTER 3: AUTHOR'S POINT OF VIEW ----------------
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"Point of view is the vantage point from which a writer tells a ___.",
+      options:["Lesson","Story","Rule","Question"], correct:1,
+      explain:"Point of view is how a writer chooses to tell the story to readers." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"Who is the one who actually tells the story to the readers?",
+      options:["The illustrator","The narrator","The publisher","The reader"], correct:1,
+      explain:"The narrator is the voice telling the story — sometimes a character, sometimes an observer." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"In FIRST person point of view, the author is:",
+      options:["Not part of the story at all","A character in the story who talks about himself","Talking directly to the reader","An unseen observer only"], correct:1,
+      explain:"In first person, the narrator is a character telling their own story." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"Which pronouns are used in FIRST person point of view?",
+      options:["You, your","He, she, they","I, my, we, our","It, its"], correct:2,
+      explain:"First person uses I, my, we, our, me, and us." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"\"I was sad. I felt nervous.\" is written in which point of view?",
+      options:["First person","Second person","Third person","No point of view"], correct:0,
+      explain:"The narrator uses \"I,\" so this is first person." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"In SECOND person point of view, the author talks about:",
+      options:["Himself only","The story of the reader, using \"you\"","Another character using \"he\" or \"she\"","Nothing in particular"], correct:1,
+      explain:"Second person speaks directly to the reader, as if the reader is in the story." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"\"You were sad. You felt nervous.\" is written in which point of view?",
+      options:["First person","Second person","Third person","Mixed person"], correct:1,
+      explain:"The pronoun \"you\" tells us this is second person — and it's rarely used in stories!" },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"In THIRD person point of view, the author:",
+      options:["Is a character in the story","Speaks only to the reader","Is not part of the story and talks about somebody else","Cannot use any pronouns"], correct:2,
+      explain:"In third person, the narrator watches the story but isn't in it." },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"\"He looked sad. He seemed nervous.\" is written in which point of view?",
+      options:["First person","Second person","Third person","Second and third mixed"], correct:2,
+      explain:"The pronoun \"he\" shows the narrator is describing someone else — third person!" },
+    { chapter:3, chapterName:"Author's Point of View", tagClass:"tag-3",
+      q:"Which point of view is used by MOST stories?",
+      options:["First person","Second person","Third person","They are all used equally"], correct:2,
+      explain:"Third person is the most commonly used point of view in stories." },
+  ];
+
+  const TOTAL = questions.length;
+  let currentIndex = 0;
+  let score = 0;
+  let answered = false;
+  const chapterScores = {1:0, 2:0, 3:0};
+  const answeredCorrectly = new Array(TOTAL).fill(null); // null | true | false
+
+  const startScreen = document.getElementById('start-screen');
+  const quizScreen = document.getElementById('quiz-screen');
+  const endScreen = document.getElementById('end-screen');
+  const startBtn = document.getElementById('start-btn');
+  const restartBtn = document.getElementById('restart-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const qChapterTag = document.getElementById('q-chapter-tag');
+  const qCounter = document.getElementById('q-counter');
+  const qText = document.getElementById('q-text');
+  const optionsContainer = document.getElementById('options-container');
+  const feedbackBox = document.getElementById('feedback-box');
+  const starCounter = document.getElementById('star-counter');
+
+  const letters = ['A','B','C','D'];
+
+  function buildDots(){
+    [1,2,3].forEach(ch => {
+      const container = document.getElementById('dots-' + ch);
+      container.innerHTML = '';
+      for(let i=0;i<10;i++){
+        const d = document.createElement('div');
+        d.className = 'trail-dot';
+        d.id = 'dot-' + ch + '-' + i;
+        container.appendChild(d);
+      }
+    });
+  }
+
+  function updateTrail(){
+    questions.forEach((qq, idx) => {
+      const withinChapterIndex = idx % 10;
+      const dot = document.getElementById('dot-' + qq.chapter + '-' + withinChapterIndex);
+      if(!dot) return;
+      dot.classList.remove('filled','current');
+      if(answeredCorrectly[idx] === true){
+        dot.classList.add('filled');
+      } else if(idx === currentIndex){
+        dot.classList.add('current');
+      }
+    });
+  }
+
+  function updateStars(){
+    starCounter.textContent = '⭐ ' + score + ' / ' + TOTAL;
+  }
+
+  function renderQuestion(){
+    answered = false;
+    const item = questions[currentIndex];
+    qChapterTag.textContent = item.chapterName;
+    qChapterTag.className = 'q-chapter-tag ' + item.tagClass;
+    qCounter.textContent = 'Question ' + (currentIndex + 1) + ' of ' + TOTAL;
+    qText.textContent = item.q;
+
+    optionsContainer.innerHTML = '';
+    item.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = '<span class="letter">' + letters[i] + '</span><span>' + opt + '</span>';
+      btn.addEventListener('click', () => selectAnswer(i));
+      optionsContainer.appendChild(btn);
+    });
+
+    feedbackBox.className = 'feedback hidden';
+    feedbackBox.innerHTML = '';
+    nextBtn.classList.add('hidden');
+
+    updateTrail();
+  }
+
+  function selectAnswer(selectedIndex){
+    if(answered) return;
+    answered = true;
+    const item = questions[currentIndex];
+    const buttons = optionsContainer.querySelectorAll('.option-btn');
+    const isCorrect = selectedIndex === item.correct;
+
+    buttons.forEach((b, i) => {
+      b.disabled = true;
+      if(i === item.correct){
+        b.classList.add('correct');
+      } else if(i === selectedIndex && !isCorrect){
+        b.classList.add('wrong');
+      }
+    });
+
+    answeredCorrectly[currentIndex] = isCorrect;
+
+    if(isCorrect){
+      score++;
+      chapterScores[item.chapter]++;
+      feedbackBox.className = 'feedback correct';
+      feedbackBox.innerHTML = '<span class="fb-icon">🎉</span><span><b>Correct!</b> ' + item.explain + '</span>';
+    } else {
+      feedbackBox.className = 'feedback wrong';
+      feedbackBox.innerHTML = '<span class="fb-icon">💡</span><span><b>Not quite.</b> ' + item.explain + '</span>';
+    }
+
+    updateStars();
+    updateTrail();
+
+    nextBtn.textContent = (currentIndex === TOTAL - 1) ? 'See My Results 🏁' : 'Next Question →';
+    nextBtn.classList.remove('hidden');
+  }
+
+  function goNext(){
+    if(currentIndex < TOTAL - 1){
+      currentIndex++;
+      renderQuestion();
+    } else {
+      showEnd();
+    }
+  }
+
+  function tierFor(finalScore){
+    const pct = finalScore / TOTAL;
+    if(pct >= 0.9) return { emoji:'🏆', title:'Grammar Grandmaster!' };
+    if(pct >= 0.67) return { emoji:'⭐', title:'Grammar Star!' };
+    if(pct >= 0.4) return { emoji:'🧭', title:'Grammar Explorer!' };
+    return { emoji:'🌱', title:'Grammar Apprentice — Keep Practicing!' };
+  }
+
+  function showEnd(){
+    quizScreen.classList.add('hidden');
+    endScreen.classList.remove('hidden');
+
+    const tier = tierFor(score);
+    document.getElementById('badge-circle').textContent = tier.emoji;
+    document.getElementById('end-title').textContent = tier.title;
+    document.getElementById('end-score').textContent = 'You scored ' + score + ' out of ' + TOTAL;
+
+    [1,2,3].forEach(ch => {
+      const s = chapterScores[ch];
+      document.getElementById('bar-' + ch).style.width = (s / 10 * 100) + '%';
+      document.getElementById('score-' + ch).textContent = s + '/10';
+    });
+  }
+
+  function resetQuiz(){
+    currentIndex = 0;
+    score = 0;
+    chapterScores[1] = 0; chapterScores[2] = 0; chapterScores[3] = 0;
+    answeredCorrectly.fill(null);
+    updateStars();
+    buildDots();
+    updateTrail();
+    endScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+  }
+
+  startBtn.addEventListener('click', () => {
+    startScreen.classList.add('hidden');
+    quizScreen.classList.remove('hidden');
+    renderQuestion();
+  });
+
+  nextBtn.addEventListener('click', goNext);
+  restartBtn.addEventListener('click', resetQuiz);
+
+  document.addEventListener('keydown', (e) => {
+    if(quizScreen.classList.contains('hidden')) return;
+    if(['1','2','3','4'].includes(e.key)){
+      if(!answered){
+        const idx = parseInt(e.key, 10) - 1;
+        const buttons = optionsContainer.querySelectorAll('.option-btn');
+        if(buttons[idx]) buttons[idx].click();
+      }
+    } else if(e.key === 'Enter'){
+      if(!nextBtn.classList.contains('hidden')) goNext();
+    }
+  });
+
+  buildDots();
+  updateStars();
+  updateTrail();
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Sugnay at Hugnayang Pangungusap</title>
+<style>
+
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1e40af;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --red: #b91c1c;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+      background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+      padding: 28px 24px;
+      margin-top: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: var(--blue-dark);
+      margin: 0 0 4px 0;
+      text-align: center;
+    }
+    h2.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 0 20px 0;
+      font-weight: 500;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--blue-dark);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+    .instructions {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 16px 0;
+      line-height: 1.6;
+    }
+    .instructions ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+    .instructions li { margin-bottom: 6px; }
+    .btn {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .btn:hover { background: var(--blue-dark); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .center { text-align: center; }
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--blue);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .topic-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .choice {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .choice:hover:not(.disabled) {
+      border-color: var(--blue);
+      background: #eff6ff;
+    }
+    .choice.selected {
+      border-color: var(--blue);
+      background: #dbeafe;
+    }
+    .choice.correct {
+      border-color: var(--green-border);
+      background: var(--green-bg);
+      color: var(--green);
+      font-weight: 600;
+    }
+    .choice.incorrect {
+      border-color: var(--red-border);
+      background: var(--red-bg);
+      color: var(--red);
+      font-weight: 600;
+    }
+    .choice.disabled { cursor: default; }
+    .choice-letter {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      background: #fff;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.85rem;
+    }
+    .feedback-box {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      animation: slideIn 0.25s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-box.correct-box {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+    .feedback-box.incorrect-box {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+    .feedback-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .feedback-title.correct-text { color: var(--green); }
+    .feedback-title.incorrect-text { color: var(--red); }
+    .feedback-exp {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+    .nav-row {
+      margin-top: 18px;
+    }
+    .score-hero {
+      text-align: center;
+      padding: 20px 0 8px 0;
+    }
+    .score-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 10px solid var(--blue);
+      background: #eff6ff;
+    }
+    .score-circle .num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      line-height: 1;
+    }
+    .score-circle .den {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .score-msg {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .score-sub {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .review-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .review-item.wrong {
+      border-color: var(--red-border);
+      background: #fff5f5;
+    }
+    .review-item.right {
+      border-color: var(--green-border);
+      background: #f5fff7;
+    }
+    .review-q {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .review-line {
+      font-size: 0.92rem;
+      margin: 3px 0;
+    }
+    .review-line.wrong-answer { color: var(--red); }
+    .review-line.right-answer { color: var(--green); }
+    .review-exp {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      color: #475569;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 6px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 24px 0 12px 0;
+    }
+    .hidden { display: none !important; }
+    footer.tag {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      margin-top: 14px;
+    }
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; border-radius: 14px; }
+      h1 { font-size: 1.25rem; }
+      .score-circle { width: 120px; height: 120px; }
+      .score-circle .num { font-size: 1.7rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Sugnay at Hugnayang Pangungusap</h1>
+    <h2 class="subtitle">Unang Trimester — Pagsusulit sa Filipino 4</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Filipino</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Pagkilala sa mga pangngalan, sugnay na makapag-iisa at di-makapag-iisa, at ang wastong pagbuo ng hugnayang pangungusap gamit ang pangatnig.</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Unang Trimester · Filipino 4 · La Salle Green Hills</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Aling uri pangngalan ang karaniwang nagsisimula sa malaking titik?", "choices": ["basal", "lansakan", "pantangi", "pambalana"], "correct": 2, "exp": "Ang pangngalang pantangi ang karaniwang nagsisimula sa malaking titik dahil pangalan ito ng partikular na tao, lugar, o bagay."}, {"q": "Alin ang tamang pagsusuri sa mga pangngalang ginamit? Namasyal ang mag-anak sa Lungsod ng Baguio at bumili sila ng mga sariwang gulay sa palengke.", "choices": ["Parehong pangngalang pantangi ang mga ito.", "Parehong pangngalang pambalana ang mga ito.", "Ang Lungsod ng Baguio ay pambalana at ang gulay ay pantangi.", "Ang Lungsod ng Baguio ay pantangi at ang gulay ay pambalana"], "correct": 3, "exp": "Pantangi ang \"Lungsod ng Baguio\" dahil partikular na lugar, at pambalana ang \"gulay\" dahil pangkalahatang tawag."}, {"q": "Aling pangngalang pambalana ang angkop na ipalit sa pangngalang Bulacan sa pangungusap? Naglakbay ang pamilya ni Ramon sa Bulacan upang makita ang magagandang tanawin at malalawak na bukirin.", "choices": ["bansa", "probinsya", "rehiyon", "tabing dagat"], "correct": 1, "exp": "Ang \"probinsya\" ang angkop na pambalanang katumbas ng pantangi na \"Bulacan.\""}, {"q": "Alin sa sumusunod na pangungusap ang walang pangngalang lansakan?", "choices": ["Dumating ang hukbo upang tumulong sa mga nasalanta.", "Nagtipon ang banda upang magsanay para sa pista.", "Nagdala ng aklat ang mga mag-aaral para sa silid-aklatan.", "Nagpasalamat ang pamilya sa natanggap nilang tulong."], "correct": 2, "exp": "Walang lansakang pangngalan ang ikatlong pangungusap dahil ang \"aklat,\" \"mag-aaral,\" at \"silid-aklatan\" ay hindi tumutukoy sa isang pangkat."}, {"q": "Alin sa sumusunod ang pinakamalapit na kasingkahulugan ng \"organisasyon\" na tumutukoy sa isang pangkat na kumikilos bilang isang yunit? Dahil sa malasakit sa mga nabaha noong bagyo, nagplano ang organisayon ng pamimigay ng pagkain.", "choices": ["klase", "kumpol", "samahan", "pamilya"], "correct": 2, "exp": "Ang \"samahan\" ang pinakamalapit na kasingkahulugan ng \"organisasyon\" bilang isang pangkat na kumikilos bilang isang yunit."}, {"q": "Ano pagbabago ang ginawa sa pangalawang pangungusap? I. Dumating ang guro bago magsimula ang klase. II. Dumating si Bb. Maria Cruz bago magsimula ang klase.", "choices": ["Ginawang tahas ang pangngalan.", "Ginawang mas tiyak ang tinutukoy na tao.", "Ginawang lansakan ang pangngalan.", "Ginawang maylapi ang pangngalan."], "correct": 1, "exp": "Naging mas tiyak ang tinutukoy na tao nang gamitin ang pangalang \"Bb. Maria Cruz\" sa halip na \"guro.\""}, {"q": "Aling pangngalang pambalana ang naiiba sa pangkat ayon sa uri ng pangngalan?", "choices": ["kalayaan", "kalikasan", "pamilya", "pagmamahal"], "correct": 2, "exp": "Naiiba ang \"pamilya\" dahil ito ay lansakan (tumutukoy sa isang pangkat), samantalang basal ang tatlong iba pa."}, {"q": "Alin ang maaaring gamitin kung papalitan ang salitang guro ng isang pangngalang maylapi na tumutukoy pa rin sa taong nagtuturo?", "choices": ["mag-aaral", "tagapagturo", "paaralan", "pagtuturo"], "correct": 1, "exp": "Ang \"tagapagturo\" ay pangngalang maylapi na tumutukoy pa rin sa taong nagtuturo."}, {"q": "Ano ang ipinakikita ng pagbabago mula bahay tungo sa kabahayan? bahay → kabahayan", "choices": ["Naging lansakan ang pangngalan.", "Naging pantangi ang pangngalan.", "Nagbago ang uri ng pangngalan mula tahas tungo sa basal.", "Nagbago ang kayarian dahil nilapian ang salitang-ugat."], "correct": 3, "exp": "Nagbago ang kayarian ng pangngalan mula payak tungo sa maylapi dahil nilapian ang salitang-ugat na \"bahay.\""}, {"q": "Alin sa sumusunod ang halimbawa ng pangngalang payak?", "choices": ["bahay", "tagaluto", "kabataan", "pagtutulungan"], "correct": 0, "exp": "Payak ang \"bahay\" dahil walang idinagdag na panlapi."}, {"q": "Alin ang hindi totoo sa pangngalang maylapi?", "choices": ["May idinagdag na panlapi sa salitang-ugat.", "Nabuo ito mula sa salitang-ugat na nilapian.", "Kapag mahaba ang pangngalan, tiyak na maylapi ito.", "Nabubuo ito sa pamamagitan ng pagdaragdag ng panlapi sa salitang-ugat."], "correct": 2, "exp": "Hindi totoo na kapag mahaba ang pangngalan ay tiyak na maylapi ito, dahil may mga payak na salitang mahaba rin ang anyo."}, {"q": "Anong panlapi ang dapat ilagay sa pangngalang payapa upang ito ay maging pangngalang basal at maylapi?", "choices": ["pa-, -an", "ka- -un", "ka-,-an", "na-, -han"], "correct": 2, "exp": "Ang panlaping ka-/-an ang bubuo ng \"kapayapaan,\" isang pangngalang basal at maylapi."}, {"q": "Alin ang tamang paglalarawan sa sugnay?", "choices": ["Ito ay nakatatayo nang mag-isa.", "Ito ay laging may buong diwa.", "Maaari itong maging makapag-iisa o hindi makapag-iisa.", "Ito ay binubuo ng tatlong kaisipan."], "correct": 2, "exp": "Ang sugnay ay maaaring maging makapag-iisa (may buong diwa) o hindi makapag-iisa (kulang sa diwa)."}, {"q": "Alin sa sumusunod na pangkat ng salita ang maaaring tumayo nang mag-isa bilang isang kumpletong kaisipan?", "choices": ["kapag dumating ang mga panauhin", "dahil maaga silang umalis", "upang matapos agad ang gawain", "nagsimula na ang programa"], "correct": 3, "exp": "Ang \"nagsimula na ang programa\" ay may kumpletong diwa at maaaring tumayo nang mag-isa, hindi tulad ng ibang pangkat na nangangailangan ng karugtong."}, {"q": "Aling pangungusap ang mabubuo kapag pinagsama ang dalawang kaisipan? I. hindi sumama si Carlo sa lakad. II. masama ang kaniyang pakiramdam.", "choices": ["Hindi sumama si Carlo sa lakad ngunit masama ang kaniyang pakiramdam.", "Hindi sumama si Carlo sa lakad dahil masama ang kaniyang pakiramdam.", "Hindi sumama si Carlo sa lakad at masama ang kaniyang pakiramdam.", "Hindi sumama si Carlo sa lakad habang masama ang kaniyang pakiramdam."], "correct": 1, "exp": "Ang \"dahil\" ang wastong pangatnig na nagpapakita ng sanhi (masamang pakiramdam) at bunga (hindi pagsama)."}, {"q": "Alin sa sumusunod ang maaaring idagdag sa hulihan upang maging buo ang diwa? Dahil maaga silang dumating, _______________________.", "choices": ["dahil tahimik ang lugar", "bago magsimula ang programa", "nakapaghanda sila ng mga kagamitan", "kapag dumating ang mga bisita"], "correct": 2, "exp": "Ang \"nakapaghanda sila ng mga kagamitan\" ay isang kumpletong kaisipan na bumubuo sa diwa ng pangungusap."}, {"q": "Aling pangungusap ang may tamang pagkakaugnay ng dalawang kasipan? Naglinis ang mga residente. Naging maayos ang paligid.", "choices": ["Naglinis ang mga residente ngunit naging maayos ang paligid.", "Naglinis ang mga residente dahil naging maayos ang paligid.", "Naging maayos ang paligid sapagkat naglinis ang mga residente.", "Naging maayos ang paligid kahit naglinis ang mga residente."], "correct": 2, "exp": "Ang \"sapagkat\" ang wastong pangatnig na nagpapakita na ang paglilinis ang dahilan kung bakit naging maayos ang paligid."}, {"q": "Nais ni Cedric na magpakita ng kondisyon bago gawin ang kilos. Alin ang angkop na sugnay upang mabuo ang pangungusap? ________, sasama ako sa lakad ng aking barkada.", "choices": ["Dahil tapos na ang aking gawain", "Kahit umuulan nang malakas", "Kapag natapos ko na ang aking gawain", "Habang naghihintay ang aking mga kaibigan"], "correct": 2, "exp": "Ang \"Kapag natapos ko na ang aking gawain\" ang nagpapakita ng kondisyon bago gawin ang kilos."}, {"q": "Aling pangungusap ang may malinaw na ugnayan kung isusulat muli ang pangungusap sa loob ng kahon? Dahil malakas ang ulan ngunit nagpatuloy ang mga manlalaro sa paligsahan.", "choices": ["Dahil malakas ang ulan, nagpatuloy ang mga manlalaro sa paligsahan.", "Kahit malakas ang ulan, nagpatuloy ang mga manlalaro sa paligsahan.", "Ngunit malakas ang ulan, nagpatuloy ang mga manlalaro sa paligsahan.", "Kapag malakas ang ulan, nagpatuloy ang mga manlalaro sa paligsahan."], "correct": 1, "exp": "Ang \"Kahit\" ang wastong pangatnig na nagpapakita ng pagsalungat (kabila ng malakas na ulan, nagpatuloy pa rin)."}, {"q": "Alin ang tamang hugnayang pangungusap na binuo mula sa mga sumusunod na kaisipan? Maraming pamilya ang nangangailangan ng tulong. Nagtipon ng donasyon ang mga residente. Nais nilang makatulong.", "choices": ["Maraming pamilya ang nangangailangan ng tulong ngunit nagtipon ng donasyon ang mga residente.", "Dahil maraming pamilya ang nangangailangan ng tulong at nais nilang makatulong, nagtipon ng donasyon ang mga residente.", "Nagtipon ng donasyon ang mga residente kahit walang nangangailangan ng tulong.", "Nais nilang makatulong subalit hindi sila nagtipon ng donasyon."], "correct": 1, "exp": "Ang wastong hugnayang pangungusap ay dapat magpakita ng dahilan (nangangailangan ng tulong, nais makatulong) at bunga (nagtipon ng donasyon)."}, {"q": "Alin sa sumusunod ang hugnayang pangungusap?", "choices": ["Masaya at tahimik ang mga bata.", "Nagbasa si Ana at nagsulat si Ben.", "Umuwi kami dahil malakas na ang ulan.", "Si Carlo ay matalino at masipag."], "correct": 2, "exp": "Hugnayang pangungusap ang \"Umuwi kami dahil malakas na ang ulan\" dahil binubuo ito ng dalawang sugnay na pinagsama ng pangatnig na \"dahil.\""}, {"q": "Alin ang sugnay na di-makapag-iisa? Maglalaro kami sa parke kung hindi tayo aabutan ng uulan.", "choices": ["Maglalaro kami", "Maglalaro kami sa parke", "hindi uulan", "kung hindi tayo aabutan ng uulan"], "correct": 3, "exp": "Ang \"kung hindi tayo aabutan ng uulan\" ay sugnay na di-makapag-iisa dahil kulang ito sa buong diwa nang mag-isa."}, {"q": "Alin sa sumusunod ang halimbawa ng hugnayang pangungusap?", "choices": ["Kumain kami ng hapunan.", "Natutulog na ang mga bata.", "Nag-aral si Rina dahil may pagsusulit bukas.", "Masipag at matalino si Ben."], "correct": 2, "exp": "Hugnayan ang \"Nag-aral si Rina dahil may pagsusulit bukas\" dahil binubuo ito ng dalawang sugnay na inugnay ng pangatnig na \"dahil.\""}, {"q": "Alin ang sugnay na makapag-iisa sa pangungusap? Kapag natapos ang klase, uuwi na kami agad.", "choices": ["Kapag natapos ang klase", "uuwi na kami agad", "natapos ang klase", "kami agad"], "correct": 1, "exp": "Ang \"uuwi na kami agad\" ay may buong diwa at maaaring tumayo nang mag-isa bilang isang kumpletong pangungusap."}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Nagpunta kami sa palengke dahil kailangan naming bumili ng sariwang gulay.", "choices": ["Nagpunta kami sa palengke", "dahil kailangan naming bumili ng sariwang gulay", "bumili ng sariwang gulay", "kami sa palengke"], "correct": 1, "exp": "Ang \"dahil kailangan naming bumili ng sariwang gulay\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa."}, {"q": "Alin ang tamang kahulugan ng hugnayang pangungusap?", "choices": ["Pangungusap na binubuo ng isang sugnay lamang.", "Pangungusap na binubuo ng dalawa o higit pang sugnay na pinagsama ng pangatnig.", "Pangungusap na walang kaisipang ipinahahayag.", "Pangungusap na binubuo lamang ng mga pangngalan."], "correct": 1, "exp": "Ang hugnayang pangungusap ay binubuo ng dalawa o higit pang sugnay na pinagsama ng isang pangatnig."}, {"q": "Alin sa sumusunod ang tamang paraan ng pagsasama ng dalawang kaisipan gamit ang pangatnig? Nagsipilyo si Mika. Natulog siya.", "choices": ["Nagsipilyo si Mika kaya natulog siya.", "Nagsipilyo si Mika bago siya natulog.", "Nagsipilyo si Mika ngunit natulog siya.", "Nagsipilyo si Mika o natulog siya."], "correct": 1, "exp": "Ang \"bago\" ang wastong pangatnig na nagpapakita na naunang nangyari ang pagsisipilyo bago natulog si Mika."}, {"q": "Alin ang pinakaangkop na sugnay upang mabuo ang pangungusap? ________, nahuli kami sa unang klase.", "choices": ["Dahil naantala ang biyahe namin", "Habang naghihintay kami sa sasakyan", "Kapag maaga kaming umalis", "Kung sakaling umulan mamaya"], "correct": 0, "exp": "Ang \"Dahil naantala ang biyahe namin\" ang nagpapakita ng dahilan ng pagkahuli sa unang klase."}, {"q": "Alin ang wastong pagsasama ng dalawang kaisipan? Uuwi na si Nena. Bumagal ang trapiko.", "choices": ["Uuwi na si Nena kaya bumagal ang trapiko.", "Uuwi na si Nena kahit bumagal ang trapiko.", "Uuwi na si Nena at bumagal ang trapiko.", "Uuwi na si Nena habang bumabagal ang trapiko."], "correct": 1, "exp": "Ang \"kahit\" ang wastong pangatnig dahil nagpapakita ito na patuloy pa ring umuwi si Nena sa kabila ng pagbagal ng trapiko."}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Habang naghihintay kami ng sundo, kumain kami ng meryenda.", "choices": ["Habang naghihintay kami ng sundo", "kumain kami ng meryenda", "naghihintay kami ng sundo", "meryenda kami"], "correct": 0, "exp": "Ang \"Habang naghihintay kami ng sundo\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa."}, {"q": "Alin ang halimbawa ng sugnay na makapag-iisa?", "choices": ["dahil malakas ang ulan", "natulog na ang mga bata", "kapag umalis na siya", "habang naglalaro sila"], "correct": 1, "exp": "Ang \"natulog na ang mga bata\" ay may buong diwa at maaaring tumayo nang mag-isa."}, {"q": "Alin ang wastong pangatnig na dapat gamitin upang mabuo ang hugnayang pangungusap? Nag-aral nang mabuti si Jenny ________ pumasa siya sa pagsusulit.", "choices": ["kaya", "bago", "habang", "kahit"], "correct": 0, "exp": "Ang \"kaya\" ang nagpapakita ng resulta (pagpasa sa pagsusulit) ng pag-aaral nang mabuti."}, {"q": "Alin sa sumusunod ang hindi hugnayang pangungusap?", "choices": ["Naglaro ang mga bata dahil wala silang pasok.", "Umuwi si Tina bago dumating ang bagyo.", "Masaya ang mga bisita sa handaan.", "Nag-aral si Marco upang makapasa sa pagsusulit."], "correct": 2, "exp": "Hindi hugnayan ang \"Masaya ang mga bisita sa handaan\" dahil isang sugnay lamang ang bumubuo nito."}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Nagdiwang ang mga residente sapagkat nanalo ang kanilang koponan sa paligsahan.", "choices": ["Nagdiwang ang mga residente", "sapagkat nanalo ang kanilang koponan sa paligsahan", "nanalo ang koponan", "mga residente sa paligsahan"], "correct": 1, "exp": "Ang \"sapagkat nanalo ang kanilang koponan sa paligsahan\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa."}, {"q": "Alin ang wastong hugnayang pangungusap na binuo mula sa dalawang kaisipan? Malakas ang ulan. Ipinagpaliban ang laro.", "choices": ["Malakas ang ulan kaya ipinagpaliban ang laro.", "Malakas ang ulan ngunit ipinagpaliban ang laro.", "Malakas ang ulan o ipinagpaliban ang laro.", "Malakas ang ulan habang ipinagpaliban ang laro."], "correct": 0, "exp": "Ang \"kaya\" ang wastong pangatnig dahil nagpapakita ito na ang malakas na ulan ang naging sanhi ng pagpapaliban sa laro."}, {"q": "Alin ang tamang sugnay upang ipakita ang dahilan sa pangungusap? ________, hindi nakapasok si Ana sa paaralan.", "choices": ["Dahil sa lagnat na kanyang nararamdaman", "Bago pa man magsimula ang klase", "Kapag natapos na ang aralin", "Habang naghihintay ng sundo"], "correct": 0, "exp": "Ang \"Dahil sa lagnat na kanyang nararamdaman\" ang nagpapakita ng dahilan kung bakit hindi nakapasok si Ana."}, {"q": "Alin ang hugnayang pangungusap na may wastong pagkakaugnay? Bumagsak ang kuryente. Nagtungo ang mga residente sa barangay hall.", "choices": ["Bumagsak ang kuryente kaya nagtungo ang mga residente sa barangay hall.", "Bumagsak ang kuryente ngunit nagtungo ang mga residente sa barangay hall.", "Bumagsak ang kuryente habang nagtungo ang mga residente sa barangay hall.", "Bumagsak ang kuryente kahit nagtungo ang mga residente sa barangay hall."], "correct": 0, "exp": "Ang \"kaya\" ang wastong pangatnig dahil ang pagbagsak ng kuryente ang naging sanhi ng pagtungo ng mga residente sa barangay hall."}, {"q": "Alin ang sugnay na makapag-iisa sa pangungusap? Kahit pagod na si Tatay, nagluto pa rin siya ng hapunan para sa amin.", "choices": ["Kahit pagod na si Tatay", "nagluto pa rin siya ng hapunan para sa amin", "pagod na si Tatay", "para sa amin"], "correct": 1, "exp": "Ang \"nagluto pa rin siya ng hapunan para sa amin\" ay may buong diwa at maaaring tumayo nang mag-isa."}, {"q": "Alin sa sumusunod ang tamang pagbuo ng hugnayang pangungusap gamit ang pangatnig na \"upang\"?", "choices": ["Nag-ipon si Carlo upang makabili ng bagong sapatos.", "Nag-ipon si Carlo ngunit makabili ng bagong sapatos.", "Nag-ipon si Carlo dahil makabili ng bagong sapatos.", "Nag-ipon si Carlo habang makabili ng bagong sapatos."], "correct": 0, "exp": "Ang \"upang\" ang wastong pangatnig na nagpapakita ng layunin ng pag-iipon ni Carlo."}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Aalis na kami kapag dumating na ang aming mga kasama.", "choices": ["Aalis na kami", "kapag dumating na ang aming mga kasama", "dumating na ang mga kasama", "mga kasama namin"], "correct": 1, "exp": "Ang \"kapag dumating na ang aming mga kasama\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa."}, {"q": "Alin ang wastong pangungusap kung pagsasamahin ang mga sumusunod na kaisipan? Nagtanim ang mga residente ng puno. Naging malinis ang hangin sa kanilang baranggay.", "choices": ["Nagtanim ang mga residente ng puno kaya naging malinis ang hangin sa kanilang baranggay.", "Nagtanim ang mga residente ng puno ngunit naging malinis ang hangin sa kanilang baranggay.", "Nagtanim ang mga residente ng puno o naging malinis ang hangin sa kanilang baranggay.", "Nagtanim ang mga residente ng puno habang naging malinis ang hangin sa kanilang baranggay."], "correct": 0, "exp": "Ang \"kaya\" ang wastong pangatnig dahil ang pagtatanim ng puno ang naging sanhi ng paglilinis ng hangin."}, {"q": "Alin sa sumusunod ang halimbawa ng sugnay na makapag-iisa?", "choices": ["bago sumapit ang gabi", "dahil sa malakas na hangin", "natapos ang proyekto sa oras", "upang makarating agad sa paaralan"], "correct": 2, "exp": "Ang \"natapos ang proyekto sa oras\" ay may buong diwa at maaaring tumayo nang mag-isa."}, {"q": "Alin ang pinakaangkop na sugnay upang ipakita ang oras ng pangyayari? ________, nagsimula nang umulan nang malakas.", "choices": ["Habang naglalakad kami pauwi", "Dahil naubusan ng gasolina", "Upang makaiwas sa trapiko", "Kahit gustong bumili ng payong"], "correct": 0, "exp": "Ang \"Habang naglalakad kami pauwi\" ang nagpapakita ng oras ng pangyayari."}, {"q": "Alin ang hugnayang pangungusap na may tamang pagkakaugnay ng dahilan at bunga? Hindi nakarating sa paaralan si Mica. Nasira ang kanilang sasakyan.", "choices": ["Hindi nakarating sa paaralan si Mica dahil nasira ang kanilang sasakyan.", "Hindi nakarating sa paaralan si Mica ngunit nasira ang kanilang sasakyan.", "Hindi nakarating sa paaralan si Mica habang nasira ang kanilang sasakyan.", "Hindi nakarating sa paaralan si Mica kahit nasira ang kanilang sasakyan."], "correct": 0, "exp": "Ang \"dahil\" ang wastong pangatnig dahil ang pagkasira ng sasakyan ang naging dahilan ng hindi pagdating sa paaralan."}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Magsasaya kami sa piknik kung sasama ang aming mga pinsan.", "choices": ["Magsasaya kami sa piknik", "kung sasama ang aming mga pinsan", "sasama ang mga pinsan", "piknik kami"], "correct": 1, "exp": "Ang \"kung sasama ang aming mga pinsan\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa."}];
+
+const QUIZ_LENGTH = 15;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = []; // {qIndex, chosen, correct}
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  // shuffle the choice order for each question, tracking the new correct index
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    isCorrect: isCorrect,
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg, sub;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa paksang ito!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

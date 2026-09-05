@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Quiz: Numbers & Operations (Full Periodical Set)</title>
+<style>
+  :root {
+    --blue: #2E74B5;
+    --blue-dark: #1F4E79;
+    --green: #2e7d32;
+    --green-bg: #e8f5e9;
+    --red: #c62828;
+    --red-bg: #fdecea;
+    --gray-bg: #f4f6f8;
+    --border: #d7dee5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--gray-bg);
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px 12px 60px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 640px;
+    padding: 28px 24px 32px;
+  }
+  h1 {
+    color: var(--blue-dark);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--blue);
+    font-weight: 600;
+    margin: 0 0 20px;
+    font-size: 1.05rem;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    background: var(--gray-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 0.92rem;
+  }
+  .meta-grid div span.label {
+    display: block;
+    color: #667;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .meta-grid div span.value {
+    font-weight: 600;
+    color: #222;
+  }
+  ul.instructions {
+    padding-left: 22px;
+    margin: 0 0 22px;
+    line-height: 1.6;
+  }
+  ul.instructions li { margin-bottom: 6px; }
+  .topics-covered {
+    background: #eaf2fa;
+    border: 1px solid #cfe0f0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin: 0 0 22px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--blue-dark);
+  }
+  .topics-covered strong { color: #1a1a1a; }
+  .btn {
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 26px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.06s ease, box-shadow 0.15s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(46,116,181,0.35);
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary:disabled {
+    background: #a9c3d9;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+  .btn-row { text-align: center; margin-top: 8px; }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 6px;
+    transition: width 0.25s ease;
+  }
+  .progress-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    white-space: nowrap;
+  }
+  .score-live {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--green);
+    white-space: nowrap;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eaf2fa;
+    color: var(--blue-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 18px;
+    color: #1a1a1a;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover:not(.locked) { border-color: var(--blue); background: #f5faff; }
+  .option.selected { border-color: var(--blue); background: #eaf2fa; }
+  .option-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gray-bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #556;
+  }
+  .option.selected .option-letter { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .option.correct { border-color: var(--green); background: var(--green-bg); }
+  .option.correct .option-letter { background: var(--green); border-color: var(--green); color: #fff; }
+  .option.incorrect { border-color: var(--red); background: var(--red-bg); }
+  .option.incorrect .option-letter { background: var(--red); border-color: var(--red); color: #fff; }
+  .option.locked { cursor: default; }
+
+  .feedback {
+    display: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-bg); border: 1px solid #b7dfb9; color: #1b4d20; }
+  .feedback.incorrect-fb { background: var(--red-bg); border: 1px solid #f3b8b3; color: #7a1d1d; }
+  .feedback .fb-title { font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+
+  /* Results */
+  .score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 8px solid var(--blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .score-circle .num { font-size: 2rem; font-weight: 800; color: var(--blue-dark); line-height: 1; }
+  .score-circle .den { font-size: 0.85rem; color: #667; margin-top: 2px; }
+  .score-msg {
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #333;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item .rtopic {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .review-item .rq { font-weight: 600; margin-bottom: 8px; }
+  .review-item .rline { font-size: 0.9rem; margin-bottom: 3px; }
+  .review-item .rline.wrong { color: var(--red); }
+  .review-item .rline.right { color: var(--green); }
+  .review-item .rexpl { font-size: 0.85rem; color: #556; margin-top: 6px; font-style: italic; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px 26px; border-radius: 12px; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .score-circle { width: 110px; height: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="app">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen">
+    <h1>Math Quiz</h1>
+    <p class="subtitle">Full Periodical Set: Numbers &amp; Operations</p>
+
+    <div class="meta-grid">
+      <div><span class="label">Subject</span><span class="value">Mathematics</span></div>
+      <div><span class="label">Grade Level</span><span class="value">Grade 4</span></div>
+      <div><span class="label">Coverage</span><span class="value">Periodical Exam Review</span></div>
+      <div><span class="label">Questions</span><span class="value">All 90 (10 per topic, no question bank)</span></div>
+    </div>
+
+    <ul class="instructions">
+      <li>This quiz has <strong>90 questions</strong> — all 10 questions from every one of the 9 topics below, every time (no random subset).</li>
+      <li>Topics appear in order (Reading &amp; Writing Numbers first, Word Problems last), but the 10 questions within each topic are shuffled every attempt.</li>
+      <li>Each question is <strong>multiple choice</strong> with 4 answer choices (A–D), also shuffled every attempt.</li>
+      <li>Answer one question at a time, then press <strong>Submit</strong> to check your answer.</li>
+      <li>You'll see right away whether you got it correct, along with a short explanation.</li>
+      <li>At the end, you'll get your final score and a review of any questions you missed.</li>
+      <li>Take your time — this is the full set. Good luck! 🧮</li>
+    </ul>
+
+    <div class="topics-covered">
+      <strong>Topics covered (10 questions each):</strong> Reading &amp; writing numbers up to millions (standard, word, expanded form) · Place value &amp; value of digits up to millions · Comparing &amp; ordering numbers · Rounding off numbers · Addition &amp; subtraction of whole numbers · Estimating sums, differences, products, and quotients · Multiplication of whole numbers · Division of whole numbers · Word problems involving addition, subtraction, multiplication, and division.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="start-btn" style="width:100%;">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Q1 / 90</div>
+      <div class="score-live" id="score-live">Score: 0</div>
+    </div>
+    <div class="topic-tag" id="topic-tag">Topic</div>
+    <p class="question-text" id="question-text">Question text</p>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-title" id="fb-title"></div>
+      <div id="fb-explanation"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="action-btn" style="width:100%;" disabled>Submit</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS SCREEN ============ -->
+  <div id="results-screen" class="hidden">
+    <h1>Quiz Complete!</h1>
+    <div class="score-circle">
+      <div class="num" id="score-num">0/90</div>
+      <div class="den">correct</div>
+    </div>
+    <p class="score-msg" id="score-msg"></p>
+    <div id="review-section"></div>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn btn-primary" id="retake-btn" style="width:100%;">Retake Quiz</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ======================================================================
+// QUESTION LIST: all 90 questions used every attempt (no question bank).
+// Grouped by topic in a fixed order (A -> J); shuffled WITHIN each topic
+// group, and answer options shuffled, on every attempt.
+// options[0] is ALWAYS the correct answer in source; shuffled at render time.
+// ======================================================================
+const QUESTION_LIST = [
+
+  // ===================== READING & WRITING NUMBERS (10) =====================
+  { topic: 'Reading & Writing Numbers', q: 'What is the word form of 5,362,748?',
+    options: ['five million three hundred sixty-two thousand seven hundred forty-eight', 'five million three hundred sixty-two thousand seven hundred ninety-eight', 'five million six hundred sixty-two thousand seven hundred forty-eight', 'five million three hundred sixty-two thousand seven hundred forty-one'],
+    explanation: '5,362,748 is read group by group, from left to right: five million three hundred sixty-two thousand seven hundred forty-eight.' },
+  { topic: 'Reading & Writing Numbers', q: 'What is the word form of 9,080,020?',
+    options: ['nine million eighty thousand twenty', 'nine million eighty thousand nine hundred twenty', 'nine million eighty thousand twenty-eight', 'nine million ninety thousand twenty'],
+    explanation: '9,080,020 is read group by group, from left to right: nine million eighty thousand twenty.' },
+  { topic: 'Reading & Writing Numbers', q: 'Which number is written as "three million one hundred twenty thousand eight" in standard form?',
+    options: ['3,120,008', '3,100,008', '3,120,028', '3,120,088'],
+    explanation: '"three million one hundred twenty thousand eight" is 3,120,008 in standard form: 3,000,000 + 100,000 + 20,000 + 8 = 3,120,008.' },
+  { topic: 'Reading & Writing Numbers', q: 'Which number is written as "six million seventy thousand three hundred" in standard form?',
+    options: ['6,070,300', '6,870,300', '6,570,300', '6,070,306'],
+    explanation: '"six million seventy thousand three hundred" is 6,070,300 in standard form: 6,000,000 + 70,000 + 300 = 6,070,300.' },
+  { topic: 'Reading & Writing Numbers', q: 'What is the expanded form of 2,916,340?',
+    options: ['2,000,000 + 900,000 + 10,000 + 6,000 + 300 + 40', '2,000,000 + 900,000 + 70,000 + 6,000 + 300 + 40', '2,000,000 + 900,000 + 10,000 + 5,000 + 300 + 40', '2,000,000 + 900,000 + 10,000 + 7,000 + 300 + 40'],
+    explanation: 'Write each non-zero digit as digit × place value: 2,000,000 + 900,000 + 10,000 + 6,000 + 300 + 40.' },
+  { topic: 'Reading & Writing Numbers', q: 'Which number in standard form equals 9,000,000 + 800,000 + 40,000 + 7?',
+    options: ['9,840,007', '9,840,005', '9,840,001', '9,840,009'],
+    explanation: 'Add the values: 9,000,000 + 800,000 + 40,000 + 7 = 9,840,007.' },
+  { topic: 'Reading & Writing Numbers', q: 'What is the word form of 2,000,000?',
+    options: ['two million', 'two million eight thousand', 'two million nine hundred thousand', 'two million fifty'],
+    explanation: '2,000,000 is read group by group, from left to right: two million.' },
+  { topic: 'Reading & Writing Numbers', q: 'Which number is written as "eight hundred forty-six thousand two hundred nine" in standard form?',
+    options: ['846,209', '846,809', '866,209', '844,209'],
+    explanation: '"eight hundred forty-six thousand two hundred nine" is 846,209 in standard form: 800,000 + 40,000 + 6,000 + 200 + 9 = 846,209.' },
+  { topic: 'Reading & Writing Numbers', q: 'What is the expanded form of 5,060,090?',
+    options: ['5,000,000 + 60,000 + 90', '5,000,000 + 40,000 + 90', '5,000,000 + 60,000 + 70', '5,000,000 + 60,000 + 80'],
+    explanation: 'Write each non-zero digit as digit × place value: 5,000,000 + 60,000 + 90.' },
+  { topic: 'Reading & Writing Numbers', q: 'Which number is written as "seven million ninety thousand six hundred" in standard form?',
+    options: ['7,090,600', '7,390,600', '7,091,600', '7,090,608'],
+    explanation: '"seven million ninety thousand six hundred" is 7,090,600 in standard form: 7,000,000 + 90,000 + 600 = 7,090,600.' },
+
+  // ===================== PLACE VALUE & VALUE OF DIGITS (10) =====================
+  { topic: 'Place Value & Value of Digits', q: 'What is the PLACE VALUE of the digit 7 in 1,637,928?',
+    options: ['thousands', 'hundred millions', 'hundreds', 'tens'],
+    explanation: 'In 1,637,928, the digit 7 sits in the thousands place.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the VALUE of the digit 8 in 4,980,215?',
+    options: ['80,000', '8', '800,000', '90,000'],
+    explanation: 'The digit 8 in 4,980,215 is in the ten thousands place, so its value is 8 × 10,000 = 80,000.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the PLACE VALUE of the digit 1 in 3,856,194?',
+    options: ['hundreds', 'hundred millions', 'hundred thousands', 'ten thousands'],
+    explanation: 'In 3,856,194, the digit 1 sits in the hundreds place.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the VALUE of the digit 9 in 6,209,473?',
+    options: ['9,000', '9', '90,000', '900'],
+    explanation: 'The digit 9 in 6,209,473 is in the thousands place, so its value is 9 × 1,000 = 9,000.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the PLACE VALUE of the digit 5 in 8,127,059?',
+    options: ['tens', 'hundred thousands', 'thousands', 'ten thousands'],
+    explanation: 'In 8,127,059, the digit 5 sits in the tens place.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the VALUE of the digit 3 in 5,731,864?',
+    options: ['30,000', '40,000', '300,000', '3'],
+    explanation: 'The digit 3 in 5,731,864 is in the ten thousands place, so its value is 3 × 10,000 = 30,000.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the PLACE VALUE of the digit 0 in 9,053,716?',
+    options: ['hundred thousands', 'hundred millions', 'tens', 'thousands'],
+    explanation: 'In 9,053,716, the digit 0 sits in the hundred thousands place.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the VALUE of the digit 7 in 1,794,862?',
+    options: ['700,000', '800,000', '7,000,000', '70,000'],
+    explanation: 'The digit 7 in 1,794,862 is in the hundred thousands place, so its value is 7 × 100,000 = 700,000.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the PLACE VALUE of the digit 4 in 6,482,037?',
+    options: ['hundred thousands', 'hundred millions', 'hundreds', 'ones'],
+    explanation: 'In 6,482,037, the digit 4 sits in the hundred thousands place.' },
+  { topic: 'Place Value & Value of Digits', q: 'What is the VALUE of the digit 6 in 7,150,964?',
+    options: ['60', '6', '70', '600'],
+    explanation: 'The digit 6 in 7,150,964 is in the tens place, so its value is 6 × 10 = 60.' },
+
+  // ===================== COMPARING & ORDERING NUMBERS (10) =====================
+  { topic: 'Comparing & Ordering Numbers', q: 'Which symbol correctly compares 6,194,837 ___ 6,194,873?',
+    options: ['<', '>', '=', '≠'],
+    explanation: '6,194,837 is less than 6,194,873, so the correct symbol is <.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which symbol correctly compares 2,508,671 ___ 2,580,671?',
+    options: ['<', '>', '=', '≠'],
+    explanation: '2,508,671 is less than 2,580,671, so the correct symbol is <.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which symbol correctly compares 4,193,260 ___ 419,326?',
+    options: ['>', '<', '=', '≠'],
+    explanation: '4,193,260 is greater than 419,326, so the correct symbol is >.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which symbol correctly compares 7,000,000 ___ 6,999,998?',
+    options: ['>', '<', '=', '≠'],
+    explanation: '7,000,000 is greater than 6,999,998, so the correct symbol is >.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which of these numbers is the GREATEST: 7,361,940, 7,316,940, 7,631,940, 7,136,940?',
+    options: ['7,631,940', '7,361,940', '7,316,940', '7,136,940'],
+    explanation: 'Compare digit by digit from the left. 7,631,940 has the largest value when compared place by place, making it the greatest.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which of these numbers is the LEAST: 4,287,519, 4,278,519, 4,287,159, 4,278,159?',
+    options: ['4,278,159', '4,287,519', '4,278,519', '4,287,159'],
+    explanation: 'Compare digit by digit from the left. 4,278,159 has the smallest value when compared place by place, making it the least.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which list shows 629,418, 296,418, 962,418, 269,418 arranged from LEAST to GREATEST (ascending order)?',
+    options: ['269,418, 296,418, 629,418, 962,418', '962,418, 629,418, 269,418, 296,418', '962,418, 296,418, 269,418, 629,418', '296,418, 269,418, 629,418, 962,418'],
+    explanation: 'Arranged from least to greatest: 269,418, 296,418, 629,418, 962,418.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which list shows 1,508,472, 1,580,472, 1,805,472, 1,058,472 arranged from GREATEST to LEAST (descending order)?',
+    options: ['1,805,472, 1,580,472, 1,508,472, 1,058,472', '1,805,472, 1,508,472, 1,580,472, 1,058,472', '1,508,472, 1,580,472, 1,805,472, 1,058,472', '1,508,472, 1,805,472, 1,058,472, 1,580,472'],
+    explanation: 'Arranged from greatest to least: 1,805,472, 1,580,472, 1,508,472, 1,058,472.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Which is TRUE about 764,839 and 1,200,000?',
+    options: ['764,839 < 1,200,000', '764,839 > 1,200,000', '764,839 = 1,200,000', '1,200,000 < 764,839'],
+    explanation: '1,200,000 has 7 digits while 764,839 has only 6 digits, so 1,200,000 is greater: 764,839 < 1,200,000.' },
+  { topic: 'Comparing & Ordering Numbers', q: 'Zita is ordering four numbers from least to greatest. What should she compare first?',
+    options: ['The digits in the highest place value (leftmost digit) of each number', 'The digits in the ones place of each number', 'How many even digits each number has', 'The last digit written in each number'],
+    explanation: 'To compare multi-digit numbers, always start by comparing the digits in the highest (leftmost) place value first, then move right only if there\'s a tie.' },
+
+  // ===================== ROUNDING OFF NUMBERS (10) =====================
+  { topic: 'Rounding Off Numbers', q: 'Round 67,482 to the nearest ten.',
+    options: ['67,480', '67,500', '67,490', '67,470'],
+    explanation: 'Look at the digit to the right of the tens place. Since it is less than 5, 67,482 rounds to 67,480.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 342,917 to the nearest hundred.',
+    options: ['342,900', '342,920', '342,800', '340,000'],
+    explanation: 'Look at the digit to the right of the hundreds place. Since it is less than 5, 342,917 rounds to 342,900.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 519,648 to the nearest thousand.',
+    options: ['520,000', '521,000', '519,000', '500,000'],
+    explanation: 'Look at the digit to the right of the thousands place. Since it is 5 or more, 519,648 rounds to 520,000.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 3,714,582 to the nearest ten thousand.',
+    options: ['3,710,000', '3,714,580', '3,720,000', '3,700,000'],
+    explanation: 'Look at the digit to the right of the ten thousands place. Since it is less than 5, 3,714,582 rounds to 3,710,000.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 4,863,270 to the nearest hundred thousand.',
+    options: ['4,900,000', '5,000,000', '4,863,000', '4,863,300'],
+    explanation: 'Look at the digit to the right of the hundred thousands place. Since it is 5 or more, 4,863,270 rounds to 4,900,000.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 8,245 to the nearest ten.',
+    options: ['8,250', '8,260', '10,000', '8,240'],
+    explanation: 'Look at the digit to the right of the tens place. Since it is 5 or more, 8,245 rounds to 8,250.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 273,950 to the nearest thousand.',
+    options: ['274,000', '273,950', '275,000', '300,000'],
+    explanation: 'Look at the digit to the right of the thousands place. Since it is 5 or more, 273,950 rounds to 274,000.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 6,395,184 to the nearest hundred thousand.',
+    options: ['6,400,000', '6,300,000', '6,395,180', '6,395,000'],
+    explanation: 'Look at the digit to the right of the hundred thousands place. Since it is 5 or more, 6,395,184 rounds to 6,400,000.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 58,217 to the nearest hundred.',
+    options: ['58,200', '58,300', '58,100', '60,000'],
+    explanation: 'Look at the digit to the right of the hundreds place. Since it is less than 5, 58,217 rounds to 58,200.' },
+  { topic: 'Rounding Off Numbers', q: 'Round 3,500,001 to the nearest million.',
+    options: ['4,000,000', '3,500,000', '3,000,000', '5,000,000'],
+    explanation: 'Look at the digit to the right of the millions place. Since it is 5 or more, 3,500,001 rounds to 4,000,000.' },
+
+  // ===================== ADDITION & SUBTRACTION (10) =====================
+  { topic: 'Addition & Subtraction', q: 'Add: 452,817 + 316,948 = ?',
+    options: ['769,765', '769,665', '769,865', '769,755'],
+    explanation: '452,817 + 316,948 = 769,765.' },
+  { topic: 'Addition & Subtraction', q: 'Add: 2,678,145 + 1,493,827 = ?',
+    options: ['4,171,972', '4,171,962', '4,172,072', '4,170,972'],
+    explanation: '2,678,145 + 1,493,827 = 4,171,972.' },
+  { topic: 'Addition & Subtraction', q: 'Add: 694,208 + 257,316 = ?',
+    options: ['951,524', '951,424', '951,514', '950,524'],
+    explanation: '694,208 + 257,316 = 951,524.' },
+  { topic: 'Addition & Subtraction', q: 'Add: 3,128,459 + 876,591 = ?',
+    options: ['4,005,050', '4,006,050', '4,005,150', '4,004,950'],
+    explanation: '3,128,459 + 876,591 = 4,005,050.' },
+  { topic: 'Addition & Subtraction', q: 'Add: 538,067 + 924 = ?',
+    options: ['538,991', '537,991', '539,001', '539,991'],
+    explanation: '538,067 + 924 = 538,991.' },
+  { topic: 'Addition & Subtraction', q: 'Subtract: 800,000 − 376,419 = ?',
+    options: ['423,581', '423,571', '423,591', '423,481'],
+    explanation: '800,000 − 376,419 = 423,581.' },
+  { topic: 'Addition & Subtraction', q: 'Subtract: 4,213,600 − 2,957,481 = ?',
+    options: ['1,256,119', '1,255,119', '1,257,119', '1,256,129'],
+    explanation: '4,213,600 − 2,957,481 = 1,256,119.' },
+  { topic: 'Addition & Subtraction', q: 'Subtract: 715,280 − 386,597 = ?',
+    options: ['328,683', '329,683', '328,783', '328,673'],
+    explanation: '715,280 − 386,597 = 328,683.' },
+  { topic: 'Addition & Subtraction', q: 'Subtract: 2,000,000 − 843,216 = ?',
+    options: ['1,156,784', '1,156,774', '1,156,884', '1,156,684'],
+    explanation: '2,000,000 − 843,216 = 1,156,784.' },
+  { topic: 'Addition & Subtraction', q: 'Subtract: 3,948,217 − 1,765,903 = ?',
+    options: ['2,182,314', '2,182,324', '2,182,414', '2,182,304'],
+    explanation: '3,948,217 − 1,765,903 = 2,182,314.' },
+
+  // ===================== ESTIMATING SUM, DIFFERENCE, PRODUCT, QUOTIENT (10) =====================
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the sum of 53,718 + 26,340 by rounding each number to its highest place value.',
+    options: ['80,000', '90,000', '70,000', '60,000'],
+    explanation: 'Round 53,718 to 50,000 and 26,340 to 30,000. Estimated sum = 50,000 + 30,000 = 80,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the sum of 732,690 + 156,420 by rounding each number to its highest place value.',
+    options: ['900,000', '1,000,000', '800,000', '700,000'],
+    explanation: 'Round 732,690 to 700,000 and 156,420 to 200,000. Estimated sum = 700,000 + 200,000 = 900,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the difference of 917,284 − 348,652 by rounding each number to its highest place value.',
+    options: ['600,000', '700,000', '500,000', '300,000'],
+    explanation: 'Round 917,284 to 900,000 and 348,652 to 300,000. Estimated difference = 900,000 − 300,000 = 600,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the difference of 6,248,930 − 3,175,840 by rounding each number to its highest place value.',
+    options: ['3,000,000', '4,000,000', '2,000,000', '0'],
+    explanation: 'Round 6,248,930 to 6,000,000 and 3,175,840 to 3,000,000. Estimated difference = 6,000,000 − 3,000,000 = 3,000,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the product of 3,216 × 47 by rounding each factor to its highest place value.',
+    options: ['150,000', '180,000', '200,000', '15,000'],
+    explanation: 'Round 3,216 to 3,000 and 47 to 50. Estimated product = 3,000 × 50 = 150,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the product of 528 × 371 by rounding each factor to its highest place value.',
+    options: ['200,000', '250,000', '20,000', '240,000'],
+    explanation: 'Round 528 to 500 and 371 to 400. Estimated product = 500 × 400 = 200,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the quotient of 21,000 ÷ 68 using compatible numbers (round the divisor to its highest place value first).',
+    options: ['300', '3,000', '360', '30'],
+    explanation: 'Round 68 to 70. Since 21,000 already divides evenly by 70, the estimated quotient = 21,000 ÷ 70 = 300.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the quotient of 720,000 ÷ 79 using compatible numbers (round the divisor to its highest place value first).',
+    options: ['9,000', '90,000', '10,800', '900'],
+    explanation: 'Round 79 to 80. Since 720,000 already divides evenly by 80, the estimated quotient = 720,000 ÷ 80 = 9,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the sum of 4,267,158 + 2,913,740 by rounding each number to its highest place value.',
+    options: ['7,000,000', '8,000,000', '6,000,000', '9,000,000'],
+    explanation: 'Round 4,267,158 to 4,000,000 and 2,913,740 to 3,000,000. Estimated sum = 4,000,000 + 3,000,000 = 7,000,000.' },
+  { topic: 'Estimating Sum, Difference, Product, Quotient', q: 'Estimate the product of 4,102 × 58 by rounding each factor to its highest place value.',
+    options: ['240,000', '280,000', '300,000', '24,000'],
+    explanation: 'Round 4,102 to 4,000 and 58 to 60. Estimated product = 4,000 × 60 = 240,000.' },
+
+  // ===================== MULTIPLICATION OF WHOLE NUMBERS (10) =====================
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 2,145 × 4 = ?',
+    options: ['8,580', '10,725', '6,435', '8,576'],
+    explanation: '2,145 × 4 = 8,580.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 3,708 × 5 = ?',
+    options: ['18,540', '22,248', '18,535', '14,832'],
+    explanation: '3,708 × 5 = 18,540.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 1,926 × 7 = ?',
+    options: ['13,482', '13,475', '13,489', '11,556'],
+    explanation: '1,926 × 7 = 13,482.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 538 × 46 = ?',
+    options: ['24,748', '24,210', '24,794', '24,702'],
+    explanation: '538 × 46 = 24,748.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 724 × 63 = ?',
+    options: ['45,612', '44,888', '45,675', '45,549'],
+    explanation: '724 × 63 = 45,612.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 3,187 × 24 = ?',
+    options: ['76,488', '73,301', '76,464', '79,675'],
+    explanation: '3,187 × 24 = 76,488.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 2,456 × 39 = ?',
+    options: ['95,784', '95,823', '95,745', '93,328'],
+    explanation: '2,456 × 39 = 95,784.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 861 × 305 = ?',
+    options: ['262,605', '262,910', '261,744', '263,466'],
+    explanation: '861 × 305 = 262,605.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 1,672 × 48 = ?',
+    options: ['80,256', '80,208', '80,304', '81,928'],
+    explanation: '1,672 × 48 = 80,256.' },
+  { topic: 'Multiplication of Whole Numbers', q: 'Multiply: 5,230 × 6 = ?',
+    options: ['31,380', '26,150', '31,386', '36,610'],
+    explanation: '5,230 × 6 = 31,380.' },
+
+  // ===================== DIVISION OF WHOLE NUMBERS (10) =====================
+  { topic: 'Division of Whole Numbers', q: 'Divide: 7,896 ÷ 4 = ?',
+    options: ['1,974', '1,970', '1,978', '1,975'],
+    explanation: '7,896 ÷ 4 = 1,974 exactly, since 4 × 1,974 = 7,896.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 9,375 ÷ 5 = ?',
+    options: ['1,875', '1,880', '1,876', '1,874'],
+    explanation: '9,375 ÷ 5 = 1,875 exactly, since 5 × 1,875 = 9,375.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 6,427 ÷ 8 = ?',
+    options: ['803 remainder 3', '802 remainder 3', '803 remainder 4', '804 remainder 3'],
+    explanation: '8 × 803 = 6,424, and 6,427 − 6,424 = 3. So 6,427 ÷ 8 = 803 remainder 3.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 24,192 ÷ 8 = ?',
+    options: ['3,024', '3,023', '3,016', '3,025'],
+    explanation: '24,192 ÷ 8 = 3,024 exactly, since 8 × 3,024 = 24,192.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 6,825 ÷ 15 = ?',
+    options: ['455', '470', '456', '440'],
+    explanation: '6,825 ÷ 15 = 455 exactly, since 15 × 455 = 6,825.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 37,658 ÷ 6 = ?',
+    options: ['6,276 remainder 2', '6,277 remainder 2', '6,275 remainder 2', '6,276 remainder 3'],
+    explanation: '6 × 6,276 = 37,656, and 37,658 − 37,656 = 2. So 37,658 ÷ 6 = 6,276 remainder 2.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 41,328 ÷ 9 = ?',
+    options: ['4,592', '4,583', '4,593', '4,591'],
+    explanation: '41,328 ÷ 9 = 4,592 exactly, since 9 × 4,592 = 41,328.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 31,824 ÷ 24 = ?',
+    options: ['1,326', '1,325', '1,327', '1,302'],
+    explanation: '31,824 ÷ 24 = 1,326 exactly, since 24 × 1,326 = 31,824.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 96,350 ÷ 5 = ?',
+    options: ['19,270', '19,275', '19,269', '19,271'],
+    explanation: '96,350 ÷ 5 = 19,270 exactly, since 5 × 19,270 = 96,350.' },
+  { topic: 'Division of Whole Numbers', q: 'Divide: 48,173 ÷ 7 = ?',
+    options: ['6,881 remainder 6', '6,881 remainder 5', '6,880 remainder 6', '6,882 remainder 6'],
+    explanation: '7 × 6,881 = 48,167, and 48,173 − 48,167 = 6. So 48,173 ÷ 7 = 6,881 remainder 6.' },
+
+  // ===================== WORD PROBLEMS (10) =====================
+  { topic: 'Word Problems', q: 'A basketball league had 214,680 ticket sales for the morning games and 158,947 for the afternoon games. How many tickets were sold in all?',
+    options: ['373,627', '373,637', '373,527', '374,627'],
+    explanation: 'Total tickets sold = 214,680 + 158,947 = 373,627.' },
+  { topic: 'Word Problems', q: 'A farm harvested 176,300 kilograms of rice in week 1, 208,450 kilograms in week 2, and 341,920 kilograms in week 3. How many kilograms of rice were harvested in all three weeks?',
+    options: ['726,670', '725,670', '727,170', '726,645'],
+    explanation: 'Total rice harvested = 176,300 + 208,450 + 341,920 = 726,670.' },
+  { topic: 'Word Problems', q: 'A province has 936,000 registered voters. Of these, 517,834 voters already voted before noon. How many registered voters had NOT yet voted by noon?',
+    options: ['418,166', '418,266', '417,166', '427,166'],
+    explanation: 'Voters who had not yet voted = 936,000 − 517,834 = 418,166.' },
+  { topic: 'Word Problems', q: 'A barangay budgeted ₱1,480,000 for a flood-control project. So far, ₱962,375 has been spent. How much of the budget is left?',
+    options: ['517,625', '516,625', '519,625', '517,125'],
+    explanation: 'Budget remaining = ₱1,480,000 − ₱962,375 = ₱517,625.' },
+  { topic: 'Word Problems', q: 'A grocery store received 318 crates of bottled water. Each crate holds 45 bottles. How many bottles are there in all?',
+    options: ['14,310', '14,355', '13,992', '14,410'],
+    explanation: 'Total bottles = 318 × 45 = 14,310.' },
+  { topic: 'Word Problems', q: 'A printing press produces 1,450 storybooks every week. How many storybooks does it produce in 36 weeks?',
+    options: ['52,200', '50,750', '53,650', '52,100'],
+    explanation: 'Total storybooks = 1450 × 36 = 52,200.' },
+  { topic: 'Word Problems', q: 'A total of 9,576 school supplies will be divided equally among 36 classrooms. How many supplies will each classroom receive?',
+    options: ['266', '267', '265', '276'],
+    explanation: 'Supplies per classroom = 9,576 ÷ 36 = 266.' },
+  { topic: 'Word Problems', q: 'A supplier has 6,248 pencils to pack equally into 18 boxes. How many pencils go in each box, and how many pencils are left over?',
+    options: ['347 pencils each, with 2 pencils left over', '348 pencils each, with 2 pencils left over', '347 pencils each, with 3 pencils left over', '346 pencils each, with 2 pencils left over'],
+    explanation: '6,248 ÷ 18 = 347 remainder 2. Each box gets 347 pencils, and 2 pencils are left over.' },
+  { topic: 'Word Problems', q: 'A vegetable vendor has 28 sacks of onions with 65 onions in each sack, plus 213 loose onions. How many onions does the vendor have in all?',
+    options: ['2,033', '1,820', '2,098', '1,968'],
+    explanation: 'Onions in sacks = 28 × 65 = 1,820. Add the loose onions: 1,820 + 213 = 2,033.' },
+  { topic: 'Word Problems', q: 'A canteen earned ₱24,680 on Friday and ₱19,420 on Saturday. If it wants to spread this two-day total evenly across 4 days for its weekly report, what would the average daily amount be?',
+    options: ['11,025', '11,035', '10,925', '12,025'],
+    explanation: 'Two-day total = ₱24,680 + ₱19,420 = ₱44,100. Average per day = ₱44,100 ÷ 4 = ₱11,025.' },
+];
+
+const TOPIC_ORDER = [
+  "Reading & Writing Numbers",
+  "Place Value & Value of Digits",
+  "Comparing & Ordering Numbers",
+  "Rounding Off Numbers",
+  "Addition & Subtraction",
+  "Estimating Sum, Difference, Product, Quotient",
+  "Multiplication of Whole Numbers",
+  "Division of Whole Numbers",
+  "Word Problems"
+];
+
+const TOTAL_QUESTIONS = QUESTION_LIST.length;
+
+// ---------- State ----------
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let missed = [];
+let answeredThisQuestion = false;
+let selectedOptionIndex = null;
+
+// ---------- Helpers ----------
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuiz() {
+  // Group all questions by topic, preserving TOPIC_ORDER, shuffling within each group.
+  const byTopic = {};
+  QUESTION_LIST.forEach(item => {
+    if (!byTopic[item.topic]) byTopic[item.topic] = [];
+    byTopic[item.topic].push(item);
+  });
+
+  let ordered = [];
+  TOPIC_ORDER.forEach(topic => {
+    if (byTopic[topic]) {
+      ordered = ordered.concat(shuffleArray(byTopic[topic]));
+    }
+  });
+  // Include any topic not explicitly listed (safety net), shuffled within itself.
+  Object.keys(byTopic).forEach(topic => {
+    if (!TOPIC_ORDER.includes(topic)) {
+      ordered = ordered.concat(shuffleArray(byTopic[topic]));
+    }
+  });
+
+  quizQuestions = ordered.map(item => {
+    const optionOrder = shuffleArray([0, 1, 2, 3]);
+    const shuffledOptions = optionOrder.map(i => item.options[i]);
+    const correctIndex = optionOrder.indexOf(0);
+    return {
+      topic: item.topic,
+      q: item.q,
+      options: shuffledOptions,
+      correctIndex: correctIndex,
+      explanation: item.explanation
+    };
+  });
+  currentIndex = 0;
+  score = 0;
+  missed = [];
+}
+
+// ---------- DOM refs ----------
+const startScreen = document.getElementById('start-screen');
+const quizScreen = document.getElementById('quiz-screen');
+const resultsScreen = document.getElementById('results-screen');
+
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const scoreLive = document.getElementById('score-live');
+const topicTag = document.getElementById('topic-tag');
+const questionText = document.getElementById('question-text');
+const optionsList = document.getElementById('options-list');
+const feedback = document.getElementById('feedback');
+const fbTitle = document.getElementById('fb-title');
+const fbExplanation = document.getElementById('fb-explanation');
+const actionBtn = document.getElementById('action-btn');
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  buildQuiz();
+  startScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  resultsScreen.classList.add('hidden');
+  renderQuestion();
+});
+
+document.getElementById('retake-btn').addEventListener('click', () => {
+  buildQuiz();
+  resultsScreen.classList.add('hidden');
+  quizScreen.classList.remove('hidden');
+  renderQuestion();
+});
+
+function renderQuestion() {
+  answeredThisQuestion = false;
+  selectedOptionIndex = null;
+  const item = quizQuestions[currentIndex];
+
+  progressFill.style.width = ((currentIndex) / TOTAL_QUESTIONS * 100) + '%';
+  progressLabel.textContent = 'Q' + (currentIndex + 1) + ' / ' + TOTAL_QUESTIONS;
+  scoreLive.textContent = 'Score: ' + score;
+  topicTag.textContent = item.topic;
+  questionText.textContent = item.q;
+
+  optionsList.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.dataset.idx = idx;
+    const letter = String.fromCharCode(65 + idx);
+    div.innerHTML = '<div class="option-letter">' + letter + '</div><div class="option-text"></div>';
+    div.querySelector('.option-text').textContent = opt;
+    div.addEventListener('click', () => selectOption(idx));
+    optionsList.appendChild(div);
+  });
+
+  feedback.classList.remove('show', 'correct-fb', 'incorrect-fb');
+  actionBtn.textContent = 'Submit';
+  actionBtn.disabled = true;
+  actionBtn.onclick = handleSubmit;
+}
+
+function selectOption(idx) {
+  if (answeredThisQuestion) return;
+  selectedOptionIndex = idx;
+  [...optionsList.children].forEach(el => el.classList.remove('selected'));
+  optionsList.children[idx].classList.add('selected');
+  actionBtn.disabled = false;
+}
+
+function handleSubmit() {
+  if (selectedOptionIndex === null || answeredThisQuestion) return;
+  answeredThisQuestion = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedOptionIndex === item.correctIndex;
+
+  [...optionsList.children].forEach((el, idx) => {
+    el.classList.add('locked');
+    if (idx === item.correctIndex) el.classList.add('correct');
+    else if (idx === selectedOptionIndex) el.classList.add('incorrect');
+  });
+
+  feedback.classList.add('show');
+  if (isCorrect) {
+    score++;
+    feedback.classList.add('correct-fb');
+    feedback.classList.remove('incorrect-fb');
+    fbTitle.innerHTML = '✅ Correct!';
+  } else {
+    missed.push({
+      topic: item.topic,
+      q: item.q,
+      yourAnswer: item.options[selectedOptionIndex],
+      correctAnswer: item.options[item.correctIndex],
+      explanation: item.explanation
+    });
+    feedback.classList.add('incorrect-fb');
+    feedback.classList.remove('correct-fb');
+    fbTitle.textContent = '❌ Not quite — the correct answer is: ' + item.options[item.correctIndex];
+  }
+  fbExplanation.textContent = item.explanation;
+  scoreLive.textContent = 'Score: ' + score;
+
+  actionBtn.textContent = (currentIndex === TOTAL_QUESTIONS - 1) ? 'See Results' : 'Next Question';
+  actionBtn.disabled = false;
+  actionBtn.onclick = handleNext;
+}
+
+function handleNext() {
+  currentIndex++;
+  if (currentIndex >= TOTAL_QUESTIONS) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  progressFill.style.width = '100%';
+  quizScreen.classList.add('hidden');
+  resultsScreen.classList.remove('hidden');
+
+  document.getElementById('score-num').textContent = score + '/' + TOTAL_QUESTIONS;
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  let msg;
+  if (pct === 100) msg = "Perfect score! You're ready for your periodical exam! 🌟";
+  else if (pct >= 80) msg = "Great job! You have a strong grasp of numbers and operations.";
+  else if (pct >= 60) msg = "Good effort! Review the topics below to strengthen your understanding.";
+  else msg = "Keep practicing! Review the explanations below and try again.";
+  document.getElementById('score-msg').textContent = msg + ' (' + pct + '%)';
+
+  const reviewSection = document.getElementById('review-section');
+  reviewSection.innerHTML = '';
+  if (missed.length === 0) {
+    const p = document.createElement('p');
+    p.style.textAlign = 'center';
+    p.style.color = '#2e7d32';
+    p.style.fontWeight = '600';
+    p.textContent = 'No mistakes — amazing work!';
+    reviewSection.appendChild(p);
+  } else {
+    const heading = document.createElement('h2');
+    heading.style.fontSize = '1.05rem';
+    heading.style.color = '#1F4E79';
+    heading.textContent = 'Review: Questions You Missed (' + missed.length + ')';
+    reviewSection.appendChild(heading);
+
+    missed.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      const rtopic = document.createElement('div');
+      rtopic.className = 'rtopic';
+      rtopic.textContent = m.topic;
+      const rq = document.createElement('div');
+      rq.className = 'rq';
+      rq.textContent = m.q;
+      const rlineWrong = document.createElement('div');
+      rlineWrong.className = 'rline wrong';
+      rlineWrong.textContent = 'Your answer: ' + m.yourAnswer;
+      const rlineRight = document.createElement('div');
+      rlineRight.className = 'rline right';
+      rlineRight.textContent = 'Correct answer: ' + m.correctAnswer;
+      const rexpl = document.createElement('div');
+      rexpl.className = 'rexpl';
+      rexpl.textContent = m.explanation;
+      div.appendChild(rtopic);
+      div.appendChild(rq);
+      div.appendChild(rlineWrong);
+      div.appendChild(rlineRight);
+      div.appendChild(rexpl);
+      reviewSection.appendChild(div);
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagsusulit sa Filipino: Uri ng Sugnay at Hugnayang Pangungusap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8eefc 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between py-6 px-3 sm:px-6 text-slate-800">
+
+    <!-- Top Navigation / Banner -->
+    <header class="w-full max-w-3xl mx-auto mb-6">
+        <div class="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-700 text-white rounded-3xl p-6 shadow-2xl relative overflow-hidden text-center">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+            <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-yellow-400/20 rounded-full blur-xl pointer-events-none"></div>
+            <span class="inline-block bg-yellow-400 text-blue-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm mb-2">
+                Filipino Grammar Quiz
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Uri ng Sugnay at Hugnayang Pangungusap</h1>
+            <p class="text-blue-100 text-xs sm:text-sm mt-1">25 Tanong &bull; Multiple Choice (A-D) &bull; May Paliwanag at Review</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-3xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-white/50 p-5 sm:p-8 min-h-[480px] flex flex-col justify-between">
+        
+        <!-- WELCOME SCREEN -->
+        <div id="welcome-screen" class="my-auto flex flex-col items-center justify-center text-center py-6">
+            <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-3xl flex items-center justify-center mb-5 text-3xl shadow-inner transform -rotate-3">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-800 mb-2">Pagsasanay sa Gramatikang Filipino</h2>
+            <p class="text-slate-600 max-w-md text-sm sm:text-base mb-6 leading-relaxed">
+                Magsanay sa pagtukoy ng <span class="font-bold text-blue-600">Sugnay na Makapag-iisa</span>, <span class="font-bold text-indigo-600">Sugnay na Di-Makapag-iisa</span>, at ang paggamit ng mga pangatnig sa <span class="font-bold text-purple-600">Hugnayang Pangungusap</span>.
+            </p>
+            
+            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 mb-8 text-left w-full max-w-md text-xs sm:text-sm text-slate-600 space-y-2 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-random text-blue-500 text-base"></i>
+                    <span>Random ang pagkakasunod-sunod sa bawat pagsubok.</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-emerald-500 text-base"></i>
+                    <span>May nakahandang paliwanag sa bawat sagot.</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-clipboard-check text-purple-500 text-base"></i>
+                    <span>Buong pagsusuri at review ng mga mali sa huli.</span>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full max-w-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-2xl shadow-lg shadow-blue-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3 text-base">
+                <i class="fas fa-play"></i> Simulan ang Pagsusulit
+            </button>
+        </div>
+
+        <!-- QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden my-auto flex-1 flex flex-col justify-between">
+            <div>
+                <!-- Header Stats -->
+                <div class="flex justify-between items-center mb-3">
+                    <span id="question-number-display" class="font-bold text-blue-700 text-xs sm:text-sm tracking-wide">
+                        TANONG 1 NG 25
+                    </span>
+                    <span id="score-live" class="text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 px-3 py-1 rounded-full">
+                        Iskor: 0 / 25
+                    </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 rounded-full h-2.5 mb-6 overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 4%"></div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-5 mb-5 shadow-sm">
+                    <span id="topic-tag" class="inline-block bg-indigo-100 text-indigo-800 text-[11px] font-bold px-3 py-1 rounded-full mb-2 uppercase tracking-wider">
+                        PAKSA
+                    </span>
+                    <h3 id="question-text" class="text-base sm:text-lg font-bold text-slate-800 leading-snug">
+                        --
+                    </h3>
+                </div>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-3 mb-5">
+                    <!-- Dynamically Built -->
+                </div>
+
+                <!-- Feedback Callout -->
+                <div id="feedback-box" class="hidden rounded-2xl p-4 mb-5 text-xs sm:text-sm border transition-all">
+                    <div id="feedback-title" class="font-bold text-sm sm:text-base mb-1 flex items-center gap-2"></div>
+                    <p id="feedback-text" class="text-slate-700 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex justify-between items-center pt-3 border-t border-slate-100 mt-2">
+                <span class="text-[11px] font-medium text-slate-400">Pumili ng A, B, C, o D</span>
+                <button id="submit-btn" onclick="submitAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 text-sm" disabled>
+                    <span>Isumite</span> <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition flex items-center gap-2 text-sm">
+                    <span>Susunod</span> <i class="fas fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="hidden flex-1 flex flex-col justify-between">
+            <div>
+                <!-- Score Banner -->
+                <div class="text-center py-4 border-b border-slate-200/80 mb-6">
+                    <div id="result-icon" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 text-3xl shadow-sm"></div>
+                    <h2 class="text-2xl font-extrabold text-slate-800 mb-1">Tapos na ang Pagsusulit!</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm mb-3">Narito ang pangkalahatang resulta ng iyong pagsasanay</p>
+
+                    <div class="inline-block bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/80 rounded-2xl px-8 py-3 shadow-inner">
+                        <span class="block text-[11px] uppercase tracking-widest text-blue-600 font-extrabold mb-0.5">Kabuong Iskor</span>
+                        <span id="final-score" class="text-3xl sm:text-4xl font-black text-blue-700">0 / 25</span>
+                        <span id="percentage" class="block text-xs font-bold text-slate-600 mt-0.5">0%</span>
+                    </div>
+                </div>
+
+                <!-- Review Section -->
+                <div class="mb-6">
+                    <h3 class="text-base sm:text-lg font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-list-check text-indigo-600"></i> Review ng mga Maling Sagot
+                    </h3>
+                    <div id="mistakes-container" class="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                        <!-- Dynamically populated or Perfect Score message -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retry Button -->
+            <div class="text-center pt-3 border-t border-slate-100">
+                <button onclick="startQuiz()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 mx-auto text-sm">
+                    <i class="fas fa-redo"></i> Ulitin ang Pagsusulit (Bagong Pagkakasunod-sunod)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-4 text-center text-xs text-slate-500">
+        Filipino Grammar Quiz &bull; Batay sa mga aralin ukol sa Sugnay at Hugnayang Pangungusap
+    </footer>
+
+    <script>
+        // Master Questions Database (25 Questions)
+        const masterQuestions = [
+            {
+                topic: "Uri ng Sugnay",
+                question: "Ano ang tawag sa lipon ng mga salitang may simuno at panaguri na nagpapahayag ng buong diwa?",
+                options: [
+                    "Sugnay na Di-Makapag-iisa",
+                    "Sugnay na Makapag-iisa",
+                    "Parirala",
+                    "Pangatnig"
+                ],
+                correct: 1,
+                explanation: "Ang Sugnay na Makapag-iisa (Independent Clause) ay may kumpletong diwa at maaaring tumayo bilang isang payak na pangungusap."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Alin sa mga sumusunod ang katangian ng Sugnay na Di-Makapag-iisa?",
+                options: [
+                    "Maaaring tumayo bilang payak na pangungusap.",
+                    "May buong diwa at hindi nangangailangan ng iba pang sugnay.",
+                    "May simuno at panaguri ngunit hindi buo ang diwa.",
+                    "Walang simuno at panaguri."
+                ],
+                correct: 2,
+                explanation: "Ang Sugnay na Di-Makapag-iisa (Dependent Clause) ay may simuno at panaguri ngunit hindi buo ang diwa kaya nangangailangan ng sugnay na makapag-iisa."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Tukuyin ang uri ng nakasalungguhit na sugnay: '<u>Nagluto si Nanay ng hapunan</u> habang si Tatay ay nagdidilig ng halaman.'",
+                options: [
+                    "Sugnay na Makapag-iisa",
+                    "Sugnay na Di-Makapag-iisa",
+                    "Pariralang Pang-ukol",
+                    "Pangatnig na Paninsay"
+                ],
+                correct: 0,
+                explanation: "Ang 'Nagluto si Nanay ng hapunan' ay may buong diwa at maaaring tumayo nang mag-isa bilang pangungusap."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Anong sugnay ang nakasalungguhit sa pangungusap na ito? 'Hindi nakapasok si Ana sa paaralan <u>dahil siya ay may sakit</u>.'",
+                options: [
+                    "Sugnay na Makapag-iisa",
+                    "Sugnay na Di-Makapag-iisa",
+                    "Pariralang Pandiwa",
+                    "Sugnay na Tambalan"
+                ],
+                correct: 1,
+                explanation: "Ang 'dahil siya ay may sakit' ay nagsisimula sa pangatnig na 'dahil' at hindi buo ang diwa kung hihiwalay."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Ano ang binubuo ng isang Hugnayang Pangungusap?",
+                options: [
+                    "Dalawang sugnay na kapwa makapag-iisa.",
+                    "Isang sugnay na makapag-iisa at isa o higit pang sugnay na di-makapag-iisa.",
+                    "Isang sugnay lamang na may payak na diwa.",
+                    "Dalawa o higit pang parirala na walang pandiwa."
+                ],
+                correct: 1,
+                explanation: "Ang Hugnayang Pangungusap ay binubuo ng 1 sugnay na makapag-iisa at 1 o higit pang sugnay na di-makapag-iisa na pinag-uugnay ng pangatnig."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Alin sa mga sumusunod na salita ang madalas gamiting pangatnig sa Hugnayang Pangungusap?",
+                options: [
+                    "at, pati, saka",
+                    "ngunit, subalit, datapwat",
+                    "kundi, habang, sapagkat",
+                    "o, ni, maging"
+                ],
+                correct: 2,
+                explanation: "Ang mga salitang 'kundi, habang, sapagkat, dahil, kung' ay halimbawa ng pangatnig na nag-uugnay ng sugnay na di-makapag-iisa sa sugnay na makapag-iisa."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Alin sa mga sumusunod ang halimbawa ng Hugnayang Pangungusap?",
+                options: [
+                    "Si Maria at si Juan ay nag-aaral nang mabuti.",
+                    "Nanonood si Pedro ng TV habang nagbabasa si Ana.",
+                    "Mabait ang bata ngunit makulit kung minsan.",
+                    "Pumunta kami sa parke at kumain ng sorbetes."
+                ],
+                correct: 1,
+                explanation: "Ang 'Nanonood si Pedro ng TV habang nagbabasa si Ana' ay may sugnay na makapag-iisa (Nanonood si Pedro ng TV) at di-makapag-iisa (habang nagbabasa si Ana)."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Ano ang tawag sa pangatnig na nag-uugnay sa sugnay na di-makapag-iisa patungo sa sugnay na makapag-iisa?",
+                options: [
+                    "Pangatnig na Panimbang",
+                    "Pangatnig na Pantulong",
+                    "Pang-angkop",
+                    "Pang-ukol"
+                ],
+                correct: 1,
+                explanation: "Pangatnig na Pantulong (Subordinating Conjunctions) ang nag-uugnay sa sugnay na di-makapag-iisa sa sugnay na makapag-iisa."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Sa pangungusap na 'Matutuwa si Inay kung matataas ang iyong marka', alin ang sugnay na makapag-iisa?",
+                options: [
+                    "kung matataas ang iyong marka",
+                    "Matutuwa si Inay",
+                    "ang iyong marka",
+                    "kung matutuwa"
+                ],
+                correct: 1,
+                explanation: "Ang 'Matutuwa si Inay' ang may kumpletong diwa sa pangungusap."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Sa pangungusap na 'Umuwi agad si Ben upang makatulong sa gawaing-bahay', alin ang sugnay na di-makapag-iisa?",
+                options: [
+                    "Umuwi agad si Ben",
+                    "si Ben upang",
+                    "upang makatulong sa gawaing-bahay",
+                    "gawaing-bahay"
+                ],
+                correct: 2,
+                explanation: "Ang 'upang makatulong sa gawaing-bahay' ay pinalamutian ng pangatnig na 'upang' at hindi buo ang diwa kung itatayo mag-isa."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Alin sa mga pahayag ang TAMA tungkol sa Sugnay?",
+                options: [
+                    "Ang sugnay ay laging may buong diwa.",
+                    "Ang sugnay ay binubuo ng mga salita na walang simuno at panaguri.",
+                    "Ang sugnay ay may simuno at panaguri, ngunit may dalawang pangunahing uri ito.",
+                    "Ang sugnay ay kapareho lamang ng isang simpleng parirala."
+                ],
+                correct: 2,
+                explanation: "Ang sugnay ay kinabibilangan ng simuno at panaguri, at nahahati sa dalawang uri: Makapag-iisa at Di-makapag-iisa."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Anong uri ng pangungusap ayon sa kayarian ang: 'Mataas ang nakuha niyang marka sapagkat nag-aral siya nang mabuti'?",
+                options: [
+                    "Payak",
+                    "Tambalan",
+                    "Hugnayan",
+                    "Langkapan"
+                ],
+                correct: 2,
+                explanation: "Ito ay Hugnayan sapagkat may isang sugnay na makapag-iisa at isang sugnay na di-makapag-iisa na pinag-ugnay ng 'sapagkat'."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Ano ang ginagampanan ng salitang 'nang' sa pangungusap na: 'Naglakad siya nang mabilis nang dumating ang bus'?",
+                options: [
+                    "Pangatnig sa ikalawang parirala",
+                    "Pangatnig na nag-uugnay ng sugnay na di-makapag-iisa sa hugnayan",
+                    "Pang-uri",
+                    "Pang-ukol sa simuno"
+                ],
+                correct: 1,
+                explanation: "Ang salitang 'nang' (nang dumating ang bus) ay nagsisilbing pangatnig na nagpapakilala sa sugnay na di-makapag-iisa."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Tukuyin ang nakasalungguhit: '<u>Habang nagluluto si Aling Maria</u>, naglilinis naman ng bahay ang kanyang anak.'",
+                options: [
+                    "Sugnay na Makapag-iisa",
+                    "Sugnay na Di-Makapag-iisa",
+                    "Payak na Salita",
+                    "Pangatnig na Paninsay"
+                ],
+                correct: 1,
+                explanation: "Ang 'Habang nagluluto si Aling Maria' ay may pangatnig sa simula at hindi buo ang diwa kung hiwalay sa pangungusap."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Alin sa mga sumusunod na pangungusap ang HINDI hugnayan?",
+                options: [
+                    "Mag-aral ka nang mabuti upang makapasa ka sa pagsusulit.",
+                    "Kumain si Carlo habang nanonood ng telebisyon.",
+                    "Naglinis si Sarah at nagluto si Carlo ng tanghalian.",
+                    "Bumili siya ng gamot dahil masama ang kanyang pakiramdam."
+                ],
+                correct: 2,
+                explanation: "Ang 'Naglinis si Sarah at nagluto si Carlo ng tanghalian' ay isang Tambalang Pangungusap (dalawang sugnay na makapag-iisa na pinag-ugnay ng 'at')."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Kapag ang sugnay ay nagsisimula sa mga pangatnig tulad ng 'kung', 'kapag', 'dahil sa', at 'sapagkat', ito ay karaniwang:",
+                options: [
+                    "Sugnay na Makapag-iisa",
+                    "Sugnay na Di-Makapag-iisa",
+                    "Punong Sugnay",
+                    "Tambalang Sugnay"
+                ],
+                correct: 1,
+                explanation: "Ang mga katagang ito ay nagpapakilala ng sugnay na pantulong o sugnay na di-makapag-iisa."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Punan ang patlang upang makabuo ng Hugnayang Pangungusap: 'Magiging matagumpay ka ____ magsisikap ka sa buhay.'",
+                options: [
+                    "at",
+                    "ngunit",
+                    "kung",
+                    "o"
+                ],
+                correct: 2,
+                explanation: "Ang 'kung' ay pangatnig na nagpapakita ng kondisyon at bumubuo ng sugnay na di-makapag-iisa sa hugnayang pangungusap."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Ano ang angkop na pangatnig sa pangungusap na ito: 'Umiyak ang bata ____ nawala ang kanyang laruan.'?",
+                options: [
+                    "dahil",
+                    "habang",
+                    "upang",
+                    "bago"
+                ],
+                correct: 0,
+                explanation: "Ang 'dahil' ay ginagamit upang ipakita ang sanhi o dahilan sa isang hugnayang pangungusap."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Alin sa mga sumusunod ang sugnay na makapag-iisa sa pangungusap na: 'Bago ka umalis, itapon mo ang basura'?",
+                options: [
+                    "Bago ka umalis",
+                    "itapon mo ang basura",
+                    "Bago ka",
+                    "ang basura"
+                ],
+                correct: 1,
+                explanation: "Ang 'itapon mo ang basura' ay may buong diwa at nagpapahayag ng malinaw na utos o kaisipan."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Ano ang pagkakaiba ng Parirala sa Sugnay?",
+                options: [
+                    "Ang parirala ay may simuno at panaguri, ang sugnay ay wala.",
+                    "Ang sugnay ay may simuno at panaguri, samantalang ang parirala ay lipon ng salita na walang simuno at panaguri.",
+                    "Ang parirala ay laging buo ang diwa kumpara sa sugnay.",
+                    "Walang pagkakaiba ang dalawa."
+                ],
+                correct: 1,
+                explanation: "Ang sugnay ay may kompletong tambalan ng simuno at panaguri, samantalang ang parirala ay kulang sa mga bahaging ito."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Anong ugnayan ng kaisipan ang madalas ipinapahayag sa Hugnayang Pangungusap?",
+                options: [
+                    "Pagdaragdag lamang",
+                    "Sanhi at Bunga, Kondisyon, o Paraan",
+                    "Pangalan ng tao at bagay",
+                    "Pagtatambal ng dalawang magkatapat na salita"
+                ],
+                correct: 1,
+                explanation: "Ang hugnayang pangungusap ay madalas na nagpapakita ng relasyon ng sanhi at bunga, kondisyon, dahilan, o panahon sa tulong ng mga pantulong na pangatnig."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Suriin ang pangungusap: '<u>Bagaman umuulan</u>, pumasok pa rin siya sa paaralan.' Ano ang uri ng nakasalungguhit na sugnay?",
+                options: [
+                    "Sugnay na Makapag-iisa",
+                    "Sugnay na Di-Makapag-iisa",
+                    "Pangunahing Sugnay",
+                    "Tambalang Pangungusap"
+                ],
+                correct: 1,
+                explanation: "Ang 'Bagaman umuulan' ay hindi buo ang kaisipan at nakadepende sa kabilang sugnay upang mabuo ang diwa."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Alin sa mga sumusunod ang TAMANG pagkakahati ng Sugnay na Makapag-iisa (SM) at Di-Makapag-iisa (SDM) sa: 'Mabilis siyang tumakbo upang mahuli ang bus'?",
+                options: [
+                    "SM: Mabilis siyang tumakbo | SDM: upang mahuli ang bus",
+                    "SM: upang mahuli ang bus | SDM: Mabilis siyang tumakbo",
+                    "SM: Mabilis siyang | SDM: tumakbo upang mahuli ang bus",
+                    "Kapwa SM ang dalawang sugnay."
+                ],
+                correct: 0,
+                explanation: "Ang 'Mabilis siyang tumakbo' ay makapag-iisa (SM), samantalang ang 'upang mahuli ang bus' ay di-makapag-iisa (SDM)."
+            },
+            {
+                topic: "Hugnayang Pangungusap",
+                question: "Pumili ng tamang pangatnig upang mabuo ang hugnayang pangungusap: 'Huwag kang sumuko ____ may pag-asa pa.'",
+                options: [
+                    "habang",
+                    "pati",
+                    "ngunit",
+                    "o"
+                ],
+                correct: 0,
+                explanation: "Ang 'habang' ay ang angkop na pantulong na pangatnig na nagpapakita ng panahon o pagpapatuloy."
+            },
+            {
+                topic: "Uri ng Sugnay",
+                question: "Sa katagang 'habang si Leo ay nag-aaral', bakit ito tinatawag na Sugnay na Di-Makapag-iisa?",
+                options: [
+                    "Dahil wala itong pandiwa.",
+                    "Dahil mayroon itong simuno at panaguri ngunit hindi pa buo ang ipinapahayag na diwa.",
+                    "Dahil ito ay isang tambalang pangungusap.",
+                    "Dahil dalawa ang simuno nito."
+                ],
+                correct: 1,
+                explanation: "Bagamat may simuno (Leo) at panaguri (nag-aaral), ang presence ng 'habang' ay nag-iiwan sa kaisipan na bitin o di-buo."
+            }
+        ];
+
+        // State Variables
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let selectedOptionIndex = null;
+
+        // UI Elements
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const questionNumberDisplay = document.getElementById('question-number-display');
+        const scoreLive = document.getElementById('score-live');
+        const progressBar = document.getElementById('progress-bar');
+        const topicTag = document.getElementById('topic-tag');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        
+        const feedbackBox = document.getElementById('feedback-box');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Helper: Shuffle Array
+        function shuffleArray(array) {
+            let shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Start Quiz
+        function startQuiz() {
+            // Randomize question sequence and option order for each attempt
+            currentQuestions = shuffleArray(masterQuestions).map(q => {
+                const originalOptions = [...q.options];
+                const correctAnswerText = originalOptions[q.correct];
+                const shuffledOptions = shuffleArray(originalOptions);
+                const newCorrectIndex = shuffledOptions.indexOf(correctAnswerText);
+                
+                return {
+                    ...q,
+                    options: shuffledOptions,
+                    correct: newCorrectIndex
+                };
+            });
+
+            currentIndex = 0;
+            score = 0;
+            userAnswers = [];
+            selectedOptionIndex = null;
+
+            welcomeScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            loadQuestion();
+        }
+
+        // Load Question UI
+        function loadQuestion() {
+            selectedOptionIndex = null;
+            const q = currentQuestions[currentIndex];
+            
+            questionNumberDisplay.innerText = `TANONG ${currentIndex + 1} NG ${currentQuestions.length}`;
+            scoreLive.innerText = `Iskor: ${score} / ${currentQuestions.length}`;
+            progressBar.style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+            
+            topicTag.innerText = q.topic;
+            questionText.innerHTML = q.question;
+
+            optionsContainer.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `option-btn w-full text-left p-3.5 sm:p-4 rounded-xl border-2 border-slate-200/80 bg-white hover:border-blue-400 hover:bg-blue-50/50 transition flex items-center justify-between group shadow-sm`;
+                btn.onclick = () => selectOption(idx);
+                btn.dataset.index = idx;
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 group-hover:bg-blue-200 text-slate-700 group-hover:text-blue-900 font-bold flex items-center justify-center text-xs sm:text-sm transition flex-shrink-0">
+                            ${labels[idx]}
+                        </span>
+                        <span class="text-slate-800 font-semibold text-xs sm:text-sm leading-snug">${opt}</span>
+                    </div>
+                    <div class="radio-indicator w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
+                        <div class="inner-dot w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-blue-600 hidden"></div>
+                    </div>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            feedbackBox.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+            submitBtn.disabled = true;
+            nextBtn.classList.add('hidden');
+        }
+
+        // Handle Option Click
+        function selectOption(index) {
+            selectedOptionIndex = index;
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, idx) => {
+                const dot = btn.querySelector('.inner-dot');
+                const radio = btn.querySelector('.radio-indicator');
+                
+                if (idx === index) {
+                    btn.classList.add('border-blue-600', 'bg-blue-50/80');
+                    btn.classList.remove('border-slate-200/80', 'bg-white');
+                    radio.classList.add('border-blue-600');
+                    dot.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('border-blue-600', 'bg-blue-50/80');
+                    btn.classList.add('border-slate-200/80', 'bg-white');
+                    radio.classList.remove('border-blue-600');
+                    dot.classList.add('hidden');
+                }
+            });
+
+            submitBtn.disabled = false;
+        }
+
+        // Submit Answer per question
+        function submitAnswer() {
+            if (selectedOptionIndex === null) return;
+
+            const q = currentQuestions[currentIndex];
+            const isCorrect = selectedOptionIndex === q.correct;
+
+            if (isCorrect) score++;
+
+            userAnswers.push({
+                questionIndex: currentIndex + 1,
+                topic: q.topic,
+                question: q.question,
+                options: q.options,
+                userSelected: selectedOptionIndex,
+                correctSelected: q.correct,
+                isCorrect: isCorrect,
+                explanation: q.explanation
+            });
+
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-blue-400', 'hover:bg-blue-50/50');
+                
+                if (idx === q.correct) {
+                    btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-950');
+                    btn.classList.remove('border-slate-200/80', 'border-blue-600', 'bg-white');
+                } else if (idx === selectedOptionIndex && !isCorrect) {
+                    btn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-950');
+                    btn.classList.remove('border-slate-200/80', 'border-blue-600', 'bg-white');
+                }
+            });
+
+            feedbackBox.classList.remove('hidden');
+            if (isCorrect) {
+                feedbackBox.className = "rounded-xl p-3.5 mb-5 text-xs sm:text-sm border bg-emerald-50/90 border-emerald-200 text-emerald-900";
+                feedbackTitle.innerHTML = `<i class="fas fa-check-circle text-emerald-600"></i> Tama!`;
+            } else {
+                feedbackBox.className = "rounded-xl p-3.5 mb-5 text-xs sm:text-sm border bg-rose-50/90 border-rose-200 text-rose-900";
+                feedbackTitle.innerHTML = `<i class="fas fa-times-circle text-rose-600"></i> Mali!`;
+            }
+            feedbackText.innerHTML = q.explanation;
+
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            
+            scoreLive.innerText = `Iskor: ${score} / ${currentQuestions.length}`;
+        }
+
+        // Next Question Handler
+        function nextQuestion() {
+            currentIndex++;
+
+            if (currentIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Results View
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            const total = currentQuestions.length;
+            const percentageVal = Math.round((score / total) * 100);
+
+            document.getElementById('final-score').innerText = `${score} / ${total}`;
+            document.getElementById('percentage').innerText = `${percentageVal}% Puntos`;
+
+            const resultIcon = document.getElementById('result-icon');
+            if (percentageVal >= 80) {
+                resultIcon.className = "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 text-3xl bg-emerald-100 text-emerald-600 shadow-inner";
+                resultIcon.innerHTML = `<i class="fas fa-trophy"></i>`;
+            } else if (percentageVal >= 60) {
+                resultIcon.className = "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 text-3xl bg-amber-100 text-amber-600 shadow-inner";
+                resultIcon.innerHTML = `<i class="fas fa-star"></i>`;
+            } else {
+                resultIcon.className = "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 text-3xl bg-rose-100 text-rose-600 shadow-inner";
+                resultIcon.innerHTML = `<i class="fas fa-redo-alt"></i>`;
+            }
+
+            const mistakesContainer = document.getElementById('mistakes-container');
+            mistakesContainer.innerHTML = '';
+
+            const wrongAnswers = userAnswers.filter(a => !a.isCorrect);
+
+            if (wrongAnswers.length === 0) {
+                mistakesContainer.innerHTML = `
+                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-5 text-center">
+                        <i class="fas fa-award text-3xl mb-2 text-emerald-600"></i>
+                        <h4 class="font-extrabold text-base">Magaling! Walang Maling Sagot!</h4>
+                        <p class="text-xs">Nakuha mo nang tama ang lahat ng 25 na tanong sa pagsusulit.</p>
+                    </div>
+                `;
+            } else {
+                const labels = ['A', 'B', 'C', 'D'];
+                wrongAnswers.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-left text-xs sm:text-sm";
+
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded uppercase tracking-wider">
+                                Tanong #${item.questionIndex} &bull; ${item.topic}
+                            </span>
+                        </div>
+                        <p class="font-bold text-slate-800 text-xs sm:text-sm mb-2.5">${item.question}</p>
+                        
+                        <div class="space-y-1 mb-2.5">
+                            <div class="p-2 rounded-lg bg-rose-100/70 text-rose-950 border border-rose-200 flex items-center gap-2">
+                                <i class="fas fa-times text-rose-600 text-xs"></i>
+                                <span><strong>Iyong Sagot:</strong> (${labels[item.userSelected]}) ${item.options[item.userSelected]}</span>
+                            </div>
+                            <div class="p-2 rounded-lg bg-emerald-100/70 text-emerald-950 border border-emerald-200 flex items-center gap-2">
+                                <i class="fas fa-check text-emerald-600 text-xs"></i>
+                                <span><strong>Wastong Sagot:</strong> (${labels[item.correctSelected]}) ${item.options[item.correctSelected]}</span>
+                            </div>
+                        </div>
+                        <p class="text-[11px] sm:text-xs text-slate-600 bg-white p-2.5 rounded-lg border border-slate-100">
+                            <strong class="text-slate-700">Paliwanag:</strong> ${item.explanation}
+                        </p>
+                    `;
+                    mistakesContainer.appendChild(card);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

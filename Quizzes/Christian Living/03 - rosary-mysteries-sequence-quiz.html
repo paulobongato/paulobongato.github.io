@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>The Mysteries of the Rosary: Put Them In Order</title>
+<style>
+  :root{
+    --joyful:#4a7ab8;
+    --luminous:#c9971c;
+    --sorrowful:#a13d3d;
+    --glorious:#6a4c93;
+    --ink:#22303f;
+    --paper:#f4f7fb;
+    --card:#ffffff;
+    --row-alt:#e3ecf7;
+    --correct-bg:#c8e6c9;
+    --correct-text:#1b5e20;
+    --incorrect-bg:#ffcdd2;
+    --incorrect-text:#b71c1c;
+    --shadow: 0 2px 6px rgba(20,30,50,0.15);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family: Verdana, "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height:100vh;
+    padding: 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap{ max-width: 640px; margin: 0 auto; }
+  h1{ font-size: 1.5rem; text-align:center; margin: 8px 0 4px; color: var(--ink); }
+  .subtitle{ text-align:center; color:#516078; margin-bottom: 18px; font-size:0.95rem; }
+  .panel{
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 20px 18px;
+    margin-bottom: 16px;
+  }
+  .btn{
+    display:inline-block;
+    font-size: 1.05rem;
+    font-weight: bold;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 10px;
+    background: var(--joyful);
+    color: white;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn.secondary{ background:#7a8ba3; }
+  .btn.wide{ width:100%; }
+  .btn[disabled]{ opacity:0.5; cursor:not-allowed; }
+  .center{ text-align:center; }
+  ul.instructions{ padding-left: 20px; line-height:1.5; }
+  .badge-row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin: 10px 0 16px; }
+  .badge{
+    padding:6px 12px; border-radius:999px; font-size:0.82rem; font-weight:bold; color:white;
+  }
+  .round-header{
+    display:flex; align-items:center; justify-content:space-between;
+    color:white; border-radius: 10px; padding: 12px 16px; margin-bottom:14px;
+  }
+  .round-header h2{ margin:0; font-size:1.15rem; }
+  .round-header .progress{ font-size:0.85rem; opacity:0.9; }
+  .hint{ font-size:0.9rem; color:#516078; margin: 0 0 14px; line-height:1.4; }
+  ul#reorder-list{ list-style:none; margin:0; padding:0; }
+  li.mystery-card{
+    display:flex; align-items:center; gap:10px;
+    background: var(--row-alt);
+    border-radius: 10px;
+    padding: 10px 10px 10px 6px;
+    margin-bottom: 8px;
+    position:relative;
+    transition: background 0.15s ease;
+  }
+  li.mystery-card:nth-child(odd){ background: var(--card); border:2px solid var(--row-alt); }
+  li.mystery-card.dragging{ box-shadow: 0 6px 14px rgba(20,30,50,0.3); opacity:0.85; z-index:5; }
+  .slot-num{
+    flex: 0 0 30px;
+    height:30px; width:30px;
+    border-radius:50%;
+    background: var(--joyful);
+    color:white; font-weight:bold;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.95rem;
+  }
+  .handle{
+    flex: 0 0 34px;
+    height:44px; display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; color:#7a8ba3; cursor:grab; touch-action:none; user-select:none;
+  }
+  .card-title{ flex:1; font-size:1rem; line-height:1.3; }
+  .arrows{ display:flex; flex-direction:column; gap:2px; }
+  .arrow-btn{
+    border:none; background:#c7d5e8; color:#22303f; border-radius:6px;
+    width:28px; height:22px; font-size:0.8rem; cursor:pointer; line-height:1;
+  }
+  .arrow-btn:active{ background:#aec2dd; }
+  li.mystery-card.result-correct{ background: var(--correct-bg) !important; border-color: var(--correct-bg); }
+  li.mystery-card.result-incorrect{ background: var(--incorrect-bg) !important; border-color: var(--incorrect-bg); }
+  .result-mark{ font-size:1.2rem; flex:0 0 22px; text-align:center; }
+  .reveal-box{
+    margin-top:16px; padding:12px 14px; background:#eef3fa; border-radius:10px; font-size:0.92rem;
+  }
+  .reveal-box h3{ margin:0 0 8px; font-size:1rem; }
+  .reveal-item{ padding:6px 0; border-bottom:1px solid #dbe4f0; }
+  .reveal-item:last-child{ border-bottom:none; }
+  .reveal-item b{ color: var(--joyful); }
+  .reveal-item .verse{ color:#516078; font-size:0.85rem; }
+  .score-line{ font-weight:bold; margin-top:10px; }
+  .footer-actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap;}
+  [hidden]{ display:none !important; }
+
+  /* End screen */
+  .trophy{ font-size:3rem; text-align:center; margin-bottom:6px; }
+  .final-score{ text-align:center; font-size:1.6rem; font-weight:bold; margin-bottom:4px; }
+  .final-msg{ text-align:center; color:#516078; margin-bottom:16px; }
+  .round-summary{ display:flex; justify-content:space-between; padding:8px 4px; border-bottom:1px solid #e3ecf7; font-size:0.95rem; }
+  .round-summary:last-child{ border-bottom:none; }
+  .mistake-item{ padding:10px 0; border-bottom:1px solid #e3ecf7; font-size:0.92rem; }
+  .mistake-item:last-child{ border-bottom:none; }
+  .mistake-item .your-answer{ color: var(--incorrect-text); }
+  .mistake-item .correct-answer{ color: var(--correct-text); }
+  .no-mistakes{ text-align:center; color:#516078; padding:10px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Mysteries of the Rosary</h1>
+  <div class="subtitle">Put each set of Mysteries in the order they happened</div>
+
+  <!-- START SCREEN -->
+  <div class="panel" id="start-screen">
+    <p style="line-height:1.5;">
+      The Rosary has four sets of Mysteries, and each set has 5 events from
+      the life of Jesus and Mary. In this quiz, the 5 events in a set will be
+      shuffled — your job is to put them back in the order they really happened!
+    </p>
+    <ul class="instructions">
+      <li>There are <b>4 rounds</b>: Joyful, Luminous, Sorrowful, and Glorious Mysteries (20 events total).</li>
+      <li>Drag each card into place, or use the ▲ ▼ buttons, so the events go from <b>first (top)</b> to <b>last (bottom)</b>.</li>
+      <li>Press <b>Check My Order</b> when you're ready. You'll see what you got right and learn the correct order.</li>
+      <li>At the end, you'll get your total score and a review of anything you missed.</li>
+    </ul>
+    <div class="badge-row">
+      <span class="badge" style="background:var(--joyful)">Joyful</span>
+      <span class="badge" style="background:var(--luminous)">Luminous</span>
+      <span class="badge" style="background:var(--sorrowful)">Sorrowful</span>
+      <span class="badge" style="background:var(--glorious)">Glorious</span>
+    </div>
+    <div class="center">
+      <button class="btn" id="start-btn">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="panel" id="quiz-screen" hidden>
+    <div class="round-header" id="round-header">
+      <h2 id="round-title">Round</h2>
+      <div class="progress" id="round-progress">Round 1 of 4</div>
+    </div>
+    <p class="hint" id="round-hint">Drag the cards into the order the events happened (1 = first).</p>
+    <ul id="reorder-list"></ul>
+    <div class="center">
+      <button class="btn wide" id="check-btn">Check My Order</button>
+      <button class="btn wide" id="next-btn" hidden>Next Round →</button>
+    </div>
+    <div class="reveal-box" id="reveal-box" hidden></div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="panel" id="end-screen" hidden>
+    <div class="trophy" id="trophy">🏆</div>
+    <div class="final-score" id="final-score"></div>
+    <div class="final-msg" id="final-msg"></div>
+    <div id="round-summaries"></div>
+    <div class="reveal-box" style="margin-top:18px;">
+      <h3>Review: events to double-check</h3>
+      <div id="mistakes-list"></div>
+    </div>
+    <div class="footer-actions">
+      <button class="btn" id="retry-btn">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const DATA = [
+    {
+      name: "The Joyful Mysteries",
+      color: "var(--joyful)",
+      colorHex: "#4a7ab8",
+      items: [
+        {title:"The Annunciation", verse:"Luke 1:26-27", explain:"The angel Gabriel visits Mary and tells her she will be the mother of Jesus."},
+        {title:"The Visitation", verse:"Luke 1:39-42", explain:"Mary visits her cousin Elizabeth, who is expecting John the Baptist."},
+        {title:"The Birth of Jesus", verse:"Luke 2:1-7", explain:"Jesus is born in a stable in Bethlehem."},
+        {title:"The Presentation of Jesus in the Temple", verse:"Luke 2:21-24", explain:"Mary and Joseph bring baby Jesus to the Temple to present him to God."},
+        {title:"The Finding of Jesus in the Temple", verse:"Luke 2:41-47", explain:"After searching for three days, Mary and Joseph find 12-year-old Jesus teaching in the Temple."}
+      ]
+    },
+    {
+      name: "The Luminous Mysteries",
+      color: "var(--luminous)",
+      colorHex: "#c9971c",
+      items: [
+        {title:"The Baptism of Jesus", verse:"Matthew 3:16-17", explain:"John baptizes Jesus in the Jordan River, and the Holy Spirit comes down like a dove."},
+        {title:"The Wedding at Cana", verse:"John 2:1-5", explain:"Jesus performs his first miracle, turning water into wine at a wedding."},
+        {title:"The Proclamation of God's Kingdom", verse:"Mark 1:15", explain:"Jesus begins teaching people about God's kingdom and invites them to change their hearts."},
+        {title:"The Transfiguration", verse:"Matthew 17:1-2", explain:"On a mountain, Jesus shines with dazzling light in front of three of his apostles."},
+        {title:"The Institution of the Eucharist", verse:"Matthew 26:26", explain:"At the Last Supper, Jesus gives his apostles bread and wine as his Body and Blood."}
+      ]
+    },
+    {
+      name: "The Sorrowful Mysteries",
+      color: "var(--sorrowful)",
+      colorHex: "#a13d3d",
+      items: [
+        {title:"The Agony in the Garden", verse:"Matthew 26:36-39", explain:"The night before he dies, Jesus prays in the Garden of Gethsemane, feeling great sorrow."},
+        {title:"The Scourging at the Pillar", verse:"Matthew 27:26", explain:"Jesus is whipped by soldiers before his crucifixion."},
+        {title:"The Crowning with Thorns", verse:"Matthew 27:27-29", explain:"Soldiers mock Jesus by pressing a crown of thorns onto his head."},
+        {title:"The Carrying of the Cross", verse:"Mark 15:21-22", explain:"Jesus carries his cross up the hill of Calvary."},
+        {title:"The Crucifixion", verse:"Luke 23:33-46", explain:"Jesus dies on the cross to save us from our sins."}
+      ]
+    },
+    {
+      name: "The Glorious Mysteries",
+      color: "var(--glorious)",
+      colorHex: "#6a4c93",
+      items: [
+        {title:"The Resurrection", verse:"Luke 24:1-5", explain:"Jesus rises from the dead on the third day."},
+        {title:"The Ascension", verse:"Mark 16:19", explain:"Jesus returns to heaven in front of his apostles."},
+        {title:"The Descent of the Holy Spirit", verse:"Acts 2:1-4", explain:"The Holy Spirit comes upon the apostles at Pentecost as tongues of fire."},
+        {title:"The Assumption", verse:"Luke 1:48-49", explain:"Mary is taken up, body and soul, into heaven."},
+        {title:"The Coronation of the Blessed Virgin", verse:"Revelation 12:1", explain:"Mary is crowned as Queen of Heaven."}
+      ]
+    }
+  ];
+
+  // ---------- state ----------
+  let roundIndex = 0;
+  let order = [];          // current display order, array of item objects (with correctPos)
+  let checked = false;
+  let draggingIndex = null;
+  let dragPointerId = null;
+  const roundScores = [];  // {name, correct, total}
+  const mistakes = [];     // {round, title, yourPos, correctPos, verse, explain}
+
+  // ---------- helpers ----------
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function $(id){ return document.getElementById(id); }
+
+  // ---------- screens ----------
+  const startScreen = $("start-screen");
+  const quizScreen = $("quiz-screen");
+  const endScreen = $("end-screen");
+
+  $("start-btn").addEventListener("click", startQuiz);
+  $("retry-btn").addEventListener("click", startQuiz);
+  $("check-btn").addEventListener("click", checkOrder);
+  $("next-btn").addEventListener("click", nextRound);
+
+  function startQuiz(){
+    roundIndex = 0;
+    roundScores.length = 0;
+    mistakes.length = 0;
+    startScreen.hidden = true;
+    endScreen.hidden = true;
+    quizScreen.hidden = false;
+    loadRound(roundIndex);
+  }
+
+  function loadRound(i){
+    checked = false;
+    const set = DATA[i];
+    const withPos = set.items.map((it, idx) => Object.assign({}, it, {correctPos: idx+1}));
+    order = shuffle(withPos);
+
+    $("round-header").style.background = set.colorHex;
+    $("round-title").textContent = set.name;
+    $("round-progress").textContent = "Round " + (i+1) + " of " + DATA.length;
+    $("round-hint").textContent = "Drag the cards (or use ▲ ▼) into the order these events happened — 1 is first, 5 is last.";
+    $("reveal-box").hidden = true;
+    $("check-btn").hidden = false;
+    $("next-btn").hidden = true;
+
+    renderList();
+  }
+
+  function renderList(){
+    const list = $("reorder-list");
+    list.innerHTML = "";
+    order.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "mystery-card";
+      li.dataset.index = index;
+      if (draggingIndex === index) li.classList.add("dragging");
+
+      const slot = document.createElement("div");
+      slot.className = "slot-num";
+      slot.textContent = index + 1;
+
+      const handle = document.createElement("div");
+      handle.className = "handle";
+      handle.setAttribute("aria-label", "Drag to reorder");
+      handle.textContent = "⠿";
+
+      const title = document.createElement("div");
+      title.className = "card-title";
+      title.textContent = item.title;
+
+      const arrows = document.createElement("div");
+      arrows.className = "arrows";
+      const up = document.createElement("button");
+      up.className = "arrow-btn";
+      up.textContent = "▲";
+      up.type = "button";
+      up.disabled = index === 0;
+      up.addEventListener("click", () => moveItem(index, index - 1));
+      const down = document.createElement("button");
+      down.className = "arrow-btn";
+      down.textContent = "▼";
+      down.type = "button";
+      down.disabled = index === order.length - 1;
+      down.addEventListener("click", () => moveItem(index, index + 1));
+      arrows.appendChild(up);
+      arrows.appendChild(down);
+
+      li.appendChild(slot);
+      li.appendChild(handle);
+      li.appendChild(title);
+      li.appendChild(arrows);
+      list.appendChild(li);
+
+      attachDrag(handle, li);
+    });
+  }
+
+  function moveItem(from, to){
+    if (checked) return;
+    if (to < 0 || to >= order.length) return;
+    const [moved] = order.splice(from, 1);
+    order.splice(to, 0, moved);
+    renderList();
+  }
+
+  // pointer-based drag & drop (mouse + touch + pen)
+  function attachDrag(handle, li){
+    handle.addEventListener("pointerdown", (e) => {
+      if (checked) return;
+      e.preventDefault();
+      draggingIndex = Number(li.dataset.index);
+      dragPointerId = e.pointerId;
+      li.classList.add("dragging");
+      try { handle.setPointerCapture(e.pointerId); } catch(err){}
+      document.addEventListener("pointermove", onPointerMove);
+      document.addEventListener("pointerup", onPointerUp);
+      document.addEventListener("pointercancel", onPointerUp);
+    });
+  }
+
+  function onPointerMove(e){
+    if (draggingIndex === null) return;
+    e.preventDefault();
+    const overEl = document.elementFromPoint(e.clientX, e.clientY);
+    const overLi = overEl && overEl.closest ? overEl.closest("li.mystery-card") : null;
+    if (overLi){
+      const overIndex = Number(overLi.dataset.index);
+      if (!isNaN(overIndex) && overIndex !== draggingIndex){
+        const [moved] = order.splice(draggingIndex, 1);
+        order.splice(overIndex, 0, moved);
+        draggingIndex = overIndex;
+        renderList();
+      }
+    }
+  }
+
+  function onPointerUp(e){
+    draggingIndex = null;
+    dragPointerId = null;
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", onPointerUp);
+    document.removeEventListener("pointercancel", onPointerUp);
+    renderList();
+  }
+
+  function checkOrder(){
+    if (checked) return;
+    checked = true;
+    const set = DATA[roundIndex];
+    let correctCount = 0;
+    const list = $("reorder-list");
+    [...list.children].forEach((li, index) => {
+      const item = order[index];
+      const isCorrect = item.correctPos === index + 1;
+      if (isCorrect) correctCount++;
+      li.classList.add(isCorrect ? "result-correct" : "result-incorrect");
+      let mark = li.querySelector(".result-mark");
+      if (!mark){
+        mark = document.createElement("div");
+        mark.className = "result-mark";
+        li.insertBefore(mark, li.firstChild);
+      }
+      mark.textContent = isCorrect ? "✅" : "❌";
+      // disable further dragging/moving
+      const buttons = li.querySelectorAll(".arrow-btn");
+      buttons.forEach(b => b.disabled = true);
+      const handle = li.querySelector(".handle");
+      if (handle) handle.style.cursor = "default";
+
+      if (!isCorrect){
+        mistakes.push({
+          round: set.name,
+          title: item.title,
+          yourPos: index + 1,
+          correctPos: item.correctPos,
+          verse: item.verse,
+          explain: item.explain
+        });
+      }
+    });
+
+    roundScores.push({name: set.name, correct: correctCount, total: order.length});
+
+    // reveal box: correct order with verses + explanations
+    const revealBox = $("reveal-box");
+    revealBox.hidden = false;
+    let html = "<h3>Correct order for " + set.name + "</h3>";
+    const correctOrder = set.items; // already in correct sequence
+    correctOrder.forEach((it, i) => {
+      html += '<div class="reveal-item"><b>' + (i+1) + ". " + it.title + "</b><br>" +
+              '<span class="verse">' + it.verse + " — " + it.explain + "</span></div>";
+    });
+    html += '<div class="score-line">You got ' + correctCount + " out of " + order.length + " in the correct position.</div>";
+    revealBox.innerHTML = html;
+
+    $("check-btn").hidden = true;
+    $("next-btn").hidden = false;
+    $("next-btn").textContent = (roundIndex === DATA.length - 1) ? "See My Results →" : "Next Round →";
+  }
+
+  function nextRound(){
+    roundIndex++;
+    if (roundIndex >= DATA.length){
+      showResults();
+    } else {
+      loadRound(roundIndex);
+    }
+  }
+
+  function showResults(){
+    quizScreen.hidden = true;
+    endScreen.hidden = false;
+
+    const totalCorrect = roundScores.reduce((s,r) => s + r.correct, 0);
+    const totalPossible = roundScores.reduce((s,r) => s + r.total, 0);
+    const pct = Math.round((totalCorrect / totalPossible) * 100);
+
+    $("final-score").textContent = totalCorrect + " / " + totalPossible + " (" + pct + "%)";
+    $("trophy").textContent = pct === 100 ? "🏆" : (pct >= 70 ? "⭐" : "📿");
+    let msg;
+    if (pct === 100) msg = "Perfect! You know the Mysteries of the Rosary in order, front to back!";
+    else if (pct >= 70) msg = "Great job! You know the Mysteries well — review the ones below to get a perfect score next time.";
+    else msg = "Good try! Praying the Rosary often will help these events stick. Check the review below.";
+    $("final-msg").textContent = msg;
+
+    const summaryEl = $("round-summaries");
+    summaryEl.innerHTML = roundScores.map(r =>
+      '<div class="round-summary"><span>' + r.name + '</span><span>' + r.correct + ' / ' + r.total + '</span></div>'
+    ).join("");
+
+    const mistakesEl = $("mistakes-list");
+    if (mistakes.length === 0){
+      mistakesEl.innerHTML = '<div class="no-mistakes">No mistakes — every event was placed correctly! 🎉</div>';
+    } else {
+      mistakesEl.innerHTML = mistakes.map(m =>
+        '<div class="mistake-item"><b>' + m.title + '</b> <span class="verse">(' + m.verse + ')</span><br>' +
+        m.explain + '<br>' +
+        '<span class="your-answer">You placed it at position ' + m.yourPos + '</span> — ' +
+        '<span class="correct-answer">it belongs at position ' + m.correctPos + ' in the ' + m.round + '</span></div>'
+      ).join("");
+    }
+  }
+
+})();
+</script>
+</body>
+</html>

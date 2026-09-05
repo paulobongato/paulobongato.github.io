@@ -5,8 +5,10 @@ Reference doc for requesting interactive HTML quizzes. Paste or link this when a
 ## Format
 - **Output type:** Single self-contained HTML file (no external dependencies). NOT document or word format.
 - **Language:** English or Filipino/Tagalog (unless specified otherwise), default is English reference if files are in english. Filipino if files are in Filipino.
-- **Question type:** Multiple choice, A-D.
-- **Question count:** Question bank is three times the number of questions. For example, a 15 question quiz has 45 question but only 15 are shown per attempt. One question at a time. Submit button after every question, showing the correct answer with an explanation after. Include a starting page with instructions and details and a start button before starting the quiz. 
+- **Question type:** Multiple choice, A-D. Make choices different position every attempt. It can also be true or false if easier. For math questions, it can be a text box that the user needs to input the right numerical value.
+- **Question count:** Default questions is 20 unless specified. No question bank. But make sure important questions necessary to the topic are included. Make questions random order every attempt.
+- **Question format:** Each question is one slide. Add a submit button per question and show correct answer per question with explanation.
+- **Question start and end page:** Show a start button at the first page and instructions/details of the quiz. After finishing the quiz, show all incorrect answers and show correct answers.
 
 ## Required features
 - **Randomization:** Question order shuffled on each load/attempt

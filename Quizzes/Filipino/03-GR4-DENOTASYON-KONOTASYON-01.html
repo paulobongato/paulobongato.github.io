@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Denotasyon at Konotasyon</title>
+<style>
+
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1e40af;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --red: #b91c1c;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+      background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+      padding: 28px 24px;
+      margin-top: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: var(--blue-dark);
+      margin: 0 0 4px 0;
+      text-align: center;
+    }
+    h2.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 0 20px 0;
+      font-weight: 500;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--blue-dark);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+    .instructions {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 16px 0;
+      line-height: 1.6;
+    }
+    .instructions ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+    .instructions li { margin-bottom: 6px; }
+    .btn {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .btn:hover { background: var(--blue-dark); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .center { text-align: center; }
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--blue);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .topic-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .choice {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .choice:hover:not(.disabled) {
+      border-color: var(--blue);
+      background: #eff6ff;
+    }
+    .choice.selected {
+      border-color: var(--blue);
+      background: #dbeafe;
+    }
+    .choice.correct {
+      border-color: var(--green-border);
+      background: var(--green-bg);
+      color: var(--green);
+      font-weight: 600;
+    }
+    .choice.incorrect {
+      border-color: var(--red-border);
+      background: var(--red-bg);
+      color: var(--red);
+      font-weight: 600;
+    }
+    .choice.disabled { cursor: default; }
+    .choice-letter {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      background: #fff;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.85rem;
+    }
+    .feedback-box {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      animation: slideIn 0.25s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-box.correct-box {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+    .feedback-box.incorrect-box {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+    .feedback-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .feedback-title.correct-text { color: var(--green); }
+    .feedback-title.incorrect-text { color: var(--red); }
+    .feedback-exp {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+    .nav-row {
+      margin-top: 18px;
+    }
+    .score-hero {
+      text-align: center;
+      padding: 20px 0 8px 0;
+    }
+    .score-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 10px solid var(--blue);
+      background: #eff6ff;
+    }
+    .score-circle .num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      line-height: 1;
+    }
+    .score-circle .den {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .score-msg {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .score-sub {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .review-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .review-item.wrong {
+      border-color: var(--red-border);
+      background: #fff5f5;
+    }
+    .review-item.right {
+      border-color: var(--green-border);
+      background: #f5fff7;
+    }
+    .review-q {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .review-line {
+      font-size: 0.92rem;
+      margin: 3px 0;
+    }
+    .review-line.wrong-answer { color: var(--red); }
+    .review-line.right-answer { color: var(--green); }
+    .review-exp {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      color: #475569;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 6px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 24px 0 12px 0;
+    }
+    .hidden { display: none !important; }
+    footer.tag {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      margin-top: 14px;
+    }
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; border-radius: 14px; }
+      h1 { font-size: 1.25rem; }
+      .score-circle { width: 120px; height: 120px; }
+      .score-circle .num { font-size: 1.7rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Denotasyon at Konotasyon</h1>
+    <h2 class="subtitle">Unang Trimester — Pagsusulit sa Filipino 4</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Filipino</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Pagtukoy sa literal (denotasyon) at di-tuwirang (konotasyon) kahulugan ng mga salita batay sa gamit nito sa pangungusap.</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Unang Trimester · Filipino 4 · La Salle Green Hills</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang tawag sa malalim na pagpapakahulugan sa isang salita?", "choices": ["denotasyon", "kasalungat", "konotasyon", "paglalarawan"], "correct": 2, "exp": "Ang malalim o di-tuwirang pagpapakahulugan sa isang salita ay tinatawag na konotasyon."}, {"q": "Aling pahayag ang tumutukoy sa denotasyon?", "choices": ["nakatagong kahulugan ng salita", "tuwiran o literal na kahulugan ng salita", "personal na opinyon tungkol sa salita", "malalim na damdaming ipinahihiwatig ng salita"], "correct": 1, "exp": "Ang denotasyon ay tumutukoy sa tuwiran o literal na kahulugan ng salita."}, {"q": "Alin ang kahulugan ng gintong puso ayon sa pangungusap? Si Ana ay may gintong puso kaya siya ay minamahal ng lahat.", "choices": ["pusong gawa sa ginto", "mayaman na tao", "napakabait at matulungin", "may alahas na ginto"], "correct": 2, "exp": "Ang \"gintong puso\" ay konotasyong nangangahulugang napakabait at matulungin sa iba."}, {"q": "Alin sa mga sumusunod ang nagpapahayag ng konotasyon?", "choices": ["Ang rosas ay may mabangong amoy.", "Ang rosas ay may iba't ibang kulay.", "Ang rosas ay halamang may tinik at bulaklak.", "Si Maria ay rosas ng kanilang pamilya dahil siya ay pinakamaganda at pinakamamahal."], "correct": 3, "exp": "Ipinapahayag sa huling pangungusap ang konotasyon dahil ginamit ang \"rosas\" upang ilarawan ang pagiging pinakamamahal ni Maria."}, {"q": "Anong damdamin ang ipinapahayag ng konotasyong ginamit sa pangungusap? Nag-init ang ulo ni Nanay Josie dahil nadatnan niyang makalat ang bahay.", "choices": ["nagulat", "nagalit", "natuwa", "nalungkot"], "correct": 1, "exp": "Ang \"nag-init ang ulo\" ay konotasyong nangangahulugang nagalit."}, {"q": "Anong uri ng kahulugan ang ginamit sa salitang ilaw sa pangungusap? Si Aling Nena ang ilaw ng kanilang tahanan.", "choices": ["denotasyon sapagkat ito ay bombilya", "denotasyon sapagkat nagbibigay ito ng liwanag", "konotasyon sapagkat ito ay kagamitan sa bahay", "konotasyon sapagkat nangangahulugang gabay at inspirasyon"], "correct": 3, "exp": "Konotasyon ang ginamit dahil ang \"ilaw ng tahanan\" ay nangangahulugang gabay at inspirasyon ng pamilya."}, {"q": "Alin sa mga sumusunod ang nagpapahayag ng denotasyon?", "choices": ["Ang masarap na keyk ay dala ni Miko.", "Mataas ang pangarap ni Jose sa kanyang buhay.", "Masakit siyang magsalita dahil matalim ang kanyang dila.", "Mainit ang ulo ng nanay ko kasi nasira ang bagong laptop ko."], "correct": 0, "exp": "Denotasyon ang unang pangungusap dahil ginamit ang \"masarap\" sa literal nitong kahulugan."}, {"q": "Alin ang kahulugan ng puno ayon sa pangungusap? Maraming mangga ang tanim naming puno sa likod bahay.", "choices": ["lider o namamahala", "apaw o lagpas na sa lalagyan", "bagay na nagagamit sa bahay", "lumalaking halaman na nagbibigay ng bunga"], "correct": 3, "exp": "Denotasyon ang ginamit dahil tumutukoy ito sa lumalaking halamang nagbibigay ng bunga."}, {"q": "Ano ang tamang pagsusuri sa paggamit ng salitang puso sa dalawang pangungusap? I. Ang puso ay isang mahalagang bahagi ng katawan na nagpapadaloy ng dugo. II. May mabuting puso si Liza kaya lagi siyang handang tumulong sa nangangailangan.", "choices": ["Parehong denotasyon ang ginamit sa dalawang pangungusap.", "Parehong konotasyon ang ginamit sa dalawang pangungusap.", "Denotasyon ang unang pangungusap at konotasyon ang ikalawang pangungusap.", "Konotasyon ang unang pangungusap at denotasyon ang ikalawang pangungusap."], "correct": 2, "exp": "Denotasyon ang una dahil literal na bahagi ng katawan ang tinutukoy, at konotasyon ang ikalawa dahil tumutukoy ito sa kabutihang-loob."}, {"q": "Sinabi ni Carlo sa kanyang kaibigan, \"Mag-ingat ka kay Roy. Isa siyang ahas na nakangiti sa harap mo ngunit nagsasalita ng masama kapag nakatalikod ka.\" Aling pahiwatig mula sa pangungusap ang pinakamalinaw na nagpapakita na konotasyon ang kahulugan ng salitang ahas?", "choices": ["Magkaibigan sina Carlo at Roy.", "Nakangiti si Roy sa kanyang mga kaibigan.", "Binanggit ang salitang ahas sa pangungusap.", "Nagsasalita ng masama si Roy kapag nakatalikod ang ibang tao."], "correct": 3, "exp": "Ang pagsasalita ng masama sa likod ng ibang tao ang pinakamalinaw na palatandaan ng taksil o mapanlinlang na katangian, kaya konotasyon ang \"ahas.\""}, {"q": "Habang binabati ng punongguro ang mga nagwaging mag-aaral, sinabi niya, \"Si Andrea ang bituin ng ating paaralan dahil sa kanyang galing sa akademiko at pamumuno.\" Batay sa pangungusap, bakit ginamit ang salitang bituin?", "choices": ["dahil mahilig si Andrea sa mga bituin", "dahil kumikislap si Andrea tulad ng bituin", "dahil siya ay nag-aaral tungkol sa mga bituin", "dahil siya ay magaling at hinahangaan ng marami"], "correct": 3, "exp": "Ginamit ang \"bituin\" bilang konotasyon upang ilarawan si Andrea bilang taong magaling at hinahangaan ng marami."}, {"q": "Ano ang konotasyong kahulugan ng salitang ahas sa pangungusap? Hindi ko inaasahang pagtataksilan niya ako; isa pala siyang ahas sa aming grupo.", "choices": ["isang uri ng reptilya", "taong mapagkakatiwalaan", "taong taksil o mapanlinlang", "taong mabilis kumilos"], "correct": 2, "exp": "Ginamit ang \"ahas\" bilang konotasyon na tumutukoy sa taong taksil o mapanlinlang."}, {"q": "Alin ang denotasyong kahulugan ng salitang puso?", "choices": ["pagmamahal", "kabutihan", "organong nagbobomba ng dugo", "tapang"], "correct": 2, "exp": "Ang denotasyon ng \"puso\" ay tumutukoy sa organong nagpapadaloy ng dugo sa katawan."}, {"q": "Ano ang konotasyong kahulugan ng haligi ng tahanan?", "choices": ["poste ng bahay", "ama o tatay", "bubong ng bahay", "pundasyon ng gusali"], "correct": 1, "exp": "Ang \"haligi ng tahanan\" ay konotasyong tumutukoy sa ama o tatay bilang tagapagtaguyod ng pamilya."}, {"q": "Ano ang ipinahihiwatig na kahulugan ng ilaw ng tahanan? Si Marco ang ilaw ng aming tahanan dahil lagi niyang pinasasaya ang buong pamilya.", "choices": ["bumbilya", "kandila", "taong nagbibigay saya at inspirasyon sa pamilya", "taong nag-aayos ng kuryente"], "correct": 2, "exp": "Konotasyon ang \"ilaw ng tahanan\" na tumutukoy sa taong nagbibigay ng saya at inspirasyon sa pamilya."}, {"q": "Alin sa sumusunod na pangungusap ang gumamit ng salitang ilaw sa denotatibong kahulugan?", "choices": ["Si Aling Nena ang ilaw ng kanilang tahanan.", "Sinindihan ni Tatay ang ilaw upang tumanglaw sa madilim na kusina.", "Ang guro namin ang ilaw ng aming klase dahil sa kanyang inspirasyon.", "Si Ka Andres ang ilaw ng kanilang pamilya."], "correct": 1, "exp": "Literal o denotasyon ang ginamit sa \"ilaw\" dahil tumutukoy ito sa aktuwal na kagamitang nagbibigay-liwanag."}, {"q": "Alin sa sumusunod na pangungusap ang gumamit ng salitang puso sa konotatibong kahulugan?", "choices": ["Ang puso ay nagpapadaloy ng dugo sa buong katawan.", "Sinuri ng doktor ang tibok ng puso ng pasyente.", "Mabuting puso ang mayroon si Aling Rosa kaya laging handang tumulong.", "Ang puso ay matatagpuan sa gitna ng dibdib."], "correct": 2, "exp": "Konotasyon ang ginamit sa ikatlong pangungusap dahil tumutukoy ito sa kabutihang-loob, hindi sa literal na organo."}, {"q": "Alin ang denotasyong kahulugan ng salitang bato?", "choices": ["matigas at walang awa", "matigas na bagay na karaniwang matatagpuan sa lupa", "taong walang pakiramdam", "matatag at determinado"], "correct": 1, "exp": "Ang denotasyon ng \"bato\" ay tumutukoy sa literal na matigas na bagay mula sa lupa."}, {"q": "Ano ang konotasyong kahulugan ng bato sa pangungusap? Bato ang puso ni Mang Kikoy kaya hindi siya naaawa sa mga pulubi.", "choices": ["matigas na bagay mula sa lupa", "taong walang awa o damdamin", "matibay na gusali", "mabigat na dalahin"], "correct": 1, "exp": "Konotasyon ang \"bato\" na tumutukoy sa taong walang awa o damdamin."}, {"q": "Alin ang denotasyong kahulugan ng salitang leon?", "choices": ["hayop na kabilang sa pamilya ng pusa na kilala bilang hari ng gubat", "taong matapang at walang takot", "taong palalo", "taong sakim"], "correct": 0, "exp": "Ang denotasyon ng \"leon\" ay tumutukoy sa literal na hayop na kilala bilang hari ng gubat."}, {"q": "Ano ang konotasyong kahulugan ng leon sa pangungusap? Isang leon si Kapitan Ramon sa larangan ng digmaan.", "choices": ["hayop na may malaking ngipin", "taong walang takot at matapang", "taong mahilig manood ng sirko", "taong may alagang hayop"], "correct": 1, "exp": "Konotasyon ang \"leon\" na tumutukoy sa taong matapang at walang takot."}, {"q": "Alin ang denotasyong kahulugan ng salitang unggoy?", "choices": ["taong tuso", "hayop na maiitim at magaling umakyat sa puno", "taong makulit", "taong magaspang kumilos"], "correct": 1, "exp": "Ang denotasyon ng \"unggoy\" ay tumutukoy sa literal na hayop na magaling umakyat sa puno."}, {"q": "Ano ang konotasyong kahulugan ng unggoy sa pangungusap? Unggoy talaga ang kapatid kong si Rico, ang kulit at hindi mapakali!", "choices": ["hayop na kamag-anak ng tao", "taong mahilig kumain ng saging", "taong makulit at hindi mapakali", "taong marunong umakyat ng puno"], "correct": 2, "exp": "Konotasyon ang \"unggoy\" na tumutukoy sa taong makulit at hindi mapakali."}, {"q": "Alin ang denotasyong kahulugan ng salitang aso?", "choices": ["taong tapat at laging sumusunod", "hayop na karaniwang inaalagaan bilang bantay-bahay", "taong palaboy", "taong madaling magalit"], "correct": 1, "exp": "Ang denotasyon ng \"aso\" ay tumutukoy sa literal na hayop na bantay-bahay."}, {"q": "Ano ang konotasyong kahulugan ng aso sa pangungusap? Parang aso si Ben, tapat na tapat sa kanyang amo sa trabaho.", "choices": ["hayop na may apat na paa", "taong tapat at masunurin", "hayop na tumatahol", "taong mahilig sa hayop"], "correct": 1, "exp": "Konotasyon ang \"aso\" na tumutukoy sa taong tapat at masunurin."}, {"q": "Alin ang denotasyong kahulugan ng salitang ginto?", "choices": ["mamahaling metal na dilaw ang kulay at ginagawang alahas", "taong napakabait", "taong mahalaga sa isang samahan", "taong napakayaman"], "correct": 0, "exp": "Ang denotasyon ng \"ginto\" ay tumutukoy sa literal na mamahaling metal."}, {"q": "Ano ang konotasyong kahulugan ng ginto sa pangungusap? Ginto ang panahong ginugol namin bilang magkakapatid noong bata pa kami.", "choices": ["mamahaling metal", "mahalaga at hindi na maibabalik", "dilaw na kulay", "gawa sa metal"], "correct": 1, "exp": "Konotasyon ang \"ginto\" na tumutukoy sa isang bagay na napakahalaga."}, {"q": "Alin ang denotasyong kahulugan ng salitang apoy?", "choices": ["matinding galit", "init ng damdamin", "liyab na nagmumula sa nasusunog na bagay", "sigla ng loob"], "correct": 2, "exp": "Ang denotasyon ng \"apoy\" ay tumutukoy sa literal na liyab na nagmumula sa nasusunog na bagay."}, {"q": "Ano ang konotasyong kahulugan ng apoy sa pangungusap? Nag-alab ang apoy sa dibdib ni Elena nang malaman niyang niloko siya ng kaibigan.", "choices": ["liyab na nasusunog", "matinding galit o poot", "init ng panahon", "ilaw na nagliliwanag"], "correct": 1, "exp": "Konotasyon ang \"apoy\" na tumutukoy sa matinding galit o poot."}, {"q": "Alin ang denotasyong kahulugan ng salitang yelo?", "choices": ["taong walang malasakit", "tubig na nagyelo dahil sa lamig", "taong malamig ang ugali", "taong tahimik"], "correct": 1, "exp": "Ang denotasyon ng \"yelo\" ay tumutukoy sa literal na tubig na nagyelo."}, {"q": "Ano ang konotasyong kahulugan ng yelo sa pangungusap? Parang yelo ang pakikitungo ni Carla sa mga bagong kasamahan sa trabaho.", "choices": ["tubig na nagyelo", "taong malamig o walang malasakit sa ugali", "taong laging nilalamig", "taong mahilig uminom ng malamig"], "correct": 1, "exp": "Konotasyon ang \"yelo\" na tumutukoy sa taong malamig o walang malasakit ang ugali."}, {"q": "Alin ang denotasyong kahulugan ng salitang bulaklak?", "choices": ["taong maganda ang ugali", "bahagi ng halaman na may kulay at bango", "taong sikat sa lipunan", "taong bata pa"], "correct": 1, "exp": "Ang denotasyon ng \"bulaklak\" ay tumutukoy sa literal na bahagi ng halaman."}, {"q": "Ano ang konotasyong kahulugan ng bulaklak sa pangungusap? Si Marina ang bulaklak ng kanilang tahanan dahil sa kanyang kagandahang-asal.", "choices": ["bahagi ng halaman", "taong nagdudulot ng ganda at kasiyahan sa iba", "taong mahilig sa hardin", "taong maganda ang mukha"], "correct": 1, "exp": "Konotasyon ang \"bulaklak\" na tumutukoy sa taong nagdudulot ng ganda at kasiyahan sa iba."}, {"q": "Alin ang denotasyong kahulugan ng salitang tinik?", "choices": ["suliranin sa buhay", "matulis na bahagi ng ilang halaman o isda", "taong nakakasakit ng damdamin", "balakid sa pagsulong"], "correct": 1, "exp": "Ang denotasyon ng \"tinik\" ay tumutukoy sa literal na matulis na bahagi ng halaman o isda."}, {"q": "Ano ang konotasyong kahulugan ng tinik sa pangungusap? Naging tinik sa lalamunan nila ang problema sa pananalapi ng negosyo.", "choices": ["matulis na bahagi ng isda", "patuloy na suliranin o balakid", "sakit ng lalamunan", "bagay na maaaring itapon"], "correct": 1, "exp": "Konotasyon ang \"tinik\" na tumutukoy sa patuloy na suliranin o balakid."}, {"q": "Alin ang denotasyong kahulugan ng salitang dagat?", "choices": ["malaking suliranin", "malawak na katubigang maalat", "napakaraming bagay", "malayong lugar"], "correct": 1, "exp": "Ang denotasyon ng \"dagat\" ay tumutukoy sa literal na malawak na katubigang maalat."}, {"q": "Ano ang konotasyong kahulugan ng dagat sa pangungusap? Lumangoy si Fely sa dagat ng problema matapos mawalan ng trabaho ang kanyang asawa.", "choices": ["malawak na katubigan", "napakaraming suliranin o hamon sa buhay", "malayong lugar", "paglalakbay sa ibang bansa"], "correct": 1, "exp": "Konotasyon ang \"dagat\" na tumutukoy sa napakaraming suliranin o hamon sa buhay."}, {"q": "Alin ang denotasyong kahulugan ng salitang bundok?", "choices": ["malaking hamon o suliranin", "mataas na lupang bahagi ng lupain", "malaking bagay", "malayong paglalakbay"], "correct": 1, "exp": "Ang denotasyon ng \"bundok\" ay tumutukoy sa literal na mataas na lupang bahagi ng lupain."}, {"q": "Ano ang konotasyong kahulugan ng bundok sa pangungusap? Isang bundok na suliranin ang kinaharap ni Aling Norma matapos ang bagyo.", "choices": ["mataas na lupang bahagi", "napakalaking suliranin o hamon", "lugar na puno ng puno", "malayong probinsya"], "correct": 1, "exp": "Konotasyon ang \"bundok\" na tumutukoy sa napakalaking suliranin o hamon."}, {"q": "Alin ang denotasyong kahulugan ng salitang bituin?", "choices": ["taong hinahangaan at bantog", "maliwanag na katawang-langit na nakikita sa gabi", "taong sikat sa palabas", "taong maganda"], "correct": 1, "exp": "Ang denotasyon ng \"bituin\" ay tumutukoy sa literal na maliwanag na katawang-langit."}, {"q": "Ano ang konotasyong kahulugan ng bituin sa pangungusap? Siya ang bituin ng koponan dahil sa kanyang husay sa paglalaro.", "choices": ["maliwanag na bagay sa langit", "taong pinakamahusay o kapansin-pansin sa isang grupo", "taong mahilig manood ng basketbol", "taong laging nasa itaas"], "correct": 1, "exp": "Konotasyon ang \"bituin\" na tumutukoy sa taong pinakamahusay o kapansin-pansin sa isang grupo."}, {"q": "Alin ang denotasyong kahulugan ng salitang gubat?", "choices": ["taong mahirap unawain", "lugar na puno ng mga puno at halaman", "taong magulo", "lugar na mapanganib"], "correct": 1, "exp": "Ang denotasyon ng \"gubat\" ay tumutukoy sa literal na lugar na puno ng mga puno at halaman."}, {"q": "Ano ang konotasyong kahulugan ng gubat sa pangungusap? Parang naligaw sa gubat si Migo sa dami ng dapat niyang gawin sa proyekto.", "choices": ["lugar na maraming puno", "nalilito o naguguluhan dahil sa dami ng bagay na dapat asikasuhin", "malayong lugar", "lugar na madilim"], "correct": 1, "exp": "Konotasyon ang \"gubat\" na tumutukoy sa pagkalito dahil sa dami ng bagay na dapat asikasuhin."}, {"q": "Alin ang denotasyong kahulugan ng salitang diyamante?", "choices": ["taong napakahalaga sa isang samahan", "isang uri ng napakamahal na bato na ginagawang alahas", "taong napakaganda", "taong matigas ang ulo"], "correct": 1, "exp": "Ang denotasyon ng \"diyamante\" ay tumutukoy sa literal na napakamahal na bato."}, {"q": "Ano ang konotasyong kahulugan ng diyamante sa pangungusap? Isang diyamante si Coach Rey sa aming koponan dahil sa kanyang natatanging galing.", "choices": ["mamahaling bato", "taong napakahalaga at natatangi", "hiyas na isinusuot", "taong mayaman"], "correct": 1, "exp": "Konotasyon ang \"diyamante\" na tumutukoy sa taong napakahalaga at natatangi."}];
+
+const QUIZ_LENGTH = 15;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = []; // {qIndex, chosen, correct}
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  // shuffle the choice order for each question, tracking the new correct index
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    isCorrect: isCorrect,
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg, sub;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa paksang ito!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

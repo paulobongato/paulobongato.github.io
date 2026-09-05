@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pangwakas na Balikaral: Unang Trimestral na Pagsusulit (Filipino 4)</title>
+<style>
+
+    :root {
+      --blue: #2563eb;
+      --blue-dark: #1e40af;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --red: #b91c1c;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+      background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 720px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+      padding: 28px 24px;
+      margin-top: 12px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: var(--blue-dark);
+      margin: 0 0 4px 0;
+      text-align: center;
+    }
+    h2.subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 0 20px 0;
+      font-weight: 500;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--blue-dark);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+    .instructions {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 16px 0;
+      line-height: 1.6;
+    }
+    .instructions ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+    }
+    .instructions li { margin-bottom: 6px; }
+    .btn {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .btn:hover { background: var(--blue-dark); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .center { text-align: center; }
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      background: #e2e8f0;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--blue);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .topic-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .choice {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .choice:hover:not(.disabled) {
+      border-color: var(--blue);
+      background: #eff6ff;
+    }
+    .choice.selected {
+      border-color: var(--blue);
+      background: #dbeafe;
+    }
+    .choice.correct {
+      border-color: var(--green-border);
+      background: var(--green-bg);
+      color: var(--green);
+      font-weight: 600;
+    }
+    .choice.incorrect {
+      border-color: var(--red-border);
+      background: var(--red-bg);
+      color: var(--red);
+      font-weight: 600;
+    }
+    .choice.disabled { cursor: default; }
+    .choice-letter {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      background: #fff;
+      border-radius: 50%;
+      font-weight: 700;
+      margin-right: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.85rem;
+    }
+    .feedback-box {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      animation: slideIn 0.25s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-box.correct-box {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+    .feedback-box.incorrect-box {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+    .feedback-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .feedback-title.correct-text { color: var(--green); }
+    .feedback-title.incorrect-text { color: var(--red); }
+    .feedback-exp {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+    .nav-row {
+      margin-top: 18px;
+    }
+    .score-hero {
+      text-align: center;
+      padding: 20px 0 8px 0;
+    }
+    .score-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 10px solid var(--blue);
+      background: #eff6ff;
+    }
+    .score-circle .num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      line-height: 1;
+    }
+    .score-circle .den {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .score-msg {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .score-sub {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .review-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .review-item.wrong {
+      border-color: var(--red-border);
+      background: #fff5f5;
+    }
+    .review-item.right {
+      border-color: var(--green-border);
+      background: #f5fff7;
+    }
+    .review-q {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .review-line {
+      font-size: 0.92rem;
+      margin: 3px 0;
+    }
+    .review-line.wrong-answer { color: var(--red); }
+    .review-line.right-answer { color: var(--green); }
+    .review-exp {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      color: #475569;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 6px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin: 24px 0 12px 0;
+    }
+    .hidden { display: none !important; }
+    footer.tag {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      margin-top: 14px;
+    }
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; border-radius: 14px; }
+      h1 { font-size: 1.25rem; }
+      .score-circle { width: 120px; height: 120px; }
+      .score-circle .num { font-size: 1.7rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Balikaral para sa Unang Trimestral na Pagsusulit</h1>
+    <h2 class="subtitle">Filipino 4 — Buod ng Aralin 1–5</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Filipino</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Buod ng limang paksa — (1) Magkasingkahulugan at Magkasalungat, (2) Denotasyon at Konotasyon, (3) Kontekstong Pahiwatig at Onomatopeya, (4) Pangngalan (Uri at Kayarian), (5) Sugnay/Hugnayang Pangungusap at Pangatnig. May maliit na tatak sa itaas ng bawat tanong na nagsasabi kung saang paksa ito galing.</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div id="topic-tag-container"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Balikaral · Unang Trimestral na Pagsusulit · Filipino 4 · La Salle Green Hills</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Alin ang kahulugan ng salitang \"nababahala\"? Nababahala si Carlos dahil sa pagkakasakit ng kanyang ama.", "choices": ["nalulungkot", "nagagalit", "nag-aalala", "naiiyak"], "correct": 2, "exp": "Ang \"nababahala\" ay nangangahulugang \"nag-aalala\" o may inaalala ukol sa isang bagay.", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Alin ang magkasalungat na pares ng salita batay sa pangungusap? Ang kahon ay painot-inot na ipinasok sa isang silid ng unang katulong. Kinabukasan, mabilis na mabilis naman iyong nailipat sa bodega ng ikalawang katulong.", "choices": ["kahon – bodega", "painot-inot – mabilis", "unang katulong – ikalawang katulong", "silid – bodega"], "correct": 1, "exp": "Magkasalungat ang \"painot-inot\" (mabagal) at \"mabilis na mabilis\" (napakabilis).", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Ano ang pinakamalapit na kahulugan ng sumuko sa pangungusap? Hindi sumuko si Aling Mila kahit maraming problema ang kanyang pamilya. Ginawa niya ang lahat para makatulong at makagaan sa alalahanin nila.", "choices": ["nagmadali", "nagtagumpay", "tumigil", "tumuloy"], "correct": 2, "exp": "Ang \"sumuko\" sa pangungusap ay pinakamalapit sa kahulugan ng \"tumigil\" sa pagsisikap.", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Alin sa sumusunod na pangungusap ang nagpapakita ng kasalungat ng katangian ng salitang \"maramot\"? Si Aling Marta ay kilala sa kanilang barangay bilang isang \"maramot\" na tao dahil hindi siya marunong mamigay ng bunga ng kanyang mga puno sa bakuran.", "choices": ["Siya ay madalas magtago ng kanyang mga halaman.", "Siya ay matipid sa paggastos ng kanyang pera araw-araw.", "Siya ay umiiwas makipag-usap sa kanyang mga kapitbahay.", "Siya ay mapagbigay sa mga nangangailangan sa oras ng kalamidad."], "correct": 3, "exp": "Ang kasalungat ng \"maramot\" ay \"mapagbigay\", tulad ng ipinapakita sa huling pangungusap.", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Alin ang kasingkahulugan ng salitang \"masipag\"? Masipag mag-aral si Miguel kaya laging mataas ang kanyang marka.", "choices": ["tamad", "masikhay", "matulog", "malungkot"], "correct": 1, "exp": "Ang \"masipag\" ay kasingkahulugan ng \"masikhay\", o taong hindi tinatamad magtrabaho.", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Alin ang kasingkahulugan ng salitang \"malinis\"? Malinis ang paligid ng kanilang bahay kaya masarap doon manatili.", "choices": ["malinamnam", "maayos at walang dumi", "maulap", "magulo"], "correct": 1, "exp": "Ang \"malinis\" ay nangangahulugang walang dumi o maayos ang kalagayan.", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Alin ang kasalungat ng salitang \"tahimik\"?", "choices": ["payapa", "maingay", "mahinahon", "tago"], "correct": 1, "exp": "Ang kasalungat ng \"tahimik\" (walang ingay) ay \"maingay\" (may malakas na tunog).", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Alin ang kasalungat ng salitang \"mayaman\"?", "choices": ["masagana", "naghihirap", "matipid", "maunlad"], "correct": 1, "exp": "Ang kasalungat ng \"mayaman\" ay \"naghihirap\".", "topic": "Magkasingkahulugan at Magkasalungat"}, {"q": "Ano ang ibig sabihin ng nalanta sa pangungusap? Ang mga halaman ay nalanta dahil sa tindi ng init ng araw at kawalan ng ulan ng tatlong buwan.", "choices": ["nabasa dahil sa dilig ng tubig", "ibang kulay at naging malago", "lumaki at nagkaroon ng maraming bunga", "natuyo, nanghina, at malapit nang mamatay"], "correct": 3, "exp": "Ipinapahiwatig ng \"tindi ng init\" at \"kawalan ng ulan\" na ang mga halaman ay natuyo, nanghina, at malapit nang mamatay.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Batay sa pangungusap, anong reaksiyon ang inaasahang maramdaman ni Selya pagkarinig ng tunog? Habang naglalakad si Selya sa gubat, narinig niya ang \"Sssssssss...\" sa ilalim ng mga tuyong dahon.", "choices": ["naawa kaya ito nilapitan", "mag-ingat at lumayo rito", "matuwa dahil isa itong hayop", "magdiwang kaya nagtatalon"], "correct": 1, "exp": "Ang tunog na \"Sssssssss\" ay maaaring galing sa ahas kaya nararapat mag-ingat at lumayo.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Habang nag-aaral si Ana, narinig niya ang ___________ ng orasan sa kaniyang kuwarto.", "choices": ["tik-tak", "aw-aw", "kokak", "lagapak"], "correct": 0, "exp": "Ang \"tik-tak\" ang onomatopeyang tumutukoy sa tunog ng orasan.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Ano ang ibig sabihin ng salitang \"nanglumo\"? Nanglumo si Rosa nang malaman niyang bumagsak siya sa pagsusulit.", "choices": ["natuwa nang husto", "nawalan ng lakas ng loob dahil sa lungkot", "nagalit nang matindi", "nagulat sa balita"], "correct": 1, "exp": "Ang \"nanglumo\" ay nangangahulugang nawalan ng lakas ng loob dahil sa matinding lungkot.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Ano ang ibig sabihin ng salitang \"kumunot ang noo\"? Kumunot ang noo ni Nanay habang binabasa niya ang liham mula sa paaralan.", "choices": ["natuwa at ngumiti", "nag-alala o nag-isip nang malalim", "nakatulog agad", "natawa nang malakas"], "correct": 1, "exp": "Ang \"kumunot ang noo\" ay nangangahulugang nag-aalala o nag-iisip nang malalim tungkol sa isang bagay.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Ano ang ibig sabihin ng salitang \"humimlay\"? Humimlay si Lola sa duyan matapos ang mahabang paglalakbay.", "choices": ["nagsimulang maglinis", "nahiga o nagpahinga", "nagluto ng pagkain", "lumabas ng bahay"], "correct": 1, "exp": "Ang \"humimlay\" ay nangangahulugang nahiga o nagpahinga matapos ang isang pagod na gawain.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Habang naglalaro ang mga bata sa parke, naririnig ang ___________ ng mga ibong lumilipad.", "choices": ["lagapak", "huni", "dagundong", "lagutok"], "correct": 1, "exp": "Ang \"huni\" ang onomatopeyang tumutukoy sa tunog ng mga ibon.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Marahang ___________ ang tubig sa batis habang dumadaloy ito papunta sa ilog.", "choices": ["lagaslas", "dagundong", "kalabog", "atungal"], "correct": 0, "exp": "Ang \"lagaslas\" ang onomatopeyang tumutukoy sa marahang tunog ng umaagos na tubig.", "topic": "Kontekstong Pahiwatig at Onomatopeya"}, {"q": "Ano ang tawag sa malalim na pagpapakahulugan sa isang salita?", "choices": ["denotasyon", "kasalungat", "konotasyon", "paglalarawan"], "correct": 2, "exp": "Ang malalim o di-tuwirang pagpapakahulugan sa isang salita ay tinatawag na konotasyon.", "topic": "Denotasyon at Konotasyon"}, {"q": "Alin sa mga sumusunod ang nagpapahayag ng denotasyon?", "choices": ["Ang masarap na keyk ay dala ni Miko.", "Mataas ang pangarap ni Jose sa kanyang buhay.", "Masakit siyang magsalita dahil matalim ang kanyang dila.", "Mainit ang ulo ng nanay ko kasi nasira ang bagong laptop ko."], "correct": 0, "exp": "Denotasyon ang unang pangungusap dahil ginamit ang \"masarap\" sa literal nitong kahulugan.", "topic": "Denotasyon at Konotasyon"}, {"q": "Alin ang denotasyong kahulugan ng salitang puso?", "choices": ["pagmamahal", "kabutihan", "organong nagbobomba ng dugo", "tapang"], "correct": 2, "exp": "Ang denotasyon ng \"puso\" ay tumutukoy sa organong nagpapadaloy ng dugo sa katawan.", "topic": "Denotasyon at Konotasyon"}, {"q": "Alin ang denotasyong kahulugan ng salitang leon?", "choices": ["hayop na kabilang sa pamilya ng pusa na kilala bilang hari ng gubat", "taong matapang at walang takot", "taong palalo", "taong sakim"], "correct": 0, "exp": "Ang denotasyon ng \"leon\" ay tumutukoy sa literal na hayop na kilala bilang hari ng gubat.", "topic": "Denotasyon at Konotasyon"}, {"q": "Alin ang denotasyong kahulugan ng salitang ginto?", "choices": ["mamahaling metal na dilaw ang kulay at ginagawang alahas", "taong napakabait", "taong mahalaga sa isang samahan", "taong napakayaman"], "correct": 0, "exp": "Ang denotasyon ng \"ginto\" ay tumutukoy sa literal na mamahaling metal.", "topic": "Denotasyon at Konotasyon"}, {"q": "Ano ang konotasyong kahulugan ng bulaklak sa pangungusap? Si Marina ang bulaklak ng kanilang tahanan dahil sa kanyang kagandahang-asal.", "choices": ["bahagi ng halaman", "taong nagdudulot ng ganda at kasiyahan sa iba", "taong mahilig sa hardin", "taong maganda ang mukha"], "correct": 1, "exp": "Konotasyon ang \"bulaklak\" na tumutukoy sa taong nagdudulot ng ganda at kasiyahan sa iba.", "topic": "Denotasyon at Konotasyon"}, {"q": "Ano ang konotasyong kahulugan ng bundok sa pangungusap? Isang bundok na suliranin ang kinaharap ni Aling Norma matapos ang bagyo.", "choices": ["mataas na lupang bahagi", "napakalaking suliranin o hamon", "lugar na puno ng puno", "malayong probinsya"], "correct": 1, "exp": "Konotasyon ang \"bundok\" na tumutukoy sa napakalaking suliranin o hamon.", "topic": "Denotasyon at Konotasyon"}, {"q": "Ano ang wastong pagsusuri sa dalawang pangngalang may diin? Sa kabila ng malakas na ulan, ipinakita ng mga mag-aaral ang kanilang katatagan sa pagtulong sa mga nasalanta.", "choices": ["mag-aaral – tahas; katatagan – basal", "mag-aaral – pambalana; katatagan – basal", "mag-aaral – lansakan; katatagan – tahas", "mag-aaral – pantangi; katatagan – maylapi"], "correct": 0, "exp": "Ang \"mag-aaral\" ay tahas dahil konkreto at nasasalat, at ang \"katatagan\" ay basal dahil abstrakto o hindi nasasalat.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Aling sagot ang wastong pagsusuri sa kayarian ng mga pangngalang may diin? Nagdala ang mangingisda ng sariwang isda at inilagay ito sa malaking lalagyan.", "choices": ["mangingisda – payak; isda – maylapi; lalagyan – payak", "mangingisda – maylapi; isda – payak; lalagyan – maylapi", "mangingisda – maylapi; isda – maylapi; lalagyan – payak", "mangingisda – payak; isda – payak; lalagyan – maylapi"], "correct": 1, "exp": "Maylapi ang \"mangingisda\" (isda + mang-) at \"lalagyan\" (lagay + -an), habang payak ang \"isda\" dahil walang idinagdag na panlapi.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Ilang pangngalang payak ang ginamit sa talata? Sa Barangay Masipag, nagsama-sama ang mga residente upang linisin ang ilog. Nagdala ang bawat mamamayan ng sariling kagamitan. Sa kabila ng init, ipinakita nila ang kanilang kasipagan at pagkakaisa.", "choices": ["3", "4", "5", "6"], "correct": 1, "exp": "Apat na pangngalang payak ang ginamit: residente, ilog, mamamayan, at init; ang kagamitan, kasipagan, at pagkakaisa ay maylapi.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Alin sa sumusunod ang pangngalang pambalana?", "choices": ["Maynila", "Rizal", "paaralan", "Butuan"], "correct": 2, "exp": "Pambalana ang \"paaralan\" dahil pangkalahatang tawag ito sa anumang institusyong pang-edukasyon.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Alin ang pangngalang tahas sa pangungusap? Naglaro ang mga bata gamit ang bola sa harap ng paaralan.", "choices": ["bola", "naglaro", "harap", "gamit"], "correct": 0, "exp": "Tahas ang \"bola\" dahil ito ay konkretong bagay na maaaring makita at mahawakan.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Alin ang salitang-ugat ng pangngalang pagkakaibigan?", "choices": ["kaibigan", "ibig", "ibigan", "pagkaibig"], "correct": 1, "exp": "Ang salitang-ugat ng \"pagkakaibigan\" ay \"ibig,\" na may panlaping pagkaka-/-an.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Alin ang naiibang uri ng pangngalan sa pangkat? kagalakan, kalungkutan, kabutihan, mesa", "choices": ["kagalakan", "kalungkutan", "kabutihan", "mesa"], "correct": 3, "exp": "Naiiba ang \"mesa\" dahil ito ay tahas at payak, habang basal at maylapi ang iba pang tatlo.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Aling uri pangngalan ang karaniwang nagsisimula sa malaking titik?", "choices": ["basal", "lansakan", "pantangi", "pambalana"], "correct": 2, "exp": "Ang pangngalang pantangi ang karaniwang nagsisimula sa malaking titik dahil pangalan ito ng partikular na tao, lugar, o bagay.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Ano pagbabago ang ginawa sa pangalawang pangungusap? I. Dumating ang guro bago magsimula ang klase. II. Dumating si Bb. Maria Cruz bago magsimula ang klase.", "choices": ["Ginawang tahas ang pangngalan.", "Ginawang mas tiyak ang tinutukoy na tao.", "Ginawang lansakan ang pangngalan.", "Ginawang maylapi ang pangngalan."], "correct": 1, "exp": "Naging mas tiyak ang tinutukoy na tao nang gamitin ang pangalang \"Bb. Maria Cruz\" sa halip na \"guro.\"", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Anong panlapi ang dapat ilagay sa pangngalang payapa upang ito ay maging pangngalang basal at maylapi?", "choices": ["pa-, -an", "ka- -un", "ka-,-an", "na-, -han"], "correct": 2, "exp": "Ang panlaping ka-/-an ang bubuo ng \"kapayapaan,\" isang pangngalang basal at maylapi.", "topic": "Pangngalan (Uri at Kayarian)"}, {"q": "Aling pangungusap ang may tamang pagkakaugnay ng dalawang kasipan? Naglinis ang mga residente. Naging maayos ang paligid.", "choices": ["Naglinis ang mga residente ngunit naging maayos ang paligid.", "Naglinis ang mga residente dahil naging maayos ang paligid.", "Naging maayos ang paligid sapagkat naglinis ang mga residente.", "Naging maayos ang paligid kahit naglinis ang mga residente."], "correct": 2, "exp": "Ang \"sapagkat\" ang wastong pangatnig na nagpapakita na ang paglilinis ang dahilan kung bakit naging maayos ang paligid.", "topic": "Sugnay at Hugnayang Pangungusap"}, {"q": "Alin sa sumusunod ang halimbawa ng hugnayang pangungusap?", "choices": ["Kumain kami ng hapunan.", "Natutulog na ang mga bata.", "Nag-aral si Rina dahil may pagsusulit bukas.", "Masipag at matalino si Ben."], "correct": 2, "exp": "Hugnayan ang \"Nag-aral si Rina dahil may pagsusulit bukas\" dahil binubuo ito ng dalawang sugnay na inugnay ng pangatnig na \"dahil.\"", "topic": "Sugnay at Hugnayang Pangungusap"}, {"q": "Alin ang wastong pagsasama ng dalawang kaisipan? Uuwi na si Nena. Bumagal ang trapiko.", "choices": ["Uuwi na si Nena kaya bumagal ang trapiko.", "Uuwi na si Nena kahit bumagal ang trapiko.", "Uuwi na si Nena at bumagal ang trapiko.", "Uuwi na si Nena habang bumabagal ang trapiko."], "correct": 1, "exp": "Ang \"kahit\" ang wastong pangatnig dahil nagpapakita ito na patuloy pa ring umuwi si Nena sa kabila ng pagbagal ng trapiko.", "topic": "Sugnay at Hugnayang Pangungusap"}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Nagdiwang ang mga residente sapagkat nanalo ang kanilang koponan sa paligsahan.", "choices": ["Nagdiwang ang mga residente", "sapagkat nanalo ang kanilang koponan sa paligsahan", "nanalo ang koponan", "mga residente sa paligsahan"], "correct": 1, "exp": "Ang \"sapagkat nanalo ang kanilang koponan sa paligsahan\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa.", "topic": "Sugnay at Hugnayang Pangungusap"}, {"q": "Alin ang sugnay na di-makapag-iisa sa pangungusap? Aalis na kami kapag dumating na ang aming mga kasama.", "choices": ["Aalis na kami", "kapag dumating na ang aming mga kasama", "dumating na ang mga kasama", "mga kasama namin"], "correct": 1, "exp": "Ang \"kapag dumating na ang aming mga kasama\" ay hindi makapag-iisa dahil kulang ito sa buong diwa nang mag-isa.", "topic": "Sugnay at Hugnayang Pangungusap"}, {"q": "Ano ang pangatnig?", "choices": ["Ito ay ang pagpapahaba ng mga pangungusap.", "Ito ay mga salitang ginagamit sa paglalarawan.", "Ito ay mga salitang ginagamit sa pagsusuri ng pangungusap.", "Ito ay isang kataga o salita na nag-uugnay ng dalawang salita, parirala o pangungusap."], "correct": 3, "exp": "Ang pangatnig ay isang kataga o salitang nag-uugnay ng dalawang salita, parirala, o pangungusap.", "topic": "Pangatnig"}, {"q": "Aling mga pangatnig ang bubuo sa diwa ng pangungusap sa loob ng kahon? Gusto kong bumili ng bagong sapatos, ___________ wala akong sapat na pera, ___________ mag-iipon muna ako mula sa aking baon.", "choices": ["at / o", "dahil / upang", "pero / kaya", "sapagkat/ habang"], "correct": 2, "exp": "Ang \"pero\" ay nagpapakita ng pagsalungat, at ang \"kaya\" ay nagpapakita ng bunga o resulta.", "topic": "Pangatnig"}, {"q": "Alin sa sumusunod ang halimbawa ng pangungusap na gumagamit ng pangatnig na di-magkatimbang?", "choices": ["Naglaro sina Ben at Tom sa parke.", "Umuwi kami dahil malakas na ang ulan.", "Bumili siya ng tinapay at gatas.", "Kumanta si Rosa at sumayaw si Nina."], "correct": 1, "exp": "Ang \"dahil\" ay pangatnig na di-magkatimbang dahil nag-uugnay ito ng isang sugnay na makapag-iisa at isang sugnay na hindi makapag-iisa.", "topic": "Pangatnig"}, {"q": "Aling pangatnig ang wastong gamitin? Gusto kong kumain ng tinapay ___________ ng keso.", "choices": ["at", "dahil", "kaya", "habang"], "correct": 0, "exp": "Ang \"at\" ang nag-uugnay ng dalawang magkatimbang na bagay na kakainin.", "topic": "Pangatnig"}, {"q": "Aling pangatnig ang wastong gamitin? ___________ dumating ang guro, tumahimik ang mga mag-aaral.", "choices": ["Habang", "Kaya", "Ngunit", "O"], "correct": 0, "exp": "Ang \"Habang\" ang nagpapakita ng dalawang pangyayaring sabay na naganap.", "topic": "Pangatnig"}, {"q": "Alin ang tamang pangatnig na magpapakita ng oras habang nagaganap ang dalawang kilos? ___________ nagluluto si Nanay, naglalaro ang mga bata sa labas.", "choices": ["Habang", "Dahil", "Kaya", "Upang"], "correct": 0, "exp": "Ang \"Habang\" ang nagpapakita ng dalawang pangyayaring sabay na naganap.", "topic": "Pangatnig"}, {"q": "Alin ang pinakaangkop na pangatnig upang mabuo ang pangungusap? Nag-aalaga si Tessie ng halaman ___________ mapaganda ang kanilang bakuran.", "choices": ["upang", "ngunit", "o", "kahit"], "correct": 0, "exp": "Ang \"upang\" ang nagpapakita ng layunin ng pag-aalaga ng halaman.", "topic": "Pangatnig"}];
+
+const QUIZ_LENGTH = 15;
+const SHOW_TOPIC_TAGS = true;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = []; // {qIndex, chosen, correct}
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  // shuffle the choice order for each question, tracking the new correct index
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp,
+      topic: item.topic || null
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  const topicContainer = document.getElementById('topic-tag-container');
+  if (SHOW_TOPIC_TAGS && item.topic) {
+    topicContainer.innerHTML = `<span class="topic-tag">${escapeHtml(item.topic)}</span>`;
+  } else {
+    topicContainer.innerHTML = '';
+  }
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    isCorrect: isCorrect,
+    topic: item.topic,
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg, sub;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa paksang ito!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  if (SHOW_TOPIC_TAGS && a.topic) {
+    html += `<span class="topic-tag">${escapeHtml(a.topic)}</span>`;
+  }
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

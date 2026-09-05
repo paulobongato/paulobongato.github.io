@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Ang Kinalalagyan ng Pilipinas</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --green: #15803d;
+    --green-bg: #dcfce7;
+    --green-border: #22c55e;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --red-border: #ef4444;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 720px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+    padding: 28px 24px;
+    margin-top: 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: var(--blue-dark);
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+  h2.subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    background: #dbeafe;
+    color: var(--blue-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .instructions {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .instructions ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+  .instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #e2e8f0;
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .center { text-align: center; }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--blue);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .choice:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: #eff6ff;
+  }
+  .choice.selected {
+    border-color: var(--blue);
+    background: #dbeafe;
+  }
+  .choice.correct {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .choice.incorrect {
+    border-color: var(--red-border);
+    background: var(--red-bg);
+    color: var(--red);
+    font-weight: 600;
+  }
+  .choice.disabled { cursor: default; }
+  .choice-letter {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+  }
+  .feedback-box {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct-box {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+  }
+  .feedback-box.incorrect-box {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+  }
+  .feedback-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .feedback-title.correct-text { color: var(--green); }
+  .feedback-title.incorrect-text { color: var(--red); }
+  .feedback-exp {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #334155;
+  }
+  .nav-row {
+    margin-top: 18px;
+  }
+  .score-hero {
+    text-align: center;
+    padding: 20px 0 8px 0;
+  }
+  .score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid var(--blue);
+    background: #eff6ff;
+  }
+  .score-circle .num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    line-height: 1;
+  }
+  .score-circle .den {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .score-msg {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .score-sub {
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item.wrong {
+    border-color: var(--red-border);
+    background: #fff5f5;
+  }
+  .review-item.right {
+    border-color: var(--green-border);
+    background: #f5fff7;
+  }
+  .review-q {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .review-line {
+    font-size: 0.92rem;
+    margin: 3px 0;
+  }
+  .review-line.wrong-answer { color: var(--red); }
+  .review-line.right-answer { color: var(--green); }
+  .review-exp {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: #475569;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 6px;
+  }
+  .section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 24px 0 12px 0;
+  }
+  .hidden { display: none !important; }
+  footer.tag {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; border-radius: 14px; }
+    h1 { font-size: 1.25rem; }
+    .score-circle { width: 120px; height: 120px; }
+    .score-circle .num { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Ang Kinalalagyan ng Pilipinas</h1>
+    <h2 class="subtitle">Aralin 1 — Pagsusulit sa Araling Panlipunan</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Araling Panlipunan</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Mapa at Globo, Direksiyon, GPS, Guhit Pangkaisipan (Latitud/Longhitud), at Tiyak/Relatibong Lokasyon ng Pilipinas (Pahina 5–14).</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div id="topic-tag-container"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Aralin 1: Ang Kinalalagyan ng Pilipinas · Rebyuwer sa Araling Panlipunan</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang tawag sa pag-aaral sa mundo, mga katangian ng daigdig, at ang relasyon ng tao sa kanyang kapaligiran?", "choices": ["Heograpiya", "Heolohiya", "Kartograpiya", "Astronomiya"], "correct": 0, "exp": "Ang heograpiya ay ang pag-aaral sa mundo, mga katangian ng daigdig, iba't ibang bansa o lugar, at ang relasyon ng tao sa kanyang kapaligiran."}, {"q": "Saan hango ang salitang \"heograpiya\"?", "choices": ["Salitang Latin na \"terra\"", "Salitang Griyego na \"geo\" at \"graphein\"", "Salitang Espanyol na \"mapa\"", "Salitang Ingles na \"earth\""], "correct": 1, "exp": "Ang salitang heograpiya ay buhat sa salitang Griyego na geo (mundo) at graphein (isulat o ilarawan) — literal na \"pagsulat tungkol sa mundo.\""}, {"q": "Ano ang literal na kahulugan ng salitang heograpiya batay sa pinagmulan nitong Griyego?", "choices": ["Pagguhit ng bansa", "Pagsulat tungkol sa mundo", "Pag-aaral ng panahon", "Pagsukat ng distansya"], "correct": 1, "exp": "Ang geo ay nangangahulugang mundo at ang graphein ay isulat o ilarawan, kaya't literal itong \"pagsulat tungkol sa mundo.\""}, {"q": "Ano ang tawag sa patag na representasyon ng buo o bahagi ng mundo sa ibabaw na patag?", "choices": ["Globo", "Mapa", "Grid", "Atlas"], "correct": 1, "exp": "Ang mapa ay patag na representasyon ng buong o bahagi ng mundo sa ibabaw na patag (flat surface)."}, {"q": "Alin ang tunay na modelo ng mundo dahil ang hugis nito ay oblate spheroid?", "choices": ["Mapa", "Globo", "Legend", "Compass rose"], "correct": 1, "exp": "Ang hugis ng mundo ay oblate spheroid, kaya't ang globo ang tunay na modelo nito."}, {"q": "Ano ang tawag sa hugis ng mundo na kinamumukhaan ng globo?", "choices": ["Perpektong bilog", "Oblate spheroid", "Parisukat", "Tatsulok"], "correct": 1, "exp": "Ang hugis ng mundo ay oblate spheroid, kaya't ang globo ang tunay na modelo nito."}, {"q": "Ano ang tawag sa sining ng paggawa ng mapa at globo?", "choices": ["Heograpiya", "Kartograpiya", "Topograpiya", "Heolohiya"], "correct": 1, "exp": "Ang kartograpiya ang sining ng paggawa ng mapa at globo."}, {"q": "Ano ang tawag sa taong gumagawa ng mapa at globo?", "choices": ["Heograpo", "Kartograpo", "Topograpo", "Astronomo"], "correct": 1, "exp": "Ang taong gumagawa ng mapa at globo ay tinatawag na kartograpo."}, {"q": "Aling elemento ng mapa ang nagsasabi kung anong uri ng mapa ang tinitingnan, hal. politikal o pisikal?", "choices": ["Legend", "Eskala", "Titulo", "Direksiyon"], "correct": 2, "exp": "Ang titulo ay nagsasabi kung anong uri ng mapa ang tinitingnan (hal. politikal o pisikal na mapa)."}, {"q": "Aling elemento ng mapa ang nagpapaliwanag sa iba't ibang simbolo o pananda na ginagamit dito?", "choices": ["Legend", "Titulo", "Eskala", "Grid"], "correct": 0, "exp": "Ang legend ay nagpapaliwanag sa iba't ibang simbolo o pananda na ginagamit sa mapa, hal. bituin = kabesera ng bansa."}, {"q": "Sa legend ng isang mapa, ano ang karaniwang ipinapahiwatig ng isang bituin?", "choices": ["Bundok", "Kabesera ng bansa", "Dagat", "Ilog"], "correct": 1, "exp": "Sa legend, ang bituin ay karaniwang sumisimbolo sa kabesera ng bansa."}, {"q": "Sa legend ng isang mapa, ano ang karaniwang ipinapahiwatig ng isang itim na tuldok?", "choices": ["Kabesera ng lalawigan", "Bulkan", "Ilog", "Talampas"], "correct": 0, "exp": "Sa legend, ang itim na tuldok ay karaniwang sumisimbolo sa kabesera ng lalawigan."}, {"q": "Aling elemento ng mapa ang tumutukoy sa ratio ng distansya sa mapa kumpara sa aktwal na distansya sa totoong mundo?", "choices": ["Eskala", "Legend", "Titulo", "Longhitud"], "correct": 0, "exp": "Ang eskala ay tumutukoy sa ratio ng distansya sa mapa kumpara sa aktwal na distansya sa totoong mundo."}, {"q": "Aling elemento ng mapa ang nagpapakita ng hilaga, timog, silangan, at kanluran gamit ang compass rose?", "choices": ["Eskala", "Direksiyon", "Legend", "Grid"], "correct": 1, "exp": "Ang direksiyon ay nagpapakita ng hilaga, timog, silangan, at kanluran gamit ang compass rose."}, {"q": "Aling elemento ng mapa ang tumutukoy sa eksaktong lokasyon ng isang lugar?", "choices": ["Titulo at Legend", "Eskala at Direksiyon", "Longhitud at Latitud", "Grid at Compass rose"], "correct": 2, "exp": "Ang longhitud at latitud ay mga guhit na tumutukoy sa eksaktong lokasyon ng isang lugar."}, {"q": "Ilan ang pangunahing direksiyon (cardinal directions)?", "choices": ["2", "4", "6", "8"], "correct": 1, "exp": "May apat na pangunahing direksiyon: Hilaga, Timog, Silangan, at Kanluran."}, {"q": "Alin sa mga sumusunod ang HINDI kabilang sa mga pangunahing direksiyon?", "choices": ["Hilaga", "Timog", "Hilagang-Silangan", "Kanluran"], "correct": 2, "exp": "Ang Hilagang-Silangan ay isang pangalawang direksiyon (intercardinal), hindi pangunahing direksiyon."}, {"q": "Ano ang tawag sa mga direksiyong Hilagang-Silangan, Hilagang-Kanluran, Timog-Silangan, at Timog-Kanluran?", "choices": ["Pangunahing direksiyon", "Pangalawang direksiyon", "Guhit pangkaisipan", "Grid direksiyon"], "correct": 1, "exp": "Ang mga ito ay tinatawag na pangalawang direksiyon (intercardinal/intermediate directions) — nasa pagitan ng dalawang pangunahing direksiyon."}, {"q": "Ilan ang pangalawang direksiyon (intercardinal directions)?", "choices": ["2", "4", "6", "8"], "correct": 1, "exp": "May apat na pangalawang direksiyon: Hilagang-Silangan (HS), Hilagang-Kanluran (HK), Timog-Silangan (TS), at Timog-Kanluran (TK)."}, {"q": "Ano ang GPS?", "choices": ["Global Positioning System", "General Public Survey", "Geographic Position Scale", "Global Photo System"], "correct": 0, "exp": "Ang GPS ay ang Global Positioning System, na bahagi ng Global Navigation Satellite System (GNSS)."}, {"q": "Ang GPS ay bahagi ng anong mas malaking sistema?", "choices": ["Global Navigation Satellite System (GNSS)", "Global Network Security System", "General Navigation Space System", "Geographic National Survey System"], "correct": 0, "exp": "Ang GPS ay bahagi ng Global Navigation Satellite System (GNSS) na malawakang ginagamit sa mundo ngayon."}, {"q": "Alin ang HINDI kayang tukuyin ng isang GPS receiver?", "choices": ["Tiyak na lokasyon", "Bilis", "Direksiyon at oras", "Kondisyon ng panahon bukas"], "correct": 3, "exp": "Ang GPS receiver ay may kakayahang tumukoy ng tiyak na lokasyon, bilis, direksiyon, at oras — hindi ito panghuhula ng panahon."}, {"q": "Sinong ahensiya ang lumikha ng GPS?", "choices": ["Kagawaran ng Depensa ng Estados Unidos", "United Nations", "NASA Philippines", "Kagawaran ng Agrikultura ng Estados Unidos"], "correct": 0, "exp": "Nilikha ang GPS ng Kagawaran ng Depensa ng Estados Unidos noong 1973."}, {"q": "Anong taon nilikha ang GPS?", "choices": ["1963", "1973", "1983", "1993"], "correct": 1, "exp": "Nilikha ang GPS ng Kagawaran ng Depensa ng Estados Unidos noong 1973."}, {"q": "Para saan lamang eksklusibong ginamit ang GPS bago ito pinahintulutang gamitin ng publiko noong 1980s?", "choices": ["Mga operasyong militar", "Mga negosyo", "Mga paaralan", "Mga ospital"], "correct": 0, "exp": "Eksklusibo itong ginamit para sa mga operasyong militar hanggang noong 1980s nang pinahintulutan nang gamitin ito sa iba pang bahagi ng lipunan."}, {"q": "Alin sa mga sumusunod ang mga kilalang navigation app na gumagamit ng GPS?", "choices": ["Waze at Google Maps", "Facebook at Instagram", "YouTube at Netflix", "Excel at Word"], "correct": 0, "exp": "Dalawang kilalang navigation app na gumagamit ng GPS ay ang Waze at Google Maps."}, {"q": "Ano ang tawag sa mga guhit sa mapa at globo na nililikha lamang upang madaling matukoy ang lokasyon, hugis, laki, at sukat ng isang lugar?", "choices": ["Guhit pangkaisipan (imaginary lines)", "Guhit pisikal", "Guhit politikal", "Guhit panlabas"], "correct": 0, "exp": "Ang mapa at globo ay may mga guhit pangkaisipan (imaginary lines) na nililikha lamang upang madaling matukoy ang tiyak na lokasyon, hugis, laki, at sukat ng isang lugar."}, {"q": "Ano ang tawag sa mga guhit na pahiga o tumatakbo pasilangang-kanluran na tumutukoy sa distansya ng isang lugar mula sa ekwador?", "choices": ["Longhitud (Meridian)", "Latitud (Parallel)", "Prime Meridian", "Grid"], "correct": 1, "exp": "Ang latitud (parallel) ay mga guhit na pahiga o linyang tumatakbo pasilangang-kanluran; tinutukoy nito ang distansya ng mga lugar mula sa ekwador."}, {"q": "Ano ang tawag sa mga guhit na patayo mula hilaga patungong timog na nagsasaad ng distansya mula sa Prime Meridian?", "choices": ["Latitud (Parallel)", "Longhitud (Meridian)", "Ekwador", "Tropiko"], "correct": 1, "exp": "Ang longhitud (meridian) ay mga guhit na patayo mula hilaga patungong timog; isinasaad nito ang distansya mula sa Prime Meridian."}, {"q": "Ano ang sukat ng longhitud sa Prime Meridian?", "choices": ["0°", "90°", "180°", "360°"], "correct": 0, "exp": "Ang Prime Meridian ang simula ng mga guhit longhitud, nasa 0° longhitud."}, {"q": "Ilan ang kabuoang sukat ng Prime Meridian bilang guhit longhitud?", "choices": ["90°", "180°", "270°", "360°"], "correct": 1, "exp": "Ang Prime Meridian ay may kabuoang sukat na 180°."}, {"q": "Anong dalawang hemisphere ang hinahati ng Prime Meridian?", "choices": ["Hilaga at Timog Hemisphere", "Kanlurang Hemisphere at Silangang Hemisphere", "Tropikal at Temperate Hemisphere", "Arktiko at Antartiko Hemisphere"], "correct": 1, "exp": "Hinahati ng Prime Meridian ang mundo sa Kanlurang Hemisphere at Silangang Hemisphere."}, {"q": "Ano ang sukat ng latitud sa ekwador?", "choices": ["0°", "23.5°", "66.5°", "90°"], "correct": 0, "exp": "Ang ekwador ay isang malaking guhit parallel na may zero digring (0°) latitud."}, {"q": "Ilan ang kabuoang sukat ng ekwador bilang guhit parallel?", "choices": ["90°", "180°", "270°", "360°"], "correct": 3, "exp": "Ang ekwador ay isang malaking guhit parallel na may sukat na 360°."}, {"q": "Anong dalawang hemisphere ang hinahati ng ekwador?", "choices": ["Kanluran at Silangang Hemisphere", "Hilagang Hemisphere at Timog Hemisphere", "Tropiko ng Kanser at Kaprikornyo", "Arktiko at Antartiko"], "correct": 1, "exp": "Hinahati ng ekwador ang mundo sa Hilagang Hemisphere at Timog Hemisphere."}, {"q": "Ang Tropiko ng Kanser ay nasaan kaugnay sa ekwador?", "choices": ["23.5° Hilaga ng ekwador", "23.5° Timog ng ekwador", "66.5° Hilaga ng ekwador", "0° sa ekwador mismo"], "correct": 0, "exp": "Ang Tropiko ng Kanser ay isang parallel na nasa 23.5° Hilaga ng ekwador; pinakahilagang hanggahan na naaabot ng patayong sinag ng araw."}, {"q": "Ang Tropiko ng Kaprikornyo ay nasaan kaugnay sa ekwador?", "choices": ["23.5° Hilaga ng ekwador", "23.5° Timog ng ekwador", "66.5° Timog ng ekwador", "0° sa ekwador mismo"], "correct": 1, "exp": "Ang Tropiko ng Kaprikornyo ay parallel na nasa 23.5° Timog ng ekwador; pinakatimog na lugar na naaabot ng patayong sinag ng araw."}, {"q": "Ang Kabilugang Arktiko ay nasaan kaugnay sa ekwador?", "choices": ["23.5° Hilaga", "66.5° Hilaga", "66.5° Timog", "90° Hilaga"], "correct": 1, "exp": "Ang Kabilugang Arktiko ay parallel na nasa 66.5° Hilaga ng ekwador."}, {"q": "Ang Kabilugang Antartiko ay nasaan kaugnay sa ekwador?", "choices": ["23.5° Timog", "66.5° Hilaga", "66.5° Timog", "90° Timog"], "correct": 2, "exp": "Ang Kabilugang Antartiko ay parallel na nasa 66.5° Timog ng ekwador."}, {"q": "Ano ang tawag sa pinagsama-samang guhit latitud at longhitud na ginagamit bilang batayan sa pagtukoy ng eksaktong lokasyon?", "choices": ["Grid", "Compass rose", "Legend", "Eskala"], "correct": 0, "exp": "Ang grid ay ang pinagsama-samang guhit latitud at longhitud na bumubuo ng isang grid, ginagamit bilang batayan sa pagtukoy ng eksaktong lokasyon ng isang lugar."}, {"q": "Ano ang tawag sa eksaktong lokasyon ng isang lugar na tinutukoy sa pamamagitan ng longhitud at latitud?", "choices": ["Relatibong lokasyon", "Absolute o tiyak na lokasyon", "Rehiyonal na lokasyon", "Kontinental na lokasyon"], "correct": 1, "exp": "Ang tiyak o absolute location ng isang lugar ay ang eksaktong lokasyon nito sa ibabaw ng Mundo, na tinutukoy sa pamamagitan ng longhitud at latitud."}, {"q": "Ano ang tawag sa lawak na sinasaklaw ng isang bansa batay sa mga distansiyang longhitudinal at latitudinal nito?", "choices": ["Lawak na heograpikal", "Lawak na maritime", "Lawak na kontinental", "Lawak na politikal"], "correct": 0, "exp": "Ang lawak na sinasaklaw ng isang bansa sa pamamagitan ng mga distansiyang longhitudinal at latitudinal ay tinatawag na lawak na heograpikal o geographical extent."}, {"q": "Sa pagitan ng anong mga latitud matatagpuan ang Pilipinas?", "choices": ["4°23' at 21°25' Hilaga", "0° at 23.5° Hilaga", "4°23' at 21°25' Timog", "10° at 30° Hilaga"], "correct": 0, "exp": "Ang Pilipinas ay nasa pagitan ng mga latitud 4°23' at 21°25' Hilaga."}, {"q": "Sa pagitan ng anong mga longhitud matatagpuan ang Pilipinas?", "choices": ["100°00' at 110°00' Silangan", "116°00' at 127°00' Silangan", "116°00' at 127°00' Kanluran", "90°00' at 100°00' Silangan"], "correct": 1, "exp": "Ang Pilipinas ay nasa pagitan ng mga longhitud 116°00' at 127°00' Silangan."}, {"q": "Ang relatibong lokasyon ng isang lugar batay sa mga karatig-bansang lupain nito ay tinatawag na anong uri ng relatibong lokasyon?", "choices": ["Relatibong lokasyong maritime", "Relatibong lokasyong insular", "Relatibong lokasyong kontinental", "Absolute na lokasyon"], "correct": 2, "exp": "Ang lokasyon ay tinatawag na relatibong lokasyong kontinental kapag ang lugar na tinutukoy ay ibinatay sa lubusang napaliligiran nito ng kinalalagyang lupain."}, {"q": "Ang relatibong lokasyon ng isang lugar batay sa mga katubigang nakapaligid dito ay tinatawag na anong uri?", "choices": ["Relatibong lokasyong kontinental", "Relatibong lokasyong maritime (insular)", "Absolute na lokasyon", "Geograpikal na lawak"], "correct": 1, "exp": "Ang relatibong lokasyong maritime (o insular/bisinal) ay ibinabatay sa katawan ng tubig na nakapaligid sa lugar."}, {"q": "Batay sa relatibong lokasyong insular (bisinal), aling katubigan ang nasa hilaga ng Pilipinas?", "choices": ["Bashi Channel", "Dagat Timog Tsina", "Dagat Celebes", "Karagatang Pasipiko"], "correct": 0, "exp": "Batay sa relatibong lokasyong insular: Hilaga – Bashi Channel."}, {"q": "Batay sa relatibong lokasyong insular (bisinal), aling katubigan ang nasa kanluran ng Pilipinas?", "choices": ["Bashi Channel", "Dagat Timog Tsina", "Dagat Celebes", "Karagatang Pasipiko"], "correct": 1, "exp": "Batay sa relatibong lokasyong insular: Kanluran – Dagat Timog Tsina."}, {"q": "Batay sa relatibong lokasyong insular (bisinal), aling katubigan ang nasa timog ng Pilipinas?", "choices": ["Bashi Channel", "Dagat Timog Tsina", "Dagat Celebes", "Karagatang Pasipiko"], "correct": 2, "exp": "Batay sa relatibong lokasyong insular: Timog – Dagat Celebes."}, {"q": "Batay sa relatibong lokasyong insular (bisinal), aling katubigan ang nasa silangan ng Pilipinas?", "choices": ["Bashi Channel", "Dagat Timog Tsina", "Dagat Celebes", "Karagatang Pasipiko"], "correct": 3, "exp": "Batay sa relatibong lokasyong insular: Silangan – Karagatang Pasipiko."}, {"q": "Batay sa relatibong lokasyong kontinental, aling mga bansa ang matatagpuan sa hilaga ng Pilipinas?", "choices": ["Taiwan at Japan", "Laos, Cambodia, Vietnam", "Borneo, Brunei, Indonesia", "Guam"], "correct": 0, "exp": "Batay sa relatibong lokasyong kontinental: Hilaga – Taiwan, Japan."}, {"q": "Batay sa relatibong lokasyong kontinental, aling mga bansa ang matatagpuan sa kanluran ng Pilipinas?", "choices": ["Taiwan, Japan", "Laos, Cambodia, Vietnam", "Borneo, Brunei, Indonesia", "Guam"], "correct": 1, "exp": "Batay sa relatibong lokasyong kontinental: Kanluran – Laos, Cambodia, Vietnam."}, {"q": "Batay sa relatibong lokasyong kontinental, aling mga bansa ang matatagpuan sa timog ng Pilipinas?", "choices": ["Taiwan, Japan", "Laos, Cambodia, Vietnam", "Borneo, Brunei, Indonesia", "Guam"], "correct": 2, "exp": "Batay sa relatibong lokasyong kontinental: Timog – Borneo, Brunei, Indonesia."}, {"q": "Batay sa relatibong lokasyong kontinental, aling bansa/teritoryo ang matatagpuan sa silangan ng Pilipinas?", "choices": ["Taiwan", "Vietnam", "Indonesia", "Guam"], "correct": 3, "exp": "Batay sa relatibong lokasyong kontinental: Silangan – Guam."}, {"q": "Suriin ang mga pahayag. I. Ang globo ang tunay na modelo ng mundo dahil ito ay oblate spheroid. II. Ang mapa ay isang patag na representasyon ng mundo. Alin ang TAMA?", "choices": ["Ang una lamang ang tama", "Ang ikalawa lamang ang tama", "Parehong tama", "Parehong mali"], "correct": 2, "exp": "Parehong tama ang dalawang pahayag — ito ang eksaktong paglalarawan ng globo at mapa ayon sa aralin."}, {"q": "Suriin ang mga pahayag. I. Ang ekwador ay 0° longhitud. II. Ang Prime Meridian ay 0° latitud. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 1, "exp": "Parehong mali — ang ekwador ay 0° latitud (hindi longhitud), at ang Prime Meridian ay 0° longhitud (hindi latitud)."}];
+
+const QUIZ_LENGTH = 15;
+const SHOW_TOPIC_TAGS = false;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = [];
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp,
+      topic: item.topic || null
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  const topicContainer = document.getElementById('topic-tag-container');
+  if (SHOW_TOPIC_TAGS && item.topic) {
+    topicContainer.innerHTML = `<span class="topic-tag">${escapeHtml(item.topic)}</span>`;
+  } else {
+    topicContainer.innerHTML = '';
+  }
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    topic: item.topic,
+    isCorrect: isCorrect
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa Aralin 1!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  const sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  if (SHOW_TOPIC_TAGS && a.topic) {
+    html += `<span class="topic-tag">${escapeHtml(a.topic)}</span>`;
+  }
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

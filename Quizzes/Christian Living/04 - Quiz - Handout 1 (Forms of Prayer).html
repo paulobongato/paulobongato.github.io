@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Handout 1</title>
+<style>
+  :root {
+    --green-dark: #1f5c3f;
+    --green: #2f7a52;
+    --green-light: #eaf5ee;
+    --ink: #26332c;
+    --muted: #5b6a61;
+    --border: #d7e6dc;
+    --correct: #1f7a3d;
+    --correct-bg: #e6f6ea;
+    --wrong: #b3261e;
+    --wrong-bg: #fdeceb;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f8f5;
+    color: var(--ink);
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    color: #fff;
+    padding: 22px 20px 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  header .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 14px 40px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 26px;
+    box-shadow: 0 4px 16px rgba(31,92,63,0.08);
+    width: 100%;
+    max-width: 560px;
+  }
+  .center-card { text-align: center; }
+  .center-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 22px;
+  }
+  .center-card p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .info-list {
+    text-align: left;
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  .info-list div { margin-bottom: 4px; }
+  .info-list div:last-child { margin-bottom: 0; }
+  button {
+    font-size: 15.5px;
+    font-weight: 600;
+    padding: 13px 30px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-primary:disabled { background: #b7cabf; cursor: not-allowed; }
+  .btn-secondary { background: #fff; color: var(--green-dark); border: 1px solid var(--green); }
+  .btn-secondary:hover { background: var(--green-light); }
+  .progress-wrap {
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 14px 14px 0;
+    flex-shrink: 0;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .progress-bar { height: 8px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 5px; transition: width 0.3s ease; }
+  .q-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green-dark);
+    background: var(--green-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .q-instruction { font-size: 13px; color: var(--muted); margin-bottom: 10px; font-style: italic; }
+  .q-text { font-size: 17px; line-height: 1.5; margin-bottom: 18px; }
+  .options label {
+    display: block;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .options label:hover { background: var(--green-light); border-color: var(--green); }
+  .options input[type="radio"] { margin-right: 10px; }
+  select.match-select {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    background: #fff;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  label.opt-correct { background: var(--correct-bg) !important; border-color: var(--correct) !important; }
+  label.opt-wrong { background: var(--wrong-bg) !important; border-color: var(--wrong) !important; }
+  select.sel-correct { border-color: var(--correct) !important; background: var(--correct-bg); }
+  select.sel-wrong { border-color: var(--wrong) !important; background: var(--wrong-bg); }
+  .feedback { display: none; margin-top: 14px; padding: 12px 14px; border-radius: 9px; font-size: 14.5px; font-weight: 600; }
+  .feedback.correct { display: block; background: var(--correct-bg); color: var(--correct); }
+  .feedback.wrong { display: block; background: var(--wrong-bg); color: var(--wrong); }
+  .q-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+  .score-circle {
+    width: 130px; height: 130px; border-radius: 50%; border: 8px solid var(--green);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    margin: 6px auto 16px;
+  }
+  .score-circle .num { font-size: 30px; font-weight: 800; color: var(--green-dark); }
+  .score-circle .den { font-size: 13px; color: var(--muted); }
+  .review { text-align: left; margin-top: 22px; }
+  .review h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--green-dark); margin-bottom: 10px; }
+  .review-item { border: 1px solid var(--border); border-radius: 9px; padding: 12px 14px; margin-bottom: 10px; font-size: 14px; }
+  .review-item.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .review-item .rq { font-weight: 600; margin-bottom: 6px; }
+  .review-item .ra { color: var(--wrong); }
+  .review-item .rc { color: var(--correct); }
+  .no-mistakes { text-align: center; color: var(--correct); font-weight: 600; margin-top: 18px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 10px 0 18px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Christian Living / GMRC 4</div>
+  <h1 id="headerTitle">Quiz: Handout #1</h1>
+</header>
+
+<div class="progress-wrap" id="progressWrap" style="display:none;">
+  <div class="progress-label">
+    <span id="progressText">Question 1 of 15</span>
+    <span id="progressScore"></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+</div>
+
+<main>
+  <div class="card" id="cardArea"></div>
+</main>
+
+<footer>Christian Living / GMRC 4 &middot; Handout #1 &mdash; Living the Forms of Prayer (ACTSO)</footer>
+
+<script>
+const RAW_QUESTIONS = [
+  {
+    "id": "h1_1",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "What does the word \"pray\" come from, and what does it mean?",
+    "choices": [
+      {
+        "label": "The Latin word \"precari,\" meaning to entreat or ask",
+        "isCorrect": true
+      },
+      {
+        "label": "The Greek word \"logos,\" meaning word",
+        "isCorrect": false
+      },
+      {
+        "label": "The Hebrew word \"shalom,\" meaning peace",
+        "isCorrect": false
+      },
+      {
+        "label": "The Latin word \"gratia,\" meaning thanks",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_2",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "Properly understood, prayer is best described as:",
+    "choices": [
+      {
+        "label": "A conversation with God or with the saints",
+        "isCorrect": true
+      },
+      {
+        "label": "Just asking God for what we want",
+        "isCorrect": false
+      },
+      {
+        "label": "A ritual we must perform out of obligation",
+        "isCorrect": false
+      },
+      {
+        "label": "A private activity that requires no belief in God's presence",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_3",
+    "section": "Forms of Prayer",
+    "instruction": "Identify the type of prayer described. Choose the correct answer from the drop-down list.",
+    "type": "select",
+    "prompt": "\"We praise the greatness of God and acknowledge our dependence on Him in all things.\"",
+    "choices": [
+      {
+        "label": "Adoration",
+        "isCorrect": true
+      },
+      {
+        "label": "Contrition",
+        "isCorrect": false
+      },
+      {
+        "label": "Thanksgiving",
+        "isCorrect": false
+      },
+      {
+        "label": "Supplication",
+        "isCorrect": false
+      },
+      {
+        "label": "Offering/Love",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_4",
+    "section": "Forms of Prayer",
+    "instruction": "Identify the type of prayer described. Choose the correct answer from the drop-down list.",
+    "type": "select",
+    "prompt": "\"We acknowledge our sinfulness and ask God for His forgiveness and mercy.\"",
+    "choices": [
+      {
+        "label": "Adoration",
+        "isCorrect": false
+      },
+      {
+        "label": "Contrition",
+        "isCorrect": true
+      },
+      {
+        "label": "Thanksgiving",
+        "isCorrect": false
+      },
+      {
+        "label": "Supplication",
+        "isCorrect": false
+      },
+      {
+        "label": "Offering/Love",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_5",
+    "section": "Forms of Prayer",
+    "instruction": "Identify the type of prayer described. Choose the correct answer from the drop-down list.",
+    "type": "select",
+    "prompt": "\"Perhaps the most neglected type of prayer\" \u2014 we thank God for the good things that happen to us and others.",
+    "choices": [
+      {
+        "label": "Adoration",
+        "isCorrect": false
+      },
+      {
+        "label": "Contrition",
+        "isCorrect": false
+      },
+      {
+        "label": "Thanksgiving",
+        "isCorrect": true
+      },
+      {
+        "label": "Supplication",
+        "isCorrect": false
+      },
+      {
+        "label": "Offering/Love",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_6",
+    "section": "Forms of Prayer",
+    "instruction": "Identify the type of prayer described. Choose the correct answer from the drop-down list.",
+    "type": "select",
+    "prompt": "\"We ask God for the things we need, while also accepting His will.\"",
+    "choices": [
+      {
+        "label": "Adoration",
+        "isCorrect": false
+      },
+      {
+        "label": "Contrition",
+        "isCorrect": false
+      },
+      {
+        "label": "Thanksgiving",
+        "isCorrect": false
+      },
+      {
+        "label": "Supplication",
+        "isCorrect": true
+      },
+      {
+        "label": "Offering/Love",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_7",
+    "section": "Forms of Prayer",
+    "instruction": "Identify the type of prayer described. Choose the correct answer from the drop-down list.",
+    "type": "select",
+    "prompt": "\"Expressions of our love for God, the source and object of all love.\"",
+    "choices": [
+      {
+        "label": "Adoration",
+        "isCorrect": false
+      },
+      {
+        "label": "Contrition",
+        "isCorrect": false
+      },
+      {
+        "label": "Thanksgiving",
+        "isCorrect": false
+      },
+      {
+        "label": "Supplication",
+        "isCorrect": false
+      },
+      {
+        "label": "Offering/Love",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "id": "h1_8",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "Which prayer does the handout give as an example of a private prayer of adoration?",
+    "choices": [
+      {
+        "label": "The Glory Be",
+        "isCorrect": true
+      },
+      {
+        "label": "The Act of Contrition",
+        "isCorrect": false
+      },
+      {
+        "label": "Grace After Meals",
+        "isCorrect": false
+      },
+      {
+        "label": "The Our Father",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_9",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "Which line from the Our Father shows our willingness to accept God's will?",
+    "choices": [
+      {
+        "label": "\"Thy will be done\"",
+        "isCorrect": true
+      },
+      {
+        "label": "\"Give us this day our daily bread\"",
+        "isCorrect": false
+      },
+      {
+        "label": "\"Forgive us our trespasses\"",
+        "isCorrect": false
+      },
+      {
+        "label": "\"Lead us not into temptation\"",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_10",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "According to the handout, which prayer is perhaps the best example of a prayer of love or offering?",
+    "choices": [
+      {
+        "label": "The Lasallian Prayer",
+        "isCorrect": true
+      },
+      {
+        "label": "The Hail Mary",
+        "isCorrect": false
+      },
+      {
+        "label": "The Apostles' Creed",
+        "isCorrect": false
+      },
+      {
+        "label": "The Fatima Prayer",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_11",
+    "section": "True or False",
+    "instruction": "Choose TRUE if the statement is correct and FALSE if it is incorrect.",
+    "type": "tf",
+    "prompt": "The Confiteor and the Act of Contrition are examples of prayers of contrition.",
+    "choices": [
+      {
+        "label": "True",
+        "isCorrect": true
+      },
+      {
+        "label": "False",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_12",
+    "section": "True or False",
+    "instruction": "Choose TRUE if the statement is correct and FALSE if it is incorrect.",
+    "type": "tf",
+    "prompt": "Grace After Meals is an example of a prayer of supplication.",
+    "choices": [
+      {
+        "label": "True",
+        "isCorrect": false
+      },
+      {
+        "label": "False",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "id": "h1_13",
+    "section": "True or False",
+    "instruction": "Choose TRUE if the statement is correct and FALSE if it is incorrect.",
+    "type": "tf",
+    "prompt": "The Fatima Prayer asks Jesus to forgive our sins and lead all souls to Heaven.",
+    "choices": [
+      {
+        "label": "True",
+        "isCorrect": true
+      },
+      {
+        "label": "False",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_14",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "Which prayer begins with \"I believe in God, the Father almighty, Creator of heaven and earth...\"?",
+    "choices": [
+      {
+        "label": "The Apostles' Creed",
+        "isCorrect": true
+      },
+      {
+        "label": "The Lord's Prayer",
+        "isCorrect": false
+      },
+      {
+        "label": "The Hail Mary",
+        "isCorrect": false
+      },
+      {
+        "label": "The Glory Be",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "h1_15",
+    "section": "Multiple Choice",
+    "instruction": "Read the question carefully. Choose the letter of the correct answer.",
+    "type": "mc",
+    "prompt": "What is the Hail Holy Queen prayer used for?",
+    "choices": [
+      {
+        "label": "It is a concluding prayer of the Holy Rosary",
+        "isCorrect": true
+      },
+      {
+        "label": "It is prayed before Mass begins",
+        "isCorrect": false
+      },
+      {
+        "label": "It replaces the Lord's Prayer in the Rosary",
+        "isCorrect": false
+      },
+      {
+        "label": "It is only prayed during Lent",
+        "isCorrect": false
+      }
+    ]
+  }
+];
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let quiz = [];
+let currentIndex = 0;
+let answers = [];
+let answeredCurrent = false;
+
+const cardArea = document.getElementById('cardArea');
+const progressWrap = document.getElementById('progressWrap');
+const progressText = document.getElementById('progressText');
+const progressScore = document.getElementById('progressScore');
+const progressFill = document.getElementById('progressFill');
+
+function buildQuiz() {
+  quiz = shuffle(RAW_QUESTIONS).map(q => ({
+    ...q,
+    choices: shuffle(q.choices)
+  }));
+  answers = new Array(quiz.length).fill(null);
+  currentIndex = 0;
+}
+
+function renderStart() {
+  progressWrap.style.display = 'none';
+  cardArea.innerHTML = `
+    <div class="center-card">
+      <h2>Living the Forms of Prayer (ACTSO)</h2>
+      <p>Handout #1 &middot; Christian Living / GMRC 4 &middot; 1st Trimester, SY 2026-2027</p>
+      <div class="info-list">
+        <div>&#10003; 15 questions total: Multiple Choice, True/False, and Identify-the-Type.</div>
+        <div>&#10003; Questions appear one at a time, in a new random order each time you take the quiz.</div>
+        <div>&#10003; Answer, then press <strong>Submit</strong> to see if you got it right before moving on.</div>
+        <div>&#10003; Your final score and a review of any mistakes will be shown at the end.</div>
+      </div>
+      <button class="btn-primary" id="startBtn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById('startBtn').addEventListener('click', () => {
+    buildQuiz();
+    renderQuestion();
+  });
+}
+
+function renderQuestion() {
+  progressWrap.style.display = 'block';
+  answeredCurrent = false;
+  const q = quiz[currentIndex];
+  const total = quiz.length;
+  progressText.textContent = `Question ${currentIndex + 1} of ${total}`;
+  const scored = answers.filter(a => a).length;
+  const correctSoFar = answers.filter(a => a && a.isCorrect).length;
+  progressScore.textContent = scored ? `Score: ${correctSoFar}/${scored}` : '';
+  progressFill.style.width = `${(currentIndex / total) * 100}%`;
+
+  let inputHtml = '';
+  if (q.type === 'select') {
+    inputHtml = `<select class="match-select" id="selectInput">
+      <option value="">-- Select --</option>
+      ${q.choices.map((c, i) => `<option value="${i}">${c.label}</option>`).join('')}
+    </select>`;
+  } else {
+    const letters = ['A','B','C','D'];
+    inputHtml = `<div class="options">${q.choices.map((c, i) => `
+      <label data-idx="${i}">
+        <input type="radio" name="opt" value="${i}">
+        ${q.type === 'mc' ? letters[i] + '. ' : ''}${c.label}
+      </label>`).join('')}</div>`;
+  }
+
+  cardArea.innerHTML = `
+    <div class="q-tag">${q.section}</div>
+    <div class="q-instruction">${q.instruction}</div>
+    <div class="q-text">${q.prompt}</div>
+    ${inputHtml}
+    <div class="feedback" id="feedbackBox"></div>
+    <div class="q-actions">
+      <button class="btn-primary" id="actionBtn">Submit</button>
+    </div>
+  `;
+
+  const actionBtn = document.getElementById('actionBtn');
+  actionBtn.addEventListener('click', () => {
+    if (!answeredCurrent) {
+      submitAnswer();
+    } else {
+      currentIndex++;
+      if (currentIndex >= quiz.length) {
+        renderEnd();
+      } else {
+        renderQuestion();
+      }
+    }
+  });
+}
+
+function getSelectedIndex(q) {
+  if (q.type === 'select') {
+    const sel = document.getElementById('selectInput');
+    return sel.value === '' ? null : parseInt(sel.value, 10);
+  }
+  const checked = document.querySelector('input[name="opt"]:checked');
+  return checked ? parseInt(checked.value, 10) : null;
+}
+
+function submitAnswer() {
+  const q = quiz[currentIndex];
+  const idx = getSelectedIndex(q);
+  if (idx === null) {
+    const fb = document.getElementById('feedbackBox');
+    fb.className = 'feedback wrong';
+    fb.style.display = 'block';
+    fb.textContent = 'Please choose an answer before submitting.';
+    return;
+  }
+
+  const isCorrect = q.choices[idx].isCorrect;
+  const correctIdx = q.choices.findIndex(c => c.isCorrect);
+  answers[currentIndex] = {
+    given: q.choices[idx].label,
+    correct: q.choices[correctIdx].label,
+    isCorrect
+  };
+  answeredCurrent = true;
+
+  if (q.type === 'select') {
+    const sel = document.getElementById('selectInput');
+    sel.disabled = true;
+    sel.classList.add(isCorrect ? 'sel-correct' : 'sel-wrong');
+  } else {
+    document.querySelectorAll('.options label').forEach(label => {
+      const i = parseInt(label.dataset.idx, 10);
+      label.querySelector('input').disabled = true;
+      if (q.choices[i].isCorrect) label.classList.add('opt-correct');
+      else if (i === idx) label.classList.add('opt-wrong');
+    });
+  }
+
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+  fb.style.display = 'block';
+  fb.textContent = isCorrect ? 'Correct! Well done.' : `Incorrect. The correct answer is: ${q.choices[correctIdx].label}`;
+
+  const actionBtn = document.getElementById('actionBtn');
+  actionBtn.textContent = currentIndex === quiz.length - 1 ? 'See Results' : 'Next Question';
+
+  progressFill.style.width = `${((currentIndex + 1) / quiz.length) * 100}%`;
+  const scored = answers.filter(a => a).length;
+  const correctSoFar = answers.filter(a => a && a.isCorrect).length;
+  progressScore.textContent = `Score: ${correctSoFar}/${scored}`;
+}
+
+function renderEnd() {
+  progressWrap.style.display = 'none';
+  const total = quiz.length;
+  const score = answers.filter(a => a && a.isCorrect).length;
+  const pct = Math.round((score / total) * 100);
+  let msg = '';
+  if (pct === 100) msg = 'Perfect score! Excellent work.';
+  else if (pct >= 80) msg = 'Great job!';
+  else if (pct >= 60) msg = 'Good effort — review the mistakes below.';
+  else msg = 'Keep practicing — review the mistakes below.';
+
+  const mistakes = quiz
+    .map((q, i) => ({ q, a: answers[i] }))
+    .filter(x => x.a && !x.a.isCorrect);
+
+  let reviewHtml = '';
+  if (mistakes.length === 0) {
+    reviewHtml = `<div class="no-mistakes">You answered every question correctly!</div>`;
+  } else {
+    reviewHtml = `
+      <div class="review">
+        <h3>Review Your Mistakes (${mistakes.length})</h3>
+        ${mistakes.map(x => `
+          <div class="review-item wrong">
+            <div class="rq">${x.q.prompt}</div>
+            <div class="ra">Your answer: ${x.a.given}</div>
+            <div class="rc">Correct answer: ${x.a.correct}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  cardArea.innerHTML = `
+    <div class="center-card">
+      <h2>Quiz Complete</h2>
+      <div class="score-circle">
+        <div class="num">${score}/${total}</div>
+        <div class="den">${pct}%</div>
+      </div>
+      <p>${msg}</p>
+      ${reviewHtml}
+      <button class="btn-secondary" id="retryBtn" style="margin-top:20px;">Take Quiz Again</button>
+    </div>
+  `;
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    renderStart();
+  });
+}
+
+renderStart();
+</script>
+
+</body>
+</html>

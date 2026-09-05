@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagsusulit: Ang Klima at Panahon ng Pilipinas</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --green: #15803d;
+    --green-bg: #dcfce7;
+    --green-border: #22c55e;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --red-border: #ef4444;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+    background: linear-gradient(180deg, #e0f2fe 0%, #f1f5f9 300px);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 720px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+    padding: 28px 24px;
+    margin-top: 12px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    color: var(--blue-dark);
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+  h2.subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    text-align: center;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    background: #dbeafe;
+    color: var(--blue-dark);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .instructions {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  .instructions ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+  .instructions li { margin-bottom: 6px; }
+  .btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #e2e8f0;
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .center { text-align: center; }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--blue);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .topic-tag {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .choice {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .choice:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: #eff6ff;
+  }
+  .choice.selected {
+    border-color: var(--blue);
+    background: #dbeafe;
+  }
+  .choice.correct {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .choice.incorrect {
+    border-color: var(--red-border);
+    background: var(--red-bg);
+    color: var(--red);
+    font-weight: 600;
+  }
+  .choice.disabled { cursor: default; }
+  .choice-letter {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    margin-right: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.85rem;
+  }
+  .feedback-box {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    animation: slideIn 0.25s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct-box {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+  }
+  .feedback-box.incorrect-box {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+  }
+  .feedback-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+  .feedback-title.correct-text { color: var(--green); }
+  .feedback-title.incorrect-text { color: var(--red); }
+  .feedback-exp {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #334155;
+  }
+  .nav-row {
+    margin-top: 18px;
+  }
+  .score-hero {
+    text-align: center;
+    padding: 20px 0 8px 0;
+  }
+  .score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid var(--blue);
+    background: #eff6ff;
+  }
+  .score-circle .num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    line-height: 1;
+  }
+  .score-circle .den {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .score-msg {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .score-sub {
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .review-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .review-item.wrong {
+    border-color: var(--red-border);
+    background: #fff5f5;
+  }
+  .review-item.right {
+    border-color: var(--green-border);
+    background: #f5fff7;
+  }
+  .review-q {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .review-line {
+    font-size: 0.92rem;
+    margin: 3px 0;
+  }
+  .review-line.wrong-answer { color: var(--red); }
+  .review-line.right-answer { color: var(--green); }
+  .review-exp {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: #475569;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 6px;
+  }
+  .section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 24px 0 12px 0;
+  }
+  .hidden { display: none !important; }
+  footer.tag {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    margin-top: 14px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; border-radius: 14px; }
+    h1 { font-size: 1.25rem; }
+    .score-circle { width: 120px; height: 120px; }
+    .score-circle .num { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <div id="start-screen" class="card">
+    <h1>Ang Klima at Panahon ng Pilipinas</h1>
+    <h2 class="subtitle">Aralin 3 — Pagsusulit sa Araling Panlipunan</h2>
+    <div class="badge-row">
+      <span class="badge">Asignatura: Araling Panlipunan</span>
+      <span class="badge">Baitang 4</span>
+      <span class="badge">15 Tanong</span>
+    </div>
+    <div class="instructions">
+      <strong>Panuto:</strong>
+      <ul>
+        <li>Ang pagsusulit na ito ay may <strong>15 tanong</strong> na kinuha nang random mula sa isang malaking bangko ng tanong, kaya't magkakaiba ang pagkakasunod-sunod at maaaring magkaiba ang mga tanong sa bawat pagsusulit.</li>
+        <li>Isang tanong lang ang ipapakita sa bawat pagkakataon. Piliin ang iyong sagot, pagkatapos ay pindutin ang <strong>Isumite</strong>.</li>
+        <li>Makikita mo agad kung tama o mali ang sagot, kasama ang tamang sagot at maikling paliwanag.</li>
+        <li>Pagkatapos ng lahat ng tanong, makikita mo ang iyong <strong>iskor</strong> at ang buod ng mga tanong na iyong nasagutan, kabilang ang mga nagkamalian ka.</li>
+        <li>Paksa: Klima Laban sa Panahon, ang Pilipinas Bilang Bansang Tropikal, mga Salik sa Klima (Lokasyon, Halumigmig, Hangin, Ulan), PAGASA, at Bagyo (Pahina 34–41).</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="startQuiz()">Simulan ang Pagsusulit</button>
+  </div>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <div id="quiz-screen" class="card hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Tanong 1 / 15</div>
+    </div>
+    <div id="topic-tag-container"></div>
+    <div class="question-text" id="question-text"></div>
+    <div id="choices-container"></div>
+    <div id="feedback-container"></div>
+    <div class="nav-row">
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" disabled>Isumite</button>
+      <button class="btn hidden" id="next-btn" onclick="nextQuestion()" style="margin-top:10px;">Susunod na Tanong</button>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <div id="result-screen" class="card hidden">
+    <div class="score-hero">
+      <div class="score-circle">
+        <div class="num" id="score-num">0/15</div>
+        <div class="den">TAMANG SAGOT</div>
+      </div>
+      <div class="score-msg" id="score-msg"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="restartQuiz()">Ulitin ang Pagsusulit</button>
+    <div class="section-title">Buod ng mga Sagot</div>
+    <div id="review-container"></div>
+  </div>
+
+  <footer class="tag">Aralin 3: Ang Klima at Panahon ng Pilipinas · Rebyuwer sa Araling Panlipunan</footer>
+</div>
+
+<script>
+const QUESTION_BANK = [{"q": "Ano ang tawag sa pansamantalang kalagayan ng atmospera na nagbabago anumang oras?", "choices": ["Klima", "Panahon (weather)", "Habagat", "Halumigmig"], "correct": 1, "exp": "Ang panahon (weather) ay ang pansamantalang kalagayan ng atmospera na nagbabago anumang oras."}, {"q": "Ano ang tawag sa pangmatagalang kalagayan ng panahon sa isang lugar na hindi bumababa sa anim na buwan?", "choices": ["Panahon", "Klima (climate)", "Amihan", "Bagyo"], "correct": 1, "exp": "Ang klima (climate) ay ang pangmatagalang kalagayan ng panahon sa isang lugar; hindi ito bumababa sa anim na buwan."}, {"q": "Kung biglang dumilim at umulan habang papasok ang araw, ito ay halimbawa ng ano?", "choices": ["Klima", "Panahon", "Habagat", "Amihan"], "correct": 1, "exp": "Ang biglaang pagbabago tulad nito ay halimbawa ng panahon (weather), hindi klima."}, {"q": "Alin ang pangunahing dahilan kung bakit madaling matukoy ang klima ng isang bansa?", "choices": ["Ang laki ng populasyon nito", "Ang lokasyon nito", "Ang uri ng pamahalaan nito", "Ang kasaysayan nito"], "correct": 1, "exp": "Ang klima ng isang bansa ay madaling matukoy dahil sa lokasyon nito."}, {"q": "Ang mga bansang nasa pagitan ng Tropiko ng Kanser at Tropiko ng Kaprikornyo ay nakararanas ng anong klima?", "choices": ["Klimang polar", "Klimang tagsibol at taglamig", "Klimang mainit o tropikal", "Klimang temperate lamang"], "correct": 2, "exp": "Ang mga bansang nasa pagitan ng Tropiko ng Kanser (23.5° Hilaga) at Tropiko ng Kaprikornyo (23.5° Timog) ay nakararanas ng klimang mainit o tropikal."}, {"q": "Ang mga bansang nasa pagitan ng Tropiko ng Kanser at Kabilugang Arktiko ay karaniwang nakararanas ng anong mga klima?", "choices": ["Tag-init at tag-ulan lamang", "Tagsibol, taglagas, at taglamig", "Klimang tropikal", "Palagiang nagyeyelo"], "correct": 1, "exp": "Ang karamihan sa mga bansang nasa pagitan ng Tropiko ng Kanser at Kabilugang Arktiko ay nakararanas ng klimang tagsibol, taglagas, at taglamig."}, {"q": "Ano ang tawag sa rehiyong nasa Kabilugang Arktiko o Antartiko na halos hindi umaabot ang sikat ng araw?", "choices": ["Tropical Zone", "Temperate Zone", "Frigid Zone", "Equatorial Zone"], "correct": 2, "exp": "Ang mga bansang nasa Kabilugang Arktiko o Antartiko (Frigid Zone) ay nananatiling malamig sapagkat halos hindi umaabot dito ang sikat ng araw."}, {"q": "Bakit kabilang ang Pilipinas sa mga bansang may klimang tropikal?", "choices": ["Dahil ito ay malapit sa ekwador", "Dahil ito ay malapit sa Kabilugang Arktiko", "Dahil ito ay may maraming bundok", "Dahil ito ay isang kapuluan"], "correct": 0, "exp": "Ang Pilipinas ay nasa pagitan ng 4°23' at 21°25' Hilaga, malapit sa ekwador, kaya't kabilang ito sa mga bansang may klimang tropikal."}, {"q": "Ilan ang uri ng panahon na mararanasan sa mga bansang tropikal?", "choices": ["1", "2", "3", "4"], "correct": 1, "exp": "Dalawang uri ng panahon lamang ang mararanasan sa mga bansang tropikal: tag-init at tag-ulan."}, {"q": "Alin sa mga sumusunod ang dalawang uri ng panahon na mararanasan sa Pilipinas bilang bansang tropikal?", "choices": ["Tagsibol at taglagas", "Tag-init at tag-ulan", "Taglamig at tagsibol", "Habagat at Amihan lamang"], "correct": 1, "exp": "Dalawang uri ng panahon lamang ang mararanasan sa mga bansang tropikal: tag-init at tag-ulan."}, {"q": "Kailan karaniwang tag-init sa Pilipinas?", "choices": ["Hunyo hanggang Nobyembre", "Disyembre hanggang Mayo", "Marso hanggang Hunyo", "Setyembre hanggang Disyembre"], "correct": 1, "exp": "Sa Pilipinas, karaniwang tag-init mula Disyembre hanggang Mayo."}, {"q": "Kailan karaniwang tag-ulan sa Pilipinas?", "choices": ["Disyembre hanggang Mayo", "Hunyo hanggang Nobyembre", "Enero hanggang Marso", "Agosto hanggang Oktubre"], "correct": 1, "exp": "Sa Pilipinas, karaniwang tag-ulan mula Hunyo hanggang Nobyembre."}, {"q": "Alin sa mga sumusunod ang HINDI kabilang sa mga salik na may kinalaman sa klima ng bansa?", "choices": ["Lokasyon at temperatura", "Halumigmig (humidity)", "Ihip ng hangin", "Kulay ng bandila ng bansa"], "correct": 3, "exp": "Ang mga salik na may kinalaman sa klima ay lokasyon/katangiang pisikal/temperatura, halumigmig, ihip ng hangin, at dami ng ulan — hindi kulay ng bandila."}, {"q": "Karaniwang nakararanas ng anong temperatura ang mga mababang lugar gaya ng kapatagan?", "choices": ["Malamig na temperatura", "Mainit na temperatura", "Palaging nagyeyelo", "Walang temperatura"], "correct": 1, "exp": "Ang mga mababang lugar, gaya ng kapatagan, ay karaniwang nakararanas ng mainit na temperatura."}, {"q": "Karaniwang nakararanas ng anong temperatura ang mga matataas na lugar gaya ng mga bundok?", "choices": ["Mainit na temperatura", "Malamig na temperatura", "Walang pagbabago sa temperatura", "Palaging maulan"], "correct": 1, "exp": "Ang mga matataas na lugar, gaya ng mga bundok, ay malamig."}, {"q": "Anong lungsod ang tinaguriang \"Summer Capital\" ng Pilipinas dahil sa malamig na klima nito?", "choices": ["Maynila", "Baguio", "Cebu", "Davao"], "correct": 1, "exp": "Ang Baguio ay tinaguriang \"Summer Capital\" ng Pilipinas."}, {"q": "Humigit-kumulang ilang metro pataas sa antas ng dagat matatagpuan ang Baguio?", "choices": ["500 metro", "1,000 metro", "1,500 metro", "2,500 metro"], "correct": 2, "exp": "Ang Baguio ay nasa humigit-kumulang 1,500 metro pataas sa antas ng dagat kaya't malamig ang klima rito."}, {"q": "Ayon sa halimbawa sa aralin, humigit-kumulang ilang degrees Celsius ang average na temperatura sa Baguio?", "choices": ["10.3°C", "18.3°C", "26.6°C", "32.0°C"], "correct": 1, "exp": "Ang average na temperatura sa Baguio ay maaaring nasa 18.3° Celsius."}, {"q": "Ayon sa halimbawa sa aralin, humigit-kumulang ilang degrees Celsius maaaring umabot ang temperatura sa Maynila?", "choices": ["18.3°C", "20.0°C", "26.6°C", "35.0°C"], "correct": 2, "exp": "Sa mga mababang lugar gaya ng Maynila, maaaring umabot sa 26.6° Celsius ang temperatura paminsan-minsan."}, {"q": "Anong ahensiya ang responsable sa pagsubaybay sa temperatura at panahon sa Pilipinas?", "choices": ["DOST", "PAGASA", "DENR", "NDRRMC"], "correct": 1, "exp": "Ang PAGASA (Philippine Atmospheric, Geophysical and Astronomical Services Administration) ang ahensiyang responsable sa pagsubaybay sa temperatura at panahon sa bansa."}, {"q": "Ano ang buong katawagan ng PAGASA?", "choices": ["Philippine Atmospheric, Geophysical and Astronomical Services Administration", "Philippine Agency for Geological and Space Administration", "Pambansang Ahensiya para sa Ginhawa at Serbisyo Agrikultural", "Philippine Association for Geography and Astronomy"], "correct": 0, "exp": "Ang PAGASA ay ang Philippine Atmospheric, Geophysical and Astronomical Services Administration."}, {"q": "Ano ang tumutukoy sa dami ng singaw ng tubig na nasa ating atmospera?", "choices": ["Temperatura", "Halumigmig (humidity)", "Habagat", "Windward"], "correct": 1, "exp": "Ang halumigmig ay tumutukoy sa dami ng singaw ng tubig na nasa ating atmospera."}, {"q": "Bakit mataas ang antas ng halumigmig na naranasan sa buong kapuluan ng Pilipinas?", "choices": ["Dahil sa lokasyong insular at napaliligiran ito ng maraming anyong-tubig", "Dahil malayo ito sa ekwador", "Dahil kaunti lang ang ulan dito", "Dahil walang bundok sa Pilipinas"], "correct": 0, "exp": "Dahil ang Pilipinas ay may lokasyong insular at napaliligiran ng maraming anyong-tubig, mataas ang antas ng halumigmig na naranasan sa buong kapuluan."}, {"q": "Anong hangin ang nararanasan ng Pilipinas mula Hunyo hanggang Setyembre na nagmumula sa timog-kanlurang direksiyon at nagdudulot ng malakas na ulan?", "choices": ["Amihan", "Habagat", "Trade winds", "Bagyo"], "correct": 1, "exp": "Ang Habagat ay nararanasan ng bansa mula Hunyo hanggang Setyembre; nagmumula sa timog-kanlurang direksiyon at nagdudulot ng malakas na ulan."}, {"q": "Anong hangin ang nararanasan mula Nobyembre hanggang Pebrero, nanggagaling sa Siberia, at tuyo ngunit malamig?", "choices": ["Habagat", "Amihan", "Trade winds", "Ulan monsoon"], "correct": 1, "exp": "Ang Amihan ay nararanasan mula Nobyembre hanggang Pebrero; nanggagaling ito sa Siberia at dumadaloy patungong hilagang-silangan, tuyo ngunit malamig."}, {"q": "Saan nagmumula ang trade winds na nararanasan mula Nobyembre hanggang Pebrero?", "choices": ["Siberia", "Karagatang Pasipiko", "Dagat Timog Tsina", "Indian Ocean"], "correct": 1, "exp": "Ang trade winds ay nagmumula sa Karagatang Pasipiko at nararanasan mula Nobyembre hanggang Pebrero."}, {"q": "Kailan nararanasan ang Habagat sa Pilipinas?", "choices": ["Hunyo hanggang Setyembre", "Nobyembre hanggang Pebrero", "Marso hanggang Mayo", "Buong taon"], "correct": 0, "exp": "Ang Habagat ay nararanasan ng bansa mula Hunyo hanggang Setyembre."}, {"q": "Kailan nararanasan ang Amihan sa Pilipinas?", "choices": ["Hunyo hanggang Setyembre", "Nobyembre hanggang Pebrero", "Marso hanggang Mayo", "Buong taon"], "correct": 1, "exp": "Ang Amihan ay nararanasan mula Nobyembre hanggang Pebrero."}, {"q": "Anong taon inilabas ng PAGASA ang color-coded rainfall flood warning system?", "choices": ["Hunyo 2010", "Hunyo 2012", "Hunyo 2015", "Hunyo 2018"], "correct": 1, "exp": "Noong Hunyo 2012, inilabas ng PAGASA ang color-coded rainfall flood warning system upang mabigyang-babala ang mga tao hinggil sa posibleng pagbaha."}, {"q": "Sa color-coded rainfall warning system ng PAGASA, ano ang ipinapahiwatig ng kulay Pula (Red)?", "choices": ["Posibleng pagbaha; subaybayan", "Nagbabantang pagbaha; alerto", "Malubhang pagbaha; ebakwasyon", "Walang panganib"], "correct": 2, "exp": "Ang kulay Pula (Red), na sumasaklaw ng mahigit 30mm bawat oras na ulan, ay nagpapahiwatig ng malubhang pagbaha at pangangailangan ng ebakwasyon."}, {"q": "Sa color-coded rainfall warning system ng PAGASA, ilang milimetro bawat oras ang sukat ng ulan para sa antas na Kahel (Orange)?", "choices": ["Mahigit 30mm", "15–30mm", "7.5–15mm", "Wala pang 5mm"], "correct": 1, "exp": "Ang antas na Kahel (Orange) ay sumasaklaw ng 15–30mm bawat oras na ulan, nagbabantang pagbaha, alerto."}, {"q": "Sa color-coded rainfall warning system ng PAGASA, ilang milimetro bawat oras ang sukat ng ulan para sa antas na Dilaw (Yellow)?", "choices": ["Mahigit 30mm", "15–30mm", "7.5–15mm", "0–2mm"], "correct": 2, "exp": "Ang antas na Dilaw (Yellow) ay sumasaklaw ng 7.5–15mm bawat oras na ulan, posibleng pagbaha, dapat subaybayan."}, {"q": "Ano ang tawag sa bahagi ng bundok kung saan bumabagsak ang ulan?", "choices": ["Leeward", "Windward", "Kailaliman", "Talampas"], "correct": 1, "exp": "Ang windward ay ang bahagi ng bundok kung saan bumabagsak ang ulan."}, {"q": "Ano ang tawag sa bahagi ng bundok na kabila ng windward at walang bumabagsak na ulan?", "choices": ["Windward", "Leeward", "Habagat side", "Amihan side"], "correct": 1, "exp": "Ang leeward ay ang bahaging kabila ng windward na walang bumabagsak na ulan."}, {"q": "Alin sa mga sumusunod ang mga bulubundukin na nakapaligid sa mga lalawigang hilagang Luzon at nagdudulot ng pagkakaiba sa windward/leeward?", "choices": ["Cordillera, Sierra Madre, at Caraballo", "Diwata Range at Zambales Mountains", "Kitanglad at Apo Range", "Banahaw at Makiling"], "correct": 0, "exp": "Makikita ang windward/leeward na sitwasyon sa mga lalawigang hilagang Luzon na napaliligiran ng mga bulubundukin ng Cordillera, Sierra Madre, at Caraballo."}, {"q": "Humigit-kumulang ilang bagyo ang dumaraan sa Pilipinas taon-taon?", "choices": ["10 bagyo", "20 bagyo", "30 bagyo", "50 bagyo"], "correct": 1, "exp": "May humigit-kumulang 20 bagyo ang dumaraan sa bansa taon-taon."}, {"q": "Paano binibigyan ng pangalan ang mga bagyong dumaraan sa Pilipinas taon-taon?", "choices": ["Nang paalpabeto", "Ayon sa buwan", "Ayon sa lakas ng hangin", "Batay sa pangalan ng lalawigan"], "correct": 0, "exp": "Ang mga bagyo ay binibigyan ng pangalan nang paalpabeto upang maging palatandaan kung ilang bagyo na ang pumapasok sa bansa."}, {"q": "Saan karaniwang nagmumula ang mga bagyo na dumadaan sa Luzon, Visayas, at Mindanao?", "choices": ["Karagatang Pasipiko", "Dagat Timog Tsina", "Dagat Celebes", "Golpo ng Moro"], "correct": 0, "exp": "Karaniwang nagmumula ang mga bagyo sa Karagatang Pasipiko at bumabaybay sa mga lalawigan ng Luzon, Visayas, at Mindanao."}, {"q": "Sa sistema ng Babala ng PAGASA, anong bilis ng hangin ang saklaw ng Babala Bilang 1?", "choices": ["30–60 kph", "61–120 kph", "121–170 kph", "171–220 kph"], "correct": 0, "exp": "Ang Babala Bilang 1 ay sumasaklaw ng 30–60 kph na bilis ng hangin, inaasahang tama sa lupa sa loob ng 36 na oras."}, {"q": "Sa sistema ng Babala ng PAGASA, anong bilis ng hangin ang saklaw ng Babala Bilang 3?", "choices": ["30–60 kph", "61–120 kph", "121–170 kph", "Mahigit 220 kph"], "correct": 2, "exp": "Ang Babala Bilang 3 ay sumasaklaw ng 121–170 kph na bilis ng hangin, inaasahang tama sa lupa sa loob ng 18 oras."}, {"q": "Sa sistema ng Babala ng PAGASA, anong babala ang para sa bagyong may bilis ng hanging mahigit 220 kph?", "choices": ["Babala Bilang 2", "Babala Bilang 3", "Babala Bilang 4", "Babala Bilang 5"], "correct": 3, "exp": "Ang Babala Bilang 5 ay para sa bagyong may bilis ng hanging mahigit 220 kph."}, {"q": "Ilang oras bago inaasahang tumama sa lupa ang bagyo sa ilalim ng Babala Bilang 1?", "choices": ["12 oras", "18 oras", "24 oras", "36 oras"], "correct": 3, "exp": "Sa ilalim ng Babala Bilang 1, inaasahang tatama ito sa lupa sa loob ng 36 na oras."}, {"q": "Ilan ang uri ng klima na mararanasan sa Pilipinas ayon sa temperatura at distribusyon ng ulan?", "choices": ["2", "3", "4", "5"], "correct": 2, "exp": "May apat na uri ng klima sa Pilipinas batay sa temperatura at distribusyon ng ulan sa buong bansa."}, {"q": "Alin sa mga sumusunod ang nakaaapekto sa uri ng klimang nararanasan ng bawat lalawigan sa Pilipinas?", "choices": ["Lokasyon, distansya mula sa dagat, at katangiang pisikal", "Bilang lamang ng populasyon", "Uri ng pamahalaang lokal", "Pangalan ng lalawigan"], "correct": 0, "exp": "Nag-iiba-iba ang uri ng klimang nararanasan ng bawat lalawigan depende sa kanilang lokasyon, distansya mula sa dagat, at katangiang pisikal na nakapaligid dito."}, {"q": "Suriin ang mga pahayag. I. Ang klima ay nagbabago-bago sa loob lamang ng ilang oras. II. Ang panahon ay pansamantalang kalagayan ng atmospera. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 3, "exp": "Mali ang una dahil ang mabilis magbagong kalagayan sa loob ng ilang oras ay tinatawag na panahon, hindi klima. Tama ang ikalawa."}, {"q": "Suriin ang mga pahayag. I. Ang Habagat ay nagmumula sa Siberia. II. Ang Amihan ay tuyo at malamig na hangin mula Nobyembre hanggang Pebrero. Alin ang TAMA?", "choices": ["Parehong tama", "Parehong mali", "Ang una lamang ang tama", "Ang ikalawa lamang ang tama"], "correct": 3, "exp": "Mali ang una dahil ang Amihan (hindi Habagat) ang nagmumula sa Siberia. Tama ang ikalawa."}];
+
+const QUIZ_LENGTH = 15;
+const SHOW_TOPIC_TAGS = false;
+let quizQuestions = [];
+let currentIndex = 0;
+let userAnswers = [];
+let answeredCurrent = false;
+let selectedChoice = null;
+
+function shuffle(array) {
+  const a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuizSet() {
+  const pool = shuffle(QUESTION_BANK);
+  const picked = pool.slice(0, QUIZ_LENGTH);
+  return picked.map(item => {
+    const letterOrder = shuffle([0, 1, 2, 3]);
+    const newChoices = letterOrder.map(i => item.choices[i]);
+    const newCorrect = letterOrder.indexOf(item.correct);
+    return {
+      q: item.q,
+      choices: newChoices,
+      correct: newCorrect,
+      exp: item.exp,
+      topic: item.topic || null
+    };
+  });
+}
+
+function startQuiz() {
+  quizQuestions = buildQuizSet();
+  currentIndex = 0;
+  userAnswers = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  answeredCurrent = false;
+  selectedChoice = null;
+  const item = quizQuestions[currentIndex];
+
+  document.getElementById('progress-label').textContent = `Tanong ${currentIndex + 1} / ${QUIZ_LENGTH}`;
+  document.getElementById('progress-fill').style.width = ((currentIndex) / QUIZ_LENGTH * 100) + '%';
+
+  const topicContainer = document.getElementById('topic-tag-container');
+  if (SHOW_TOPIC_TAGS && item.topic) {
+    topicContainer.innerHTML = `<span class="topic-tag">${escapeHtml(item.topic)}</span>`;
+  } else {
+    topicContainer.innerHTML = '';
+  }
+
+  document.getElementById('question-text').textContent = item.q;
+
+  const container = document.getElementById('choices-container');
+  container.innerHTML = '';
+  item.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="choice-letter">${LETTERS[idx]}</span>${escapeHtml(choice)}`;
+    btn.onclick = () => selectChoice(idx);
+    btn.id = 'choice-' + idx;
+    container.appendChild(btn);
+  });
+
+  document.getElementById('feedback-container').innerHTML = '';
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('submit-btn').classList.remove('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function selectChoice(idx) {
+  if (answeredCurrent) return;
+  selectedChoice = idx;
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('submit-btn').disabled = false;
+}
+
+function submitAnswer() {
+  if (selectedChoice === null || answeredCurrent) return;
+  answeredCurrent = true;
+  const item = quizQuestions[currentIndex];
+  const isCorrect = selectedChoice === item.correct;
+
+  userAnswers.push({
+    question: item.q,
+    choices: item.choices,
+    chosenIdx: selectedChoice,
+    correctIdx: item.correct,
+    exp: item.exp,
+    topic: item.topic,
+    isCorrect: isCorrect
+  });
+
+  document.querySelectorAll('.choice').forEach((el, i) => {
+    el.classList.add('disabled');
+    el.onclick = null;
+    if (i === item.correct) el.classList.add('correct');
+    else if (i === selectedChoice) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('feedback-container');
+  const box = document.createElement('div');
+  box.className = 'feedback-box ' + (isCorrect ? 'correct-box' : 'incorrect-box');
+  box.innerHTML = `
+    <div class="feedback-title ${isCorrect ? 'correct-text' : 'incorrect-text'}">
+      ${isCorrect ? '✅ Tama!' : '❌ Mali.'} ${!isCorrect ? 'Ang tamang sagot ay ' + LETTERS[item.correct] + '. ' + escapeHtml(item.choices[item.correct]) + '.' : ''}
+    </div>
+    <div class="feedback-exp">${escapeHtml(item.exp)}</div>
+  `;
+  fb.appendChild(box);
+
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').textContent = (currentIndex === QUIZ_LENGTH - 1) ? 'Tingnan ang Resulta' : 'Susunod na Tanong';
+
+  document.getElementById('progress-fill').style.width = ((currentIndex + 1) / QUIZ_LENGTH * 100) + '%';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= QUIZ_LENGTH) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+
+  const correctCount = userAnswers.filter(a => a.isCorrect).length;
+  document.getElementById('score-num').textContent = `${correctCount}/${QUIZ_LENGTH}`;
+
+  const pct = Math.round((correctCount / QUIZ_LENGTH) * 100);
+  let msg;
+  if (pct >= 90) { msg = 'Napakahusay! Bihasa ka na sa Aralin 3!'; }
+  else if (pct >= 75) { msg = 'Magaling! Malapit ka nang maging eksperto.'; }
+  else if (pct >= 50) { msg = 'Mabuti! Ipagpatuloy ang pag-aaral.'; }
+  else { msg = 'Magpatuloy sa pagsasanay, kaya mo yan!'; }
+  const sub = `Nakuha mo ang ${pct}% sa pagsusulit na ito.`;
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-sub').textContent = sub;
+
+  const reviewContainer = document.getElementById('review-container');
+  reviewContainer.innerHTML = '';
+
+  const mistakes = userAnswers.filter(a => !a.isCorrect);
+  if (mistakes.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = `Mga Tanong na Nagkamalian Ka (${mistakes.length})`;
+    reviewContainer.appendChild(header);
+    mistakes.forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+
+    const header2 = document.createElement('div');
+    header2.className = 'section-title';
+    header2.textContent = 'Mga Tamang Sagot';
+    reviewContainer.appendChild(header2);
+  } else {
+    const header = document.createElement('div');
+    header.className = 'section-title';
+    header.style.marginTop = '0';
+    header.textContent = 'Perpektong Iskor! Narito ang Lahat ng Tanong';
+    reviewContainer.appendChild(header);
+  }
+
+  userAnswers.filter(a => a.isCorrect).forEach(a => reviewContainer.appendChild(buildReviewItem(a)));
+}
+
+function buildReviewItem(a) {
+  const div = document.createElement('div');
+  div.className = 'review-item ' + (a.isCorrect ? 'right' : 'wrong');
+  let html = '';
+  if (SHOW_TOPIC_TAGS && a.topic) {
+    html += `<span class="topic-tag">${escapeHtml(a.topic)}</span>`;
+  }
+  html += `<div class="review-q">${escapeHtml(a.question)}</div>`;
+  if (!a.isCorrect) {
+    html += `<div class="review-line wrong-answer">Ang sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+    html += `<div class="review-line right-answer">Tamang sagot: ${LETTERS[a.correctIdx]}. ${escapeHtml(a.choices[a.correctIdx])}</div>`;
+  } else {
+    html += `<div class="review-line right-answer">✓ Sagot mo: ${LETTERS[a.chosenIdx]}. ${escapeHtml(a.choices[a.chosenIdx])}</div>`;
+  }
+  html += `<div class="review-exp">${escapeHtml(a.exp)}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function restartQuiz() {
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Suri: Pagsusulit sa Heograpiya ng Pilipinas, Mapa at Globo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .title-font {
+            font-family: 'Bubblegum Sans', cursive;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-yellow-400 text-indigo-900 p-2 rounded-full shadow-inner animate-bounce">
+                    <i class="fa-solid fa-map-location-dot text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="title-font text-xl md:text-2xl tracking-wide">E-Suri: AP 5 Quiz</h1>
+                    <p class="text-[10px] text-indigo-100 font-semibold uppercase tracking-wider">Heograpiya ng Pilipinas, Mapa at Globo</p>
+                </div>
+            </div>
+            
+            <!-- Global Score Tracker -->
+            <div class="bg-indigo-800/60 px-4 py-1.5 rounded-full border border-indigo-500/30 text-center">
+                <span class="text-[9px] uppercase text-indigo-300 block font-bold">Puntos</span>
+                <span id="global-score" class="font-bold text-yellow-400 text-base md:text-lg">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY -->
+    <main class="max-w-3xl mx-auto px-4 py-8 flex-grow w-full flex items-center justify-center">
+        
+        <!-- CARD CONTAINER -->
+        <div class="w-full bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden min-h-[500px] flex flex-col justify-between transition-all duration-300">
+            
+            <!-- 1. START SCREEN -->
+            <div id="screen-start" class="p-6 md:p-10 text-center space-y-6 flex flex-col justify-center items-center my-auto">
+                <div class="relative">
+                    <span class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">Bidyo Aralin</span>
+                    <i class="fa-solid fa-earth-asia text-6xl text-indigo-600 animate-spin-slow"></i>
+                </div>
+                
+                <div class="space-y-2 max-w-md">
+                    <h2 class="title-font text-3xl md:text-4xl text-slate-800">15 Hamon sa Heograpiya ng Pilipinas</h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Subukan ang iyong kaalaman mula sa mga pinanood na video-aralin ukol sa Heograpiya ng Pilipinas (Aralin 1) at Paggamit ng Mapa at Globo (Aralin 2). Sagutin nang tama ang lahat ng 15 katanungan!
+                    </p>
+                </div>
+
+                <div class="bg-indigo-50 rounded-2xl p-4 border border-indigo-100 max-w-sm w-full text-left space-y-1.5 text-xs text-slate-600">
+                    <p class="font-bold text-indigo-900 mb-1"><i class="fa-solid fa-star text-yellow-500 mr-1"></i> Alituntunin:</p>
+                    <p>• Mayroong 15 random na tanong na may pagpipiliang A hanggang D.</p>
+                    <p>• Na-ra-randomize ang pagkakasunod-sunod sa bawat laro.</p>
+                    <p>• May detalyadong paliwanag pagkatapos ng bawat sagot.</p>
+                    <p>• Bawat tamang sagot ay may katumbas na 10 puntos.</p>
+                </div>
+
+                <button onclick="startQuiz()" class="w-full max-w-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+                    Simulan ang Pagsusulit <i class="fa-solid fa-circle-play text-lg"></i>
+                </button>
+            </div>
+
+            <!-- 2. QUIZ SCREEN -->
+            <div id="screen-quiz" class="hidden flex-col justify-between h-full flex-grow">
+                <!-- Progress Header -->
+                <div class="bg-slate-50 border-b border-slate-100 p-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                    <div class="flex items-center space-x-2">
+                        <span id="question-number" class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Tanong 1/15</span>
+                        <span class="text-slate-400 text-xs font-medium">| Pagpipilian: A hanggang D</span>
+                    </div>
+                    <!-- Progress Bar wrapper -->
+                    <div class="w-full sm:w-48 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                        <div id="progress-bar-fill" class="bg-indigo-600 h-2.5 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Active Question Context -->
+                <div class="p-6 md:p-8 space-y-6 flex-grow">
+                    <h3 id="question-text" class="text-base md:text-lg font-bold text-slate-800 leading-relaxed">
+                        -- Naglo-load ang tanong... --
+                    </h3>
+
+                    <!-- Choices A-D Grid Layout -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="choices-grid">
+                        <!-- Choice A -->
+                        <button onclick="submitAnswer(0)" class="choice-btn text-left p-4 rounded-xl border border-slate-200 hover:bg-indigo-50/50 hover:border-indigo-300 transition-all flex items-center space-x-3 group">
+                            <span class="font-bold text-indigo-600 bg-indigo-100 rounded-lg px-2.5 py-1 text-sm group-hover:bg-indigo-200">A</span>
+                            <span class="text-slate-700 text-xs md:text-sm font-medium choice-label">--</span>
+                        </button>
+                        <!-- Choice B -->
+                        <button onclick="submitAnswer(1)" class="choice-btn text-left p-4 rounded-xl border border-slate-200 hover:bg-indigo-50/50 hover:border-indigo-300 transition-all flex items-center space-x-3 group">
+                            <span class="font-bold text-indigo-600 bg-indigo-100 rounded-lg px-2.5 py-1 text-sm group-hover:bg-indigo-200">B</span>
+                            <span class="text-slate-700 text-xs md:text-sm font-medium choice-label">--</span>
+                        </button>
+                        <!-- Choice C -->
+                        <button onclick="submitAnswer(2)" class="choice-btn text-left p-4 rounded-xl border border-slate-200 hover:bg-indigo-50/50 hover:border-indigo-300 transition-all flex items-center space-x-3 group">
+                            <span class="font-bold text-indigo-600 bg-indigo-100 rounded-lg px-2.5 py-1 text-sm group-hover:bg-indigo-200">C</span>
+                            <span class="text-slate-700 text-xs md:text-sm font-medium choice-label">--</span>
+                        </button>
+                        <!-- Choice D -->
+                        <button onclick="submitAnswer(3)" class="choice-btn text-left p-4 rounded-xl border border-slate-200 hover:bg-indigo-50/50 hover:border-indigo-300 transition-all flex items-center space-x-3 group">
+                            <span class="font-bold text-indigo-600 bg-indigo-100 rounded-lg px-2.5 py-1 text-sm group-hover:bg-indigo-200">D</span>
+                            <span class="text-slate-700 text-xs md:text-sm font-medium choice-label">--</span>
+                        </button>
+                    </div>
+
+                    <!-- Instant Feedback Section -->
+                    <div id="explanation-box" class="hidden p-4 rounded-2xl text-xs md:text-sm animate-fade-in flex items-start space-x-3 border shadow-sm">
+                        <span id="feedback-icon" class="text-xl"></span>
+                        <div class="space-y-1">
+                            <h4 id="feedback-header" class="font-bold uppercase tracking-wide">--</h4>
+                            <p id="explanation-text" class="text-slate-600 leading-relaxed">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer navigation inside card -->
+                <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                    <button id="btn-next" onclick="goToNext()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs md:text-sm px-6 py-2.5 rounded-xl transition shadow flex items-center gap-1.5">
+                        Susunod <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. RESULTS SCREEN -->
+            <div id="screen-result" class="hidden p-6 md:p-10 text-center space-y-6 flex flex-col justify-center items-center my-auto">
+                <div class="relative w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center border-4 border-yellow-200 shadow-inner">
+                    <i class="fa-solid fa-trophy text-5xl text-yellow-500 animate-bounce"></i>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="title-font text-3xl text-slate-800">Natapos Mo ang Pagsusulit!</h3>
+                    <p class="text-xs md:text-sm text-slate-500">Narito ang buod ng iyong ipinamalas na kaalaman:</p>
+                </div>
+
+                <!-- Score Presentation Box -->
+                <div class="grid grid-cols-2 gap-4 max-w-sm w-full">
+                    <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl">
+                        <span class="text-[10px] uppercase font-bold text-indigo-400 block">Kabuuan</span>
+                        <span id="result-score" class="text-3xl font-extrabold text-indigo-600">0 / 150</span>
+                    </div>
+                    <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl">
+                        <span class="text-[10px] uppercase font-bold text-indigo-400 block">Katumpakan</span>
+                        <span id="result-percent" class="text-3xl font-extrabold text-indigo-600">0%</span>
+                    </div>
+                </div>
+
+                <!-- Performance message -->
+                <div class="max-w-md">
+                    <p id="performance-comment" class="text-xs md:text-sm font-semibold text-slate-700 leading-relaxed">
+                        --
+                    </p>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex flex-wrap gap-3 justify-center w-full max-w-sm">
+                    <button onclick="resetQuiz()" class="flex-grow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 rounded-xl shadow transition text-xs md:text-sm">
+                        Ulitin ang Pagsusulit
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-xs">
+        <div class="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-bold text-slate-300">E-Suri: Heograpiya at Mapa (15-Hamon)</p>
+                <p>Batay sa mga Video Aralin ng Araling Panlipunan 5 (Aralin 1 at Aralin 2)</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-slate-600">Binuo para sa mag-aaral na Pilipino</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AUDIO CONTROLLER (WEB AUDIO API) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBeep(type) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'wrong') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.setValueAtTime(147, audioCtx.currentTime + 0.15); // D3
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } else if (type === 'victory') {
+                osc.type = 'sawtooth';
+                const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.50];
+                notes.forEach((freq, idx) => {
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (idx * 0.08));
+                });
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.8);
+            }
+        }
+    </script>
+
+    <!-- STATE MANAGEMENT & QUIZ QUESTIONS DATABASE BASED ON YOUTUBE LESSONS -->
+    <script>
+        const quizDatabase = [
+            {
+                question: "Ano ang tawag sa pag-aaral ng pisikal na katangian ng daigdig, klima, vegetation, at ang ugnayan at interaksiyon ng mga tao sa kanilang kapaligiran?",
+                choices: [
+                    "Sosyolohiya",
+                    "Heograpiya",
+                    "Arkeolohiya",
+                    "Demograpiya"
+                ],
+                correct: 1,
+                explanation: "Ang Heograpiya ay nagmula sa mga salitang Griyego na 'geo' (daigdig) at 'graphein' (sumulat o ilarawan). Ito ay nakatuon sa pag-aaral ng pisikal na anyo ng mundo."
+            },
+            {
+                question: "Aling sistema ng pagtukoy ng lokasyon ang gumagamit ng mga imahinaryong guhit na latitud at longitud upang malaman ang tiyak o absolutong lokasyon ng isang lugar sa globo?",
+                choices: [
+                    "Sistemang Bisinal",
+                    "Sistemang Insular",
+                    "Sistemang Grid o Koordinado",
+                    "Sistemang Topograpiya"
+                ],
+                correct: 2,
+                explanation: "Ang sistemang grid (Grid System) ay ang pagtatagpo ng mga guhit-latitud at longitud na siyang nagbibigay sa atin ng eksaktong koordinado ng isang lugar."
+            },
+            {
+                question: "Anong uri ng lokasyon ang tinutukoy kapag ibinabatay natin ito sa mga karatig-bansa o kalupaang nakapaligid sa isang teritoryo, gaya ng Taiwan sa hilaga at Vietnam sa kanluran ng Pilipinas?",
+                choices: [
+                    "Lokasyong Insular",
+                    "Lokasyong Bisinal",
+                    "Lokasyong Absolute",
+                    "Lokasyong Topograpikal"
+                ],
+                correct: 1,
+                explanation: "Ang lokasyong Bisinal ay ang pagtukoy sa kinaroroonan ng isang bansa batay sa mga kalupaang nakapaligid dito (mga kapitbahay na bansa)."
+            },
+            {
+                question: "Kung ang Pilipinas ay nakapaloob sa lokasyong Insular, anong anyong-tubig ang matatagpuan sa silangang hangganan ng ating bansa?",
+                choices: [
+                    "Dagat Kanlurang Pilipinas (West Philippine Sea)",
+                    "Dagat Celebes",
+                    "Bashi Channel",
+                    "Karagatang Pasipiko (Pacific Ocean)"
+                ],
+                correct: 3,
+                explanation: "Ang Karagatang Pasipiko ay nasa Silangan (East) ng bansa. Ang Dagat Kanlurang Pilipinas naman ay nasa Kanluran, Bashi Channel sa Hilaga, at Dagat Celebes sa Timog."
+            },
+            {
+                question: "Aling likhang-guhit sa globo ang matatagpuan sa zero degrees ($0^\\circ$) latitud na humahati sa daigdig sa Hilagang Hemispero at Timog Hemispero?",
+                choices: [
+                    "Prime Meridian",
+                    "Ekwador",
+                    "Tropiko ng Kanser",
+                    "International Date Line"
+                ],
+                correct: 1,
+                explanation: "Ang Ekwador ang pinakagitnang pahalang na guhit na naghahati sa hilaga at timog na bahagi ng daigdig."
+            },
+            {
+                question: "Aling guhit-longitud ang matatagpuan sa $0^\\circ$ longitud na naghahati sa daigdig sa Silangan at Kanlurang Hemispero, at dumaraan sa Greenwich, England?",
+                choices: [
+                    "Prime Meridian",
+                    "International Date Line",
+                    "Tropiko ng Kaprikorniyo",
+                    "Kabilugang Arktiko"
+                ],
+                correct: 0,
+                explanation: "Ang Prime Meridian ay ang patayong guhit na nagmula sa Hilagang Pol pababa sa Timog Pol na may sukat na $0^\\circ$ longitud."
+            },
+            {
+                question: "Ano ang tawag sa espesyal na guhit-latitud na nasa $23.5^\\circ$ Hilaga ng Ekwador na nagtatakda ng hilagang hangganan ng rehiyong tropikal?",
+                choices: [
+                    "Tropiko ng Kaprikorniyo",
+                    "Kabilugang Antarktiko",
+                    "Tropiko ng Kanser",
+                    "Kabilugang Arktiko"
+                ],
+                correct: 2,
+                explanation: "Ang Tropiko ng Kanser (Tropic of Cancer) ay matatagpuan sa $23.5^\\circ$ Hilaga, samantalang ang Tropiko ng Kaprikorniyo naman ay nasa $23.5^\\circ$ Timog."
+            },
+            {
+                question: "Dahil ang Pilipinas ay matatagpuan sa mababang latitud sa pagitan ng Ekwador at Tropiko ng Kanser, anong klima ang mayroon ang ating bansa?",
+                choices: [
+                    "Klimang Katamtaman (Temperate)",
+                    "Klimang Tropikal (Tropical)",
+                    "Klimang Polar (Frigid)",
+                    "Klimang Mediteraneo"
+                ],
+                correct: 1,
+                explanation: "Nakararanas ang Pilipinas ng Klimang Tropikal na may dalawang pangunahing panahon: Tag-ulan at Tag-araw, dahil malapit ito sa ekwador at nakatatanggap ng direktang sikat ng araw."
+            },
+            {
+                question: "Aling monsoon o uri ng pana-panahong hangin ang nagdadala ng malalakas na ulan at bagyo mula sa timog-kanluran patungo sa bansa mula Hunyo hanggang Setyembre?",
+                choices: [
+                    "Hanging Amihan (Northeast Monsoon)",
+                    "Hanging Habagat (Southwest Monsoon)",
+                    "Trade Winds",
+                    "Hanging Silangan"
+                ],
+                correct: 1,
+                explanation: "Ang Hanging Habagat o Southwest Monsoon ay mainit at may dalang basang hangin na nagdudulot ng madalas na pag-ulan sa bansa tuwing tag-ulan."
+            },
+            {
+                question: "Aling hangin ang nagmumula sa tuyo at malamig na rehiyon ng Siberia patungong Hilagang-Silangan ng bansa, na nagbibigay sa atin ng malamig na simoy ng hangin mula Nobyembre hanggang Pebrero?",
+                choices: [
+                    "Hanging Habagat (Southwest Monsoon)",
+                    "Hanging Amihan (Northeast Monsoon)",
+                    "Hanging Kanluran",
+                    "Hanging Timog"
+                ],
+                correct: 1,
+                explanation: "Ang Hanging Amihan o Northeast Monsoon ang nagdadala ng malamig at tuyong klima na nararanasan tuwing buwan ng kapaskuhan hanggang Pebrero."
+            },
+            {
+                question: "Anong doktrina o polisiya ang nagsasaad na ang mga panlabas na pulo ng isang kapuluan (archipelago) kasama ang mga nakapaloob na katubigan ay bumubuo sa iisang teritoryo ng bansa, anuman ang lawak o lalim nito?",
+                choices: [
+                    "Doktrinang Pangkapuluan (Archipelagic Doctrine)",
+                    "Doktrinang Monroe",
+                    "Kasunduan sa Paris",
+                    "Treaty of Washington"
+                ],
+                correct: 0,
+                explanation: "Ang Doktrinang Pangkapuluan (bahagi ng UNCLOS) ay nagpapatibay na ang isang kapuluan tulad ng Pilipinas ay dapat ituring na isang nagkakaisang teritoryo at hindi pira-pirasong pulo."
+            },
+            {
+                question: "Ano ang tawag sa $180^\\circ$ guhit-longitud na katapat ng Prime Meridian kung saan opisyal na nagbabago ang araw at petsa sa buong mundo?",
+                choices: [
+                    "Ekwador",
+                    "International Date Line (IDL)",
+                    "Tropiko ng Kanser",
+                    "Kabilugang Arktiko"
+                ],
+                correct: 1,
+                explanation: "Ang International Date Line (IDL) ay isang pakurbang guhit sa Karagatang Pasipiko kung saan ang pagtawid pakanluran ay nagdaragdag ng isang araw, at ang pagtawid pasilangan ay nagbabawas ng isang araw."
+            },
+            {
+                question: "Aling bahagi ng mapa ang nagpapakita ng kaugnayan (ratio) sa pagitan ng distansiya sa mapa at ang aktwal o totoong sukat nito sa ibabaw ng daigdig?",
+                choices: [
+                    "Legend",
+                    "Titulo",
+                    "Eskala (Scale)",
+                    "Compass Rose"
+                ],
+                correct: 2,
+                explanation: "Ang Eskala (Scale) ay maaaring ipakita sa anyong grapikal, verbal, o fractional upang masukat ang totoong distansiya."
+            },
+            {
+                question: "Alin sa mga sumusunod ang pangunahing bentahe ng paggamit ng Globo kumpara sa Mapa?",
+                choices: [
+                    "Ito ay madaling tiklupin at dalhin sa bulsa.",
+                    "Nagpapakita ito ng tumpak na hugis at kurba ng daigdig nang walang distorsiyon.",
+                    "Mas detalyado nitong naipakikita ang mga kalsada at maliliit na bayan.",
+                    "Mas mura itong gawin at gamitin."
+                ],
+                correct: 1,
+                explanation: "Dahil ang globo ay pabilog na modelo, tapat at walang distorsiyon nitong naipakikita ang tunay na proporsiyon ng mga kontinente at karagatan sa daigdig."
+            },
+            {
+                question: "Bakit itinuturing na istratehiko ang lokasyon ng Pilipinas sa Timog-Silangang Asya?",
+                choices: [
+                    "Dahil malapit ito sa Hilagang Pol.",
+                    "Ito ay nagsisilbing daanan at pintuan ng kalakalan sa pagitan ng Pasipiko at Asya.",
+                    "Dahil ito ang pinakamalaking kontinente sa daigdig.",
+                    "Dahil napapaligiran ito ng yelo na nagpapadali sa transportasyon."
+                ],
+                correct: 1,
+                explanation: "Ang Pilipinas ay matatagpuan sa krus na daan ng mga ruta ng barko at eroplano sa Asya at Karagatang Pasipiko, na nagbibigay dito ng mahalagang papel sa kalakalan at depensa."
+            }
+        ];
+
+        let state = {
+            currentIndex: 0,
+            score: 0,
+            hasAnswered: false,
+            activeQuestions: []
+        };
+
+        // DOM elements cache
+        const screenStart = document.getElementById('screen-start');
+        const screenQuiz = document.getElementById('screen-quiz');
+        const screenResult = document.getElementById('screen-result');
+        const questionNumBadge = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const choicesGrid = document.getElementById('choices-grid');
+        const explanationBox = document.getElementById('explanation-box');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackHeader = document.getElementById('feedback-header');
+        const explanationText = document.getElementById('explanation-text');
+        const btnNext = document.getElementById('btn-next');
+        const globalScoreCounter = document.getElementById('global-score');
+
+        // Fisher-Yates Shuffle Algorithm to randomize the questions array
+        function shuffleQuestions(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function startQuiz() {
+            screenStart.classList.add('hidden');
+            screenResult.classList.add('hidden');
+            screenQuiz.classList.remove('hidden');
+            
+            state.currentIndex = 0;
+            state.score = 0;
+            globalScoreCounter.innerText = "0";
+            
+            // Randomize the active questions array for this run
+            state.activeQuestions = shuffleQuestions(quizDatabase);
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            state.hasAnswered = false;
+            btnNext.classList.add('hidden');
+            explanationBox.classList.add('hidden');
+
+            const currentQ = state.activeQuestions[state.currentIndex];
+            
+            // Update badges and progress indicators
+            questionNumBadge.innerText = `Tanong ${state.currentIndex + 1} / ${state.activeQuestions.length}`;
+            const progressPercent = ((state.currentIndex) / state.activeQuestions.length) * 100;
+            progressBarFill.style.width = `${progressPercent}%`;
+
+            // Set Question Text
+            questionText.innerText = currentQ.question;
+
+            // Render Options
+            choicesGrid.innerHTML = '';
+            const labels = ["A", "B", "C", "D"];
+            
+            currentQ.choices.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = "choice-btn text-left p-4 rounded-xl border border-slate-200 hover:bg-indigo-50/50 hover:border-indigo-300 transition-all flex items-center space-x-3 group w-full focus:outline-none";
+                btn.innerHTML = `
+                    <span class="font-bold text-indigo-600 bg-indigo-100 rounded-lg px-2.5 py-1 text-xs group-hover:bg-indigo-200">${labels[index]}</span>
+                    <span class="text-slate-700 text-xs md:text-sm font-medium leading-tight">${choice}</span>
+                `;
+                btn.onclick = () => submitAnswer(index);
+                choicesGrid.appendChild(btn);
+            });
+        }
+
+        function submitAnswer(selectedIndex) {
+            if (state.hasAnswered) return; // Prevent double taps
+            state.hasAnswered = true;
+
+            const currentQ = state.activeQuestions[state.currentIndex];
+            const choiceButtons = choicesGrid.querySelectorAll('.choice-btn');
+            const labels = ["A", "B", "C", "D"];
+
+            // Disable all options immediately
+            choiceButtons.forEach(btn => btn.disabled = true);
+
+            const isCorrect = (selectedIndex === currentQ.correct);
+
+            // Style choice states
+            if (isCorrect) {
+                playBeep('correct');
+                state.score += 10;
+                globalScoreCounter.innerText = state.score;
+
+                // Make chosen button look bright emerald
+                choiceButtons[selectedIndex].className = "choice-btn text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 transition-all flex items-center space-x-3 w-full";
+                choiceButtons[selectedIndex].querySelector('span').className = "font-bold text-white bg-emerald-500 rounded-lg px-2.5 py-1 text-xs";
+
+                // Setup positive feedback box
+                explanationBox.className = "p-4 rounded-2xl text-xs md:text-sm animate-fade-in flex items-start space-x-3 border bg-emerald-50 border-emerald-200 text-emerald-900 shadow-sm";
+                feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-check text-xl text-emerald-600"></i>`;
+                feedbackHeader.innerText = "TAMA!";
+            } else {
+                playBeep('wrong');
+                // Make selected choice red
+                choiceButtons[selectedIndex].className = "choice-btn text-left p-4 rounded-xl border-2 border-red-500 bg-red-50 text-red-900 transition-all flex items-center space-x-3 w-full";
+                choiceButtons[selectedIndex].querySelector('span').className = "font-bold text-white bg-red-500 rounded-lg px-2.5 py-1 text-xs";
+
+                // Highlight correct answer in emerald
+                choiceButtons[currentQ.correct].className = "choice-btn text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 transition-all flex items-center space-x-3 w-full animate-pulse";
+                choiceButtons[currentQ.correct].querySelector('span').className = "font-bold text-white bg-emerald-500 rounded-lg px-2.5 py-1 text-xs";
+
+                // Setup corrective feedback box
+                explanationBox.className = "p-4 rounded-2xl text-xs md:text-sm animate-fade-in flex items-start space-x-3 border bg-red-50 border-red-200 text-red-900 shadow-sm";
+                feedbackIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-xl text-red-600"></i>`;
+                feedbackHeader.innerText = `MALI (Ang Tamang Sagot ay ${labels[currentQ.correct]})`;
+            }
+
+            // Reveal explanation details
+            explanationText.innerText = currentQ.explanation;
+            explanationBox.classList.remove('hidden');
+
+            // Show 'Next' Action Button
+            btnNext.classList.remove('hidden');
+        }
+
+        function goToNext() {
+            if (state.currentIndex < state.activeQuestions.length - 1) {
+                state.currentIndex++;
+                loadQuestion();
+            } else {
+                // Quiz completed!
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            screenQuiz.classList.add('hidden');
+            screenResult.classList.remove('hidden');
+
+            const maxScore = state.activeQuestions.length * 10;
+            const accuracy = Math.round((state.score / maxScore) * 100);
+
+            progressBarFill.style.width = "100%";
+
+            // Update UI values
+            document.getElementById('result-score').innerText = `${state.score} / ${maxScore}`;
+            document.getElementById('result-percent').innerText = `${accuracy}%`;
+
+            // Performance specific remarks
+            let commentText = "";
+            if (accuracy === 100) {
+                commentText = "Napakahusay! Nakakuha ka ng perpektong iskor! Karapat-dapat ka sa gintong sertipiko ng Heograpiya ng Pilipinas! 🌟🏆";
+                playBeep('victory');
+                triggerConfetti();
+            } else if (accuracy >= 80) {
+                commentText = "Magaling! Malawak ang iyong kaalaman sa heograpiya, direksiyon, at paggamit ng globo! Ipagpatuloy mo iyan. 🥳";
+                playBeep('victory');
+                triggerConfetti();
+            } else if (accuracy >= 50) {
+                commentText = "Mabuti! Naintindihan mo ang mga batayang konsepto mula sa mga aralin, maaari mong balikan ang mga video para sa perpektong iskor! 👍";
+            } else {
+                commentText = "Huwag mawalan ng pag-asa! Subukan mong panoorin muli ang iyong mga video-aralin at sagutan muli ang pagsusulit na ito upang mapataas ang puntos. 💪";
+            }
+
+            document.getElementById('performance-comment').innerText = commentText;
+        }
+
+        function resetQuiz() {
+            screenResult.classList.add('hidden');
+            screenStart.classList.remove('hidden');
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+</body>
+</html>
