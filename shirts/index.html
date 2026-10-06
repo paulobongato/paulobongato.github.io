@@ -1,0 +1,607 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Tee Fit Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Committed single theme: green and white. Every colour painted explicitly
+     so the page holds on a light or dark host ground. */
+  :root{
+    --paper:#f2f6f2;
+    --sheet:#ffffff;
+    --sheet-2:#eef3ee;
+    --ink:#132318;
+    --ink-2:#55685c;
+    --ink-3:#86988c;
+    --rule:#d2ded4;
+    --rule-soft:#e6eee7;
+    --accent:#2f7d4f;
+    --accent-deep:#1d5636;
+    --accent-soft:#e2f0e7;
+    --accent-fill:rgba(47,125,79,.15);
+    --figure:#c3d0c6;
+    --figure-2:#b2c1b6;
+    --good:#2f7d4f;    --good-bg:#e2f0e7;
+    --tight:#b04435;   --tight-bg:#f8e7e4;
+    --loose:#9a7318;   --loose-bg:#f7efdc;
+    --grid:rgba(19,35,24,.055);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:28px 56px}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+  .eyebrow{
+    font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  }
+
+  header.masthead{border-bottom:1px solid var(--rule);padding-bottom:16px;margin-bottom:24px}
+  header.masthead h1{font-size:clamp(22px,3.4vw,30px);font-weight:700;letter-spacing:-.018em;margin:2px 0 0;text-wrap:balance}
+  header.masthead p{margin:5px 0 0;color:var(--ink-2);max-width:56ch;font-size:13px}
+
+  .layout{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+  @media (max-width:860px){.layout{grid-template-columns:1fr}}
+
+  .panel{background:var(--sheet);border:1px solid var(--rule);border-radius:4px}
+  .panel-head{padding:11px 16px;border-bottom:1px solid var(--rule-soft);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .panel-body{padding:16px}
+
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .field-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:7px}
+  .field-top label,.field-top .lbl{font-size:12px;font-weight:600}
+  .field-val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--accent)}
+  input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:18px}
+  .hint{font-size:11px;color:var(--ink-3);margin-top:5px;line-height:1.45}
+
+  .seg{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+  .seg button{
+    flex:1;background:var(--sheet);border:0;border-right:1px solid var(--rule);
+    padding:8px 4px;cursor:pointer;color:var(--ink-2);
+    font-family:'Archivo',sans-serif;font-size:12px;font-weight:500;
+  }
+  .seg button:last-child{border-right:0}
+  .seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
+
+  .mode{display:flex;gap:8px;margin-bottom:20px}
+  .mode button{
+    flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:3px;
+    padding:10px 12px;cursor:pointer;border-radius:3px;
+    background:var(--sheet-2);border:1px solid var(--rule);font-family:'Archivo',sans-serif;
+  }
+  .mode button .m-n{font-size:14px;font-weight:700;color:var(--ink)}
+  .mode button .m-s{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .mode button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+  .mode button[aria-pressed="true"] .m-n{color:var(--accent-deep)}
+  .mode button[aria-pressed="true"] .m-s{color:var(--accent)}
+
+  .swap{display:flex;gap:8px;align-items:center;margin-bottom:16px;padding:9px 11px;border:1px dashed var(--rule);border-radius:3px;background:var(--sheet-2)}
+  .swap input{accent-color:var(--accent);margin:0}
+  .swap label{font-size:12px;color:var(--ink-2);cursor:pointer}
+
+  .sheet-grid{
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:16px 16px;
+  }
+  .figure-wrap{display:flex;justify-content:center;padding:10px 4px 6px}
+  svg.figure{width:100%;max-width:330px;height:auto;display:block}
+
+  .callouts{display:grid;gap:1px;background:var(--rule-soft);border-top:1px solid var(--rule-soft)}
+  .callout{background:var(--sheet);padding:11px 16px;display:flex;gap:10px;align-items:baseline}
+  .callout .k{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);min-width:62px;flex:none}
+  .callout .v{font-size:13px}
+
+  .rec{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rule-soft)}
+  .rec strong{font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--accent-deep)}
+  .rec .why{color:var(--ink-2);font-size:12px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px;padding:14px 16px}
+  .chip{
+    position:relative;min-width:58px;padding:7px 9px 8px;cursor:pointer;
+    background:var(--sheet-2);border:1px solid var(--rule);border-radius:3px;
+    display:flex;flex-direction:column;gap:3px;align-items:flex-start;
+    font-family:'Archivo',sans-serif;color:var(--ink);
+  }
+  .chip[aria-pressed="true"]{border-color:var(--accent);background:var(--sheet);box-shadow:inset 0 0 0 1px var(--accent)}
+  .chip .sz{font-size:13px;font-weight:700}
+  .chip .st{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+  .chip .bar{position:absolute;left:-1px;right:-1px;bottom:-1px;height:3px;border-radius:0 0 3px 3px}
+  .chip.is-rec::after{
+    content:'REC';position:absolute;top:-7px;right:-5px;
+    font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;
+    background:var(--accent-deep);color:#fff;padding:1px 4px;border-radius:2px;
+  }
+
+  .table-scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:470px;font-size:13px}
+  th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--rule-soft);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--rule)}
+  tbody td{font-variant-numeric:tabular-nums}
+  tbody td.num{font-family:'IBM Plex Mono',monospace}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr.derived td{background:var(--sheet-2)}
+  td.mrow{font-weight:500}
+  td .sub{display:block;font-size:10.5px;color:var(--ink-3);font-weight:400}
+  .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.09em;
+    border:1px solid var(--rule);color:var(--ink-3);padding:0 4px;border-radius:2px;margin-left:6px;vertical-align:1px;
+  }
+
+  .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:500}
+  .s-good{color:var(--good);background:var(--good-bg)}
+  .s-tight{color:var(--tight);background:var(--tight-bg)}
+  .s-loose{color:var(--loose);background:var(--loose-bg)}
+
+  .rule-note{padding:10px 16px;border-top:1px solid var(--rule-soft);font-size:11.5px;color:var(--ink-3)}
+  .note{margin-top:20px;padding:14px 16px;border-left:2px solid var(--accent);color:var(--ink-2);font-size:12px;line-height:1.6}
+  .note b{color:var(--ink);font-weight:600}
+  .stack{display:grid;gap:20px}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Size chart &middot; width &amp; length in inches</div>
+    <h1>Tee Fit Sheet</h1>
+    <p>Pick kids or adult, set a height, and the green outline is that size drawn at its charted width and length over a figure at those proportions.</p>
+  </header>
+
+  <div class="layout">
+    <section class="panel">
+      <div class="panel-head"><span class="eyebrow">Who is it for</span></div>
+      <div class="panel-body">
+        <div class="mode" role="group" aria-label="Chart">
+          <button type="button" data-mode="kids" aria-pressed="false">
+            <span class="m-n">Kids</span><span class="m-s">S &ndash; Teens</span>
+          </button>
+          <button type="button" data-mode="adult" aria-pressed="true">
+            <span class="m-n">Adult</span><span class="m-s">XS &ndash; 3XL</span>
+          </button>
+        </div>
+
+        <div class="field">
+          <div class="field-top"><label for="f-height">Height</label><span class="field-val" id="v-height"></span></div>
+          <input type="range" id="f-height" min="145" max="205" step="1" value="178">
+        </div>
+
+        <div class="field">
+          <div class="field-top"><span class="lbl">Build</span></div>
+          <div class="seg" id="builds" role="group" aria-label="Build"></div>
+          <div class="hint">Chest estimated at <span class="mono" id="v-est"></span> across. Height alone can&rsquo;t tell a narrow chest from a broad one &mdash; this is the dial that does.</div>
+        </div>
+
+        <div class="swap">
+          <input type="checkbox" id="f-known">
+          <label for="f-known">I measured the chest instead</label>
+        </div>
+        <div class="field" id="g-chest" hidden>
+          <div class="field-top"><label for="f-chest">Chest, straight across</label><span class="field-val" id="v-chest"></span></div>
+          <input type="range" id="f-chest" min="100" max="200" step="1" value="126">
+          <div class="hint">
+            Armpit to armpit in a straight line, the same way the chart measures a shirt lying flat &mdash; no tape around the body.
+            Held flat like that it reads about a third of the way round, so the sheet converts it to
+            <span class="mono" id="v-around"></span> around before comparing.
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-top"><span class="lbl">How it should sit</span></div>
+          <div class="seg" role="group" aria-label="Fit preference">
+            <button type="button" data-fit="slim">Slim</button>
+            <button type="button" data-fit="regular" aria-pressed="true">Regular</button>
+            <button type="button" data-fit="oversized">Oversized</button>
+          </div>
+          <div class="hint" id="v-fithint"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stack">
+      <section class="panel">
+        <div class="panel-head">
+          <span class="eyebrow"><span id="v-mode">Adult</span> &mdash; size <span id="v-szlabel">M</span></span>
+          <span class="eyebrow" id="v-scale"></span>
+        </div>
+        <div class="sheet-grid figure-wrap">
+          <svg class="figure" id="fig" viewBox="0 0 340 560" role="img" aria-labelledby="figtitle">
+            <title id="figtitle">The charted size drawn over a figure at your proportions</title>
+          </svg>
+        </div>
+        <div class="callouts">
+          <div class="callout"><span class="k">Hem</span><span class="v" id="c-hem"></span></div>
+          <div class="callout"><span class="k">Sleeve</span><span class="v" id="c-sleeve"></span></div>
+          <div class="callout"><span class="k">Chest</span><span class="v" id="c-chest"></span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="rec">
+          <span class="eyebrow">Best match</span>
+          <strong id="v-rec">M</strong>
+          <span class="why" id="v-recwhy"></span>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Sizes"></div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Measurement</th><th>Garment</th><th>Target</th><th>Diff</th><th>Fit</th></tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="rule-note" id="v-rulenote"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Measuring across instead of around.</b> The chart measures a shirt lying flat, so the body input does the same &mdash; armpit to armpit in a straight line. A torso is an oval, not a folded sheet, so that straight-across reading is roughly a third of the way round, not half: about 12.6&Prime; across for a 39&Prime; chest. The sheet converts before comparing, and shows both numbers in the panel header. Worth knowing: because the conversion multiplies by about three, every <sup>1</sup>&frasl;<sub>4</sub>&Prime; you are off measuring becomes <sup>3</sup>&frasl;<sub>4</sub>&Prime; of chest, so keep the tape genuinely straight and level.
+    <br><br>
+    <b>How width becomes a size.</b> The chart&rsquo;s width is the flat pit&#8209;to&#8209;pit, so doubling it gives the garment&rsquo;s chest circumference &mdash; adult M at 20&Prime; is a 40&Prime; garment. Against a body chest that gives <b>ease</b>, and ease is the whole recommendation: regular targets 1.5&ndash;4.7&Prime;, slim 0&ndash;2.4&Prime;, oversized 5.5&ndash;11.8&Prime;. The chart&rsquo;s own instruction &mdash; size up when you fall between two &mdash; is applied on close calls.
+    <br><br>
+    <b>Shoulder and sleeve are derived, not charted.</b> Both rows are marked <span class="tag">EST</span>, from standard tee drafting ratios against the charted width (shoulder &asymp; 0.88 of width for adults, sleeve &asymp; 0.42). That is how a grader would infer them, but it is inference, and production samples will differ.
+    <br><br>
+    <b>The kids lengths run short.</b> The adult rows land within half an inch of where a hem should sit &mdash; that grade is sound. The kids rows sit 2&ndash;3&Prime; above the hip across most of the range, so those tees read cropped on a child tall enough to need that width. Reported rather than corrected: length is weighted lightly and chest ease drives the pick.
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var IN = 2.54;
+
+  var CHARTS = {
+    kids:{
+      name:'Kids',
+      sizes:[{n:'S',w:13,l:17},{n:'M',w:14,l:18},{n:'L',w:15,l:19},{n:'XL',w:16,l:20},{n:'2XL',w:17,l:21},{n:'Teens',w:17,l:23}],
+      shoulderK:0.90, sleeveK:0.44,
+      hMin:90, hMax:175, hDef:130,
+      wMin:50, wMax:140,              // chest across, tenths of an inch
+      proj:0.33, shoulderRatio:0.42,
+      chest:function(h){ return 0.45*h + 4; },
+      builds:[{k:'slim',t:'Slim',d:-5},{k:'average',t:'Average',d:0},{k:'sturdy',t:'Sturdy',d:7}],
+      hemDrop:{slim:0, regular:2, oversized:6}
+    },
+    adult:{
+      name:'Adult',
+      sizes:[{n:'XS',w:18,l:24},{n:'S',w:19,l:25},{n:'M',w:20,l:26},{n:'L',w:21,l:27},{n:'XL',w:22,l:28},{n:'2XL',w:23,l:29},{n:'3XL',w:24,l:30}],
+      shoulderK:0.88, sleeveK:0.42,
+      hMin:145, hMax:205, hDef:178,
+      wMin:100, wMax:200,
+      proj:0.32, shoulderRatio:0.44,
+      chest:function(h){ return 0.52*h + 8; },
+      builds:[{k:'slim',t:'Slim',d:-9},{k:'average',t:'Average',d:0},{k:'broad',t:'Broad',d:12}],
+      hemDrop:{slim:4, regular:7, oversized:12}
+    }
+  };
+
+  var FIT = {
+    slim:      {lo:0,  hi:6,  ideal:3,   slvCover:0.52, shEase:0.5, label:'close to the body, chest ease 0–2.4″'},
+    regular:   {lo:4,  hi:12, ideal:7.5, slvCover:0.58, shEase:2.0, label:'straight through the body, chest ease 1.5–4.7″'},
+    oversized: {lo:14, hi:30, ideal:21,  slvCover:0.68, shEase:6.5, label:'boxy with dropped shoulders, chest ease 5.5–11.8″'}
+  };
+
+  // chestW is the straight-across reading, held in tenths of an inch
+  var state = {mode:'adult', height:178, build:'average', known:false, chestW:126, fit:'regular', picked:null};
+  var $ = function(id){ return document.getElementById(id); };
+  var C = function(){ return CHARTS[state.mode]; };
+
+  /* ---------- inches only ---------- */
+  function inch(cm,dp){ return (cm/IN).toFixed(dp===undefined?1:dp) + '″'; }
+  function signed(cm){ return (cm>=0?'+':'−') + inch(Math.abs(cm)); }
+  function feet(cm){ var t=Math.round(cm/IN), f=Math.floor(t/12); return f + "'" + (t%12) + '″'; }
+
+  /* ---------- garment ---------- */
+  function garment(sz){
+    var c = C(), w = sz.w*IN;
+    return {n:sz.n, wIn:sz.w, lIn:sz.l, width:w, chest:w*2, length:sz.l*IN,
+            shoulder:w*c.shoulderK, sleeve:w*c.sleeveK};
+  }
+
+  /* ---------- body ---------- */
+  function buildOffset(){
+    var b = C().builds.filter(function(x){ return x.k === state.build; })[0];
+    return b ? b.d : 0;
+  }
+  function estChest(){ return C().chest(state.height) + buildOffset(); }      // circumference, cm
+  function measuredWidthCm(){ return state.chestW/10*IN; }                     // across, cm
+  // A torso is an oval: the straight-across reading is about `proj` of the way round.
+  function bodyChest(){ return state.known ? measuredWidthCm()/C().proj : estChest(); }
+  function bodyWidth(){ return bodyChest()*C().proj; }                         // across, cm
+  function bodyShoulder(){ return bodyChest()*C().shoulderRatio; }
+
+  function marks(){
+    var h = state.height;
+    var headFrac = Math.min(0.175, 0.129 + Math.max(0, 170-h)*0.00055);
+    var kk = 1 + (headFrac/0.129 - 1)*0.45;
+    var m = {
+      headH: headFrac*h,
+      yHPS: 0.144*kk*h, yShoulder: 0.168*kk*h, yChest: 0.270*kk*h,
+      yWaist: 0.378*kk*h, yHip: 0.494*kk*h, yCrotch: 0.530*kk*h,
+      yElbow: 0.370*kk*h, yAnkle: 0.962*h
+    };
+    m.yKnee = m.yCrotch + (m.yAnkle - m.yCrotch)*0.428;
+    return m;
+  }
+
+  /* ---------- evaluate ---------- */
+  function evaluate(sz){
+    var g = garment(sz), f = FIT[state.fit], c = C(), m = marks(), bc = bodyChest();
+    var chestEase = g.chest - bc;
+    var lenTarget = (m.yHip - m.yHPS) + c.hemDrop[state.fit];
+    var lenD = g.length - lenTarget;
+    var shTarget = bodyShoulder() + f.shEase;
+    var shD = g.shoulder - shTarget;
+    var slvTarget = (m.yElbow - m.yShoulder)*f.slvCover;
+    var slvD = g.sleeve - slvTarget;
+
+    var chestS = chestEase < f.lo - 4 ? ['tight','Too tight']
+               : chestEase < f.lo     ? ['tight','Snug']
+               : chestEase <= f.hi    ? ['good','On target']
+               : chestEase <= f.hi + 7? ['loose','Roomy'] : ['loose','Too loose'];
+    var lenS = lenD < -6 ? ['loose','Runs short'] : lenD > 6 ? ['loose','Runs long'] : ['good','On target'];
+    var shTol = state.fit === 'oversized' ? 4 : 2.5;
+    var shS  = shD < -shTol ? ['tight','Narrow'] : shD > shTol ? ['loose','Dropped'] : ['good','On target'];
+    var slvS = slvD < -2.5 ? ['tight','Short'] : slvD > 2.5 ? ['loose','Long'] : ['good','On target'];
+
+    var score = 3.0*Math.abs(chestEase - f.ideal)/4.5 + 0.8*Math.abs(lenD)/6 + 1.0*Math.abs(shD)/shTol;
+
+    return {g:g, score:score, overall:chestS[0], chestEase:chestEase,
+      rows:[
+        {k:'Chest',    sub:'around — width ' + sz.w + '″ × 2', g:g.chest,    t:bc + f.ideal, d:chestEase - f.ideal, extra:'ease ' + signed(chestEase), s:chestS, est:false},
+        {k:'Length',   sub:'charted, from shoulder',                          g:g.length,   t:lenTarget,    d:lenD, extra:null, s:lenS,  est:false},
+        {k:'Shoulder', sub:'seam to seam',                                    g:g.shoulder, t:shTarget,     d:shD,  extra:null, s:shS,   est:true},
+        {k:'Sleeve',   sub:'from shoulder seam',                              g:g.sleeve,   t:slvTarget,    d:slvD, extra:null, s:slvS,  est:true}
+      ]};
+  }
+
+  /* ---------- drawing ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs){
+    var n = document.createElementNS(NS, tag);
+    for(var k in attrs){ if(attrs[k] !== null && attrs[k] !== undefined) n.setAttribute(k, attrs[k]); }
+    return n;
+  }
+
+  function draw(g){
+    var svg = $('fig');
+    while(svg.childNodes.length > 1) svg.removeChild(svg.lastChild);
+
+    var h = state.height, c = C(), m = marks(), bc = bodyChest();
+    var S = 496/h, cx = 158, top = 26;
+    var X = function(v){ return +(cx + v*S).toFixed(2); };
+    var Y = function(v){ return +(top + v*S).toFixed(2); };
+
+    var headW = m.headH*0.70;
+    var cW = bodyWidth()/2;                       // half of the straight-across reading
+    var wW = bc*0.86*c.proj/2, hW = bc*0.98*c.proj/2;
+    var sW = bodyShoulder()/2*0.95;
+    var neckHalf = headW*0.34;
+
+    var legC = hW*0.50;
+    var thO = legC + hW*0.47, knO = legC + hW*0.30, anO = legC + hW*0.19;
+    var thI = legC - hW*0.47, knI = legC - hW*0.30, anI = legC - hW*0.19;
+
+    function bodyHalf(s){
+      return ['M',X(0),Y(m.yHPS),'L',X(s*neckHalf),Y(m.yHPS),
+        'L',X(s*sW),Y(m.yShoulder),
+        'C',X(s*sW*1.01),Y(m.yShoulder+h*0.026),X(s*cW*1.05),Y(m.yChest-h*0.022),X(s*cW),Y(m.yChest),
+        'C',X(s*cW),Y(m.yChest+h*0.05),X(s*wW),Y(m.yWaist-h*0.045),X(s*wW),Y(m.yWaist),
+        'C',X(s*wW),Y(m.yWaist+h*0.042),X(s*hW),Y(m.yHip-h*0.04),X(s*hW),Y(m.yHip),
+        'L',X(s*thO),Y(m.yCrotch),
+        'C',X(s*thO),Y(m.yCrotch+h*0.075),X(s*knO),Y(m.yKnee-h*0.06),X(s*knO),Y(m.yKnee),
+        'C',X(s*knO),Y(m.yKnee+h*0.08),X(s*anO),Y(m.yAnkle-h*0.055),X(s*anO),Y(m.yAnkle),
+        'L',X(s*anI),Y(m.yAnkle),
+        'C',X(s*anI),Y(m.yAnkle-h*0.055),X(s*knI),Y(m.yKnee+h*0.08),X(s*knI),Y(m.yKnee),
+        'C',X(s*knI),Y(m.yKnee-h*0.09),X(s*thI),Y(m.yCrotch+h*0.055),X(s*thI),Y(m.yCrotch+h*0.004),
+        'L',X(0),Y(m.yCrotch),'Z'].join(' ');
+    }
+
+    var armWTop = cW*0.60, armWBot = cW*0.36, yWrist = m.yHip + h*0.008;
+    function armHalf(s){
+      var oT = sW*0.99, oB = sW*1.02;
+      return ['M',X(s*oT),Y(m.yShoulder+h*0.004),
+        'C',X(s*(oT+0.6)),Y(m.yShoulder+h*0.09),X(s*oB),Y(yWrist-h*0.10),X(s*oB),Y(yWrist),
+        'L',X(s*(oB-armWBot)),Y(yWrist),
+        'C',X(s*(oB-armWBot)),Y(yWrist-h*0.10),X(s*(oT-armWTop)),Y(m.yShoulder+h*0.09),X(s*(oT-armWTop*0.55)),Y(m.yShoulder+h*0.018),
+        'Z'].join(' ');
+    }
+
+    // charted flat width -> worn front projection, as a half-width from centre
+    var gChest = Math.max(g.width*0.335, cW + 0.4);
+    var gShoulder = Math.max(g.shoulder/2*0.95, sW*0.98);
+    var yHem = m.yHPS + g.length;
+    var yUnder = m.yHPS + g.length*0.325;
+    var gNeck = Math.min(9.2, g.width*0.26), yNeckDrop = m.yHPS + Math.min(6.2, g.length*0.09);
+    var slvOpen = g.width*0.36;
+    var slvOX = gShoulder + g.sleeve*0.30;
+    var slvOY = m.yShoulder + g.sleeve*0.954;
+    var slvIX = slvOX - slvOpen, slvIY = slvOY - slvOpen*0.34;
+
+    function shirtHalf(s){
+      return ['M',X(0),Y(yNeckDrop),
+        'C',X(s*gNeck*0.55),Y(yNeckDrop),X(s*gNeck),Y(m.yHPS+1.6),X(s*gNeck),Y(m.yHPS+0.4),
+        'L',X(s*gShoulder),Y(m.yShoulder),
+        'L',X(s*slvOX),Y(slvOY),
+        'L',X(s*slvIX),Y(slvIY),
+        'L',X(s*gChest),Y(yUnder),
+        'L',X(s*gChest),Y(yHem),
+        'L',X(0),Y(yHem),'Z'].join(' ');
+    }
+
+    var grp = el('g',{});
+    [armHalf(1),armHalf(-1)].forEach(function(d){ grp.appendChild(el('path',{d:d,fill:'var(--figure-2)'})); });
+    grp.appendChild(el('ellipse',{cx:X(0),cy:Y(m.headH*0.52),rx:(headW/2*S).toFixed(2),ry:(m.headH/2*S).toFixed(2),fill:'var(--figure)'}));
+    grp.appendChild(el('rect',{x:X(-neckHalf*0.74),y:Y(m.headH*0.9),width:(neckHalf*1.48*S).toFixed(2),height:Math.max(1,(m.yHPS-m.headH*0.9+0.5)*S).toFixed(2),fill:'var(--figure)'}));
+    [bodyHalf(1),bodyHalf(-1)].forEach(function(d){ grp.appendChild(el('path',{d:d,fill:'var(--figure)'})); });
+
+    grp.appendChild(el('line',{x1:X(-hW-9),y1:Y(m.yHip),x2:X(hW+9),y2:Y(m.yHip),stroke:'var(--ink-3)','stroke-width':1,'stroke-dasharray':'2 4',opacity:.8}));
+    grp.appendChild(el('line',{x1:X(sW*0.72),y1:Y(m.yElbow),x2:X(sW+13),y2:Y(m.yElbow),stroke:'var(--ink-3)','stroke-width':1,'stroke-dasharray':'2 4',opacity:.65}));
+
+    [shirtHalf(1),shirtHalf(-1)].forEach(function(d){
+      grp.appendChild(el('path',{d:d,fill:'var(--accent-fill)',stroke:'var(--accent)','stroke-width':1.6,'stroke-linejoin':'round'}));
+    });
+
+    // the across-the-chest measurement, drawn as the arrow the chart implies
+    var yM = m.yChest;
+    grp.appendChild(el('line',{x1:X(-cW),y1:Y(yM),x2:X(cW),y2:Y(yM),stroke:'var(--ink-2)','stroke-width':1.1}));
+    [-1,1].forEach(function(s){
+      grp.appendChild(el('line',{x1:X(s*cW),y1:Y(yM)-4.5,x2:X(s*cW),y2:Y(yM)+4.5,stroke:'var(--ink-2)','stroke-width':1.3}));
+      grp.appendChild(el('line',{x1:X(s*gChest),y1:Y(yM)-3,x2:X(s*gChest),y2:Y(yM)+3,stroke:'var(--accent)','stroke-width':1.3}));
+    });
+    grp.appendChild(el('line',{x1:X(gChest),y1:Y(yHem),x2:X(gChest+11),y2:Y(yHem),stroke:'var(--accent)','stroke-width':1}));
+
+    function label(x,y,txt,fill,anchor){
+      var t = el('text',{x:x,y:y,fill:fill,'text-anchor':anchor||'start','font-family':'IBM Plex Mono, monospace','font-size':9,'letter-spacing':.6});
+      t.appendChild(document.createTextNode(txt));
+      grp.appendChild(t);
+    }
+    label(X(0), Y(yM)-8, inch(bodyWidth()) + ' across', 'var(--ink-2)', 'middle');
+    label(X(gChest)+7, Y(yM)+3, (g.chest-bc>=0?'+':'−') + inch(Math.abs(g.chest-bc)) + ' around', 'var(--accent)');
+    label(X(gChest)+14, Y(yHem)+3, 'hem', 'var(--accent)');
+    label(X(sW+16), Y(m.yElbow)+3, 'elbow', 'var(--ink-3)');
+    label(X(hW+12), Y(m.yHip)+3, 'hip', 'var(--ink-3)');
+
+    svg.appendChild(grp);
+    return {hemVsHip:(m.yHPS + g.length) - m.yHip, slvVsElbow:slvOY - m.yElbow, ease:g.chest - bc};
+  }
+
+  /* ---------- render ---------- */
+  function render(){
+    var c = C(), f = FIT[state.fit];
+    var evals = c.sizes.map(evaluate);
+
+    var best = evals[0], rounded = false;
+    for(var i=1;i<evals.length;i++){
+      if(evals[i].score < best.score - 1e-9){ best = evals[i]; rounded = false; }
+      else if(evals[i].score <= best.score + 0.12){ best = evals[i]; rounded = true; }
+    }
+    var cur = state.picked ? (evals.filter(function(e){ return e.g.n === state.picked; })[0] || best) : best;
+
+    $('v-height').textContent = feet(state.height);
+    $('v-chest').textContent = inch(measuredWidthCm());
+    $('v-around').textContent = inch(bodyChest());
+    $('v-est').textContent = inch(estChest()*c.proj);
+    $('v-fithint').textContent = f.label;
+    $('g-chest').hidden = !state.known;
+    $('v-mode').textContent = c.name;
+    $('v-szlabel').textContent = cur.g.n;
+    $('v-scale').textContent = 'chest ' + inch(bodyWidth()) + ' across · ' + inch(bodyChest()) + ' around' + (state.known ? '' : ' est.');
+
+    var geo = draw(cur.g);
+
+    $('c-hem').textContent = geo.hemVsHip < -3
+      ? 'Sits ' + inch(Math.abs(geo.hemVsHip)) + ' above the hip — short on the body.'
+      : geo.hemVsHip > 4 ? 'Falls ' + inch(geo.hemVsHip) + ' below the hip.' : 'Lands right at the hip.';
+    var gap = -geo.slvVsElbow;
+    $('c-sleeve').textContent = gap > 13 ? 'Cuff sits mid-bicep, ' + inch(gap) + ' clear of the elbow.'
+      : gap > 5 ? 'Cuff runs past mid-bicep, ' + inch(gap) + ' short of the elbow.'
+      : gap > 0 ? 'Long for a short sleeve — stops ' + inch(gap) + ' above the elbow.'
+      : 'Cuff covers the elbow.';
+    var e = geo.ease;
+    $('c-chest').textContent = e < f.lo
+      ? inch(e) + ' of room around — ' + inch(f.lo - e) + ' tighter than ' + state.fit + ' fit wants.'
+      : e > f.hi ? inch(e) + ' of room around — ' + inch(e - f.hi) + ' looser than ' + state.fit + ' fit wants.'
+      : inch(e) + ' of room around, inside the ' + state.fit + ' range.';
+
+    $('v-rec').textContent = best.g.n;
+    $('v-recwhy').textContent = 'width ' + best.g.wIn + '″ × 2 gives ' + inch(best.chestEase) + ' of chest ease';
+    $('v-rulenote').textContent = rounded
+      ? 'Close call between two sizes — rounded up, per the chart’s own note.'
+      : 'Chest ease drives the pick; length and the derived rows are weighted lightly.';
+
+    var chips = $('chips'); chips.innerHTML = '';
+    evals.forEach(function(ev){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chip' + (ev.g.n === best.g.n ? ' is-rec' : '');
+      b.setAttribute('aria-pressed', ev.g.n === cur.g.n ? 'true' : 'false');
+      var st = ev.overall === 'good' ? 'Fits' : ev.overall === 'tight' ? 'Tight' : 'Loose';
+      b.innerHTML = '<span class="sz">' + ev.g.n + '</span><span class="st s-' + ev.overall + '">' + st + '</span>'
+                  + '<span class="bar" style="background:var(--' + ev.overall + ')"></span>';
+      b.addEventListener('click', function(){ state.picked = ev.g.n; render(); });
+      chips.appendChild(b);
+    });
+
+    var tb = $('tbody'); tb.innerHTML = '';
+    cur.rows.forEach(function(r){
+      var tr = document.createElement('tr');
+      if(r.est) tr.className = 'derived';
+      tr.innerHTML =
+        '<td class="mrow">' + r.k + (r.est ? '<span class="tag">EST</span>' : '') + '<span class="sub">' + r.sub + '</span></td>' +
+        '<td class="num">' + inch(r.g) + (r.extra ? '<span class="sub">' + r.extra + '</span>' : '') + '</td>' +
+        '<td class="num">' + inch(r.t) + '</td>' +
+        '<td class="num">' + signed(r.d) + '</td>' +
+        '<td><span class="pill s-' + r.s[0] + '">' + r.s[1] + '</span></td>';
+      tb.appendChild(tr);
+    });
+  }
+
+  /* ---------- inputs ---------- */
+  function paintBuilds(){
+    var wrap = $('builds'); wrap.innerHTML = '';
+    C().builds.forEach(function(b){
+      var n = document.createElement('button');
+      n.type = 'button'; n.textContent = b.t;
+      n.setAttribute('aria-pressed', b.k === state.build ? 'true' : 'false');
+      n.addEventListener('click', function(){ state.build = b.k; state.picked = null; paintBuilds(); render(); });
+      wrap.appendChild(n);
+    });
+  }
+
+  function syncChestSlider(){
+    var c = C(), across = estChest()*c.proj/IN*10;
+    state.chestW = Math.max(c.wMin, Math.min(c.wMax, Math.round(across)));
+    $('f-chest').value = state.chestW;
+  }
+
+  function setMode(mode){
+    var c = CHARTS[mode];
+    state.mode = mode; state.height = c.hDef; state.build = 'average';
+    state.known = false; state.picked = null;
+    $('f-known').checked = false;
+    var hr = $('f-height'); hr.min = c.hMin; hr.max = c.hMax; hr.value = c.hDef;
+    var cr = $('f-chest'); cr.min = c.wMin; cr.max = c.wMax;
+    syncChestSlider();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-mode]'), function(b){
+      b.setAttribute('aria-pressed', b.dataset.mode === mode ? 'true' : 'false');
+    });
+    paintBuilds(); render();
+  }
+
+  $('f-height').addEventListener('input', function(){
+    state.height = +this.value; state.picked = null;
+    if(!state.known) syncChestSlider();
+    render();
+  });
+  $('f-chest').addEventListener('input', function(){ state.chestW = +this.value; state.picked = null; render(); });
+  $('f-known').addEventListener('change', function(){
+    state.known = this.checked;
+    if(this.checked) syncChestSlider();
+    state.picked = null; render();
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-mode]'), function(b){
+    b.addEventListener('click', function(){ setMode(b.dataset.mode); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fit]'), function(b){
+    b.addEventListener('click', function(){
+      state.fit = b.dataset.fit;
+      Array.prototype.forEach.call(document.querySelectorAll('[data-fit]'), function(o){
+        o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
+      });
+      state.picked = null; render();
+    });
+  });
+
+  setMode('adult');
+})();
+</script>
+
+</body></html>
