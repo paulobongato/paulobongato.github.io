@@ -80,10 +80,6 @@
   .mode button[aria-pressed="true"] .m-n{color:var(--accent-deep)}
   .mode button[aria-pressed="true"] .m-s{color:var(--accent)}
 
-  .swap{display:flex;gap:8px;align-items:center;margin-bottom:16px;padding:9px 11px;border:1px dashed var(--rule);border-radius:3px;background:var(--sheet-2)}
-  .swap input{accent-color:var(--accent);margin:0}
-  .swap label{font-size:12px;color:var(--ink-2);cursor:pointer}
-
   .sheet-grid{
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
     background-size:16px 16px;
@@ -173,31 +169,18 @@
         <div class="field">
           <div class="field-top"><span class="lbl">Build</span></div>
           <div class="seg" id="builds" role="group" aria-label="Build"></div>
-          <div class="hint">Chest estimated at <span class="mono" id="v-est"></span> across. Height alone can&rsquo;t tell a narrow chest from a broad one &mdash; this is the dial that does.</div>
-        </div>
-
-        <div class="swap">
-          <input type="checkbox" id="f-known">
-          <label for="f-known">I measured the chest instead</label>
-        </div>
-        <div class="field" id="g-chest" hidden>
-          <div class="field-top"><label for="f-chest">Chest, straight across</label><span class="field-val" id="v-chest"></span></div>
-          <input type="range" id="f-chest" min="100" max="200" step="1" value="126">
-          <div class="hint">
-            Armpit to armpit in a straight line, the same way the chart measures a shirt lying flat &mdash; no tape around the body.
-            Held flat like that it reads about a third of the way round, so the sheet converts it to
-            <span class="mono" id="v-around"></span> around before comparing.
-          </div>
+          <div class="hint">Height alone can&rsquo;t tell a narrow chest from a broad one. This is the dial that does.</div>
         </div>
 
         <div class="field">
-          <div class="field-top"><span class="lbl">How it should sit</span></div>
-          <div class="seg" role="group" aria-label="Fit preference">
-            <button type="button" data-fit="slim">Slim</button>
-            <button type="button" data-fit="regular" aria-pressed="true">Regular</button>
-            <button type="button" data-fit="oversized">Oversized</button>
+          <div class="field-top"><label for="f-chest">Chest, straight across</label><span class="field-val" id="v-chest"></span></div>
+          <input type="range" id="f-chest" min="100" max="200" step="1" value="126">
+          <div class="hint">
+            Armpit to armpit in a straight line, the way the chart measures a shirt lying flat.
+            Height and build set this for you &mdash; move it if you have measured.
+            A straight reading is about a third of the way round, so it converts to
+            <span class="mono" id="v-around"></span> around before comparing.
           </div>
-          <div class="hint" id="v-fithint"></div>
         </div>
       </div>
     </section>
@@ -243,7 +226,7 @@
   <div class="note">
     <b>Measuring across instead of around.</b> The chart measures a shirt lying flat, so the body input does the same &mdash; armpit to armpit in a straight line. A torso is an oval, not a folded sheet, so that straight-across reading is roughly a third of the way round, not half: about 12.6&Prime; across for a 39&Prime; chest. The sheet converts before comparing, and shows both numbers in the panel header. Worth knowing: because the conversion multiplies by about three, every <sup>1</sup>&frasl;<sub>4</sub>&Prime; you are off measuring becomes <sup>3</sup>&frasl;<sub>4</sub>&Prime; of chest, so keep the tape genuinely straight and level.
     <br><br>
-    <b>How width becomes a size.</b> The chart&rsquo;s width is the flat pit&#8209;to&#8209;pit, so doubling it gives the garment&rsquo;s chest circumference &mdash; adult M at 20&Prime; is a 40&Prime; garment. Against a body chest that gives <b>ease</b>, and ease is the whole recommendation: regular targets 1.5&ndash;4.7&Prime;, slim 0&ndash;2.4&Prime;, oversized 5.5&ndash;11.8&Prime;. The chart&rsquo;s own instruction &mdash; size up when you fall between two &mdash; is applied on close calls.
+    <b>How width becomes a size.</b> The chart&rsquo;s width is the flat pit&#8209;to&#8209;pit, so doubling it gives the garment&rsquo;s chest circumference &mdash; adult M at 20&Prime; is a 40&Prime; garment. Against a body chest that gives <b>ease</b>, and ease is the whole recommendation, and this sheet uses one regular fit: 1.5&ndash;4.7&Prime;. The chart&rsquo;s own instruction &mdash; size up when you fall between two &mdash; is applied on close calls.
     <br><br>
     <b>Shoulder and sleeve are derived, not charted.</b> Both rows are marked <span class="tag">EST</span>, from standard tee drafting ratios against the charted width (shoulder &asymp; 0.88 of width for adults, sleeve &asymp; 0.42). That is how a grader would infer them, but it is inference, and production samples will differ.
     <br><br>
@@ -267,7 +250,7 @@
       proj:0.33, shoulderRatio:0.42,
       chest:function(h){ return 0.45*h + 4; },
       builds:[{k:'slim',t:'Slim',d:-5},{k:'average',t:'Average',d:0},{k:'sturdy',t:'Sturdy',d:7}],
-      hemDrop:{slim:0, regular:2, oversized:6}
+      hemDrop:2
     },
     adult:{
       name:'Adult',
@@ -278,18 +261,15 @@
       proj:0.32, shoulderRatio:0.44,
       chest:function(h){ return 0.52*h + 8; },
       builds:[{k:'slim',t:'Slim',d:-9},{k:'average',t:'Average',d:0},{k:'broad',t:'Broad',d:12}],
-      hemDrop:{slim:4, regular:7, oversized:12}
+      hemDrop:7
     }
   };
 
-  var FIT = {
-    slim:      {lo:0,  hi:6,  ideal:3,   slvCover:0.52, shEase:0.5, label:'close to the body, chest ease 0–2.4″'},
-    regular:   {lo:4,  hi:12, ideal:7.5, slvCover:0.58, shEase:2.0, label:'straight through the body, chest ease 1.5–4.7″'},
-    oversized: {lo:14, hi:30, ideal:21,  slvCover:0.68, shEase:6.5, label:'boxy with dropped shoulders, chest ease 5.5–11.8″'}
-  };
+  // One regular fit: 1.5-4.7 inches of chest ease, sleeve covering 58% of the upper arm.
+  var FIT = {lo:4, hi:12, ideal:7.5, slvCover:0.58, shEase:2.0};
 
   // chestW is the straight-across reading, held in tenths of an inch
-  var state = {mode:'adult', height:178, build:'average', known:false, chestW:126, fit:'regular', picked:null};
+  var state = {mode:'adult', height:178, build:'average', chestW:126, picked:null};
   var $ = function(id){ return document.getElementById(id); };
   var C = function(){ return CHARTS[state.mode]; };
 
@@ -313,7 +293,7 @@
   function estChest(){ return C().chest(state.height) + buildOffset(); }      // circumference, cm
   function measuredWidthCm(){ return state.chestW/10*IN; }                     // across, cm
   // A torso is an oval: the straight-across reading is about `proj` of the way round.
-  function bodyChest(){ return state.known ? measuredWidthCm()/C().proj : estChest(); }
+  function bodyChest(){ return measuredWidthCm()/C().proj; }
   function bodyWidth(){ return bodyChest()*C().proj; }                         // across, cm
   function bodyShoulder(){ return bodyChest()*C().shoulderRatio; }
 
@@ -333,9 +313,9 @@
 
   /* ---------- evaluate ---------- */
   function evaluate(sz){
-    var g = garment(sz), f = FIT[state.fit], c = C(), m = marks(), bc = bodyChest();
+    var g = garment(sz), f = FIT, c = C(), m = marks(), bc = bodyChest();
     var chestEase = g.chest - bc;
-    var lenTarget = (m.yHip - m.yHPS) + c.hemDrop[state.fit];
+    var lenTarget = (m.yHip - m.yHPS) + c.hemDrop;
     var lenD = g.length - lenTarget;
     var shTarget = bodyShoulder() + f.shEase;
     var shD = g.shoulder - shTarget;
@@ -347,7 +327,7 @@
                : chestEase <= f.hi    ? ['good','On target']
                : chestEase <= f.hi + 7? ['loose','Roomy'] : ['loose','Too loose'];
     var lenS = lenD < -6 ? ['loose','Runs short'] : lenD > 6 ? ['loose','Runs long'] : ['good','On target'];
-    var shTol = state.fit === 'oversized' ? 4 : 2.5;
+    var shTol = 2.5;
     var shS  = shD < -shTol ? ['tight','Narrow'] : shD > shTol ? ['loose','Dropped'] : ['good','On target'];
     var slvS = slvD < -2.5 ? ['tight','Short'] : slvD > 2.5 ? ['loose','Long'] : ['good','On target'];
 
@@ -475,7 +455,7 @@
 
   /* ---------- render ---------- */
   function render(){
-    var c = C(), f = FIT[state.fit];
+    var c = C(), f = FIT;
     var evals = c.sizes.map(evaluate);
 
     var best = evals[0], rounded = false;
@@ -488,12 +468,9 @@
     $('v-height').textContent = feet(state.height);
     $('v-chest').textContent = inch(measuredWidthCm());
     $('v-around').textContent = inch(bodyChest());
-    $('v-est').textContent = inch(estChest()*c.proj);
-    $('v-fithint').textContent = f.label;
-    $('g-chest').hidden = !state.known;
     $('v-mode').textContent = c.name;
     $('v-szlabel').textContent = cur.g.n;
-    $('v-scale').textContent = 'chest ' + inch(bodyWidth()) + ' across · ' + inch(bodyChest()) + ' around' + (state.known ? '' : ' est.');
+    $('v-scale').textContent = 'chest ' + inch(bodyWidth()) + ' across · ' + inch(bodyChest()) + ' around';
 
     var geo = draw(cur.g);
 
@@ -507,9 +484,9 @@
       : 'Cuff covers the elbow.';
     var e = geo.ease;
     $('c-chest').textContent = e < f.lo
-      ? inch(e) + ' of room around — ' + inch(f.lo - e) + ' tighter than ' + state.fit + ' fit wants.'
-      : e > f.hi ? inch(e) + ' of room around — ' + inch(e - f.hi) + ' looser than ' + state.fit + ' fit wants.'
-      : inch(e) + ' of room around, inside the ' + state.fit + ' range.';
+      ? inch(e) + ' of room around — ' + inch(f.lo - e) + ' tighter than a regular fit wants.'
+      : e > f.hi ? inch(e) + ' of room around — ' + inch(e - f.hi) + ' looser than a regular fit wants.'
+      : inch(e) + ' of room around, right for a regular fit.';
 
     $('v-rec').textContent = best.g.n;
     $('v-recwhy').textContent = 'width ' + best.g.wIn + '″ × 2 gives ' + inch(best.chestEase) + ' of chest ease';
@@ -551,7 +528,9 @@
       var n = document.createElement('button');
       n.type = 'button'; n.textContent = b.t;
       n.setAttribute('aria-pressed', b.k === state.build ? 'true' : 'false');
-      n.addEventListener('click', function(){ state.build = b.k; state.picked = null; paintBuilds(); render(); });
+      n.addEventListener('click', function(){
+        state.build = b.k; state.picked = null; syncChestSlider(); paintBuilds(); render();
+      });
       wrap.appendChild(n);
     });
   }
@@ -564,9 +543,7 @@
 
   function setMode(mode){
     var c = CHARTS[mode];
-    state.mode = mode; state.height = c.hDef; state.build = 'average';
-    state.known = false; state.picked = null;
-    $('f-known').checked = false;
+    state.mode = mode; state.height = c.hDef; state.build = 'average'; state.picked = null;
     var hr = $('f-height'); hr.min = c.hMin; hr.max = c.hMax; hr.value = c.hDef;
     var cr = $('f-chest'); cr.min = c.wMin; cr.max = c.wMax;
     syncChestSlider();
@@ -577,29 +554,12 @@
   }
 
   $('f-height').addEventListener('input', function(){
-    state.height = +this.value; state.picked = null;
-    if(!state.known) syncChestSlider();
-    render();
+    state.height = +this.value; state.picked = null; syncChestSlider(); render();
   });
   $('f-chest').addEventListener('input', function(){ state.chestW = +this.value; state.picked = null; render(); });
-  $('f-known').addEventListener('change', function(){
-    state.known = this.checked;
-    if(this.checked) syncChestSlider();
-    state.picked = null; render();
-  });
   Array.prototype.forEach.call(document.querySelectorAll('[data-mode]'), function(b){
     b.addEventListener('click', function(){ setMode(b.dataset.mode); });
   });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-fit]'), function(b){
-    b.addEventListener('click', function(){
-      state.fit = b.dataset.fit;
-      Array.prototype.forEach.call(document.querySelectorAll('[data-fit]'), function(o){
-        o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
-      });
-      state.picked = null; render();
-    });
-  });
-
   setMode('adult');
 })();
 </script>
